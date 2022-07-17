@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
 
 namespace Tum4ik.JustClipboardManager;
@@ -17,7 +19,6 @@ public partial class App : Application
   public static void Main(string[] args)
   {
     var app = new App();
-    var tray = new TrayIcon();
     app.Run();
   }
 
@@ -30,6 +31,13 @@ public partial class App : Application
   {
     Configuration = ConfigureAppConfiguration();
     ServiceProvider = ConfigureServices(Configuration);
+  }
+
+
+  protected override void OnStartup(StartupEventArgs e)
+  {
+    base.OnStartup(e);
+    var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
   }
 
 
@@ -52,7 +60,8 @@ public partial class App : Application
     var services = new ServiceCollection();
 
     services
-      .AddSingleton(configuration);
+      .AddSingleton(configuration)
+      .RegisterView<TrayIcon, TrayIconViewModel>();
 
     return services.BuildServiceProvider();
   }

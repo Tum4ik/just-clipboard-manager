@@ -1,4 +1,4 @@
-﻿namespace Tum4ik.JustClipboardManager.Views;
+namespace Tum4ik.JustClipboardManager.Views;
 
 /// <summary>
 /// Interaction logic for PasteWindow.xaml
