@@ -220,6 +220,9 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
 
+# Namespace options
+csharp_style_namespace_declarations = file_scoped
+
 
 ###############################
 # Naming Conventions          # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions
