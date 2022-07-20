@@ -5,6 +5,7 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
 
@@ -18,7 +19,10 @@ public partial class App : Application
   [STAThread]
   public static void Main(string[] args)
   {
-    var app = new App();
+    var app = new App
+    {
+      ShutdownMode = ShutdownMode.OnExplicitShutdown
+    };
     app.Run();
   }
 
@@ -61,7 +65,10 @@ public partial class App : Application
 
     services
       .AddSingleton(configuration)
-      .RegisterView<TrayIcon, TrayIconViewModel>();
+      .AddSingleton<IKeyboardHookService, KeyboardHookService>()
+      .AddSingleton<IPasteWindowService, PasteWindowService>()
+      .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
+      .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 
     return services.BuildServiceProvider();
   }

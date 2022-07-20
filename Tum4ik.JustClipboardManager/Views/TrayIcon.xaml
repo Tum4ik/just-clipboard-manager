@@ -8,5 +8,9 @@
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="/Resources/Icons/tray.ico">
-    
+  <tb:TaskbarIcon.ContextMenu>
+    <ContextMenu>
+      <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
+    </ContextMenu>
+  </tb:TaskbarIcon.ContextMenu>
 </tb:TaskbarIcon>
