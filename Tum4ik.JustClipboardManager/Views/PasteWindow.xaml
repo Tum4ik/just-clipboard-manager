@@ -7,7 +7,10 @@
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         Title="PasteWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+  <Grid>
+    <Button Width="100" Height="60"
+            Content="Paste test data"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Command="{Binding PasteDataCommand}"/>
+  </Grid>
 </Window>
