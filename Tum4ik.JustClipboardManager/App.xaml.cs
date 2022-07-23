@@ -24,6 +24,10 @@ public partial class App : Application, ISingleInstance
     {
       ShutdownMode = ShutdownMode.OnExplicitShutdown
     };
+    app.DispatcherUnhandledException += (s, e) =>
+    {
+      app.Cleanup();
+    };
     app.Run();
   }
 
@@ -61,7 +65,7 @@ public partial class App : Application, ISingleInstance
 
   protected override void OnExit(ExitEventArgs e)
   {
-    SingleInstance.Cleanup();
+    Cleanup();
     base.OnExit(e);
   }
 
@@ -93,5 +97,14 @@ public partial class App : Application, ISingleInstance
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 
     return services.BuildServiceProvider();
+  }
+
+
+  private void Cleanup()
+  {
+    var keyboardHookService = ServiceProvider.GetRequiredService<IKeyboardHookService>();
+
+    keyboardHookService.Stop();
+    SingleInstance.Cleanup();
   }
 }
