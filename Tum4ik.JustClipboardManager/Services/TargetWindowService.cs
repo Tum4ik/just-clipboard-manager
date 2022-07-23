@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Input;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class TargetWindowService : ITargetWindowService
@@ -16,6 +17,13 @@ internal class TargetWindowService : ITargetWindowService
 
     SetForegroundWindow(targetWindowPtr);
     SetFocus(targetWindowPtr);
+
+    var ctrl = KeyInterop.VirtualKeyFromKey(Key.LeftCtrl);
+    var v = KeyInterop.VirtualKeyFromKey(Key.V);
+    keybd_event(ctrl, 0, KEYEVENTF_EXTENDEDKEY, 0);
+    keybd_event(v, 0, KEYEVENTF_EXTENDEDKEY, 0);
+    keybd_event(v, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    keybd_event(ctrl, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
   }
 
 
@@ -57,4 +65,11 @@ internal class TargetWindowService : ITargetWindowService
 
   [DllImport("user32.dll")]
   private static extern int SetFocus(IntPtr hWnd);
+
+
+  private const int KEYEVENTF_EXTENDEDKEY = 0x0001;
+  private const int KEYEVENTF_KEYUP = 0x0002;
+
+  [DllImport("user32.dll")]
+  private static extern void keybd_event(int bVk, int bScan, int dwFlags, int dwExtraInfo);
 }
