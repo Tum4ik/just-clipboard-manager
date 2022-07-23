@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
@@ -14,7 +15,7 @@ namespace Tum4ik.JustClipboardManager;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : Application, ISingleInstance
 {
   [STAThread]
   public static void Main(string[] args)
@@ -24,6 +25,12 @@ public partial class App : Application
       ShutdownMode = ShutdownMode.OnExplicitShutdown
     };
     app.Run();
+  }
+
+
+  public void OnInstanceInvoked(string[] args)
+  {
+    // TODO: maybe show "already started" notification
   }
 
 
@@ -40,8 +47,22 @@ public partial class App : Application
 
   protected override void OnStartup(StartupEventArgs e)
   {
+    var isFirstInstance = this.InitializeAsFirstInstance("JustClipboardManager");
+    if (!isFirstInstance)
+    {
+      Shutdown();
+      return;
+    }
+
     base.OnStartup(e);
     var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
+  }
+
+
+  protected override void OnExit(ExitEventArgs e)
+  {
+    SingleInstance.Cleanup();
+    base.OnExit(e);
   }
 
 
