@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SingleInstanceCore;
@@ -24,9 +26,18 @@ public partial class App : Application, ISingleInstance
     {
       ShutdownMode = ShutdownMode.OnExplicitShutdown
     };
+
+    var isFirstInstance = app.InitializeAsFirstInstance("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
+    if (!isFirstInstance)
+    {
+      return;
+    }
+
     app.DispatcherUnhandledException += (s, e) =>
     {
-      app.Cleanup();
+      Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
+      e.Handled = true;
+      app.Shutdown();
     };
     app.Run();
   }
@@ -51,21 +62,20 @@ public partial class App : Application, ISingleInstance
 
   protected override void OnStartup(StartupEventArgs e)
   {
-    var isFirstInstance = this.InitializeAsFirstInstance("JustClipboardManager");
-    if (!isFirstInstance)
-    {
-      Shutdown();
-      return;
-    }
+    AppCenter.Start(Configuration["MicrosoftAppCenterSecret"], typeof(Crashes));
 
     base.OnStartup(e);
+
     var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
   }
 
 
   protected override void OnExit(ExitEventArgs e)
   {
-    Cleanup();
+    var keyboardHookService = ServiceProvider.GetRequiredService<IKeyboardHookService>();
+    keyboardHookService.Stop();
+    SingleInstance.Cleanup();
+
     base.OnExit(e);
   }
 
@@ -80,6 +90,7 @@ public partial class App : Application, ISingleInstance
     return new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
       .AddJsonStream(appsettingsStream)
+      .AddJsonFile("appsettings.Development.json", true)
       .Build();
   }
 
@@ -97,14 +108,5 @@ public partial class App : Application, ISingleInstance
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 
     return services.BuildServiceProvider();
-  }
-
-
-  private void Cleanup()
-  {
-    var keyboardHookService = ServiceProvider.GetRequiredService<IKeyboardHookService>();
-
-    keyboardHookService.Stop();
-    SingleInstance.Cleanup();
   }
 }
