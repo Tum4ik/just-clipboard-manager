@@ -103,7 +103,7 @@ public partial class App : Application, ISingleInstance
       .AddSingleton(configuration)
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IPasteWindowService, PasteWindowService>()
-      .AddSingleton<ITargetWindowService, TargetWindowService>()
+      .AddSingleton<IPasteService, PasteService>()
       .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 

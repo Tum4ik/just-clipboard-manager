@@ -1,21 +1,30 @@
+using System;
 using CommunityToolkit.Mvvm.Input;
+using Tum4ik.JustClipboardManager.Mvvm;
 using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class PasteWindowViewModel
+internal partial class PasteWindowViewModel : IWindowAware
 {
-  private readonly ITargetWindowService _targetWindowService;
+  public PasteWindowResult? PasteResult { get; private set; }
+  
 
-  public PasteWindowViewModel(ITargetWindowService targetWindowService)
+  private Action? _hideWindow;
+  
+
+  public void WindowActions(Action hide)
   {
-    _targetWindowService = targetWindowService;
+    _hideWindow = hide;
   }
 
 
   [ICommand]
   private void PasteData()
   {
-    _targetWindowService.PasteData("some test data");
+    PasteResult = null;
+    // todo: get data
+    PasteResult = new("result");
+    _hideWindow?.Invoke();
   }
 }

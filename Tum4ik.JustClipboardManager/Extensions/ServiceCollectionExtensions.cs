@@ -1,5 +1,6 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Tum4ik.JustClipboardManager.Mvvm;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
 internal static class ServiceCollectionExtensions
@@ -18,10 +19,15 @@ internal static class ServiceCollectionExtensions
     var viewDescriptor = new ServiceDescriptor(typeof(TView), serviceProvider =>
     {
       var viewModel = serviceProvider.GetRequiredService<TViewModel>();
-      return new TView
+      var view = new TView { DataContext = viewModel };
+      if (view is Window window && viewModel is IWindowAware windowAware)
       {
-        DataContext = viewModel
-      };
+        windowAware.WindowActions(() =>
+        {
+          window.Hide();
+        });
+      }
+      return view;
     }, viewLifetime);
     services.Add(viewModelDescriptor);
     services.Add(viewDescriptor);

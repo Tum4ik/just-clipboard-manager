@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Interop;
 using Tum4ik.JustClipboardManager.Exceptions;
@@ -13,7 +14,7 @@ internal class KeyboardHookService : IKeyboardHookService
   private HwndSource? _hwndSource;
   private bool _isStarted;
   private readonly Dictionary<KeybindDescriptor, int> _registeredAtoms = new();
-  private readonly Dictionary<int, Action> _registeredCallbacks = new();
+  private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
 
   public void Start(IntPtr windowHandle)
@@ -45,19 +46,13 @@ internal class KeyboardHookService : IKeyboardHookService
 
   public void RegisterHotKey(KeybindDescriptor descriptor, Action action)
   {
-    var atom = GlobalAddAtom(descriptor.ToString());
-    var modifiers = (int) descriptor.Modifiers;
-    var vKey = KeyInterop.VirtualKeyFromKey(descriptor.Key);
-    if (RegisterHotKey(_windowHandle, atom, modifiers, vKey))
-    {
-      _registeredAtoms[descriptor] = atom;
-      _registeredCallbacks[atom] = action;
-    }
-    else
-    {
-      GlobalDeleteAtom(atom);
-      throw new HotKeyRegistrationException($"Impossible to register hot key '{descriptor}'.");
-    }
+    RegisterHotKey(descriptor, (Delegate) action);
+  }
+
+
+  public void RegisterHotKey(KeybindDescriptor descriptor, Func<Task> action)
+  {
+    RegisterHotKey(descriptor, (Delegate) action);
   }
 
 
@@ -69,7 +64,7 @@ internal class KeyboardHookService : IKeyboardHookService
       GlobalDeleteAtom(atom);
 
       _registeredAtoms.Remove(descriptor);
-      _registeredCallbacks.Remove(atom);
+      _registeredActionCallbacks.Remove(atom);
     }
   }
 
@@ -82,7 +77,25 @@ internal class KeyboardHookService : IKeyboardHookService
       GlobalDeleteAtom(atom);
     }
     _registeredAtoms.Clear();
-    _registeredCallbacks.Clear();
+    _registeredActionCallbacks.Clear();
+  }
+
+
+  private void RegisterHotKey(KeybindDescriptor descriptor, Delegate action)
+  {
+    var atom = GlobalAddAtom(descriptor.ToString());
+    var modifiers = (int) descriptor.Modifiers;
+    var vKey = KeyInterop.VirtualKeyFromKey(descriptor.Key);
+    if (RegisterHotKey(_windowHandle, atom, modifiers, vKey))
+    {
+      _registeredAtoms[descriptor] = atom;
+      _registeredActionCallbacks[atom] = action;
+    }
+    else
+    {
+      GlobalDeleteAtom(atom);
+      throw new HotKeyRegistrationException($"Impossible to register hot key '{descriptor}'.");
+    }
   }
 
 
@@ -92,9 +105,9 @@ internal class KeyboardHookService : IKeyboardHookService
     {
       case 0x0312: // WM_HOTKEY
         var atom = wParam.ToInt32();
-        if (_registeredCallbacks.TryGetValue(atom, out var action))
+        if (_registeredActionCallbacks.TryGetValue(atom, out var action))
         {
-          action();
+          action.DynamicInvoke();
           handled = true;
         }
         break;
