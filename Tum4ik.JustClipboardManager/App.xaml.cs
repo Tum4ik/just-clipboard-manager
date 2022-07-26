@@ -6,6 +6,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PubSub;
 using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
@@ -101,6 +102,9 @@ public partial class App : Application, ISingleInstance
 
     services
       .AddSingleton(configuration)
+      .AddSingleton<IPubSubPipelineFactory, PubSubPipelineFactory>()
+      .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetPublisher())
+      .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetSubscriber())
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()

@@ -1,11 +1,12 @@
-using System.Runtime.InteropServices;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using PubSub;
+using Tum4ik.JustClipboardManager.EventPayloads;
 using Tum4ik.JustClipboardManager.Models;
 using Tum4ik.JustClipboardManager.Services;
-using System.Threading.Tasks;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
@@ -14,14 +15,18 @@ internal partial class TrayIconViewModel
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
+  private readonly ISubscriber _subscriber;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
-                           IPasteService pasteService)
+                           IPasteService pasteService,
+                           ISubscriber subscriber)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
+    _subscriber = subscriber;
+
     _keyboardHookService.Start(_pasteWindowService.GetWindowHandle());
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKey);
@@ -36,11 +41,15 @@ internal partial class TrayIconViewModel
   }
 
 
-  private async Task HandleInsertHotKey()
+  private void HandleInsertHotKey()
   {
     var targetWindowToPaste = GetForegroundWindow();
-    var result = await _pasteWindowService.ShowWindowAsync(targetWindowToPaste);
-    _pasteService.PasteData(targetWindowToPaste, result?.Data);
+    _subscriber.Subscribe<PasteWindowResult>(this, r =>
+    {
+      _subscriber.Unsubscribe<PasteWindowResult>(this);
+      _pasteService.PasteData(targetWindowToPaste, r.Data);
+    });
+    _pasteWindowService.ShowWindow();
   }
 
 

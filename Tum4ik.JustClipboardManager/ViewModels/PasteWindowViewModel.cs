@@ -1,14 +1,20 @@
 using System;
 using CommunityToolkit.Mvvm.Input;
+using PubSub;
+using Tum4ik.JustClipboardManager.EventPayloads;
 using Tum4ik.JustClipboardManager.Mvvm;
-using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
 internal partial class PasteWindowViewModel : IWindowAware
 {
-  public PasteWindowResult? PasteResult { get; private set; }
-  
+  private readonly IPublisher _publisher;
+
+  public PasteWindowViewModel(IPublisher publisher)
+  {
+    _publisher = publisher;
+  }
+
 
   private Action? _hideWindow;
   
@@ -22,9 +28,7 @@ internal partial class PasteWindowViewModel : IWindowAware
   [ICommand]
   private void PasteData()
   {
-    PasteResult = null;
-    // todo: get data
-    PasteResult = new("result");
     _hideWindow?.Invoke();
+    _publisher.Publish(new PasteWindowResult("test paste"));
   }
 }
