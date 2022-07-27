@@ -18,15 +18,12 @@ namespace Tum4ik.JustClipboardManager;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application, ISingleInstance
+public partial class App : ISingleInstance
 {
   [STAThread]
   public static void Main(string[] args)
   {
-    var app = new App
-    {
-      ShutdownMode = ShutdownMode.OnExplicitShutdown
-    };
+    var app = new App();
 
     var isFirstInstance = app.InitializeAsFirstInstance("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
     if (!isFirstInstance)
@@ -34,6 +31,7 @@ public partial class App : Application, ISingleInstance
       return;
     }
 
+    app.InitializeComponent();
     app.DispatcherUnhandledException += (s, e) =>
     {
       Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
@@ -50,15 +48,11 @@ public partial class App : Application, ISingleInstance
   }
 
 
-  public IConfiguration Configuration { get; }
-  public IServiceProvider ServiceProvider { get; }
+  private IConfiguration? _configuration;
+  public IConfiguration Configuration => _configuration ??= ConfigureAppConfiguration();
 
-
-  public App()
-  {
-    Configuration = ConfigureAppConfiguration();
-    ServiceProvider = ConfigureServices(Configuration);
-  }
+  private IServiceProvider? _serviceProvider;
+  public IServiceProvider ServiceProvider => _serviceProvider ??= ConfigureServices(Configuration);
 
 
   protected override void OnStartup(StartupEventArgs e)
@@ -81,7 +75,7 @@ public partial class App : Application, ISingleInstance
   }
 
 
-  private IConfiguration ConfigureAppConfiguration()
+  private static IConfiguration ConfigureAppConfiguration()
   {
     var assembly = Assembly.GetExecutingAssembly();
     var appsettingsResourceName = assembly.GetManifestResourceNames().Single(n => n.EndsWith("appsettings.json"));
@@ -96,7 +90,7 @@ public partial class App : Application, ISingleInstance
   }
 
 
-  private IServiceProvider ConfigureServices(IConfiguration configuration)
+  private static IServiceProvider ConfigureServices(IConfiguration configuration)
   {
     var services = new ServiceCollection();
 

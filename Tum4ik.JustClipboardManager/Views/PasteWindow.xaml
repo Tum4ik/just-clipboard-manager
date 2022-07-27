@@ -4,14 +4,70 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
+        xmlns:system="clr-namespace:System;assembly=netstandard"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
-        Height="450" Width="800"
-        Topmost="True">
-  <Grid>
-    <Button Width="100" Height="60"
-            Content="Paste test data"
-            HorizontalAlignment="Center" VerticalAlignment="Center"
-            Command="{Binding PasteDataCommand}"/>
-  </Grid>
+        Topmost="True"
+        ShowInTaskbar="False"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        SizeToContent="WidthAndHeight">
+  <Border Width="300"
+          MaxHeight="300"
+          CornerRadius="4"
+          BorderThickness="1"
+          BorderBrush="{DynamicResource PasteWindowBorderBrush}"
+          Background="{DynamicResource PasteWindowBackgroundBrush}"
+          Margin="8"
+          Padding="8"
+          Effect="{StaticResource DefaultDropShadowEffect}">
+    <DockPanel>
+      <Grid DockPanel.Dock="Top">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Text="Search" Margin="0, 0, 8, 0" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" />
+      </Grid>
+      <ListBox Margin="0, 8, 0, 0">
+        <i:Interaction.Triggers>
+          <i:EventTrigger EventName="SelectionChanged">
+            <i:InvokeCommandAction Command="{Binding PasteDataCommand}" 
+                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}"/>
+          </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <ListBox.Resources>
+          <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Cursor" Value="Hand"/>
+          </Style>
+        </ListBox.Resources>
+        <ListBox.ItemsSource>
+          <x:Array Type="{x:Type system:String}">
+            <system:String>First</system:String>
+            <system:String>Second</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+            <system:String>Third</system:String>
+          </x:Array>
+        </ListBox.ItemsSource>
+      </ListBox>
+    </DockPanel>
+  </Border>
 </Window>

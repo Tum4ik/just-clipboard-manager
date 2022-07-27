@@ -5,4 +5,11 @@
     <Setter Property="AllowsTransparency" Value="True"/>
     <Setter Property="SizeToContent" Value="WidthAndHeight"/>
   </Style>
+
+  <DropShadowEffect x:Key="DefaultDropShadowEffect" 
+                    Color="Black"
+                    Opacity=".3"
+                    BlurRadius="8"
+                    ShadowDepth="2"
+                    RenderingBias="Quality"/>
 </ResourceDictionary>

@@ -26,9 +26,9 @@ internal partial class PasteWindowViewModel : IWindowAware
 
 
   [ICommand]
-  private void PasteData()
+  private void PasteData(string data)
   {
     _hideWindow?.Invoke();
-    _publisher.Publish(new PasteWindowResult("test paste"));
+    _publisher.Publish(new PasteWindowResult(data));
   }
 }
