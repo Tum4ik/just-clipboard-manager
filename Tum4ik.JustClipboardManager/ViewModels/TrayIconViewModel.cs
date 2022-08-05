@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using PubSub;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.EventPayloads;
-using Tum4ik.JustClipboardManager.Models;
 using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
@@ -27,7 +27,6 @@ internal partial class TrayIconViewModel
     _pasteService = pasteService;
     _subscriber = subscriber;
 
-    _keyboardHookService.Start(_pasteWindowService.GetWindowHandle());
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKey);
   }
@@ -36,7 +35,6 @@ internal partial class TrayIconViewModel
   [ICommand]
   private void Exit()
   {
-    _keyboardHookService.Stop();
     Application.Current.Shutdown();
   }
 

@@ -3,45 +3,21 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Interop;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Exceptions;
-using Tum4ik.JustClipboardManager.Models;
 
 namespace Tum4ik.JustClipboardManager.Services;
-internal class KeyboardHookService : IKeyboardHookService
+internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
 {
-  private IntPtr _windowHandle;
-  private HwndSource? _hwndSource;
-  private bool _isStarted;
+  public KeyboardHookService(IPasteWindowService pasteWindowService)
+  {
+    _windowHandle = pasteWindowService.WindowHandle;
+  }
+
+
+  private readonly IntPtr _windowHandle;
   private readonly Dictionary<KeybindDescriptor, int> _registeredAtoms = new();
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
-
-
-  public void Start(IntPtr windowHandle)
-  {
-    if (_isStarted)
-    {
-      return;
-    }
-
-    _windowHandle = windowHandle;
-    _hwndSource = HwndSource.FromHwnd(_windowHandle);
-    _hwndSource.AddHook(HwndHook);
-    _isStarted = true;
-  }
-
-
-  public void Stop()
-  {
-    if (!_isStarted)
-    {
-      return;
-    }
-
-    UnregisterAll();
-    _hwndSource?.RemoveHook(HwndHook);
-    _isStarted = false;
-  }
 
 
   public void RegisterHotKey(KeybindDescriptor descriptor, Action action)
@@ -99,7 +75,7 @@ internal class KeyboardHookService : IKeyboardHookService
   }
 
 
-  private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+  public IntPtr HwndHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
   {
     switch (msg)
     {
@@ -108,11 +84,16 @@ internal class KeyboardHookService : IKeyboardHookService
         if (_registeredActionCallbacks.TryGetValue(atom, out var action))
         {
           action.DynamicInvoke();
-          handled = true;
         }
         break;
     }
     return IntPtr.Zero;
+  }
+
+
+  public void Dispose()
+  {
+    UnregisterAll();
   }
 
 
@@ -123,8 +104,8 @@ internal class KeyboardHookService : IKeyboardHookService
   private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
   [DllImport("kernel32.dll")]
-  public static extern int GlobalAddAtom(string name);
+  private static extern int GlobalAddAtom(string name);
 
   [DllImport("kernel32.dll")]
-  public static extern int GlobalDeleteAtom(int nAtom);
+  private static extern int GlobalDeleteAtom(int nAtom);
 }

@@ -1,13 +1,16 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PubSub;
 using SingleInstanceCore;
+using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
@@ -31,13 +34,14 @@ public partial class App : ISingleInstance
       return;
     }
 
-    app.InitializeComponent();
     app.DispatcherUnhandledException += (s, e) =>
     {
       Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
+      Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
       e.Handled = true;
       app.Shutdown();
     };
+    app.InitializeComponent();
     app.Run();
   }
 
@@ -51,7 +55,7 @@ public partial class App : ISingleInstance
   private IConfiguration? _configuration;
   public IConfiguration Configuration => _configuration ??= ConfigureAppConfiguration();
 
-  private IServiceProvider? _serviceProvider;
+  private ServiceProvider? _serviceProvider;
   public IServiceProvider ServiceProvider => _serviceProvider ??= ConfigureServices(Configuration);
 
 
@@ -62,13 +66,14 @@ public partial class App : ISingleInstance
     base.OnStartup(e);
 
     var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
+    var hookService = ServiceProvider.GetRequiredService<GeneralHookService>();
+    var clipboardService = ServiceProvider.GetRequiredService<IClipboardService>();
   }
 
 
   protected override void OnExit(ExitEventArgs e)
   {
-    var keyboardHookService = ServiceProvider.GetRequiredService<IKeyboardHookService>();
-    keyboardHookService.Stop();
+    _serviceProvider?.Dispose();
     SingleInstance.Cleanup();
 
     base.OnExit(e);
@@ -85,23 +90,33 @@ public partial class App : ISingleInstance
     return new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
       .AddJsonStream(appsettingsStream)
-      .AddJsonFile("appsettings.Development.json", true)
+      .AddUserSecrets(Assembly.GetExecutingAssembly())
       .Build();
   }
 
 
-  private static IServiceProvider ConfigureServices(IConfiguration configuration)
+  private static ServiceProvider ConfigureServices(IConfiguration configuration)
   {
     var services = new ServiceCollection();
 
     services
       .AddSingleton(configuration)
+      .AddDbContext<AppDbContext>((sp, o) =>
+      {
+        var configuration = sp.GetRequiredService<IConfiguration>();
+        o.UseSqlite(configuration["SqlightConnectionString"])
+         .UseLazyLoadingProxies();
+      })
       .AddSingleton<IPubSubPipelineFactory, PubSubPipelineFactory>()
       .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetPublisher())
       .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetSubscriber())
+      .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
+      .AddSingleton<IClipboardHookService, ClipboardHookService>()
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
+      .AddSingleton<IClipboard, ClipboardWrapper>()
+      .AddSingleton<IClipboardService, ClipboardService>()
       .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 

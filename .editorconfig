@@ -324,3 +324,6 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 # Warnings Suppressing        #
 ###############################
 [*.cs]
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none

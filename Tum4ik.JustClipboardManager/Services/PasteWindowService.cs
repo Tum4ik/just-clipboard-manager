@@ -10,13 +10,11 @@ internal class PasteWindowService : IPasteWindowService
   public PasteWindowService(PasteWindow pasteWindow)
   {
     _pasteWindow = pasteWindow;
+    WindowHandle = new WindowInteropHelper(_pasteWindow).EnsureHandle();
   }
 
 
-  public IntPtr GetWindowHandle()
-  {
-    return new WindowInteropHelper(_pasteWindow).EnsureHandle();
-  }
+  public IntPtr WindowHandle { get; }
 
 
   public void ShowWindow()

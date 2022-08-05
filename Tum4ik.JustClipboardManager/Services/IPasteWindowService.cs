@@ -3,6 +3,6 @@ using System;
 namespace Tum4ik.JustClipboardManager.Services;
 internal interface IPasteWindowService
 {
-  IntPtr GetWindowHandle();
+  public IntPtr WindowHandle { get; }
   void ShowWindow();
 }

@@ -9,7 +9,7 @@ namespace Tum4ik.SorceGenerators.Templates
     public static string StaticClassInterfaceAndImplementation(ComponentInfo component)
     {
       var interfaceMethodsSeparator = Environment.NewLine + new string(' ', 4);
-      var implementationMethodsSeparator = Environment.NewLine + Environment.NewLine;
+      var implementationMethodsSeparator = Environment.NewLine;
       var interfaceMethods = new List<string>();
       var implementationMethods = new List<string>();
 
@@ -21,11 +21,11 @@ namespace Tum4ik.SorceGenerators.Templates
 
         interfaceMethods.Add($"{method.ReturnTypeFullName} {method.MethodName}({parameters});");
 
-        implementationMethods.Add($@"public {method.ReturnTypeFullName} {method.MethodName}({parameters})
+        implementationMethods.Add($@"
+    public {method.ReturnTypeFullName} {method.MethodName}({parameters})
     {{
       {(method.ReturnTypeFullName == "void" ? string.Empty : "return ")}{component.StaticClassFullName}.{method.MethodName}({parameterNames});
-    }}
-");
+    }}");
       }
 
       return $@"namespace {component.Namespace}
