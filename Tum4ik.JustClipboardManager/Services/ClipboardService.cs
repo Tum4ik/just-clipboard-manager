@@ -1,34 +1,32 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using PubSub;
+using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
-using Tum4ik.JustClipboardManager.EventPayloads;
+using Tum4ik.JustClipboardManager.Events;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
 {
   private readonly IClipboard _clipboard;
-  private readonly ISubscriber _subscriber;
   private readonly AppDbContext _dbContext;
 
   public ClipboardService(IClipboard clipboard,
-                          ISubscriber subscriber,
+                          IEventSubscriber eventSubscriber,
                           AppDbContext dbContext)
   {
     _clipboard = clipboard;
-    _subscriber = subscriber;
     _dbContext = dbContext;
 
-    subscriber.Subscribe<ClipboardChanged>(this, OnClipboardChanged);
+    eventSubscriber.Subscribe<ClipboardChangedEvent>(OnClipboardChanged, ThreadOption.MainThread);
   }
 
 
   private bool _clipboardChangedByThisService;
 
 
-  private async void OnClipboardChanged(ClipboardChanged clipboardChanged) // TODO: use Task-based handler
+  private void OnClipboardChanged(ClipboardChangedEvent clipboardChanged)
   {
     if (_clipboardChangedByThisService)
     {

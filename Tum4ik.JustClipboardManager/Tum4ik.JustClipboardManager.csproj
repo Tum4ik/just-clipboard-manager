@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -32,12 +32,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="PubSub" Version="4.0.2" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Tum4ik.Attributes\Tum4ik.Attributes.csproj" />
+    <ProjectReference Include="..\Tum4ik.EventAggregator\Tum4ik.EventAggregator.csproj" />
     <ProjectReference Include="..\Tum4ik.SorceGenerators\Tum4ik.SorceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 

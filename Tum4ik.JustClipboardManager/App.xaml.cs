@@ -8,8 +8,8 @@ using Microsoft.AppCenter.Crashes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PubSub;
 using SingleInstanceCore;
+using Tum4ik.EventAggregator.Extensions;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
@@ -107,9 +107,7 @@ public partial class App : ISingleInstance
         o.UseSqlite(configuration["SqlightConnectionString"])
          .UseLazyLoadingProxies();
       })
-      .AddSingleton<IPubSubPipelineFactory, PubSubPipelineFactory>()
-      .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetPublisher())
-      .AddSingleton(sp => sp.GetRequiredService<IPubSubPipelineFactory>().GetSubscriber())
+      .AddEventAggregator()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()

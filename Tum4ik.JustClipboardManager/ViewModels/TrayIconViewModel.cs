@@ -1,11 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using PubSub;
+using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data.Models;
-using Tum4ik.JustClipboardManager.EventPayloads;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
@@ -15,17 +16,17 @@ internal partial class TrayIconViewModel
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
-  private readonly ISubscriber _subscriber;
+  private readonly IEventSubscriber _eventSubscriber;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
-                           ISubscriber subscriber)
+                           IEventSubscriber eventSubscriber)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
-    _subscriber = subscriber;
+    _eventSubscriber = eventSubscriber;
 
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKey);
@@ -39,15 +40,26 @@ internal partial class TrayIconViewModel
   }
 
 
-  private void HandleInsertHotKey()
+  private TaskCompletionSource<string>? _tcs;
+
+
+  private async Task HandleInsertHotKey()
   {
     var targetWindowToPaste = GetForegroundWindow();
-    _subscriber.Subscribe<PasteWindowResult>(this, r =>
-    {
-      _subscriber.Unsubscribe<PasteWindowResult>(this);
-      _pasteService.PasteData(targetWindowToPaste, r.Data);
-    });
+    _tcs = new();
+    _eventSubscriber.Subscribe<PasteWindowResultEvent>(HandlePasteWindowResult);
     _pasteWindowService.ShowWindow();
+
+    var data = await _tcs.Task;
+    _tcs = null;
+    _pasteService.PasteData(targetWindowToPaste, data);
+  }
+
+
+  private void HandlePasteWindowResult(PasteWindowResultEvent result)
+  {
+    _eventSubscriber.Unsubscribe<PasteWindowResultEvent>(HandlePasteWindowResult);
+    _tcs?.SetResult(result.Payload);
   }
 
 
