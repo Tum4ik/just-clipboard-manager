@@ -3,9 +3,8 @@ using System.Reflection;
 namespace Tum4ik.EventAggregator.Event;
 internal class EventHandlerInfo
 {
-  public EventHandlerInfo(Type eventType, Delegate handlerAction, ThreadOption threadOption, bool keepHandlerAlive)
+  public EventHandlerInfo(Delegate handlerAction, ThreadOption threadOption, bool keepHandlerAlive)
   {
-    EventType = eventType;
     ThreadOption = threadOption;
     if (keepHandlerAlive)
     {
@@ -26,7 +25,6 @@ internal class EventHandlerInfo
   private readonly Type? _delegateType;
 
 
-  public Type EventType { get; }
   public Delegate? HandlerAction => _handlerAction ?? GetHandlerAction();
   public ThreadOption ThreadOption { get; }
   public bool IsAlive => _handlerAction is not null || (_weakReference is not null && _weakReference.IsAlive);

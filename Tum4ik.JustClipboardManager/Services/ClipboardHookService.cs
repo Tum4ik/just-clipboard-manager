@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Events;
@@ -6,12 +5,12 @@ using Tum4ik.JustClipboardManager.Events;
 namespace Tum4ik.JustClipboardManager.Services;
 internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 {
-  private readonly IEventPublisher _eventPublisher;
+  private readonly IEventAggregator _eventAggregator;
 
   public ClipboardHookService(IPasteWindowService pasteWindowService,
-                              IEventPublisher eventPublisher)
+                              IEventAggregator eventAggregator)
   {
-    _eventPublisher = eventPublisher;
+    _eventAggregator = eventAggregator;
 
     _windowHandle = pasteWindowService.WindowHandle;
     _nextClipboardViewerHandle = SetClipboardViewer(_windowHandle);
@@ -47,7 +46,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 
   private void OnClipboardChanged()
   {
-    _eventPublisher.Publish(new ClipboardChangedEvent());
+    _eventAggregator.GetEvent<ClipboardChangedEvent>().Publish();
   }
 
 

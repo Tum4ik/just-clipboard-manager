@@ -1,6 +1,6 @@
 using System.IO;
-using System.Linq;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -13,20 +13,21 @@ internal class ClipboardService : IClipboardService
   private readonly AppDbContext _dbContext;
 
   public ClipboardService(IClipboard clipboard,
-                          IEventSubscriber eventSubscriber,
+                          IEventAggregator eventAggregator,
                           AppDbContext dbContext)
   {
     _clipboard = clipboard;
     _dbContext = dbContext;
 
-    eventSubscriber.Subscribe<ClipboardChangedEvent>(OnClipboardChanged, ThreadOption.MainThread);
+    eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.MainThread);
   }
 
 
+  private readonly SemaphoreSlim _semaphore = new(1, 1);
   private bool _clipboardChangedByThisService;
 
 
-  private void OnClipboardChanged(ClipboardChangedEvent clipboardChanged)
+  private async Task OnClipboardChanged()
   {
     if (_clipboardChangedByThisService)
     {
@@ -35,28 +36,38 @@ internal class ClipboardService : IClipboardService
 
     var dataObject = _clipboard.GetDataObject();
     var formats = dataObject.GetFormats();
-
-    var dbFormats = _dbContext.ClipTypes
-      .Where(ct => formats.Contains(ct.Name))
-      .ToList();
-
-    var formatsToCreate = formats.Except(dbFormats.Select(dbf => dbf.Name));
-    foreach (var newFormat in formatsToCreate)
-    {
-      var newClipType = new ClipType { Name = newFormat };
-      _dbContext.ClipTypes.Add(newClipType);
-      dbFormats.Add(newClipType);
-    }
-
     var clipData = GetDataObjectBytes(dataObject);
-    var newClip = new Clip
-    {
-      ClipTypes = dbFormats,
-      Data = clipData
-    };
 
-    _dbContext.Clips.Add(newClip);
-    _dbContext.SaveChanges();
+    try
+    {
+      await _semaphore.WaitAsync().ConfigureAwait(false);
+
+      var dbFormats = await _dbContext.ClipTypes
+        .Where(ct => formats.Contains(ct.Name))
+        .ToListAsync()
+        .ConfigureAwait(false);
+
+      var formatsToCreate = formats.Except(dbFormats.Select(dbf => dbf.Name));
+      foreach (var newFormat in formatsToCreate)
+      {
+        var newClipType = new ClipType { Name = newFormat };
+        await _dbContext.ClipTypes.AddAsync(newClipType).ConfigureAwait(false);
+        dbFormats.Add(newClipType);
+      }
+      
+      var newClip = new Clip
+      {
+        ClipTypes = dbFormats,
+        Data = clipData
+      };
+
+      await _dbContext.Clips.AddAsync(newClip).ConfigureAwait(false);
+      await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+    }
+    finally
+    {
+      _semaphore.Release();
+    }
   }
 
 

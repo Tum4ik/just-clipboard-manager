@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -16,17 +14,17 @@ internal partial class TrayIconViewModel
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
-  private readonly IEventSubscriber _eventSubscriber;
+  private readonly IEventAggregator _eventAggregator;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
-                           IEventSubscriber eventSubscriber)
+                           IEventAggregator eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
-    _eventSubscriber = eventSubscriber;
+    _eventAggregator = eventAggregator;
 
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKey);
@@ -47,7 +45,9 @@ internal partial class TrayIconViewModel
   {
     var targetWindowToPaste = GetForegroundWindow();
     _tcs = new();
-    _eventSubscriber.Subscribe<PasteWindowResultEvent>(HandlePasteWindowResult);
+    _eventAggregator
+      .GetEvent<PasteWindowResultEvent>()
+      .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
     _pasteWindowService.ShowWindow();
 
     var data = await _tcs.Task;
@@ -56,10 +56,10 @@ internal partial class TrayIconViewModel
   }
 
 
-  private void HandlePasteWindowResult(PasteWindowResultEvent result)
+  private void HandlePasteWindowResult(string result)
   {
-    _eventSubscriber.Unsubscribe<PasteWindowResultEvent>(HandlePasteWindowResult);
-    _tcs?.SetResult(result.Payload);
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
+    _tcs?.SetResult(result);
   }
 
 

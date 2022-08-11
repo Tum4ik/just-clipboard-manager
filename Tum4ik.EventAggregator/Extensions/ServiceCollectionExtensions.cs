@@ -5,9 +5,6 @@ public static class ServiceCollectionExtensions
 {
   public static IServiceCollection AddEventAggregator(this IServiceCollection services)
   {
-    return services
-      .AddSingleton<EventAggregator>()
-      .AddSingleton<IEventPublisher, EventPublisher>()
-      .AddSingleton<IEventSubscriber, EventSubscriber>();
+    return services.AddSingleton<IEventAggregator, EventAggregator>();
   }
 }

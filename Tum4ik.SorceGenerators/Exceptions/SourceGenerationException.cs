@@ -1,25 +1,23 @@
-using System;
 using System.Runtime.Serialization;
 
-namespace Tum4ik.SorceGenerators.Exceptions
+namespace Tum4ik.SorceGenerators.Exceptions;
+
+[Serializable]
+public class SourceGenerationException : Exception
 {
-  [Serializable]
-  public class SourceGenerationException : Exception
+  public SourceGenerationException()
   {
-    public SourceGenerationException()
-    {
-    }
+  }
 
-    public SourceGenerationException(string message) : base(message)
-    {
-    }
+  public SourceGenerationException(string message) : base(message)
+  {
+  }
 
-    public SourceGenerationException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
+  public SourceGenerationException(string message, Exception innerException) : base(message, innerException)
+  {
+  }
 
-    protected SourceGenerationException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
+  protected SourceGenerationException(SerializationInfo info, StreamingContext context) : base(info, context)
+  {
   }
 }
