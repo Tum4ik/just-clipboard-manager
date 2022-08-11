@@ -24,7 +24,7 @@ internal partial class PasteWindowViewModel : IWindowAware
   }
 
 
-  [ICommand]
+  [RelayCommand]
   private void PasteData(string data)
   {
     _hideWindow?.Invoke();

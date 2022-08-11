@@ -31,7 +31,7 @@ internal partial class TrayIconViewModel
   }
 
 
-  [ICommand]
+  [RelayCommand]
   private void Exit()
   {
     Application.Current.Shutdown();
