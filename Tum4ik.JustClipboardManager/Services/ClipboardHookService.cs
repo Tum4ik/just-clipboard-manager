@@ -14,11 +14,20 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 
     _windowHandle = pasteWindowService.WindowHandle;
     _nextClipboardViewerHandle = SetClipboardViewer(_windowHandle);
+
+    _timer.Elapsed += (s, e) => OnClipboardChanged();
   }
 
 
+  private static readonly object _locker = new();
   private readonly IntPtr _windowHandle;
   private IntPtr _nextClipboardViewerHandle;
+
+  private readonly System.Timers.Timer _timer = new System.Timers.Timer(500)
+  {
+    AutoReset = false,
+    Enabled = false
+  };
 
 
   public IntPtr HwndHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -26,7 +35,15 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
     switch (msg)
     {
       case 0x0308: // WM_DRAWCLIPBOARD
-        OnClipboardChanged();
+        // Very often the event raises several times in a raw, however it is the same clipboard change.
+        // To prevent that multiple raising of the same event the timer is used.
+        lock (_locker)
+        {
+          if (!_timer.Enabled)
+          {
+            _timer.Enabled = true;
+          }
+        }
         SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
         break;
       case 0x030D: // WM_CHANGECBCHAIN
@@ -47,6 +64,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
   private void OnClipboardChanged()
   {
     _eventAggregator.GetEvent<ClipboardChangedEvent>().Publish();
+    _timer.Enabled = false;
   }
 
 

@@ -1,6 +1,13 @@
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -23,11 +30,23 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private readonly SemaphoreSlim _semaphore = new(1, 1);
   private bool _clipboardChangedByThisService;
 
 
   private async Task OnClipboardChanged()
+  {
+    try
+    {
+      await SaveClipAsync().ConfigureAwait(false);
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e);
+    }
+  }
+
+
+  private async Task SaveClipAsync()
   {
     if (_clipboardChangedByThisService)
     {
@@ -36,46 +55,155 @@ internal class ClipboardService : IClipboardService
 
     var dataObject = _clipboard.GetDataObject();
     var formats = dataObject.GetFormats();
-    var clipData = GetDataObjectBytes(dataObject);
-
-    try
+    if (formats.Length == 0)
     {
-      await _semaphore.WaitAsync().ConfigureAwait(false);
+      return;
+    }
 
-      var dbFormats = await _dbContext.ClipTypes
-        .Where(ct => formats.Contains(ct.Name))
-        .ToListAsync()
-        .ConfigureAwait(false);
-
-      var formatsToCreate = formats.Except(dbFormats.Select(dbf => dbf.Name));
-      foreach (var newFormat in formatsToCreate)
+    var formattedDataObjects = new List<FormattedDataObject>();
+    var clipType = ClipType.Unrecognized;
+    var representationData = Array.Empty<byte>();
+    var eventProps = new Dictionary<string, string>();
+    for (var i = 0; i < formats.Length; i++)
+    {
+      var format = formats[i];
+      object data;
+      try
       {
-        var newClipType = new ClipType { Name = newFormat };
-        await _dbContext.ClipTypes.AddAsync(newClipType).ConfigureAwait(false);
-        dbFormats.Add(newClipType);
+        data = dataObject.GetData(format);
       }
-      
-      var newClip = new Clip
+      catch (COMException e)
       {
-        ClipTypes = dbFormats,
-        Data = clipData
-      };
+        Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
+        {
+          { "Message", e.Message },
+          { "Data Format", format }
+        });
+        continue;
+      }
 
-      await _dbContext.Clips.AddAsync(newClip).ConfigureAwait(false);
-      await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+      var dataDotnetType = data.GetType().ToString();
+      eventProps[format] = dataDotnetType;
+
+      if (clipType == ClipType.Unrecognized)
+      {
+        if (dataObject.GetDataPresent(DataFormats.UnicodeText))
+        {
+          clipType = ClipType.Text;
+          var representationDataObject = dataObject.GetData(DataFormats.UnicodeText);
+          representationData = GetStringBytes((string) representationDataObject);
+        }
+        else if (dataObject.GetDataPresent(DataFormats.Bitmap))
+        {
+          clipType = ClipType.Image;
+          var representationDataObject = dataObject.GetData(DataFormats.Bitmap);
+          representationData = GetInteropBitmapBytes((InteropBitmap) representationDataObject);
+        }
+        else if (dataObject.GetDataPresent(DataFormats.FileDrop))
+        {
+          clipType = ClipType.FileDropList;
+          var representationDataObject = dataObject.GetData(DataFormats.FileDrop);
+          representationData = GetStringArrayBytes((string[]) representationDataObject);
+        }
+        else if (dataObject.GetDataPresent(DataFormats.WaveAudio))
+        {
+          clipType = ClipType.Audio;
+          var representationDataObject = dataObject.GetData(DataFormats.WaveAudio);
+          representationData = GetMemoryStreamBytes((MemoryStream) representationDataObject);
+        }
+      }
+
+      var dataBytes = GetDataBytes(data);
+      if (dataBytes.Length > 0)
+      {
+        var formattedDataObject = new FormattedDataObject
+        {
+          Data = dataBytes,
+          DataDotnetType = data.GetType().ToString(),
+          Format = format,
+          FormatOrder = i
+        };
+        formattedDataObjects.Add(formattedDataObject);
+      }
     }
-    finally
+
+    if (clipType == ClipType.Unrecognized)
     {
-      _semaphore.Release();
+      Analytics.TrackEvent("Unrecognized Clip Type", eventProps);
     }
+
+    var clip = new Clip
+    {
+      ClipType = clipType,
+      FormattedDataObjects = formattedDataObjects,
+      RepresentationData = representationData
+    };
+
+    await _dbContext.Clips.AddAsync(clip).ConfigureAwait(false);
+    await _dbContext.SaveChangesAsync().ConfigureAwait(false);
   }
 
 
-  private static byte[] GetDataObjectBytes(object dataObject)
+  private static byte[] GetDataBytes(object data)
+  {
+    return data switch
+    {
+      string d => GetStringBytes(d),
+      string[] d => GetStringArrayBytes(d),
+      InteropBitmap d => GetInteropBitmapBytes(d),
+      Bitmap d => GetBitmapBytes(d),
+      MemoryStream d => GetMemoryStreamBytes(d),
+      _ => UnrecognizedTypeBytes(data)
+    };
+  }
+
+
+  private static byte[] GetStringBytes(string data)
+  {
+    return Encoding.UTF8.GetBytes(data);
+  }
+
+
+  private static byte[] GetStringArrayBytes(string[] data)
+  {
+    var str = string.Join(";", data);
+    return Encoding.UTF8.GetBytes(str);
+  }
+
+
+  private static byte[] GetInteropBitmapBytes(InteropBitmap data)
   {
     using var memoryStream = new MemoryStream();
-    JsonSerializer.Serialize(memoryStream, dataObject);
+    var bitmapEncoder = new PngBitmapEncoder();
+    bitmapEncoder.Frames.Add(BitmapFrame.Create(data));
+    bitmapEncoder.Save(memoryStream);
     return memoryStream.ToArray();
+  }
+
+
+  private static byte[] GetBitmapBytes(Bitmap data)
+  {
+    using var memoryStream = new MemoryStream();
+    data.Save(memoryStream, ImageFormat.Png);
+    return memoryStream.ToArray();
+  }
+
+
+  private static byte[] GetMemoryStreamBytes(MemoryStream data)
+  {
+    var bytes = data.ToArray();
+    data.Dispose();
+    return bytes;
+  }
+
+
+  private static byte[] UnrecognizedTypeBytes(object data)
+  {
+    Analytics.TrackEvent("Unable to save data", new Dictionary<string, string>
+    {
+      { "Data Type", data.GetType().ToString() }
+    });
+    return Array.Empty<byte>();
   }
 }
 
@@ -105,6 +233,6 @@ internal class ClipboardService : IClipboardService
 //| FileDrop            | System.String[] (Array of file paths) |
 //| EnhancedMetafile    | System.Drawing.Imaging.Metafile       |
 //| Dif                 | System.String                         |
-//| Dib                 | System.Windows.Interop.InteropBitmap  |
+//| Dib                 | System.IO.MemoryStream                |
 //| PenData             | System.IO.MemoryStream                |
 //+---------------------+---------------------------------------+

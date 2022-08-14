@@ -7,7 +7,7 @@ public abstract class PubSubEvent : EventBase
   }
 
 
-  protected internal override async void ExecuteHandler(Delegate handler, object? payload)
+  protected override async void ExecuteHandler(Delegate handler, object? payload)
   {
     switch (handler)
     {
@@ -65,7 +65,7 @@ public abstract class PubSubEvent<TPayload> : EventBase
   }
 
 
-  protected internal override async void ExecuteHandler(Delegate handler, object? payload)
+  protected override async void ExecuteHandler(Delegate handler, object? payload)
   {
     if (payload is null)
     {

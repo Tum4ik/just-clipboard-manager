@@ -5,7 +5,7 @@ public abstract class EventBase
   private readonly List<EventHandlerInfo> _handlers = new();
 
 
-  protected internal void PublishInternal(object? payload = null)
+  protected void PublishInternal(object? payload = null)
   {
     foreach (var handler in PruneAndGetAliveHanlers())
     {
@@ -38,10 +38,10 @@ public abstract class EventBase
   }
 
 
-  protected internal abstract void ExecuteHandler(Delegate handler, object? payload);
+  protected abstract void ExecuteHandler(Delegate handler, object? payload);
 
 
-  protected internal void SubscribeInternal(Delegate handler,
+  protected void SubscribeInternal(Delegate handler,
                                             ThreadOption threadOption = ThreadOption.PublisherThread,
                                             bool keepSubscriberAlive = false)
   {
@@ -53,7 +53,7 @@ public abstract class EventBase
   }
 
 
-  protected internal void UnsubscribeInternal(Delegate handler)
+  protected void UnsubscribeInternal(Delegate handler)
   {
     lock (_handlers)
     {

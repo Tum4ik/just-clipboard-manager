@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.SorceGenerators", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.Attributes", "Tum4ik.Attributes\Tum4ik.Attributes.csproj", "{750CEE32-6557-46F7-8BDF-BDC9DE8EEFEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tum4ik.EventAggregator", "Tum4ik.EventAggregator\Tum4ik.EventAggregator.csproj", "{E888701A-0BA2-4170-B62D-AB6027E3C886}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.EventAggregator", "Tum4ik.EventAggregator\Tum4ik.EventAggregator.csproj", "{E888701A-0BA2-4170-B62D-AB6027E3C886}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

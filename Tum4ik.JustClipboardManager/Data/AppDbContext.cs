@@ -11,7 +11,7 @@ internal class AppDbContext : DbContext
 
 
   public DbSet<Clip> Clips { get; set; } = null!;
-  public DbSet<ClipType> ClipTypes { get; set; } = null!;
+  public DbSet<FormattedDataObject> FormattedDataObjects { get; set; } = null!;
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,16 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tum4ik.JustClipboardManager.Data.Models;
 
-[Table("clips")]
+[Index(nameof(SearchLabel))]
 internal class Clip
 {
   public int Id { get; set; }
 
-  public byte[] Data { get; set; } = null!;
+  public ClipType ClipType { get; set; }
+  public byte[]? RepresentationData { get; set; }
+  public string? SearchLabel { get; set; }
   public DateTime ClippedAt { get; set; }
 
-  public virtual ICollection<ClipType> ClipTypes { get; set; } = null!;
+  public virtual ICollection<FormattedDataObject> FormattedDataObjects { get; set; } = null!;
+}
+
+
+internal enum ClipType
+{
+  Unrecognized, Text, Image, FileDropList, Audio
 }
