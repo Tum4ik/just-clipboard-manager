@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
-using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -54,7 +53,7 @@ internal class ClipboardService : IClipboardService
     }
 
     var dataObject = _clipboard.GetDataObject();
-    var formats = dataObject.GetFormats();
+    var formats = dataObject.GetFormats(false);
     if (formats.Length == 0)
     {
       return;
@@ -62,11 +61,20 @@ internal class ClipboardService : IClipboardService
 
     var formattedDataObjects = new List<FormattedDataObject>();
     var clipType = ClipType.Unrecognized;
+    string? searchLabel = null;
     var representationData = Array.Empty<byte>();
     var eventProps = new Dictionary<string, string>();
     for (var i = 0; i < formats.Length; i++)
     {
       var format = formats[i];
+      if (new[] {
+            DataFormats.EnhancedMetafile, DataFormats.MetafilePicture, "FileContents"
+          }.Contains(format))
+      {
+        // ignore unsupported formats
+        continue;
+      }
+
       object data;
       try
       {
@@ -76,13 +84,19 @@ internal class ClipboardService : IClipboardService
       {
         Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
         {
-          { "Message", e.Message },
-          { "Data Format", format }
+          { "Data Format / Message", $"{format} / {e.Message}" }
         });
         continue;
       }
 
-      var dataDotnetType = data.GetType().ToString();
+      var dataType = data.GetType();
+      if (dataType == typeof(Metafile))
+      {
+        // ignore unsupported types
+        continue;
+      }
+
+      var dataDotnetType = dataType.ToString();
       eventProps[format] = dataDotnetType;
 
       if (clipType == ClipType.Unrecognized)
@@ -90,26 +104,26 @@ internal class ClipboardService : IClipboardService
         if (dataObject.GetDataPresent(DataFormats.UnicodeText))
         {
           clipType = ClipType.Text;
-          var representationDataObject = dataObject.GetData(DataFormats.UnicodeText);
-          representationData = GetStringBytes((string) representationDataObject);
+          var text = (string) dataObject.GetData(DataFormats.UnicodeText);
+          searchLabel = text;
+          representationData = GetStringBytes(text);
         }
-        else if (dataObject.GetDataPresent(DataFormats.Bitmap))
+        else if (dataObject.GetDataPresent(typeof(Bitmap)))
         {
           clipType = ClipType.Image;
-          var representationDataObject = dataObject.GetData(DataFormats.Bitmap);
-          representationData = GetInteropBitmapBytes((InteropBitmap) representationDataObject);
+          var representationDataObject = dataObject.GetData(typeof(Bitmap));
+          representationData = GetBitmapBytes((Bitmap) representationDataObject);
         }
         else if (dataObject.GetDataPresent(DataFormats.FileDrop))
         {
           clipType = ClipType.FileDropList;
-          var representationDataObject = dataObject.GetData(DataFormats.FileDrop);
-          representationData = GetStringArrayBytes((string[]) representationDataObject);
+          var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
+          searchLabel = string.Join(";", filePaths);
+          representationData = GetStringArrayBytes(filePaths);
         }
         else if (dataObject.GetDataPresent(DataFormats.WaveAudio))
         {
           clipType = ClipType.Audio;
-          var representationDataObject = dataObject.GetData(DataFormats.WaveAudio);
-          representationData = GetMemoryStreamBytes((MemoryStream) representationDataObject);
         }
       }
 
@@ -119,7 +133,7 @@ internal class ClipboardService : IClipboardService
         var formattedDataObject = new FormattedDataObject
         {
           Data = dataBytes,
-          DataDotnetType = data.GetType().ToString(),
+          DataDotnetType = dataDotnetType,
           Format = format,
           FormatOrder = i
         };
@@ -136,7 +150,8 @@ internal class ClipboardService : IClipboardService
     {
       ClipType = clipType,
       FormattedDataObjects = formattedDataObjects,
-      RepresentationData = representationData
+      RepresentationData = representationData,
+      SearchLabel = searchLabel
     };
 
     await _dbContext.Clips.AddAsync(clip).ConfigureAwait(false);
@@ -150,7 +165,7 @@ internal class ClipboardService : IClipboardService
     {
       string d => GetStringBytes(d),
       string[] d => GetStringArrayBytes(d),
-      InteropBitmap d => GetInteropBitmapBytes(d),
+      BitmapSource d => GetBitmapSourceBytes(d),
       Bitmap d => GetBitmapBytes(d),
       MemoryStream d => GetMemoryStreamBytes(d),
       _ => UnrecognizedTypeBytes(data)
@@ -171,7 +186,7 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private static byte[] GetInteropBitmapBytes(InteropBitmap data)
+  private static byte[] GetBitmapSourceBytes(BitmapSource data)
   {
     using var memoryStream = new MemoryStream();
     var bitmapEncoder = new PngBitmapEncoder();
