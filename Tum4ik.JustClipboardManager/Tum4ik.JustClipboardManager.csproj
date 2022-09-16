@@ -40,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Tum4ik.Attributes\Tum4ik.Attributes.csproj" />
     <ProjectReference Include="..\Tum4ik.EventAggregator\Tum4ik.EventAggregator.csproj" />
+    <ProjectReference Include="..\Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj" />
     <ProjectReference Include="..\Tum4ik.SorceGenerators\Tum4ik.SorceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 

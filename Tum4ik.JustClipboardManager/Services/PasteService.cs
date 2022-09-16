@@ -6,11 +6,11 @@ using System.Windows.Input;
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PasteService : IPasteService
 {
-  private readonly IClipboard _clipboard;
+  private readonly IClipboardService _clipboardService;
 
-  public PasteService(IClipboard clipboard)
+  public PasteService(IClipboardService clipboardService)
   {
-    _clipboard = clipboard;
+    _clipboardService = clipboardService;
   }
 
 
@@ -21,7 +21,8 @@ internal class PasteService : IPasteService
       return;
     }
 
-    _clipboard.SetText(data);
+    //_clipboard.SetText(data);
+    //Clipboard.set
     SetForegroundWindow(targetWindowPtr);
     SetFocus(targetWindowPtr);
 

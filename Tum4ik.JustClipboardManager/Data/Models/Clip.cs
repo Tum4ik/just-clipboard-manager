@@ -18,5 +18,5 @@ internal class Clip
 
 internal enum ClipType
 {
-  Unrecognized, Text, Image, FileDropList, Audio
+  Unrecognized, Text, Image, Svg, SingleFile, FilesList
 }

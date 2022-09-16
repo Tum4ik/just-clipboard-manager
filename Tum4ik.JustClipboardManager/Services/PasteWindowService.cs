@@ -1,4 +1,3 @@
-using System;
 using System.Windows.Interop;
 using Tum4ik.JustClipboardManager.Views;
 

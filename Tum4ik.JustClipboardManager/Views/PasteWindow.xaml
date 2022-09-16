@@ -4,16 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
-        xmlns:system="clr-namespace:System;assembly=netstandard"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" 
+        xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" 
+        xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants" 
+        xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
+        IsVisibleChanged="This_IsVisibleChanged"
         Topmost="True"
         ShowInTaskbar="False"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        x:Name="This">
+  <Window.Resources>
+    <converters:BytesToStringConverter x:Key="BytesToStringConverter"/>
+    <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter"/>
+    <converters:BytesToFilesListConverter x:Key="BytesToFilesListConverter"/>
+
+    <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>
+  </Window.Resources>
+  <i:Interaction.Triggers>
+    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=This}">
+      <i:InvokeCommandAction Command="{Binding WindowVisibilityChangedCommand}"
+                             CommandParameter="{Binding Visibility, ElementName=This}"/>
+    </i:PropertyChangedTrigger>
+  </i:Interaction.Triggers>
   <Border Width="300"
           MaxHeight="300"
           CornerRadius="4"
@@ -30,9 +48,17 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="Search" Margin="0, 0, 8, 0" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" />
+        <TextBox Grid.Column="1" 
+                 Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
+                 VerticalContentAlignment="Center"
+                 Height="24"/>
       </Grid>
-      <ListBox Margin="0, 8, 0, 0">
+      <ListBox x:Name="_listBox" Margin="0, 8, 0, 0"
+               ItemsSource="{Binding Clips}"
+               ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
+               ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
+               ScrollViewer.CanContentScroll="False"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <i:Interaction.Triggers>
           <i:EventTrigger EventName="SelectionChanged">
             <i:InvokeCommandAction Command="{Binding PasteDataCommand}" 
@@ -42,31 +68,54 @@
         <ListBox.Resources>
           <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
           </Style>
+
+          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
+            <TextBlock Text="????"/>
+          </DataTemplate>
+          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
+            <Border Height="24" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
+              <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
+                         Margin="0, 4, 0, 4"/>
+            </Border>
+          </DataTemplate>
+          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeImage}">
+            <Image Source="{Binding RepresentationData, Converter={StaticResource BytesToImageSourceConverter}}"
+                   HorizontalAlignment="Left"
+                   Height="48"
+                   Stretch="Uniform"/>
+          </DataTemplate>
+          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeSingleFile}">
+            <Grid Height="24"
+                  ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+              </Grid.ColumnDefinitions>
+              <icons:SvgIcon Grid.Column="0" Icon="File" Width="14"  />
+              <TextBlock Grid.Column="1" Text="..." Margin="4, 0, 0, 0"
+                         VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="2" 
+                         Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Grid}}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Center"/>
+            </Grid>
+          </DataTemplate>
+          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeFilesList}">
+            <Grid Height="24" 
+                  ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToFilesListConverter}}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition/>
+              </Grid.ColumnDefinitions>
+              <icons:SvgIcon Grid.Column="0" Icon="Files" />
+              <TextBlock Grid.Column="1" Text="Files List" Margin="4, 0" 
+                         VerticalAlignment="Center"/>
+            </Grid>
+          </DataTemplate>
         </ListBox.Resources>
-        <ListBox.ItemsSource>
-          <x:Array Type="{x:Type system:String}">
-            <system:String>First</system:String>
-            <system:String>Second</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-            <system:String>Third</system:String>
-          </x:Array>
-        </ListBox.ItemsSource>
       </ListBox>
     </DockPanel>
   </Border>
