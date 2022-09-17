@@ -1,7 +1,7 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Windows;
 using System.Windows.Input;
+using Castle.Core.Internal;
+using Tum4ik.JustClipboardManager.Data.Models;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PasteService : IPasteService
@@ -14,15 +14,14 @@ internal class PasteService : IPasteService
   }
 
 
-  public void PasteData(IntPtr targetWindowPtr, string? data)
+  public void PasteData(IntPtr targetWindowPtr, ICollection<FormattedDataObject> data)
   {
-    if (data is null)
+    if (data.IsNullOrEmpty())
     {
       return;
     }
 
-    //_clipboard.SetText(data);
-    //Clipboard.set
+    _clipboardService.Paste(data);
     SetForegroundWindow(targetWindowPtr);
     SetFocus(targetWindowPtr);
 

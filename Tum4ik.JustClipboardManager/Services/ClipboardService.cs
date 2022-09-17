@@ -29,7 +29,27 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private bool _clipboardChangedByThisService;
+  /// <summary>
+  /// When this service modifies the clipboard with data to be pasted, the notification about changing data in the 
+  /// system clipboard will be sent and the <see cref="OnClipboardChanged"/> method will be called.
+  /// To prevent that this marker is used. If the data object contains this marker, it means the data is pushed to
+  /// the system clipboard by this service and that must not be processed.
+  /// </summary>
+  private const string ChangeMarker = "JCM_change_{AD3D5E08-A1FA-4602-AF24-94C4ADDBCA78}";
+
+
+  public void Paste(ICollection<FormattedDataObject> formattedDataObjects)
+  {
+    var dataObject = new DataObject();
+    foreach (var formattedDataObject in formattedDataObjects)
+    {
+      var data = GetDataFromBytes(formattedDataObject);
+      dataObject.SetData(formattedDataObject.Format, data);
+    }
+
+    dataObject.SetData(ChangeMarker, new());
+    _clipboard.SetDataObject(dataObject);
+  }
 
 
   private async Task OnClipboardChanged()
@@ -47,14 +67,9 @@ internal class ClipboardService : IClipboardService
 
   private async Task SaveClipAsync()
   {
-    if (_clipboardChangedByThisService)
-    {
-      return;
-    }
-
     var dataObject = _clipboard.GetDataObject();
     var formats = dataObject.GetFormats(false);
-    if (formats.Length == 0)
+    if (formats.Length == 0 || formats.Contains(ChangeMarker))
     {
       return;
     }
@@ -186,10 +201,29 @@ internal class ClipboardService : IClipboardService
     };
   }
 
+  private static object? GetDataFromBytes(FormattedDataObject formattedDataObject)
+  {
+    var data = formattedDataObject.Data;
+    return formattedDataObject.DataDotnetType switch
+    {
+      "System.String" => GetStringFromBytes(data),
+      "System.String[]" => GetStringArrayFromBytes(data),
+      "System.Windows.Interop.InteropBitmap"=> GetBitmapSourceFromBytes(data),
+      "System.Drawing.Bitmap" => GetBitmapFromBytes(data),
+      "System.IO.MemoryStream" => GetMemoryStreamFromBytes(data),
+      _ => UnrecognizedDotnetType(formattedDataObject.DataDotnetType)
+    };
+  }
+
 
   private static byte[] GetStringBytes(string data)
   {
     return Encoding.UTF8.GetBytes(data);
+  }
+
+  private static string GetStringFromBytes(byte[] bytes)
+  {
+    return Encoding.UTF8.GetString(bytes);
   }
 
 
@@ -197,6 +231,12 @@ internal class ClipboardService : IClipboardService
   {
     var str = string.Join(";", data);
     return Encoding.UTF8.GetBytes(str);
+  }
+
+  private static string[] GetStringArrayFromBytes(byte[] bytes)
+  {
+    var str = Encoding.UTF8.GetString(bytes);
+    return str.Split(";");
   }
 
 
@@ -209,12 +249,24 @@ internal class ClipboardService : IClipboardService
     return memoryStream.ToArray();
   }
 
+  private static BitmapSource GetBitmapSourceFromBytes(byte[] bytes)
+  {
+    using var memoryStream = new MemoryStream(bytes);
+    return BitmapFrame.Create(memoryStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+  }
+
 
   private static byte[] GetBitmapBytes(Bitmap data)
   {
     using var memoryStream = new MemoryStream();
     data.Save(memoryStream, ImageFormat.Png);
     return memoryStream.ToArray();
+  }
+
+  private static Bitmap GetBitmapFromBytes(byte[] bytes)
+  {
+    using var memoryStream = new MemoryStream(bytes);
+    return new(memoryStream);
   }
 
 
@@ -225,6 +277,11 @@ internal class ClipboardService : IClipboardService
     return bytes;
   }
 
+  private static MemoryStream GetMemoryStreamFromBytes(byte[] bytes)
+  {
+    return new(bytes);
+  }
+
 
   private static byte[] UnrecognizedTypeBytes(object data)
   {
@@ -233,6 +290,15 @@ internal class ClipboardService : IClipboardService
       { "Data Type", data.GetType().ToString() }
     });
     return Array.Empty<byte>();
+  }
+
+  private static object? UnrecognizedDotnetType(string name)
+  {
+    Analytics.TrackEvent("Unable to load data", new Dictionary<string, string>
+    {
+      { ".NET Type", name }
+    });
+    return null;
   }
 }
 

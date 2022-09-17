@@ -38,7 +38,7 @@ internal partial class TrayIconViewModel
   }
 
 
-  private TaskCompletionSource<string>? _tcs;
+  private TaskCompletionSource<ICollection<FormattedDataObject>>? _tcs;
 
 
   private async Task HandleInsertHotKey()
@@ -56,10 +56,10 @@ internal partial class TrayIconViewModel
   }
 
 
-  private void HandlePasteWindowResult(string result)
+  private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
   {
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
-    _tcs?.SetResult(result);
+    _tcs?.SetResult(formattedDataObjects);
   }
 
 

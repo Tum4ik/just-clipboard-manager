@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Mvvm;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
@@ -83,10 +84,16 @@ internal partial class PasteWindowViewModel : IWindowAware
 
 
   [RelayCommand]
-  private void PasteData(Clip data)
+  private void PasteData(Clip? clip)
   {
     _hideWindow?.Invoke();
-    //_eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(data);
+    if (clip is null)
+    {
+      return;
+    }
+
+    var dataObjects = clip.FormattedDataObjects;
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(dataObjects);
   }
 
 
