@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <InformationalVersion>dev</InformationalVersion>
     <Version>0.0.0.0</Version>
+    <AssemblyName>JustClipboardManager</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>

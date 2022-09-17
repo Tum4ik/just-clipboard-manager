@@ -1,3 +1,5 @@
+using System.Configuration;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using Microsoft.AppCenter;
@@ -101,8 +103,14 @@ public partial class App : ISingleInstance
       .AddSingleton(configuration)
       .AddDbContext<AppDbContext>((sp, o) =>
       {
-        var configuration = sp.GetRequiredService<IConfiguration>();
-        o.UseSqlite(configuration["SqlightConnectionString"])
+        var dbFileDir = Path.GetDirectoryName(
+          System.Configuration.ConfigurationManager
+            .OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal)
+            .FilePath
+        )!;
+        Directory.CreateDirectory(dbFileDir);
+        var dbFilePath = Path.Combine(dbFileDir, "clips.db");
+        o.UseSqlite($"Data Source={dbFilePath}")
          .UseLazyLoadingProxies();
       })
       .AddEventAggregator()
