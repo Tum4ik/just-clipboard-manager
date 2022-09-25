@@ -40,7 +40,7 @@ internal class ClipboardService : IClipboardService
 
   public void Paste(ICollection<FormattedDataObject> formattedDataObjects)
   {
-    var dataObject = new DataObject();
+    var dataObject = new DataObject(new OrderedDataStore());
     foreach (var formattedDataObject in formattedDataObjects)
     {
       var data = GetDataFromBytes(formattedDataObject);

@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using Castle.Core.Internal;
 using CommunityToolkit.Mvvm.Input;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -52,7 +53,10 @@ internal partial class TrayIconViewModel
 
     var data = await _tcs.Task;
     _tcs = null;
-    _pasteService.PasteData(targetWindowToPaste, data);
+    if (!data.IsNullOrEmpty())
+    {
+      _pasteService.PasteData(targetWindowToPaste, data);
+    }
   }
 
 

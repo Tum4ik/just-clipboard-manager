@@ -12,7 +12,6 @@
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         IsVisibleChanged="This_IsVisibleChanged"
-        Topmost="True"
         ShowInTaskbar="False"
         WindowStyle="None"
         Background="Transparent"
@@ -31,6 +30,9 @@
       <i:InvokeCommandAction Command="{Binding WindowVisibilityChangedCommand}"
                              CommandParameter="{Binding Visibility, ElementName=This}"/>
     </i:PropertyChangedTrigger>
+    <i:EventTrigger EventName="Deactivated">
+      <i:InvokeCommandAction Command="{Binding WindowDeactivatedCommand}"/>
+    </i:EventTrigger>
   </i:Interaction.Triggers>
   <Border Width="300"
           MaxHeight="300"

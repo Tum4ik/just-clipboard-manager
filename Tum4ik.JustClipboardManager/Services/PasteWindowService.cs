@@ -19,5 +19,6 @@ internal class PasteWindowService : IPasteWindowService
   public void ShowWindow()
   {
     _pasteWindow.Show();
+    _pasteWindow.Activate();
   }
 }

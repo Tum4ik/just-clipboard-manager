@@ -39,6 +39,8 @@ internal partial class PasteWindowViewModel : IWindowAware
   private const int ClipsLoadBatchSize = 10;
   private int _loadedClipsCount;
 
+  private bool _windowDeactivationTriggeredByDataPasting;
+
   public ObservableCollection<Clip> Clips { get; } = new();
 
   
@@ -73,6 +75,7 @@ internal partial class PasteWindowViewModel : IWindowAware
   {
     if (visibility == Visibility.Visible)
     {
+      _windowDeactivationTriggeredByDataPasting = false;
       _loadedClipsCount = await LoadClips(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }
     else
@@ -84,8 +87,22 @@ internal partial class PasteWindowViewModel : IWindowAware
 
 
   [RelayCommand]
+  private void WindowDeactivated()
+  {
+    if (_windowDeactivationTriggeredByDataPasting)
+    {
+      return;
+    }
+
+    _hideWindow?.Invoke();
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(Array.Empty<FormattedDataObject>());
+  }
+
+
+  [RelayCommand]
   private void PasteData(Clip? clip)
   {
+    _windowDeactivationTriggeredByDataPasting = true;
     _hideWindow?.Invoke();
     if (clip is null)
     {
@@ -107,6 +124,7 @@ internal partial class PasteWindowViewModel : IWindowAware
       .OrderByDescending(c => c.ClippedAt)
       .Skip(skip)
       .Take(take)
+      .Include(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
       .AsAsyncEnumerable();
     var loadedCount = 0;
     await foreach (var clip in clips)

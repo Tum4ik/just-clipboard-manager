@@ -82,5 +82,4 @@ public partial class PasteWindow
     }
     return null;
   }
-
 }

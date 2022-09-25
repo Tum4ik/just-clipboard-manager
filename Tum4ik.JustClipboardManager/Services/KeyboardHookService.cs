@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Exceptions;
@@ -83,7 +80,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
         var atom = wParam.ToInt32();
         if (_registeredActionCallbacks.TryGetValue(atom, out var action))
         {
-          action.DynamicInvoke();
+          action.DynamicInvoke(); // TODO: get rid of DynamicInvoke (it's very slow)
         }
         break;
     }
