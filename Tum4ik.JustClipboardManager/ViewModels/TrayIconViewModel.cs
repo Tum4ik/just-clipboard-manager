@@ -67,6 +67,14 @@ internal partial class TrayIconViewModel
   }
 
 
+  /// <summary>
+  /// Retrieves a handle to the foreground window (the window with which the user is currently working). The system
+  /// assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
+  /// </summary>
+  /// <returns>
+  /// C++ ( Type: Type: HWND )<br /> The return value is a handle to the foreground window. The foreground window
+  /// can be NULL in certain circumstances, such as when a window is losing activation.
+  /// </returns>
   [DllImport("user32.dll")]
   private static extern IntPtr GetForegroundWindow();
 }
