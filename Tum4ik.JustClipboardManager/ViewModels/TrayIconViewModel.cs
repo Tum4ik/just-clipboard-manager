@@ -49,7 +49,7 @@ internal partial class TrayIconViewModel
     _eventAggregator
       .GetEvent<PasteWindowResultEvent>()
       .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
-    _pasteWindowService.ShowWindow();
+    _pasteWindowService.ShowWindow(targetWindowToPaste);
 
     var data = await _tcs.Task;
     _tcs = null;
@@ -57,6 +57,8 @@ internal partial class TrayIconViewModel
     {
       _pasteService.PasteData(targetWindowToPaste, data);
     }
+
+    _pasteWindowService.HideWindow();
   }
 
 

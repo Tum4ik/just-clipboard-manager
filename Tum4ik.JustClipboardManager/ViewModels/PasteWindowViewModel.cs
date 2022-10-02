@@ -8,12 +8,11 @@ using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.Mvvm;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
 [INotifyPropertyChanged]
-internal partial class PasteWindowViewModel : IWindowAware
+internal partial class PasteWindowViewModel
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly AppDbContext _dbContext;
@@ -23,15 +22,6 @@ internal partial class PasteWindowViewModel : IWindowAware
   {
     _eventAggregator = eventAggregator;
     _dbContext = dbContext;
-  }
-
-
-  private Action? _hideWindow;
-
-
-  public void WindowActions(Action hide)
-  {
-    _hideWindow = hide;
   }
 
 
@@ -94,7 +84,6 @@ internal partial class PasteWindowViewModel : IWindowAware
       return;
     }
 
-    _hideWindow?.Invoke();
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(Array.Empty<FormattedDataObject>());
   }
 
@@ -103,7 +92,6 @@ internal partial class PasteWindowViewModel : IWindowAware
   private void PasteData(Clip? clip)
   {
     _windowDeactivationTriggeredByDataPasting = true;
-    _hideWindow?.Invoke();
     if (clip is null)
     {
       return;
