@@ -82,7 +82,7 @@ internal class PasteWindowService : IPasteWindowService
     }
     if (winTop + windowPixelHeight > monitorInfo.WorkArea.Bottom)
     {
-      winTop = monitorInfo.WorkArea.Bottom - (int) windowPixelHeight;
+      winTop = Math.Min(monitorInfo.WorkArea.Bottom - (int) windowPixelHeight, winTop - (int) windowPixelHeight);
     }
 
     if (winLeft != _windowPosition.X || winTop != _windowPosition.Y)
