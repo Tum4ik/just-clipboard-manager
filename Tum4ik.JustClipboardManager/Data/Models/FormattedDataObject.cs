@@ -8,4 +8,6 @@ internal class FormattedDataObject
   public string DataDotnetType { get; set; } = null!;
   public string Format { get; set; } = null!;
   public int FormatOrder { get; set; }
+
+  public virtual Clip Clip { get; set; } = null!;
 }

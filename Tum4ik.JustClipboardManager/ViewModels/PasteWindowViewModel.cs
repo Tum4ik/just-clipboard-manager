@@ -3,10 +3,9 @@ using System.ComponentModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.EntityFrameworkCore;
 using Tum4ik.EventAggregator;
-using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
@@ -15,13 +14,13 @@ namespace Tum4ik.JustClipboardManager.ViewModels;
 internal partial class PasteWindowViewModel
 {
   private readonly IEventAggregator _eventAggregator;
-  private readonly AppDbContext _dbContext;
+  private readonly IClipRepository _clipRepository;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
-                              AppDbContext dbContext)
+                              IClipRepository clipRepository)
   {
     _eventAggregator = eventAggregator;
-    _dbContext = dbContext;
+    _clipRepository = clipRepository;
   }
 
 
@@ -102,18 +101,9 @@ internal partial class PasteWindowViewModel
   }
 
 
-  private async Task<int> LoadClips(int skip = 0, int take = 0, string? search = null)
+  private async Task<int> LoadClips(int skip = 0, int take = int.MaxValue, string? search = null)
   {
-    var clips = _dbContext.Clips
-      .Where(c =>
-        string.IsNullOrEmpty(search)
-        || (!string.IsNullOrEmpty(c.SearchLabel) && EF.Functions.Like(c.SearchLabel, $"%{search}%"))
-      )
-      .OrderByDescending(c => c.ClippedAt)
-      .Skip(skip)
-      .Take(take)
-      .Include(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
-      .AsAsyncEnumerable();
+    var clips = _clipRepository.GetAsync(skip, take, search);
     var loadedCount = 0;
     await foreach (var clip in clips)
     {

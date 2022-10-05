@@ -10,20 +10,21 @@ using Microsoft.AppCenter.Crashes;
 using Tum4ik.EventAggregator;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
 {
   private readonly IClipboard _clipboard;
-  private readonly AppDbContext _dbContext;
+  private readonly IClipRepository _clipRepository;
 
   public ClipboardService(IClipboard clipboard,
                           IEventAggregator eventAggregator,
-                          AppDbContext dbContext)
+                          IClipRepository clipRepository)
   {
     _clipboard = clipboard;
-    _dbContext = dbContext;
+    _clipRepository = clipRepository;
 
     eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.MainThread);
   }
@@ -183,10 +184,8 @@ internal class ClipboardService : IClipboardService
       SearchLabel = searchLabel
     };
 
-    await _dbContext.Clips.AddAsync(clip).ConfigureAwait(false);
-    await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+    await _clipRepository.AddAsync(clip).ConfigureAwait(false);
   }
-
 
   private static byte[] GetDataBytes(object data)
   {

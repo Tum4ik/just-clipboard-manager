@@ -6,6 +6,7 @@ internal class AppDbContext : DbContext
 {
   public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
   {
+    // TODO: use migrations
     Database.EnsureCreated();
   }
 

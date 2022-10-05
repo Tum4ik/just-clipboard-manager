@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SingleInstanceCore;
 using Tum4ik.EventAggregator.Extensions;
 using Tum4ik.JustClipboardManager.Data;
+using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
@@ -65,6 +66,7 @@ public partial class App : ISingleInstance
 
     base.OnStartup(e);
 
+    RemoveOldClips();
     var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
     var hookService = ServiceProvider.GetRequiredService<GeneralHookService>();
     var clipboardService = ServiceProvider.GetRequiredService<IClipboardService>();
@@ -77,6 +79,13 @@ public partial class App : ISingleInstance
     SingleInstance.Cleanup();
 
     base.OnExit(e);
+  }
+
+
+  private void RemoveOldClips()
+  {
+    var clipRepository = ServiceProvider.GetRequiredService<IClipRepository>();
+    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
   }
 
 
@@ -101,7 +110,7 @@ public partial class App : ISingleInstance
 
     services
       .AddSingleton(configuration)
-      .AddDbContext<AppDbContext>((sp, o) =>
+      .AddPooledDbContextFactory<AppDbContext>((sp, o) =>
       {
         var dbFileDir = Path.GetDirectoryName(
           System.Configuration.ConfigurationManager
@@ -112,7 +121,8 @@ public partial class App : ISingleInstance
         var dbFilePath = Path.Combine(dbFileDir, "clips.db");
         o.UseSqlite($"Data Source={dbFilePath}")
          .UseLazyLoadingProxies();
-      })
+      }, 2)
+      .AddTransient<IClipRepository, ClipRepository>()
       .AddEventAggregator()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
