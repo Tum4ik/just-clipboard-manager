@@ -51,4 +51,12 @@ internal class ClipRepository : IClipRepository
       .ExecuteSqlRawAsync($"DELETE FROM Clips WHERE Id IN ({clipIdsCommaSeparated})")
       .ConfigureAwait(false);
   }
+
+
+  public async Task DeleteAsync(Clip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.Clips.Remove(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
 }

@@ -101,6 +101,17 @@ internal partial class PasteWindowViewModel
   }
 
 
+  [RelayCommand]
+  private async Task DeleteClip(Clip? clip)
+  {
+    if (clip is not null)
+    {
+      Clips.Remove(clip);
+      await _clipRepository.DeleteAsync(clip).ConfigureAwait(false);
+    }
+  }
+
+
   private async Task<int> LoadClips(int skip = 0, int take = int.MaxValue, string? search = null)
   {
     var clips = _clipRepository.GetAsync(skip, take, search);

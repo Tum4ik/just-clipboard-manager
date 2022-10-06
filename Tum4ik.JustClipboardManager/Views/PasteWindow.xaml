@@ -73,6 +73,33 @@
           <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                  <Border BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Background="Transparent">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                      </Grid.ColumnDefinitions>
+                      <ContentPresenter Grid.Column="0" Margin="4, 0" />
+                      <Button Grid.Column="1" Content="X"
+                              Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                              Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
+                              CommandParameter="{Binding}"/>
+                    </Grid>
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter Property="BorderBrush" Value="#2F87D4"/>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
           </Style>
 
           <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
@@ -81,7 +108,7 @@
           <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
             <Border Height="24" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
               <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
-                         Margin="0, 4, 0, 4"/>
+                         Margin="0, 4"/>
             </Border>
           </DataTemplate>
           <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeImage}">

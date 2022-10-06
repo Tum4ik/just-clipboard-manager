@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.SorceGenerators", "Tum4ik.SorceGenerators\Tum4ik.SorceGenerators.csproj", "{D15D077D-51AD-45E6-879F-EACD5D4CBF3C}"
@@ -19,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.Attributes", "Tum4ik
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.EventAggregator", "Tum4ik.EventAggregator\Tum4ik.EventAggregator.csproj", "{E888701A-0BA2-4170-B62D-AB6027E3C886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tum4ik.JustClipboardManager.Icons", "Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj", "{164953DE-C1C0-4E96-A861-1307808D5852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.Icons", "Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj", "{164953DE-C1C0-4E96-A861-1307808D5852}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
