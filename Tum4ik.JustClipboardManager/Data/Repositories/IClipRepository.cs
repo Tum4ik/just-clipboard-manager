@@ -5,6 +5,7 @@ internal interface IClipRepository
 {
   Task AddAsync(Clip clip);
   IAsyncEnumerable<Clip> GetAsync(int skip = 0, int take = int.MaxValue, string? search = null);
+  Task UpdateAsync(Clip clip);
   Task DeleteBeforeDateAsync(DateTime date);
   Task DeleteAsync(Clip clip);
 }

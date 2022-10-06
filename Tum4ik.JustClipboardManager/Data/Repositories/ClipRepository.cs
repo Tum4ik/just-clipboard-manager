@@ -40,6 +40,14 @@ internal class ClipRepository : IClipRepository
   }
 
 
+  public async Task UpdateAsync(Clip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.Clips.Update(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+
+
   public async Task DeleteBeforeDateAsync(DateTime date)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);

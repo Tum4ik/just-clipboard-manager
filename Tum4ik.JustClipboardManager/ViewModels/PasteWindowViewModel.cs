@@ -88,7 +88,7 @@ internal partial class PasteWindowViewModel
 
 
   [RelayCommand]
-  private void PasteData(Clip? clip)
+  private async Task PasteData(Clip? clip)
   {
     _windowDeactivationTriggeredByDataPasting = true;
     if (clip is null)
@@ -98,6 +98,9 @@ internal partial class PasteWindowViewModel
 
     var dataObjects = clip.FormattedDataObjects;
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(dataObjects);
+    var now = DateTime.Now;
+    clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+    await _clipRepository.UpdateAsync(clip).ConfigureAwait(false);
   }
 
 
