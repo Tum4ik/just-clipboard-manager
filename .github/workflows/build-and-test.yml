@@ -75,10 +75,10 @@ jobs:
         [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
         
     - name: .NET publish
-      run: >
-        dotnet publish -c Release
-          /p:PublishProfile=FolderProfile 
-          /p:PackageCertificateKeyFile=${{ env.Temporary_Pfx_File_Path }} 
+      run: |
+        dotnet publish -c Release `
+          /p:PublishProfile=FolderProfile `
+          /p:PackageCertificateKeyFile=${{ env.Temporary_Pfx_File_Path }} `
           /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
     # Remove the pfx
