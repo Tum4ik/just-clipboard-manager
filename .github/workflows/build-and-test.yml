@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Core Desktop WPF
+name: Build And Test
 
 on:
   workflow_dispatch:
@@ -53,8 +53,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: JustClipboardManager.sln
-#       Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Publish_Dir: .\Tum4ik.JustClipboardManager\bin\publish
       Temporary_Pfx_File_Path: .\GitHubActionsWorkflow.pfx
 
     steps:
@@ -69,31 +68,27 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
-    - name: .NET publish
-      run: dotnet publish -p:PublishProfile=FolderProfile
-
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
-
-    # Create the app package by building and packaging the Windows Application Packaging project
-#     - name: Create the app package
-#       run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-#       env:
-#         Appx_Bundle: Always
-#         Appx_Bundle_Platforms: x86|x64
-#         Appx_Package_Build_Mode: StoreUpload
-#         Configuration: ${{ matrix.configuration }}
+        
+    - name: .NET publish
+      run: >
+        dotnet publish -c Release
+          /p:PublishProfile=FolderProfile 
+          /p:PackageCertificateKeyFile=${{ env.Temporary_Pfx_File_Path }} 
+          /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
     # Remove the pfx
     - name: Remove the pfx
       run: Remove-Item -path ${{ env.Temporary_Pfx_File_Path }}
 
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-#     - name: Upload build artifacts
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: MSIX Package
-#         path: ${{ env.Wap_Project_Directory }}\AppPackages
+    # https://github.com/marketplace/actions/upload-a-build-artifact
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build files
+        path: ${{ env.Publish_Dir }}
+        if-no-files-found: error
