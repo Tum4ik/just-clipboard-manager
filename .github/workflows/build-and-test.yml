@@ -75,7 +75,7 @@ jobs:
         [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
         
     - name: .NET publish
-      run: >
+      run: >-
         dotnet publish -c Release
           /p:PublishProfile=FolderProfile 
           /p:PackageCertificateKeyFile=${{ env.Temporary_Pfx_File_Path }} 
