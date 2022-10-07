@@ -55,6 +55,7 @@ jobs:
     env:
       Solution_Name: JustClipboardManager.sln
 #       Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Temporary_Pfx_File_Path: .\GitHubActionsWorkflow.pfx
 
     steps:
     - name: Checkout
@@ -72,7 +73,7 @@ jobs:
     - name: Decode the pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        [IO.File]::WriteAllBytes("GitHubActionsWorkflow.pfx", $pfx_cert_byte)
+        [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
 
     # Create the app package by building and packaging the Windows Application Packaging project
 #     - name: Create the app package
@@ -85,7 +86,7 @@ jobs:
 
     # Remove the pfx
     - name: Remove the pfx
-      run: Remove-Item -path .\GitHubActionsWorkflow.pfx
+      run: Remove-Item -path ${{ env.Temporary_Pfx_File_Path }}
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
 #     - name: Upload build artifacts

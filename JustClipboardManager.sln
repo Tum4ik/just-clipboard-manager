@@ -22,6 +22,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.EventAggregator", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.Icons", "Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj", "{164953DE-C1C0-4E96-A861-1307808D5852}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{D330E275-4B7A-4225-A8AE-B17CD3D75AAB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{EFB58FFF-AFD1-4788-AA48-0652BD800A3A}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +61,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D330E275-4B7A-4225-A8AE-B17CD3D75AAB} = {D2BBB088-B83D-486F-B5F6-BA350E423111}
+		{EFB58FFF-AFD1-4788-AA48-0652BD800A3A} = {D330E275-4B7A-4225-A8AE-B17CD3D75AAB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4AFFE08-D045-4D40-B481-77043A089158}
