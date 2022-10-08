@@ -54,7 +54,7 @@ jobs:
 
     env:
       Publish_Dir: .\Tum4ik.JustClipboardManager\bin\publish
-      #Temporary_Pfx_File_Path: .\GitHubActionsWorkflow.pfx
+      Temporary_Pfx_File_Path: .\GitHubActionsWorkflow.pfx
 
     steps:
     - name: Checkout
@@ -69,10 +69,10 @@ jobs:
         dotnet-version: 6.0.x
         
     # Decode the base 64 encoded pfx and save the Signing_Certificate
-    #- name: Decode the pfx
-    #  run: |
-    #    $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-    #    [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
+    - name: Decode the pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+        [IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
         
     - name: .NET publish
       run: dotnet publish -c Release /p:PublishProfile=FolderProfile
@@ -80,15 +80,15 @@ jobs:
     - name: Signtool Code Sign
       uses: GabrielAcostaEngler/signtool-code-sign@1.0.6
       with:
-        certificate: '${{ secrets.Base64_Encoded_Pfx }}'
-        cert-password: '${{ secrets.Pfx_Key }}'
-        cert-sha1: '${{ secrets.Pfx_Sha1 }}'
+        certificate: ${{ env.Temporary_Pfx_File_Path }}
+        cert-password: ${{ secrets.Pfx_Key }}
+        cert-sha1: ${{ secrets.Pfx_Sha1 }}
         folder: ${{ env.Publish_Dir }}
         recursive: true
 
     # Remove the pfx
-    #- name: Remove the pfx
-    #  run: Remove-Item -path ${{ env.Temporary_Pfx_File_Path }}
+    - name: Remove the pfx
+      run: Remove-Item -path ${{ env.Temporary_Pfx_File_Path }}
 
     # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
