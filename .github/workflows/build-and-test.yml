@@ -77,9 +77,9 @@ jobs:
     - name: .NET publish
       run: dotnet publish -c Release /p:PublishProfile=FolderProfile
     
-    - name: Sing files
+    - name: Sign files
       run: |
-        $filesToSign = Get-ChildItem -Recurse -Include *.dll,*.exe ${{ env.Publish_Dir }} | Where { ! $_.PSIsContainer } | Select FullName
+        $filesToSign = Get-ChildItem -Recurse -Include *.exe ${{ env.Publish_Dir }} | Where { ! $_.PSIsContainer } | Select FullName
         $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool.exe"
         & $signtool sign /f ${{ env.Temporary_Pfx_File_Path }} /p ${{ secrets.Pfx_Key }} $filesToSign
 
