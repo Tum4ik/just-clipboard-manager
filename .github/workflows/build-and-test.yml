@@ -80,7 +80,7 @@ jobs:
     - name: Sing files
       run: |
         $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool.exe"
-        & $signtool sign /debug /f ${{ env.Temporary_Pfx_File_Path }} /p ${{ secrets.Pfx_Key }} /fd SHA256 ${{ env.Publish_Dir }}\JustClipboardManager.dll
+        & $signtool sign /debug /f ${{ env.Temporary_Pfx_File_Path }} /p ${{ secrets.Pfx_Key }} /t http://timestamp.digicert.com /fd SHA256 ${{ env.Publish_Dir }}\JustClipboardManager.dll
     # /sha1 ${{ secrets.Pfx_Sha1 }}
 
     #- name: Signtool Code Sign
