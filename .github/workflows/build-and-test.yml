@@ -80,7 +80,7 @@ jobs:
     - name: Sing files
       run: |
         $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool.exe"
-        & $signtool sign /f ${{ env.Temporary_Pfx_File_Path }} /p ${{ secrets.Pfx_Key }} /sha1 ${{ secrets.Pfx_Sha1 }} ${{ env.Publish_Dir }}\JustClipboardManager.dll
+        & $signtool sign /debug /f ${{ env.Temporary_Pfx_File_Path }} /p ${{ secrets.Pfx_Key }} /sha1 ${{ secrets.Pfx_Sha1 }} ${{ env.Publish_Dir }}\JustClipboardManager.dll
 
     #- name: Signtool Code Sign
     #  uses: GabrielAcostaEngler/signtool-code-sign@1.0.6
