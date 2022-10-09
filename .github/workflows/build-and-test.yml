@@ -71,10 +71,8 @@ jobs:
         
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
-      run: ${{ env.scripts }}\DecodePfx.ps1 -Base64Pfx ${{ secrets.Base64_Encoded_Pfx }} -OutputPath ${{ env.Temporary_Pfx_File_Path }}
-        #$pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        #[IO.File]::WriteAllBytes("${{ env.Temporary_Pfx_File_Path }}", $pfx_cert_byte)
-        
+      run: ${{ env.scripts }}\DecodePfx.ps1 -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" -OutputPath ${{ env.Temporary_Pfx_File_Path }}
+
     - name: .NET publish
       run: dotnet publish -c Release /p:PublishProfile=FolderProfile
     
