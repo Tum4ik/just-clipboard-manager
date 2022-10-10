@@ -53,9 +53,9 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      scripts: .\.github\workflows\scripts
-      Publish_Dir: .\Tum4ik.JustClipboardManager\bin\publish
-      Temporary_Pfx_File_Path: .\GitHubActionsWorkflow.pfx
+      Scripts: .\.github\workflows\scripts
+      PublishDir: .\Tum4ik.JustClipboardManager\bin\publish
+      TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
 
     steps:
     - name: Checkout
@@ -63,37 +63,34 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET workload
     - name: Install .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
         
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
+    - name: Decode PFX file into temporary file
       run: >
-        ${{ env.scripts }}\DecodePfx.ps1 `
+        ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" `
-          -OutputPath ${{ env.Temporary_Pfx_File_Path }}
+          -OutputPath ${{ env.TemporaryPfxFilePath }}
 
     - name: .NET publish
       run: dotnet publish -c Release /p:PublishProfile=FolderProfile
     
-    - name: Sign files
+    - name: Sign code files
       run: >
-        ${{ env.scripts }}\SignMyCodeFiles.ps1 `
-          -FilesDirectoryPath ${{ env.Publish_Dir }} `
-          -PfxFilePath ${{ env.Temporary_Pfx_File_Path }} `
+        ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
+          -FilesDirectoryPath ${{ env.PublishDir }} `
+          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.Pfx_Key }}
         
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path ${{ env.Temporary_Pfx_File_Path }}
+    - name: Remove temporary PFX file
+      run: Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build files
-        path: ${{ env.Publish_Dir }}
+        path: ${{ env.PublishDir }}
         if-no-files-found: error
