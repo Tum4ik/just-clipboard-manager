@@ -38,6 +38,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422
 		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InnoSetup", "InnoSetup", "{E1CDDDD5-0947-431F-9D12-4E65967BB165}"
+	ProjectSection(SolutionItems) = preProject
+		InnoSetup\Setup.iss = InnoSetup\Setup.iss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
