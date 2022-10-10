@@ -2,34 +2,46 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Just Clipboard Manager"
-#define MyAppVersion "0.0.0.0"
 #define MyAppPublisher "Yevheniy Tymchishin"
 #define MyAppURL "https://github.com/Tum4ik/just-clipboard-manager"
 #define MyAppExeName "JustClipboardManager.exe"
+#define MyAppCopyright "© 2022-2023 Yevheniy Tymchishin. All rights reserved."
+#include "version.iss"
 
 [Setup]
-; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
+; NOTE: The value of AppId uniquely identifies this application. 
+; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{B77ABBB8-E6E4-4C0F-9565-5EBFA3E52F42}
+AppId={{CA7FB06C-6E28-4BC0-AF70-2C365C3C93A0}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=D:\MyProjects\JustClipboardManager\LICENSE
+LicenseFile=..\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=D:\MyProjects\JustClipboardManager\Tum4ik.JustClipboardManager\bin\setup
-OutputBaseFilename=JustClipBoardManager_ver
-SetupIconFile=D:\MyProjects\RemoteControl\Server\Tum4ik.RemoteControl.Server\Resources\Icons\RemoteControlServer.ico
+OutputDir=..\Tum4ik.JustClipboardManager\bin\setup
+OutputBaseFilename=JustClipboardManager-{#MyAppVersion}
+SetupIconFile=install.ico
+UninstallDisplayIcon={app}\uninstall.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+AppCopyright={#MyAppCopyright}
+AppContact=timchishinevgeniy@gmail.com
+VersionInfoVersion={#MyAppVersion}
+VersionInfoTextVersion={#MyAppVersion}
+VersionInfoProductVersion={#MyAppVersion}
+VersionInfoCopyright={#MyAppCopyright}
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoProductName={#MyAppName}
+VersionInfoProductTextVersion={#MyAppVersion}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -37,15 +49,17 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "D:\MyProjects\JustClipboardManager\Tum4ik.JustClipboardManager\bin\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\MyProjects\JustClipboardManager\Tum4ik.JustClipboardManager\bin\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Tum4ik.JustClipboardManager\bin\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "install.ico"; DestDir: "{app}"
+Source: "uninstall.ico"; DestDir: "{app}"
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\install.ico"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\install.ico"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

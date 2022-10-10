@@ -27,8 +27,6 @@ public partial class App : ISingleInstance
   [STAThread]
   public static void Main(string[] args)
   {
-    var pubKey = Assembly.GetExecutingAssembly().GetName().GetPublicKey();
-    MessageBox.Show($"Is signed: {pubKey is not null && pubKey.Length > 0}");
     var app = new App();
 
     var isFirstInstance = app.InitializeAsFirstInstance("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
