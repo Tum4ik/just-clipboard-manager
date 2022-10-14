@@ -1,0 +1,1 @@
+#define Architecture "x64"

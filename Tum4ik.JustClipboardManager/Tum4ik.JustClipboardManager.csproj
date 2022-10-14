@@ -9,6 +9,7 @@
     <InformationalVersion>dev</InformationalVersion>
     <Version>0.0.0.0</Version>
     <AssemblyName>JustClipboardManager</AssemblyName>
+    <Platforms>x86;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup>

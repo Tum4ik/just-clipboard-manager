@@ -7,6 +7,7 @@
 #define MyAppExeName "JustClipboardManager.exe"
 #define MyAppCopyright "© 2022-2023 Yevheniy Tymchishin. All rights reserved."
 #include "version.iss"
+#include "architecture.iss"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. 
@@ -27,7 +28,7 @@ LicenseFile=..\LICENSE
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=..\Tum4ik.JustClipboardManager\bin\setup
-OutputBaseFilename=JustClipboardManager-{#MyAppVersion}
+OutputBaseFilename=JustClipboardManager-{#MyAppVersion}-{#Architecture}
 SetupIconFile=install.ico
 UninstallDisplayIcon={app}\uninstall.ico
 Compression=lzma
@@ -42,6 +43,7 @@ VersionInfoCopyright={#MyAppCopyright}
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoProductName={#MyAppName}
 VersionInfoProductTextVersion={#MyAppVersion}
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -52,7 +54,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\Tum4ik.JustClipboardManager\bin\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
 Source: "uninstall.ico"; DestDir: "{app}"
