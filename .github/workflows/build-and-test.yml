@@ -76,13 +76,11 @@ jobs:
         $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
         $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
-        Write-Host "==================================="
-        Write-Host $version
-        echo "VERSION=$version" >> $GITHUB_OUTPUT
+        echo "::set-output name=version::$version"
         
     - name: .NET publish
       run: |
-        $version = ${{ steps.define-version.outputs.VERSION }}
+        $version = ${{ steps.define-version.outputs.version }}
         Write-Host "==================================="
         Write-Host $version
         #dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
