@@ -81,7 +81,7 @@ jobs:
     - name: .NET publish
       run: |
         $version = ${{ steps.define-version.outputs.VERSION }}
-        Writ-Host $version
+        Write-Host $version
         #dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
         dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=$version
 
