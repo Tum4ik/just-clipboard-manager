@@ -49,7 +49,7 @@ jobs:
 
   build:
 
-    name: Release ${{ github.ref_name }}
+    name: ${{ github.ref_name }}
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
@@ -69,11 +69,18 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+
+    - name: Define version
+      id: define-version
+      run: |
+        $majorMinor = ${{ github.ref_name }}.Split("/")[-1]
+        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
+        $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
+        echo "VERSION=$version" >> $GITHUB_OUTPUT
         
     - name: .NET publish
       run: |
-        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
-        $version = "${{ github.ref_name }}.$buildNumber.${{ github.run_number }}"
+        $version = ${{ steps.define-version.outputs.VERSION }}
         dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
         dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=$version /p:InformationalVersion=$version-alpha
 
@@ -88,7 +95,6 @@ jobs:
           -PfxPassword ${{ secrets.Pfx_Key }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
    
-    #- name: Set version
     # todo: setup architecture
 
     - name: Build installer
