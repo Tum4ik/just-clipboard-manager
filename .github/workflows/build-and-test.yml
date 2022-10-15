@@ -72,25 +72,20 @@ jobs:
     - name: .NET publish
       run: |
         dotnet publish -c Release /p:PublishProfile=FolderProfile_x86
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=1.2.3.4 /p:InformationalVersion=1.2.4-test
 
-    - name: Decode PFX file into temporary file
-      run: >
+    - name: Sign code files
+      run: |
         ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
-    
-    - name: Sign code files
-      run: >
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.Pfx_Key }}
-        
-    - name: Remove temporary PFX file
-      run: Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
-
-    # todo: setup version
+        Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
+   
+    #- name: Set version
     # todo: setup architecture
 
     - name: Build installer
