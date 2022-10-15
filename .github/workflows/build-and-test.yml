@@ -98,7 +98,7 @@ jobs:
         curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
         .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
-        .\inst\iscc ".\InnoSetup\Setup.iss"
+        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
 
     # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
