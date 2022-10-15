@@ -73,7 +73,7 @@ jobs:
     - name: Define version
       id: define-version
       run: |
-        $majorMinor = (${{ github.ref_name }}).Split("/")[-1]
+        $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
         $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
         echo "VERSION=$version" >> $GITHUB_OUTPUT
