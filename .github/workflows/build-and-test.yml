@@ -96,9 +96,9 @@ jobs:
     - name: Build installer
       run: |
         curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
-        .\installer.exe /verysilent /allusers /dir=inst
+        .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
-        .\inst\issc ".\InnoSetup\Setup.iss"
+        .\inst\iscc ".\InnoSetup\Setup.iss"
 
     # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
