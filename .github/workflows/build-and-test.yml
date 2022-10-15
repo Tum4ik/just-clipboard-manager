@@ -72,8 +72,10 @@ jobs:
         
     - name: .NET publish
       run: |
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=1.2.3.4 /p:InformationalVersion=1.2.4-test
+        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
+        $version = "${{ github.ref_name }}.$buildNumber.${{ github.run_number }}"
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=$version /p:InformationalVersion=$version-alpha
 
     - name: Sign code files
       run: |
