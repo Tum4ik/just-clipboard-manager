@@ -38,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422
 		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InnoSetup", "InnoSetup", "{E1CDDDD5-0947-431F-9D12-4E65967BB165}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InnoSetup", "InnoSetup", "{4DA667C9-7864-45B1-9CF6-535A1DEE8859}"
 	ProjectSection(SolutionItems) = preProject
 		InnoSetup\architecture.iss = InnoSetup\architecture.iss
 		InnoSetup\Setup.iss = InnoSetup\Setup.iss
@@ -101,6 +101,7 @@ Global
 		{D330E275-4B7A-4225-A8AE-B17CD3D75AAB} = {D2BBB088-B83D-486F-B5F6-BA350E423111}
 		{EFB58FFF-AFD1-4788-AA48-0652BD800A3A} = {D330E275-4B7A-4225-A8AE-B17CD3D75AAB}
 		{6422F7E7-8F3A-4750-9A82-9C0153726062} = {EFB58FFF-AFD1-4788-AA48-0652BD800A3A}
+		{4DA667C9-7864-45B1-9CF6-535A1DEE8859} = {D2BBB088-B83D-486F-B5F6-BA350E423111}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4AFFE08-D045-4D40-B481-77043A089158}

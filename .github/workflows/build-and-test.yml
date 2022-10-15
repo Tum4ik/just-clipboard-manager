@@ -55,6 +55,7 @@ jobs:
     env:
       Scripts: .\.github\workflows\scripts
       PublishDir: .\Tum4ik.JustClipboardManager\bin\publish
+      InstallerDir: .\Tum4ik.JustClipboardManager\bin\setup
       TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
 
     steps:
@@ -75,7 +76,9 @@ jobs:
           -OutputPath ${{ env.TemporaryPfxFilePath }}
 
     - name: .NET publish
-      run: dotnet publish -c Release /p:PublishProfile=FolderProfile
+      run: |
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64
     
     - name: Sign code files
       run: >
@@ -87,10 +90,20 @@ jobs:
     - name: Remove temporary PFX file
       run: Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
+    # todo: setup version
+    # todo: setup architecture
+
+    - name: Build installer
+      run: |
+        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
+        .\installer.exe /verysilent /allusers /dir=inst
+        curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
+        .\inst\issc ".\InnoSetup\Setup.iss"
+
     # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build files
-        path: ${{ env.PublishDir }}
+        path: ${{ env.InstallerDir }}
         if-no-files-found: error
