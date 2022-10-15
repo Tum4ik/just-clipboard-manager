@@ -69,16 +69,16 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
+    - name: .NET publish
+      run: |
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64
+
     - name: Decode PFX file into temporary file
       run: >
         ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
-
-    - name: .NET publish
-      run: |
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64
     
     - name: Sign code files
       run: >

@@ -8,6 +8,10 @@
     <Platforms>x86;x64</Platforms>
   </PropertyGroup>
 
+  <!--<PropertyGroup Condition="'$(Platform)'=='x86'">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>-->
+
   <ItemGroup>
     <PackageReference Include="SharpVectors.Wpf" Version="1.8.0" />
   </ItemGroup>
