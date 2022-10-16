@@ -75,7 +75,7 @@ jobs:
       run: |
         $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
         $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
-        $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
+        $version = "$majorMinor.$buildNumber.${{ github.run_attempt }}"
         echo "::set-output name=version::$version"
         
     - name: .NET publish
