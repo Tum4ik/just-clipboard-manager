@@ -53,11 +53,6 @@ jobs:
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
-    strategy:
-      max-parallel: 1
-      matrix:
-        architecture: [all, x86, x64]
-
     env:
       Scripts: .\.github\workflows\scripts
       PublishDir: .\Tum4ik.JustClipboardManager\bin\publish
@@ -66,19 +61,16 @@ jobs:
 
     steps:
     - name: Checkout
-      if: ${{ matrix.architecture == 'all' }}
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     - name: Install .NET
-      if: ${{ matrix.architecture == 'all' }}
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
 
     - name: Define version
-      if: ${{ matrix.architecture == 'all' }}
       id: define-version
       run: |
         $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
@@ -88,22 +80,18 @@ jobs:
         echo "::set-output name=version::$version"
         
     - name: .NET publish
-      if: ${{ matrix.architecture != 'all' }}
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        dotnet publish -c Release `
-          /p:PublishProfile=FolderProfile_${{  matrix.architecture }} `
-          /p:Version=$version `
-          /p:InformationalVersion=$version-alpha
+        ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
+        ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: Sign code files
-      if: ${{ matrix.architecture != 'all' }}
       run: |
         ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
-          -FilesDirectoryPath ${{ env.PublishDir }}\${{ matrix.architecture }} `
+          -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.Pfx_Key }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
@@ -115,6 +103,9 @@ jobs:
         curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
         .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Null
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
+        "#define Architecture `"x86`"" | Set-Content -Path .\InnoSetup\architecture.iss
+        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
+        "#define Architecture `"x64`"" | Set-Content -Path .\InnoSetup\architecture.iss
         .\inst\iscc.exe ".\InnoSetup\Setup.iss"
 
     # https://github.com/marketplace/actions/upload-a-build-artifact
