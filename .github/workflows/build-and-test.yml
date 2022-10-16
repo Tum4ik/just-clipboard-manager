@@ -54,6 +54,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     strategy:
+      max-parallel: 1
       matrix:
         architecture: [all, x86, x64]
 
