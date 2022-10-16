@@ -5,5 +5,4 @@ param (
 
 dotnet publish -c Release `
   /p:PublishProfile=FolderProfile_$Architecture `
-  /p:Version=$Version `
-  /p:InformationalVersion=$Version-alpha
+  /p:Version=$Version
