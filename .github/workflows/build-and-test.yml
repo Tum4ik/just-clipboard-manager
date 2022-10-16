@@ -81,8 +81,8 @@ jobs:
     - name: .NET publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        #dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
-        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=$version
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x86 /p:Version=$version /p:InformationalVersion=$version-alpha
+        dotnet publish -c Release /p:PublishProfile=FolderProfile_x64 /p:Version=$version /p:InformationalVersion=$version-alpha
 
     - name: Sign code files
       run: |
