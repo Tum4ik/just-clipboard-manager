@@ -96,8 +96,6 @@ jobs:
           -PfxPassword ${{ secrets.Pfx_Key }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
    
-    # todo: setup architecture
-
     - name: Build installer
       run: |
         curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
