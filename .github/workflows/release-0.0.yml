@@ -47,7 +47,7 @@ jobs:
 
   build:
 
-    name: ${{ github.ref_name }}
+    name: Build 0.0
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
@@ -131,5 +131,7 @@ jobs:
     - name: GitHub release
       uses: softprops/action-gh-release@v0.1.14
       with:
+        tag_name: ${{ needs.build.outputs.version }}
+        draft: true
         files: |
           *.exe
