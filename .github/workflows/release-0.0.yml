@@ -132,5 +132,5 @@ jobs:
       with:
         tag_name: ${{ needs.build.outputs.version }}
         draft: true
-        files: |
-          **/*.exe
+        files: '**/*.exe'
+        body_path: ReleaseNotes.md
