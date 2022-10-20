@@ -111,7 +111,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         if-no-files-found: error
-        name: Build files
+        name: BuildFiles
         path: |
           ${{ env.InstallerDir }}
           ReleaseNotes.txt
@@ -135,5 +135,5 @@ jobs:
         tag_name: ${{ needs.build.outputs.version }}
         draft: true
         files: '**/*.exe'
-        body_path: '**/ReleaseNotes.txt'
+        body_path: BuildFiles/ReleaseNotes.txt'
         fail_on_unmatched_files: true
