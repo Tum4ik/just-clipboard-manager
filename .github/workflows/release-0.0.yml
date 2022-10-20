@@ -114,7 +114,7 @@ jobs:
         name: Build files
         path: |
           ${{ env.InstallerDir }}
-          ReleaseNotes.md
+          ReleaseNotes.txt
 
 
   github-release:
