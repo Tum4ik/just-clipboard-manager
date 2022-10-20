@@ -107,7 +107,6 @@ jobs:
         "#define Architecture `"x64`"" | Set-Content -Path .\InnoSetup\architecture.iss
         .\inst\iscc.exe ".\InnoSetup\Setup.iss"
 
-    # https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -134,4 +133,4 @@ jobs:
         tag_name: ${{ needs.build.outputs.version }}
         draft: true
         files: |
-          *.exe
+          **/*.exe
