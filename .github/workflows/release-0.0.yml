@@ -135,5 +135,5 @@ jobs:
         tag_name: ${{ needs.build.outputs.version }}
         draft: true
         files: '**/*.exe'
-        body_path: BuildFiles/ReleaseNotes.txt'
+        body_path: BuildFiles/ReleaseNotes.txt
         fail_on_unmatched_files: true
