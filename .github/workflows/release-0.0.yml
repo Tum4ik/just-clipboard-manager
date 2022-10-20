@@ -127,6 +127,8 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v3.0.0
 
+    - run: ls -R
+
     - name: GitHub release
       uses: softprops/action-gh-release@v0.1.14
       with:
