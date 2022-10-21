@@ -1,3 +1,2 @@
-- `Ctrl + Shift + V` hot key to show the paste window.
-- Automatically remove clips older than 3 months.
-- Remove clips individually.
+- Run on Windows startup option.
+- Live updates.
