@@ -122,7 +122,7 @@ jobs:
 
   github-release:
 
-    if: github.ref_name != 'main' || github.ref_name != 'merge'
+    if: github.event_name == 'pull_request'
     needs: build
     name: Release ${{ needs.build.outputs.version }}
     runs-on: windows-latest
