@@ -42,8 +42,8 @@ on:
   workflow_dispatch:
   #push:
   #  branches: [ "release/0.0" ]
-  pull_request:
-    branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
 
 jobs:
 
