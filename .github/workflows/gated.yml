@@ -42,8 +42,8 @@ on:
   workflow_dispatch:
   #push:
   #  branches: [ "release/0.0" ]
-  #pull_request:
-  #  branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
 
@@ -122,7 +122,7 @@ jobs:
 
   github-release:
 
-    if: github.ref_name != 'main'
+    if: github.ref_name != 'main' || github.ref_name != 'merge'
     needs: build
     name: Release ${{ needs.build.outputs.version }}
     runs-on: windows-latest
