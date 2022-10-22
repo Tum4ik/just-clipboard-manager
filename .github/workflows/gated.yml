@@ -96,7 +96,7 @@ jobs:
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: .NET test
-      run: dotnet test
+      run: dotnet test ~/Tests/
 
     - name: Sign code files
       run: |
