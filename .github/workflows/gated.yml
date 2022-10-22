@@ -74,19 +74,15 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Define version
-      if: github.ref_name != 'merge'
       id: define-version
       run: |
         $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
+        if (![System.Version]::TryParse($majorMinor, [ref]$null)) { $majorMinor = "0.0" }
         $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
         echo "::set-output name=version::$version"
 
-    - if: github.ref_name == 'merge'
-      id: define-version
-      run: echo "::set-output name=version::0.0.0.0"
-        
     - name: .NET publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
@@ -126,7 +122,7 @@ jobs:
 
   github-release:
 
-    if: github.ref_name != 'main'
+    if: github.event_name != 'pull_request' && contains(github.ref_name, 'release')
     needs: build
     name: Release ${{ needs.build.outputs.version }}
     runs-on: windows-latest
