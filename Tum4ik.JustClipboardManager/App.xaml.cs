@@ -92,14 +92,17 @@ public partial class App : ISingleInstance
   private static IConfiguration ConfigureAppConfiguration()
   {
     var assembly = Assembly.GetExecutingAssembly();
-    var appsettingsResourceName = assembly.GetManifestResourceNames().Single(n => n.EndsWith("appsettings.json"));
+    var appsettingsResourceName = assembly.GetManifestResourceNames()
+      .Single(n => n.EndsWith("appsettings.json", StringComparison.InvariantCultureIgnoreCase));
     // Don't use "using" keyword for appsettingsStream here - it will break the settings reading process.
     // The stream will be disposed by StreamReader internally anyway.
     var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
     return new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
       .AddJsonStream(appsettingsStream)
+#if DEBUG
       .AddUserSecrets(Assembly.GetExecutingAssembly())
+#endif
       .Build();
   }
 
