@@ -83,6 +83,12 @@ jobs:
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
         echo "::set-output name=version::$version"
 
+    - name: Set Microsoft AppCenter secret
+      run: |
+        $appsettings = Get-Content .\Tum4ik.JustClipboardManager\appsettings.json -Raw | ConvertFrom-Json
+        $appsettings.MicrosoftAppCenterSecret = ${{ secrets.MICROSOFT_APP_CENTER_SECRET }}
+        $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
+
     - name: .NET publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
@@ -92,12 +98,12 @@ jobs:
     - name: Sign code files
       run: |
         ${{ env.Scripts }}\DecodePfx.ps1 `
-          -Base64Pfx "${{ secrets.Base64_Encoded_Pfx }}" `
+          -Base64Pfx "${{ secrets.BASE64_ENCODED_PFX }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
-          -PfxPassword ${{ secrets.Pfx_Key }}
+          -PfxPassword ${{ secrets.PFX_KEY }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
    
     - name: Build installer
