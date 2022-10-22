@@ -86,7 +86,7 @@ jobs:
     - name: Set Microsoft AppCenter secret
       run: |
         $appsettings = Get-Content .\Tum4ik.JustClipboardManager\appsettings.json -Raw | ConvertFrom-Json
-        $appsettings.MicrosoftAppCenterSecret = ${{ secrets.MICROSOFT_APP_CENTER_SECRET }}
+        $appsettings.MicrosoftAppCenterSecret = "${{ secrets.MICROSOFT_APP_CENTER_SECRET }}"
         $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
 
     - name: .NET publish
