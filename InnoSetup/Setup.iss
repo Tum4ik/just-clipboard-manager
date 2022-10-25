@@ -10,7 +10,7 @@
 #include "architecture.iss"
 
 [Setup]
-; NOTE: The value of AppId uniquely identifies this application. 
+; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{CA7FB06C-6E28-4BC0-AF70-2C365C3C93A0}
@@ -109,10 +109,11 @@ begin
   Result := not IsUpgrade;
 end;
 
+
 function StrSplit(Text: String; Separator: String): TArrayOfString;
 var
   i, p: Integer;
-  Dest: TArrayOfString; 
+  Dest: TArrayOfString;
 begin
   i := 0;
   repeat
@@ -236,7 +237,7 @@ var
   DialogResult, CmdParamsCount, i: Integer;
   FoundRecord: TFindRec;
 begin
-  case CurUninstallStep of                   
+  case CurUninstallStep of
     usPostUninstall: begin
       DialogResult := MsgBox(CustomMessage('DoYouWantRemoveAppSettingsAndClips'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
       if DialogResult = IDYES then begin
