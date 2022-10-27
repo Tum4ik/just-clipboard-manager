@@ -8,6 +8,7 @@ using Microsoft.AppCenter.Crashes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Octokit;
 using SingleInstanceCore;
 using Tum4ik.EventAggregator.Extensions;
 using Tum4ik.JustClipboardManager.Data;
@@ -60,11 +61,14 @@ public partial class App : ISingleInstance
   public IServiceProvider ServiceProvider => _serviceProvider ??= ConfigureServices(Configuration);
 
 
-  protected override void OnStartup(StartupEventArgs e)
+  protected override async void OnStartup(StartupEventArgs e)
   {
     AppCenter.Start(Configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
 
     base.OnStartup(e);
+
+    var updateService = ServiceProvider.GetRequiredService<IUpdateService>();
+    updateService.SilentUpdate();
 
     RemoveOldClips();
     var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
@@ -134,6 +138,14 @@ public partial class App : ISingleInstance
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboard, ClipboardWrapper>()
       .AddSingleton<IClipboardService, ClipboardService>()
+      .AddTransient<IInfoService, InfoService>()
+      .AddTransient<IUpdateService, UpdateService>()
+      .AddTransient<IGitHubClient>(sp =>
+      {
+        var version = sp.GetRequiredService<IInfoService>().GetInformationalVersion();
+        var client = new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
+        return client;
+      })
       .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 

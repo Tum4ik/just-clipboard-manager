@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Tum4ik.DeploymentTests.InnoSetup;
+namespace Tum4ik.Deployment.UnitTests.InnoSetup;
 public class SetupFileTests
 {
   [Fact]

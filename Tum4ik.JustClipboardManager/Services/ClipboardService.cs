@@ -196,6 +196,7 @@ internal class ClipboardService : IClipboardService
       BitmapSource d => GetBitmapSourceBytes(d),
       Bitmap d => GetBitmapBytes(d),
       MemoryStream d => GetMemoryStreamBytes(d),
+      bool d => GetBooleanBytes(d),
       _ => UnrecognizedTypeBytes(data)
     };
   }
@@ -210,6 +211,7 @@ internal class ClipboardService : IClipboardService
       "System.Windows.Interop.InteropBitmap"=> GetBitmapSourceFromBytes(data),
       "System.Drawing.Bitmap" => GetBitmapFromBytes(data),
       "System.IO.MemoryStream" => GetMemoryStreamFromBytes(data),
+      "System.Boolean" => GetBooleanFromBytes(data),
       _ => UnrecognizedDotnetType(formattedDataObject.DataDotnetType)
     };
   }
@@ -279,6 +281,17 @@ internal class ClipboardService : IClipboardService
   private static MemoryStream GetMemoryStreamFromBytes(byte[] bytes)
   {
     return new(bytes);
+  }
+
+
+  private static byte[] GetBooleanBytes(bool data)
+  {
+    return BitConverter.GetBytes(data);
+  }
+
+  private static bool GetBooleanFromBytes(byte[] bytes)
+  {
+    return BitConverter.ToBoolean(bytes);
   }
 
 
