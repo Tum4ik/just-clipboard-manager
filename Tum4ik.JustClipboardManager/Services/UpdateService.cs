@@ -4,6 +4,9 @@ using System.Net;
 using System.Net.Http;
 using Octokit;
 using FileMode = System.IO.FileMode;
+using System;
+using Microsoft.AppCenter.Crashes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class UpdateService : IUpdateService
@@ -27,19 +30,31 @@ internal class UpdateService : IUpdateService
         .Release
         .GetLatest("Tum4ik", "just-clipboard-manager")
         .ConfigureAwait(false);
-      if (Version.TryParse(latestRelease.TagName, out var latestReleaseVersion)
-          && latestReleaseVersion > _infoService.GetVersion())
+      if (Version.TryParse(latestRelease.TagName, out var latestReleaseVersion))
       {
-        var osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
-        var downloadLink = latestRelease.Assets
-          .Single(a => a.Name.Contains(osArchitecture, StringComparison.InvariantCultureIgnoreCase))
-          .BrowserDownloadUrl;
-        return new(true)
+        if (latestReleaseVersion > _infoService.GetVersion())
         {
-          LatestVersion = latestReleaseVersion,
-          DownloadLink = new(downloadLink),
-          ReleaseNotes = latestRelease.Body
-        };
+          var osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+          var downloadLink = latestRelease.Assets
+            .Single(a => a.Name.Contains(osArchitecture, StringComparison.InvariantCultureIgnoreCase)
+                      && a.Name.Contains(".exe", StringComparison.InvariantCultureIgnoreCase))
+            .BrowserDownloadUrl;
+          return new(true)
+          {
+            LatestVersion = latestReleaseVersion,
+            DownloadLink = new(downloadLink),
+            ReleaseNotes = latestRelease.Body
+          };
+        }
+      }
+      else
+      {
+        Crashes.TrackError(
+          new ArgumentException("Parse version problem when check for updates."), new Dictionary<string, string>()
+          {
+            { "Lates release tag", latestRelease.TagName }
+          }
+        );
       }
     }
     catch (HttpRequestException)
@@ -68,20 +83,19 @@ internal class UpdateService : IUpdateService
       response.EnsureSuccessStatusCode();
 
       var exeFilePath = Path.Combine(Path.GetTempPath(), downloadLink.Segments.Last());
-      const int BufferSize = 8192;
-      var buffer = new byte[BufferSize];
+      var buffer = new byte[8192];
       var totalBytes = response.Content.Headers.ContentLength;
       var totalBytesDownloaded = 0L;
 
       using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
       using var fileStream =
-        new FileStream(exeFilePath, FileMode.Create, FileAccess.Write, FileShare.None, BufferSize, true);
+        new FileStream(exeFilePath, FileMode.Create, FileAccess.Write, FileShare.None, buffer.Length, true);
 
       var prevPercentage = 0;
       while (true)
       {
         var bytesDownloaded = await contentStream
-          .ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+          .ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken)
           .ConfigureAwait(false);
         if (bytesDownloaded == 0)
         {
@@ -89,7 +103,7 @@ internal class UpdateService : IUpdateService
           break;
         }
 
-        await fileStream.WriteAsync(buffer, 0, bytesDownloaded).ConfigureAwait(false);
+        await fileStream.WriteAsync(buffer.AsMemory(0, bytesDownloaded), cancellationToken).ConfigureAwait(false);
         totalBytesDownloaded += bytesDownloaded;
 
         int currentPercentage;
@@ -124,6 +138,7 @@ internal class UpdateService : IUpdateService
   }
 
 
+  [ExcludeFromCodeCoverage]
   public void InstallUpdates(FileInfo exeFile)
   {
     Process.Start(new ProcessStartInfo(exeFile.FullName, "/SILENT") { UseShellExecute = true });
