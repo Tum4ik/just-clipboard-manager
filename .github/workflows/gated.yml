@@ -115,6 +115,11 @@ jobs:
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.PFX_KEY }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
+
+    - name: Create EF migrations bundle
+      run: |
+        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
+        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x64 -OutputDir ${{ env.PublishDir }}
    
     - name: Build installer
       run: |
