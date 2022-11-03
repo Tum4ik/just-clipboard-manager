@@ -18,6 +18,7 @@
 
   <PropertyGroup>
     <Authors>Yevheniy Tymchishin</Authors>
+    <Company>YTSoft</Company>
     <Product>Just Clipboard Manager</Product>
     <Copyright>© 2022-2023 Yevheniy Tymchishin. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -44,6 +45,10 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
@@ -62,6 +67,10 @@
 
   <ItemGroup>
     <Resource Include="Resources\Icons\tray.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
