@@ -10,7 +10,7 @@ $configuration = "Release"
 if ($Architecture -eq "x64") {
   $targetRuntime = "win-x64"
 }
-else if ($Architecture -eq "x86") {
+elseif ($Architecture -eq "x86") {
   $targetRuntime = "win-x86"
 }
 else {
