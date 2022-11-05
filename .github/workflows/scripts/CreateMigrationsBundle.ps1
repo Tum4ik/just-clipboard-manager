@@ -21,7 +21,7 @@ dotnet tool install -g dotnet-ef
 dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
-  -runtime $targetRuntime `
+  --runtime $targetRuntime `
   -p $project `
   -s $project `
   --framework $framework `
