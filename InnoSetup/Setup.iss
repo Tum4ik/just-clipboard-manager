@@ -69,11 +69,13 @@ Name: "autostart"; \
 
 [Files]
 Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
+  Excludes: "efbundle.exe" \
   DestDir: "{app}"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
 Source: "uninstall.ico"; DestDir: "{app}"
+Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\efbundle.exe"; DestDir: "{tmp}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \
@@ -89,7 +91,7 @@ Name: "{autostartup}\{#MyAppName}"; \
   IconFilename: "{app}\install.ico"
 
 [Run]
-Filename: "{app}\efbundle.exe"
+Filename: "{tmp}\efbundle.exe"
 Filename: "{app}\{#MyAppExeName}"; \
   Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; \
   Check: ShowPostinstallLaunchOption; \
