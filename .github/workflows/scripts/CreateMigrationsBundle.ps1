@@ -18,7 +18,7 @@ else {
 }
 
 dotnet tool install -g dotnet-ef
-dotnet ef migrations bundle -f --self-contained --no-build `
+dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
   -runtime $targetRuntime `
