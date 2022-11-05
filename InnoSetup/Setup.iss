@@ -89,6 +89,7 @@ Name: "{autostartup}\{#MyAppName}"; \
   IconFilename: "{app}\install.ico"
 
 [Run]
+Filename: "{app}\efbundle.exe"
 Filename: "{app}\{#MyAppExeName}"; \
   Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; \
   Check: ShowPostinstallLaunchOption; \
