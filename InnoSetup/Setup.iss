@@ -69,7 +69,7 @@ Name: "autostart"; \
 
 [Files]
 Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
-  Excludes: "efbundle.exe" \
+  Excludes: "efbundle.exe"; \
   DestDir: "{app}"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
