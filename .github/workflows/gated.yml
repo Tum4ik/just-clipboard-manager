@@ -118,7 +118,7 @@ jobs:
 
     - name: Create EF migrations bundle
       run: |
-        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
+        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }} | Out-Host
         ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x64 -OutputDir ${{ env.PublishDir }}
    
     - name: Build installer
@@ -127,7 +127,7 @@ jobs:
         .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Null
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
         "#define Architecture `"x86`"" | Set-Content -Path .\InnoSetup\architecture.iss
-        .\inst\iscc.exe ".\InnoSetup\Setup.iss" | Out-Host
+        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
         "#define Architecture `"x64`"" | Set-Content -Path .\InnoSetup\architecture.iss
         .\inst\iscc.exe ".\InnoSetup\Setup.iss"
 
