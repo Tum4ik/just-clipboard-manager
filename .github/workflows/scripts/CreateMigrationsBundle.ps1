@@ -17,8 +17,7 @@ else {
   throw "Unsupported target runtime."
 }
 
-dotnet tool install -g dotnet-ef
-dotnet ef migrations bundle -f --self-contained `
+$result = dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
   --runtime $targetRuntime `
@@ -26,3 +25,7 @@ dotnet ef migrations bundle -f --self-contained `
   -s $project `
   --framework $framework `
   --configuration $configuration
+
+if ($LastExitCode -ne 0) {
+  throw $result
+}
