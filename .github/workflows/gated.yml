@@ -127,7 +127,7 @@ jobs:
         .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Null
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
         "#define Architecture `"x86`"" | Set-Content -Path .\InnoSetup\architecture.iss
-        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
+        .\inst\iscc.exe ".\InnoSetup\Setup.iss" | Out-Host
         "#define Architecture `"x64`"" | Set-Content -Path .\InnoSetup\architecture.iss
         .\inst\iscc.exe ".\InnoSetup\Setup.iss"
 
