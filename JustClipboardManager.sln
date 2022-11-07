@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422F7E7-8F3A-4750-9A82-9C0153726062}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\scripts\BuildInstaller.ps1 = .github\workflows\scripts\BuildInstaller.ps1
+		.github\workflows\scripts\CreateMigrationsBundle.ps1 = .github\workflows\scripts\CreateMigrationsBundle.ps1
 		.github\workflows\scripts\DecodePfx.ps1 = .github\workflows\scripts\DecodePfx.ps1
 		.github\workflows\scripts\DotnetPublish.ps1 = .github\workflows\scripts\DotnetPublish.ps1
 		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1
@@ -52,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.Deployment.UnitTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.UnitTests", "Tests\Tum4ik.JustClipboardManager.UnitTests\Tum4ik.JustClipboardManager.UnitTests.csproj", "{5873C9B0-C2EF-4FEF-A9AD-99FD3F0078E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tum4ik.TestHelpers", "Tests\Tum4ik.TestHelpers\Tum4ik.TestHelpers.csproj", "{E669AAA6-7888-4EA7-BCC5-84C6BA0D28A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.TestHelpers", "Tests\Tum4ik.TestHelpers\Tum4ik.TestHelpers.csproj", "{E669AAA6-7888-4EA7-BCC5-84C6BA0D28A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

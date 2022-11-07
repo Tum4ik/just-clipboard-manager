@@ -6,6 +6,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Octokit;
@@ -61,7 +62,7 @@ public partial class App : ISingleInstance
   public IServiceProvider ServiceProvider => _serviceProvider ??= ConfigureServices(Configuration);
 
 
-  protected override async void OnStartup(StartupEventArgs e)
+  protected override void OnStartup(StartupEventArgs e)
   {
     AppCenter.Start(Configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
 
@@ -117,18 +118,7 @@ public partial class App : ISingleInstance
 
     services
       .AddSingleton(configuration)
-      .AddPooledDbContextFactory<AppDbContext>((sp, o) =>
-      {
-        var dbFileDir = Path.GetDirectoryName(
-          System.Configuration.ConfigurationManager
-            .OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal)
-            .FilePath
-        )!;
-        Directory.CreateDirectory(dbFileDir);
-        var dbFilePath = Path.Combine(dbFileDir, "clips.db");
-        o.UseSqlite($"Data Source={dbFilePath}")
-         .UseLazyLoadingProxies();
-      }, 2)
+      .AddDatabase()
       .AddTransient<IClipRepository, ClipRepository>()
       .AddEventAggregator()
       .AddSingleton<GeneralHookService>()

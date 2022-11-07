@@ -1,5 +1,10 @@
+using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Tum4ik.JustClipboardManager.Data;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
 internal static class ServiceCollectionExtensions
@@ -24,5 +29,11 @@ internal static class ServiceCollectionExtensions
     services.Add(viewModelDescriptor);
     services.Add(viewDescriptor);
     return services;
+  }
+
+
+  public static IServiceCollection AddDatabase(this IServiceCollection services)
+  {
+    return services.AddPooledDbContextFactory<AppDbContext>((sp, o) => AppDbContext.Configure(o), 2);
   }
 }

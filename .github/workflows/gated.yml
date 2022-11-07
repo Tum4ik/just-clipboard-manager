@@ -80,6 +80,15 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+    - name: Install EF Core CLI
+      run: dotnet tool install -g dotnet-ef
+
+    - name: Install Inno Setup
+      run: |
+        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
+        .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Host
+        curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
+
     - name: Define version
       id: define-version
       run: |
@@ -115,16 +124,16 @@ jobs:
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.PFX_KEY }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
+
+    - name: Create EF migrations bundle
+      run: |
+        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
+        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x64 -OutputDir ${{ env.PublishDir }}
    
     - name: Build installer
       run: |
-        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
-        .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Null
-        curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
-        "#define Architecture `"x86`"" | Set-Content -Path .\InnoSetup\architecture.iss
-        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
-        "#define Architecture `"x64`"" | Set-Content -Path .\InnoSetup\architecture.iss
-        .\inst\iscc.exe ".\InnoSetup\Setup.iss"
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3

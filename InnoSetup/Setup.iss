@@ -69,11 +69,13 @@ Name: "autostart"; \
 
 [Files]
 Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
+  Excludes: "efbundle.exe"; \
   DestDir: "{app}"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
 Source: "uninstall.ico"; DestDir: "{app}"
+Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\efbundle.exe"; DestDir: "{tmp}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \
@@ -89,6 +91,7 @@ Name: "{autostartup}\{#MyAppName}"; \
   IconFilename: "{app}\install.ico"
 
 [Run]
+Filename: "{tmp}\efbundle.exe"; Flags: runhidden
 Filename: "{app}\{#MyAppExeName}"; \
   Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; \
   Check: ShowPostinstallLaunchOption; \
@@ -241,7 +244,7 @@ begin
     usPostUninstall: begin
       DialogResult := MsgBox(CustomMessage('DoYouWantRemoveAppSettingsAndClips'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
       if DialogResult = IDYES then begin
-        PublisherDir := ExpandConstant('{localappdata}\Yevheniy_Tymchishin\');
+        PublisherDir := ExpandConstant('{localappdata}\YTSoft\');
         if FindFirst(PublisherDir + 'JustClipboardManager*', FoundRecord) then begin
           try
             repeat
