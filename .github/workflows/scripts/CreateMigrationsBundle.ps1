@@ -17,7 +17,7 @@ else {
   throw "Unsupported target runtime."
 }
 
-$result = dotnet ef migrations bundle -f --self-contained `
+dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
   -p $project `

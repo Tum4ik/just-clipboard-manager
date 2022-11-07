@@ -91,7 +91,7 @@ Name: "{autostartup}\{#MyAppName}"; \
   IconFilename: "{app}\install.ico"
 
 [Run]
-Filename: "{tmp}\efbundle.exe"
+Filename: "{tmp}\efbundle.exe"; Flags: runhidden
 Filename: "{app}\{#MyAppExeName}"; \
   Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; \
   Check: ShowPostinstallLaunchOption; \
