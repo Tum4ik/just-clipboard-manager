@@ -20,12 +20,11 @@ else {
 $result = dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
-  --runtime $targetRuntime `
   -p $project `
   -s $project `
   --framework $framework `
   --configuration $configuration
 
 if ($LastExitCode -ne 0) {
-  throw $result
+  throw
 }
