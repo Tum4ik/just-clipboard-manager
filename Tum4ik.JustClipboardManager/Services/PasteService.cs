@@ -16,7 +16,7 @@ internal class PasteService : IPasteService
 
   public void PasteData(IntPtr targetWindowPtr, ICollection<FormattedDataObject> data)
   {
-    if (data.IsNullOrEmpty())
+    if (data.Count == 0)
     {
       return;
     }

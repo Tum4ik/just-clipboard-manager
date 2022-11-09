@@ -1,4 +1,4 @@
-using Tum4ik.EventAggregator.Event;
+using Prism.Events;
 
 namespace Tum4ik.JustClipboardManager.Events;
 internal class ClipboardChangedEvent : PubSubEvent

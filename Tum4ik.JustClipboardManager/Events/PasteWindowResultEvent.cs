@@ -1,4 +1,4 @@
-using Tum4ik.EventAggregator.Event;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 
 namespace Tum4ik.JustClipboardManager.Events;

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Tum4ik.EventAggregator;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;

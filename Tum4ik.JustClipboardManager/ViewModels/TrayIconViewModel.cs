@@ -1,9 +1,8 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
-using Castle.Core.Internal;
 using CommunityToolkit.Mvvm.Input;
-using Tum4ik.EventAggregator;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
@@ -51,9 +50,9 @@ internal partial class TrayIconViewModel
       .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
     _pasteWindowService.ShowWindow(targetWindowToPaste);
 
-    var data = await _tcs.Task;
+    var data = await _tcs.Task.ConfigureAwait(true);
     _tcs = null;
-    if (!data.IsNullOrEmpty())
+    if (data.Count > 0)
     {
       _pasteService.PasteData(targetWindowToPaste, data);
     }
@@ -78,5 +77,6 @@ internal partial class TrayIconViewModel
   /// can be NULL in certain circumstances, such as when a window is losing activation.
   /// </returns>
   [DllImport("user32.dll")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   private static extern IntPtr GetForegroundWindow();
 }

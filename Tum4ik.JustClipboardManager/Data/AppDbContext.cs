@@ -1,7 +1,6 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Tum4ik.JustClipboardManager.Data.Models;
 
 namespace Tum4ik.JustClipboardManager.Data;
@@ -9,6 +8,9 @@ internal class AppDbContext : DbContext
 {
   public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
   {
+#if DEBUG
+    Database.EnsureCreated();
+#endif
   }
 
 
