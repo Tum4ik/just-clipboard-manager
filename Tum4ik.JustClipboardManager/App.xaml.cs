@@ -1,20 +1,21 @@
-using System.Configuration;
-using System.IO;
-using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Octokit;
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Mvvm;
+using Prism.Regions;
+using Prism.Regions.Behaviors;
 using SingleInstanceCore;
-using Tum4ik.EventAggregator.Extensions;
-using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
@@ -55,26 +56,37 @@ public partial class App : ISingleInstance
   }
 
 
-  private IConfiguration? _configuration;
-  public IConfiguration Configuration => _configuration ??= ConfigureAppConfiguration();
-
   private ServiceProvider? _serviceProvider;
-  public IServiceProvider ServiceProvider => _serviceProvider ??= ConfigureServices(Configuration);
 
 
   protected override void OnStartup(StartupEventArgs e)
   {
-    AppCenter.Start(Configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
-
     base.OnStartup(e);
 
-    var updateService = ServiceProvider.GetRequiredService<IUpdateService>();
-    updateService.SilentUpdate();
+    _serviceProvider = ConfigureServices();
+    var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
+    AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
+    ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) => _serviceProvider.GetRequiredService(type));
+    ContainerLocator.SetContainerExtension(() => new ServiceContainerExtension(_serviceProvider));
 
-    RemoveOldClips();
-    var trayIcon = ServiceProvider.GetRequiredService<TrayIcon>();
-    var hookService = ServiceProvider.GetRequiredService<GeneralHookService>();
-    var clipboardService = ServiceProvider.GetRequiredService<IClipboardService>();
+#if !DEBUG
+    var updateService = _serviceProvider.GetRequiredService<IUpdateService>();
+    updateService.SilentUpdate();
+#endif
+
+    var regionAdapterMappings = _serviceProvider.GetRequiredService<RegionAdapterMappings>();
+    RegisterDefaultRegionAdapterMappings(regionAdapterMappings);
+
+    var defaultRegionBehaviors = _serviceProvider.GetRequiredService<IRegionBehaviorFactory>();
+    RegisterDefaultRegionBehaviors(defaultRegionBehaviors);
+
+    var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
+    //moduleManager.Run();
+
+    RemoveOldClips(_serviceProvider);
+    var trayIcon = _serviceProvider.GetRequiredService<TrayIcon>();
+    var hookService = _serviceProvider.GetRequiredService<GeneralHookService>();
+    var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
   }
 
 
@@ -87,46 +99,30 @@ public partial class App : ISingleInstance
   }
 
 
-  private void RemoveOldClips()
+  private static void RemoveOldClips(ServiceProvider serviceProvider)
   {
-    var clipRepository = ServiceProvider.GetRequiredService<IClipRepository>();
+    var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
     clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
   }
 
 
-  private static IConfiguration ConfigureAppConfiguration()
-  {
-    var assembly = Assembly.GetExecutingAssembly();
-    var appsettingsResourceName = assembly.GetManifestResourceNames()
-      .Single(n => n.EndsWith("appsettings.json", StringComparison.InvariantCultureIgnoreCase));
-    // Don't use "using" keyword for appsettingsStream here - it will break the settings reading process.
-    // The stream will be disposed by StreamReader internally anyway.
-    var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
-    return new ConfigurationBuilder()
-      .SetBasePath(AppContext.BaseDirectory)
-      .AddJsonStream(appsettingsStream)
-#if DEBUG
-      .AddUserSecrets(Assembly.GetExecutingAssembly())
-#endif
-      .Build();
-  }
-
-
-  private static ServiceProvider ConfigureServices(IConfiguration configuration)
+  private static ServiceProvider ConfigureServices()
   {
     var services = new ServiceCollection();
 
     services
-      .AddSingleton(configuration)
+      .AddSingleton<IContainerExtension>(sp => new ServiceContainerExtension(sp))
+      .AddConfiguration()
+      .AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
+      .AddPrismServices()
+      .AddRegionAdapters()
       .AddDatabase()
       .AddTransient<IClipRepository, ClipRepository>()
-      .AddEventAggregator()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
-      .AddSingleton<IClipboard, ClipboardWrapper>()
       .AddSingleton<IClipboardService, ClipboardService>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
@@ -140,5 +136,26 @@ public partial class App : ISingleInstance
       .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
 
     return services.BuildServiceProvider();
+  }
+
+
+  private static void RegisterDefaultRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+  {
+    regionAdapterMappings.RegisterMapping<Selector, SelectorRegionAdapter>();
+    regionAdapterMappings.RegisterMapping<ItemsControl, ItemsControlRegionAdapter>();
+    regionAdapterMappings.RegisterMapping<ContentControl, ContentControlRegionAdapter>();
+  }
+
+
+  private static void RegisterDefaultRegionBehaviors(IRegionBehaviorFactory regionBehaviors)
+  {
+    regionBehaviors.AddIfMissing<BindRegionContextToDependencyObjectBehavior>(BindRegionContextToDependencyObjectBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<RegionActiveAwareBehavior>(RegionActiveAwareBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<SyncRegionContextWithHostBehavior>(SyncRegionContextWithHostBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<RegionManagerRegistrationBehavior>(RegionManagerRegistrationBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<RegionMemberLifetimeBehavior>(RegionMemberLifetimeBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<ClearChildViewsRegionBehavior>(ClearChildViewsRegionBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<AutoPopulateRegionBehavior>(AutoPopulateRegionBehavior.BehaviorKey);
+    regionBehaviors.AddIfMissing<DestructibleRegionBehavior>(DestructibleRegionBehavior.BehaviorKey);
   }
 }

@@ -1,9 +1,12 @@
-using System.Configuration;
-using System.IO;
 using System.Reflection;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
+using Prism.Modularity;
+using Prism.Mvvm;
+using Prism.Regions;
+using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
@@ -29,6 +32,61 @@ internal static class ServiceCollectionExtensions
     services.Add(viewModelDescriptor);
     services.Add(viewDescriptor);
     return services;
+  }
+
+
+  public static IServiceCollection RegisterForNavigation<TView, TViewModel>(this IServiceCollection services)
+    where TView : class
+  {
+    ViewModelLocationProvider.Register<TView, TViewModel>();
+    return services.AddTransient<TView>();
+  }
+
+
+  public static IServiceCollection AddConfiguration(this IServiceCollection services)
+  {
+    var assembly = Assembly.GetExecutingAssembly();
+    var appsettingsResourceName = assembly.GetManifestResourceNames()
+      .Single(n => n.EndsWith("appsettings.json", StringComparison.InvariantCultureIgnoreCase));
+    // Don't use "using" keyword for appsettingsStream here - it will break the settings reading process.
+    // The stream will be disposed by StreamReader internally anyway.
+    var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
+    var configuration = new ConfigurationBuilder()
+      .SetBasePath(AppContext.BaseDirectory)
+      .AddJsonStream(appsettingsStream)
+#if DEBUG
+      .AddUserSecrets(Assembly.GetExecutingAssembly())
+#endif
+      .Build();
+    return services.AddSingleton<IConfiguration>(configuration);
+  }
+
+
+  public static IServiceCollection AddPrismServices(this IServiceCollection services)
+  {
+    return services
+      .AddSingleton<IDialogService, DialogService>()
+      .AddSingleton<IModuleInitializer, ModuleInitializer>()
+      .AddSingleton<IModuleManager, ModuleManager>()
+      .AddSingleton<RegionAdapterMappings>()
+      .AddSingleton<IRegionManager, RegionManager>()
+      .AddSingleton<IRegionNavigationContentLoader, RegionNavigationContentLoader>()
+      .AddSingleton<IEventAggregator, EventAggregator>()
+      .AddSingleton<IRegionViewRegistry, RegionViewRegistry>()
+      .AddSingleton<IRegionBehaviorFactory, RegionBehaviorFactory>()
+      .AddTransient<IRegionNavigationJournalEntry, RegionNavigationJournalEntry>()
+      .AddTransient<IRegionNavigationJournal, RegionNavigationJournal>()
+      .AddTransient<IRegionNavigationService, RegionNavigationService>()
+      .AddTransient<IDialogWindow, DialogWindow>();
+  }
+
+
+  public static IServiceCollection AddRegionAdapters(this IServiceCollection services)
+  {
+    return services
+      .AddTransient<SelectorRegionAdapter>()
+      .AddTransient<ItemsControlRegionAdapter>()
+      .AddTransient<ContentControlRegionAdapter>();
   }
 
 

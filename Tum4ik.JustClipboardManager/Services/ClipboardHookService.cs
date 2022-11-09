@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using Tum4ik.EventAggregator;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
 
 namespace Tum4ik.JustClipboardManager.Services;

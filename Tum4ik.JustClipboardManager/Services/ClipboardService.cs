@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Tum4ik.EventAggregator;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
@@ -16,17 +16,14 @@ using Tum4ik.JustClipboardManager.Events;
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
 {
-  private readonly IClipboard _clipboard;
   private readonly IClipRepository _clipRepository;
 
-  public ClipboardService(IClipboard clipboard,
-                          IEventAggregator eventAggregator,
+  public ClipboardService(IEventAggregator eventAggregator,
                           IClipRepository clipRepository)
   {
-    _clipboard = clipboard;
     _clipRepository = clipRepository;
 
-    eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.MainThread);
+    eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.UIThread);
   }
 
 
@@ -49,11 +46,11 @@ internal class ClipboardService : IClipboardService
     }
 
     dataObject.SetData(ChangeMarker, new());
-    _clipboard.SetDataObject(dataObject);
+    Clipboard.SetDataObject(dataObject);
   }
 
 
-  private async Task OnClipboardChanged()
+  private async void OnClipboardChanged()
   {
     try
     {
@@ -68,7 +65,7 @@ internal class ClipboardService : IClipboardService
 
   private async Task SaveClipAsync()
   {
-    var dataObject = _clipboard.GetDataObject();
+    var dataObject = Clipboard.GetDataObject();
     var formats = dataObject.GetFormats(false);
     if (formats.Length == 0 || formats.Contains(ChangeMarker))
     {
