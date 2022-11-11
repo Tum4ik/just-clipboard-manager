@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Icons\tray.ico" />
+    <Content Include="Resources\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>

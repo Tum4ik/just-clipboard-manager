@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  
   <Style TargetType="Window" x:Key="WindowStyle">
     <Setter Property="WindowStyle" Value="None"/>
     <Setter Property="AllowsTransparency" Value="True"/>
@@ -12,4 +13,21 @@
                     BlurRadius="8"
                     ShadowDepth="2"
                     RenderingBias="Quality"/>
+
+  <Style TargetType="ContextMenu">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ContextMenu">
+          <Border CornerRadius="4"
+                  Margin="8"
+                  Effect="{StaticResource DefaultDropShadowEffect}">
+            <StackPanel IsItemsHost="True"
+                        Margin="0, 8"
+                        KeyboardNavigation.DirectionalNavigation="Cycle"/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
 </ResourceDictionary>

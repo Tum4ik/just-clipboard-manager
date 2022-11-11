@@ -10,6 +10,10 @@
                 IconSource="/Resources/Icons/tray.ico">
   <tb:TaskbarIcon.ContextMenu>
     <ContextMenu>
+      <MenuItem Header="Clips"/>
+      <MenuItem Header="Options"/>
+      <MenuItem Header="About"/>
+      <Separator/>
       <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
     </ContextMenu>
   </tb:TaskbarIcon.ContextMenu>
