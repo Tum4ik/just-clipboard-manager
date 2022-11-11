@@ -1,4 +1,7 @@
+using Microsoft.AppCenter.Crashes;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 
 namespace YTSoft.JustClipboardManager;
 
@@ -7,20 +10,46 @@ namespace YTSoft.JustClipboardManager;
 /// </summary>
 public partial class App : Application
 {
-  /// <summary>
-  /// Initializes the singleton application object.  This is the first line of authored code
-  /// executed, and as such is the logical equivalent of main() or WinMain().
-  /// </summary>
-  public App()
+  [STAThread]
+  public static async Task Main(string[] args)
   {
-    this.InitializeComponent();
+    if (IsRedirect(out var instance))
+    {
+      var activatedArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+      await instance.RedirectActivationToAsync(activatedArgs);
+      return;
+    }
+
+    Start(p =>
+    {
+      var context = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
+      SynchronizationContext.SetSynchronizationContext(context);
+      var app = new App();
+      app.UnhandledException += (s, e) =>
+      {
+        Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
+        Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
+        e.Handled = true;
+        app.Exit();
+      };
+    });
   }
 
-  /// <summary>
-  /// Invoked when the application is launched.
-  /// </summary>
-  /// <param name="args">Details about the launch request and process.</param>
-  protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+
+  private static bool IsRedirect(out AppInstance instance)
+  {
+    instance = AppInstance.FindOrRegisterForKey("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
+    return !instance.IsCurrent;
+  }
+
+
+  public App()
+  {
+    InitializeComponent();
+  }
+
+
+  protected override void OnLaunched(LaunchActivatedEventArgs args)
   {
     m_window = new MainWindow();
     m_window.Activate();
