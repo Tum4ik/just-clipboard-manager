@@ -59,8 +59,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
