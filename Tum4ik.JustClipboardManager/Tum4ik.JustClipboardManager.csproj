@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -14,9 +14,6 @@
 
   <PropertyGroup>
     <Version>0.0.0.0-dev</Version>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <Authors>Yevheniy Tymchishin</Authors>
     <Company>YTSoft</Company>
     <Product>Just Clipboard Manager</Product>
@@ -41,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icons\tray.ico" />
+    <Resource Include="Resources\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
