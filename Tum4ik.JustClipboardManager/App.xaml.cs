@@ -46,7 +46,17 @@ public partial class App : ISingleInstance
       app.Shutdown();
     };
     app.InitializeComponent();
+    app.OverrideDefaultProperties();
     app.Run();
+  }
+
+
+  internal void OverrideDefaultProperties()
+  {
+    FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
+    {
+      DefaultValue = FindResource(typeof(Window))
+    });
   }
 
 

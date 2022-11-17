@@ -7,12 +7,22 @@
                 xmlns:viewmodels="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
-                IconSource="/Resources/Icons/tray.ico">
+                IconSource="/Resources/Icons/tray.ico"
+                UseLayoutRounding="True">
   <tb:TaskbarIcon.ContextMenu>
     <ContextMenu>
       <MenuItem Header="Clips"/>
       <MenuItem Header="Options"/>
       <MenuItem Header="About"/>
+      <Separator/>
+      <MenuItem Header="Theme">
+        <MenuItem Header="Light" IsCheckable="True"/>
+        <MenuItem Header="Dark" IsCheckable="True"/>
+      </MenuItem>
+      <MenuItem Header="Language">
+        <MenuItem Header="English" IsCheckable="True"/>
+        <MenuItem Header="Ukrainian" IsCheckable="True"/>
+      </MenuItem>
       <Separator/>
       <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
     </ContextMenu>

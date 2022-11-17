@@ -13,11 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\chevron.svg" />
     <None Remove="Resources\file.svg" />
     <None Remove="Resources\files.svg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\chevron.svg" />
     <Resource Include="Resources\file.svg" />
     <Resource Include="Resources\files.svg" />
   </ItemGroup>
