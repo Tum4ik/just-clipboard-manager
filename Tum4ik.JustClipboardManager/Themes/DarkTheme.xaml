@@ -6,6 +6,11 @@
   <Color x:Key="TextTertiaryColor">#8BFFFFFF</Color>
   <Color x:Key="TextDisabledColor">#5DFFFFFF</Color>
 
+  <!--<SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>
+     <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>-->
+  <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>
+  <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource TextSecondaryColor}"/>
+
   <Brush x:Key="PopupBorderBrush">#33000000</Brush>
   <VisualBrush x:Key="AcrylicBackgroundBrush" 
                TileMode="Tile" 

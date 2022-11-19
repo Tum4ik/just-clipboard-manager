@@ -5,6 +5,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                 xmlns:tb="http://www.hardcodet.net/taskbar" 
                 xmlns:viewmodels="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
+                xmlns:services="clr-namespace:Tum4ik.JustClipboardManager.Services"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="/Resources/Icons/tray.ico"
@@ -16,8 +17,12 @@
       <MenuItem Header="About"/>
       <Separator/>
       <MenuItem Header="Theme">
-        <MenuItem Header="Light" IsCheckable="True"/>
-        <MenuItem Header="Dark" IsCheckable="True"/>
+        <MenuItem Header="Light" IsCheckable="True"
+                  Command="{Binding ChangeThemeCommand}"
+                  CommandParameter="{x:Static services:Theme.Light}"/>
+        <MenuItem Header="Dark" IsCheckable="True" 
+                  Command="{Binding ChangeThemeCommand}"
+                  CommandParameter="{x:Static services:Theme.Dark}"/>
       </MenuItem>
       <MenuItem Header="Language">
         <MenuItem Header="English" IsCheckable="True"/>

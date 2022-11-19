@@ -4,10 +4,7 @@
                     xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons">
 
   <system:Double x:Key="FontSize">14</system:Double>
-  <!--<SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>
-     <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>-->
-  <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="{DynamicResource TextPrimaryColor}"/>
-  <SolidColorBrush x:Key="TextSecondaryBrush" Color="{DynamicResource TextSecondaryColor}"/>
+  
   <ContextMenu x:Key="ContextMenuDisabled" Visibility="Collapsed"/>
   
 

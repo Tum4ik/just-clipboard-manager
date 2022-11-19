@@ -134,6 +134,7 @@ public partial class App : ISingleInstance
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboardService, ClipboardService>()
+      .AddSingleton<IThemeService, ThemeService>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
       .AddTransient<IGitHubClient>(sp =>
