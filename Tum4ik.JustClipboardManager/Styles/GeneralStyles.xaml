@@ -69,8 +69,37 @@
   </Style>
   <ControlTemplate x:Key="{x:Static MenuItem.SubmenuItemTemplateKey}" TargetType="MenuItem">
     <Border Style="{StaticResource MenuItemBorderStyle}">
-      <TextBlock Style="{StaticResource MenuItemTextBlockStyle}"/>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <icons:SvgIcon Grid.Column="0" 
+                       x:Name="CheckIcon"
+                       Visibility="Collapsed"
+                       Icon="Check" Color="{DynamicResource TextPrimaryBrush}"
+                       Width="11" Height="11"
+                       VerticalAlignment="Center"
+                       Margin="15, 0, 3, 0"/>
+        <TextBlock Grid.Column="1" Style="{StaticResource MenuItemTextBlockStyle}"/>
+      </Grid>
     </Border>
+    <ControlTemplate.Triggers>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsCheckable" Value="True"/>
+          <Condition Property="IsChecked" Value="False"/>
+        </MultiTrigger.Conditions>
+        <Setter TargetName="CheckIcon" Property="Visibility" Value="Hidden"/>
+      </MultiTrigger>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsCheckable" Value="True"/>
+          <Condition Property="IsChecked" Value="True"/>
+        </MultiTrigger.Conditions>
+        <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible"/>
+      </MultiTrigger>
+    </ControlTemplate.Triggers>
   </ControlTemplate>
   <ControlTemplate x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}" TargetType="MenuItem">
     <Border Style="{StaticResource MenuItemBorderStyle}">
