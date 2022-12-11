@@ -57,9 +57,12 @@
     <Setter Property="CornerRadius" Value="4"/>
     <Setter Property="Background" Value="Transparent"/>
     <Style.Triggers>
-      <Trigger Property="IsMouseOver" Value="True">
+      <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
         <Setter Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
-      </Trigger>
+      </DataTrigger>
+      <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+        <Setter Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+      </DataTrigger>
     </Style.Triggers>
   </Style>
   <Style x:Key="MenuItemTextBlockStyle" TargetType="TextBlock">
@@ -127,6 +130,17 @@
       </Grid>
     </Border>
   </ControlTemplate>
+
+  <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
+    <Setter Property="Margin" Value="0, 2"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Separator">
+          <Border Background="{DynamicResource ItemDividerBrush}" Height="1"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
   <Style TargetType="TextBox">
     <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>

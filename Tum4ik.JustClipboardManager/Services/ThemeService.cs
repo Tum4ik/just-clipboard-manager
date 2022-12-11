@@ -24,8 +24,8 @@ internal class ThemeService : IThemeService
   }
 
 
-  private Uri? _lightThemeSourced;
-  private Uri LightThemeSource => _lightThemeSourced
+  private Uri? _lightThemeSource;
+  private Uri LightThemeSource => _lightThemeSource
     ??= new($"pack://application:,,,/{Assembly.GetExecutingAssembly()};component/Themes/LightTheme.xaml");
 
   private Uri? _darkThemeSource;

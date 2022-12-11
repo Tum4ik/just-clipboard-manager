@@ -27,6 +27,8 @@
     </VisualBrush.Visual>
   </VisualBrush>
 
+  <Brush x:Key="ItemDividerBrush">#15FFFFFF</Brush>
   <Brush x:Key="ItemHoverBackgroundBrush">#0FFFFFFF</Brush>
+  <Brush x:Key="ItemPressedBackgroundBrush">#0BFFFFFF</Brush>
 
 </ResourceDictionary>

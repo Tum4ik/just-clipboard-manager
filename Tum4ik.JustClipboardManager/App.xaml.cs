@@ -112,7 +112,7 @@ public partial class App : ISingleInstance
   private static void RemoveOldClips(ServiceProvider serviceProvider)
   {
     var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
-    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
+    _ = clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
   }
 
 
