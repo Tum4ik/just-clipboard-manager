@@ -15,9 +15,9 @@ public class SetupFileTests
 
     var preamble = reader.CurrentEncoding.Preamble;
 
-    Assert.Equal(3, preamble.Length);
-    Assert.Equal(239, preamble[0]);
-    Assert.Equal(187, preamble[1]);
-    Assert.Equal(191, preamble[2]);
+    preamble.Length.Should().Be(3);
+    preamble[0].Should().Be(239);
+    preamble[1].Should().Be(187);
+    preamble[2].Should().Be(191);
   }
 }

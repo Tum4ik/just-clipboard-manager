@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -13,11 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\check.svg" />
+    <None Remove="Resources\chevron.svg" />
     <None Remove="Resources\file.svg" />
     <None Remove="Resources\files.svg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\check.svg" />
+    <Resource Include="Resources\chevron.svg" />
     <Resource Include="Resources\file.svg" />
     <Resource Include="Resources\files.svg" />
   </ItemGroup>

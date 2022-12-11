@@ -46,7 +46,17 @@ public partial class App : ISingleInstance
       app.Shutdown();
     };
     app.InitializeComponent();
+    app.OverrideDefaultProperties();
     app.Run();
+  }
+
+
+  internal void OverrideDefaultProperties()
+  {
+    FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
+    {
+      DefaultValue = FindResource(typeof(Window))
+    });
   }
 
 
@@ -102,7 +112,7 @@ public partial class App : ISingleInstance
   private static void RemoveOldClips(ServiceProvider serviceProvider)
   {
     var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
-    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
+    _ = clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
   }
 
 
@@ -124,6 +134,7 @@ public partial class App : ISingleInstance
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboardService, ClipboardService>()
+      .AddSingleton<IThemeService, ThemeService>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
       .AddTransient<IGitHubClient>(sp =>

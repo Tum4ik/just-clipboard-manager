@@ -36,8 +36,8 @@ internal class UpdateService : IUpdateService
         {
           var osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets
-            .Single(a => a.Name.Contains(osArchitecture, StringComparison.InvariantCultureIgnoreCase)
-                      && a.Name.Contains(".exe", StringComparison.InvariantCultureIgnoreCase))
+            .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
+                      && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))
             .BrowserDownloadUrl;
           return new(true)
           {

@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using Moq;
 using Octokit;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.TestHelpers;
@@ -27,7 +26,7 @@ public class UpdateServiceTests
 
   private const string X86 = "x86";
   private const string X64 = "x64";
-  [Theory]
+  [Theory(Skip = "Until Harmony supports .NET 7")]
   [InlineData(X86)]
   [InlineData(X64)]
   public async Task CheckForUpdates_LatestVersionIsGreaterThanCurrent_UpdateAvailable(string cpuArch)
@@ -101,9 +100,9 @@ public class UpdateServiceTests
 
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 
-    Assert.False(checkUpdatesResult.NewVersionIsAvailable);
-    Assert.Null(checkUpdatesResult.LatestVersion);
-    Assert.Null(checkUpdatesResult.DownloadLink);
-    Assert.Null(checkUpdatesResult.ReleaseNotes);
+    checkUpdatesResult.NewVersionIsAvailable.Should().BeFalse();
+    checkUpdatesResult.LatestVersion.Should().BeNull();
+    checkUpdatesResult.DownloadLink.Should().BeNull();
+    checkUpdatesResult.ReleaseNotes.Should().BeNull();
   }
 }

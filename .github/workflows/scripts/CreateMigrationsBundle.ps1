@@ -5,7 +5,7 @@ param (
 
 $outputFile = Join-Path $OutputDir $Architecture "efbundle.exe"
 $project = Join-Path "Tum4ik.JustClipboardManager" "Tum4ik.JustClipboardManager.csproj"
-$framework = "net6.0-windows"
+$framework = "net7.0-windows"
 $configuration = "Release"
 if ($Architecture -eq "x64") {
   $targetRuntime = "win-x64"

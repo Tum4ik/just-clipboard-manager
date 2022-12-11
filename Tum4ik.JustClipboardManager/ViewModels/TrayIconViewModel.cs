@@ -15,19 +15,29 @@ internal partial class TrayIconViewModel
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
   private readonly IEventAggregator _eventAggregator;
+  private readonly IThemeService _themeService;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
-                           IEventAggregator eventAggregator)
+                           IEventAggregator eventAggregator,
+                           IThemeService themeService)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
     _eventAggregator = eventAggregator;
+    _themeService = themeService;
 
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
-    _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKey);
+    _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKeyAsync);
+  }
+
+
+  [RelayCommand]
+  private void ChangeTheme(Theme theme)
+  {
+    _themeService.SetTheme(theme);
   }
 
 
@@ -41,7 +51,7 @@ internal partial class TrayIconViewModel
   private TaskCompletionSource<ICollection<FormattedDataObject>>? _tcs;
 
 
-  private async Task HandleInsertHotKey()
+  private async Task HandleInsertHotKeyAsync()
   {
     var targetWindowToPaste = GetForegroundWindow();
     _tcs = new();

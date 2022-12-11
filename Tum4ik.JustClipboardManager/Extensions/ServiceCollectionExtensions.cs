@@ -47,7 +47,7 @@ internal static class ServiceCollectionExtensions
   {
     var assembly = Assembly.GetExecutingAssembly();
     var appsettingsResourceName = assembly.GetManifestResourceNames()
-      .Single(n => n.EndsWith("appsettings.json", StringComparison.InvariantCultureIgnoreCase));
+      .Single(n => n.EndsWith("appsettings.json", StringComparison.OrdinalIgnoreCase));
     // Don't use "using" keyword for appsettingsStream here - it will break the settings reading process.
     // The stream will be disposed by StreamReader internally anyway.
     var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
