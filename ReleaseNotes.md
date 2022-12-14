@@ -1,2 +1,3 @@
-- Run on Windows startup option.
-- Live updates.
+- UI Design (WinUI 3).
+- Light and Dark themes.
+- Application Settings.

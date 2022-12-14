@@ -111,8 +111,9 @@
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Style="{StaticResource MenuItemTextBlockStyle}"/>
-        <icons:SvgIcon Grid.Column="1"
+        <TextBlock x:Name="_text" Grid.Column="0" Style="{StaticResource MenuItemTextBlockStyle}"/>
+        <icons:SvgIcon x:Name="_icon"
+                       Grid.Column="1"
                        Icon="Chevron" Color="{DynamicResource TextSecondaryBrush}"
                        Width="8" Height="8"
                        VerticalAlignment="Center"
@@ -129,6 +130,12 @@
         </Popup>
       </Grid>
     </Border>
+    <ControlTemplate.Triggers>
+      <Trigger Property="IsPressed" Value="True">
+        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+      </Trigger>
+    </ControlTemplate.Triggers>
   </ControlTemplate>
 
   <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">

@@ -40,7 +40,11 @@ public partial class App : ISingleInstance
 
     app.DispatcherUnhandledException += (s, e) =>
     {
-      Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
+      // TODO: improve to give user a chance to decide send or not
+      Crashes.TrackError(e.Exception, new Dictionary<string, string>
+      {
+        { "Message", "Application Dispatcher Unhandled Exception" }
+      });
       Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
       e.Handled = true;
       app.Shutdown();
