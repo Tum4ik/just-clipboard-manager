@@ -12,7 +12,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  private readonly IntPtr _windowHandle;
+  private readonly nint _windowHandle;
   private readonly Dictionary<KeybindDescriptor, int> _registeredAtoms = new();
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
@@ -72,7 +72,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  public IntPtr HwndHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+  public nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
   {
     switch (msg)
     {
@@ -84,7 +84,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
         }
         break;
     }
-    return IntPtr.Zero;
+    return nint.Zero;
   }
 
 
@@ -95,12 +95,12 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
 
 
   [DllImport("user32.dll")]
-  private static extern bool RegisterHotKey(IntPtr hWnd, int id, int modifiers, int vKey);
+  private static extern bool RegisterHotKey(nint hWnd, int id, int modifiers, int vKey);
 
   [DllImport("user32.dll")]
-  private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+  private static extern bool UnregisterHotKey(nint hWnd, int id);
 
-  [DllImport("kernel32.dll")]
+  [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
   private static extern int GlobalAddAtom(string name);
 
   [DllImport("kernel32.dll")]

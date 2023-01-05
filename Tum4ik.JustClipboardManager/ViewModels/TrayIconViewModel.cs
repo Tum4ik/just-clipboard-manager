@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
+using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
@@ -16,21 +18,31 @@ internal partial class TrayIconViewModel
   private readonly IPasteService _pasteService;
   private readonly IEventAggregator _eventAggregator;
   private readonly IThemeService _themeService;
+  private readonly IDialogService _dialogService;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
                            IEventAggregator eventAggregator,
-                           IThemeService themeService)
+                           IThemeService themeService,
+                           IDialogService dialogService)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
     _eventAggregator = eventAggregator;
     _themeService = themeService;
+    _dialogService = dialogService;
 
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKeyAsync);
+  }
+
+
+  [RelayCommand]
+  private void Settings()
+  {
+    _dialogService.Show(DialogNames.MainDialog);
   }
 
 
@@ -42,7 +54,7 @@ internal partial class TrayIconViewModel
 
 
   [RelayCommand]
-  private void Exit()
+  private static void Exit()
   {
     Application.Current.Shutdown();
   }
@@ -88,5 +100,5 @@ internal partial class TrayIconViewModel
   /// </returns>
   [DllImport("user32.dll")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern IntPtr GetForegroundWindow();
+  private static extern nint GetForegroundWindow();
 }

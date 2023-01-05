@@ -15,6 +15,10 @@
   <ItemGroup>
     <None Remove="Resources\check.svg" />
     <None Remove="Resources\chevron.svg" />
+    <None Remove="Resources\chrome-close.svg" />
+    <None Remove="Resources\chrome-maximize.svg" />
+    <None Remove="Resources\chrome-minimize.svg" />
+    <None Remove="Resources\chrome-restore.svg" />
     <None Remove="Resources\file.svg" />
     <None Remove="Resources\files.svg" />
   </ItemGroup>
@@ -22,6 +26,10 @@
   <ItemGroup>
     <Resource Include="Resources\check.svg" />
     <Resource Include="Resources\chevron.svg" />
+    <Resource Include="Resources\chrome-close.svg" />
+    <Resource Include="Resources\chrome-maximize.svg" />
+    <Resource Include="Resources\chrome-minimize.svg" />
+    <Resource Include="Resources\chrome-restore.svg" />
     <Resource Include="Resources\file.svg" />
     <Resource Include="Resources\files.svg" />
   </ItemGroup>

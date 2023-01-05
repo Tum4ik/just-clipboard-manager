@@ -11,12 +11,8 @@
         xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
-        UseLayoutRounding="True"
         IsVisibleChanged="This_IsVisibleChanged"
         ShowInTaskbar="False"
-        WindowStyle="None"
-        Background="Transparent"
-        AllowsTransparency="True"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="Manual"
         x:Name="This">
@@ -42,7 +38,7 @@
           BorderThickness="1"
           BorderBrush="{DynamicResource PasteWindowBorderBrush}"
           Background="{DynamicResource PasteWindowBackgroundBrush}"
-          Margin="8"
+          Margin="16"
           Padding="8"
           Effect="{StaticResource DefaultDropShadowEffect}">
     <DockPanel>

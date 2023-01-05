@@ -13,7 +13,7 @@
   <tb:TaskbarIcon.ContextMenu>
     <ContextMenu>
       <MenuItem Header="Clips"/>
-      <MenuItem Header="Options"/>
+      <MenuItem Header="Settings" Command="{Binding SettingsCommand}"/>
       <MenuItem Header="About"/>
       <Separator/>
       <MenuItem Header="Theme">
@@ -26,7 +26,7 @@
       </MenuItem>
       <MenuItem Header="Language">
         <MenuItem Header="English" IsCheckable="True"/>
-        <MenuItem Header="Ukrainian" IsCheckable="True"/>
+        <MenuItem Header="Ukrainian" IsCheckable="True" IsEnabled="False"/>
       </MenuItem>
       <Separator/>
       <MenuItem Header="Exit" Command="{Binding ExitCommand}" />

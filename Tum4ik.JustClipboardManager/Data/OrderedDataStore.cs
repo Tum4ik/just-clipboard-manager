@@ -251,9 +251,9 @@ internal class OrderedDataStore : IDataObject
     // for Dib and provided a Bitmap object we can't convert.  Instead, publish as an HBITMAP
     // and let the system provide the conversion for us.
     //
-    if (IsFormatEqual(format, DataFormats.Dib) 
-        && autoConvert 
-        && (SystemDrawingHelper_IsBitmap(data) 
+    if (IsFormatEqual(format, DataFormats.Dib)
+        && autoConvert
+        && (SystemDrawingHelper_IsBitmap(data)
         || data is BitmapSource))
     {
       format = DataFormats.Bitmap;
@@ -299,7 +299,7 @@ internal class OrderedDataStore : IDataObject
       for (var i = 0; i < dataStoreEntries.Length; i++)
       {
         var entry = dataStoreEntries[i];
-        if (entry.Aspect == aspect 
+        if (entry.Aspect == aspect
             && (index == -1 || entry.Index == index))
         {
           dataStoreEntry = entry;
@@ -365,7 +365,7 @@ internal class OrderedDataStore : IDataObject
       {
         // Create BitmapSource instance from System.Drawing.Bitmap
         var hbitmap = SystemDrawingHelper_GetHBitmapFromBitmap(data);
-        bitmapData = Imaging.CreateBitmapSourceFromHBitmap(hbitmap, IntPtr.Zero,Int32Rect.Empty,null);
+        bitmapData = Imaging.CreateBitmapSourceFromHBitmap(hbitmap, nint.Zero, Int32Rect.Empty, null);
         DeleteObject(hbitmap);
       }
       else
@@ -525,9 +525,9 @@ internal class OrderedDataStore : IDataObject
   }
 
 
-  private static IntPtr SystemDrawingHelper_GetHBitmapFromBitmap(object data)
+  private static nint SystemDrawingHelper_GetHBitmapFromBitmap(object data)
   {
-    return (IntPtr) (s_getHBitmapFromBitmapMethod?.Invoke(null, new object[] { data }) ?? IntPtr.Zero);
+    return (nint) (s_getHBitmapFromBitmapMethod?.Invoke(null, new object[] { data }) ?? nint.Zero);
   }
 
 
@@ -563,8 +563,9 @@ internal class OrderedDataStore : IDataObject
   ///   <para>When a pattern brush is deleted, the bitmap associated with the brush is not deleted. The bitmap must be deleted independently.</para>
   /// </remarks>
   [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool DeleteObject([In] IntPtr hObject);
+  private static extern bool DeleteObject([In] nint hObject);
 }
 
 

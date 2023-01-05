@@ -16,3 +16,7 @@
 
 ##### Unknown formats:
 - CF_VSREFPROJECTITEMS
+
+##### TODO:
+- Validate dependencies https://www.youtube.com/watch?v=8JkHgymp2R4
+- 

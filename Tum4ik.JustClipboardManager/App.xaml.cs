@@ -13,12 +13,16 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Regions.Behaviors;
 using SingleInstanceCore;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.ViewModels;
+using Tum4ik.JustClipboardManager.ViewModels.Main;
 using Tum4ik.JustClipboardManager.Views;
+using Tum4ik.JustClipboardManager.Views.Main;
 
 namespace Tum4ik.JustClipboardManager;
 
@@ -32,7 +36,11 @@ public partial class App : ISingleInstance
   {
     var app = new App();
 
-    var isFirstInstance = app.InitializeAsFirstInstance("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
+    var instanceUniqueName = "JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46";
+#if DEBUG
+    instanceUniqueName += "_Development";
+#endif
+    var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
     if (!isFirstInstance)
     {
       return;
@@ -129,9 +137,12 @@ public partial class App : ISingleInstance
       .AddConfiguration()
       .AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
       .AddPrismServices()
+      .AddPrismBehaviors()
       .AddRegionAdapters()
       .AddDatabase()
       .AddTransient<IClipRepository, ClipRepository>()
+      .AddSingleton<IUser32DllService, User32DllService>()
+      .AddSingleton<ISHCoreDllService, SHCoreDllService>()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()
@@ -144,11 +155,11 @@ public partial class App : ISingleInstance
       .AddTransient<IGitHubClient>(sp =>
       {
         var version = sp.GetRequiredService<IInfoService>().GetInformationalVersion();
-        var client = new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
-        return client;
+        return new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
       })
-      .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
-      .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
+      .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
+      .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
+      .RegisterDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog);
 
     return services.BuildServiceProvider();
   }

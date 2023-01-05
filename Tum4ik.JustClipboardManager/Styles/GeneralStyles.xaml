@@ -1,34 +1,82 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:system="clr-namespace:System;assembly=netstandard" 
-                    xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons">
+                    xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+                    xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls">
 
   <system:Double x:Key="FontSize">14</system:Double>
   
   <ContextMenu x:Key="ContextMenuDisabled" Visibility="Collapsed"/>
-  
 
-  <Style TargetType="Window">
-    <Setter Property="WindowStyle" Value="None"/>
-    <Setter Property="AllowsTransparency" Value="True"/>
-    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-    <Setter Property="FontSize" Value="{StaticResource FontSize}"/>
-  </Style>
 
   <DropShadowEffect x:Key="DefaultDropShadowEffect" 
                     Color="Black"
-                    Opacity=".3"
-                    BlurRadius="8"
-                    ShadowDepth="2"
+                    Direction="270"
+                    Opacity="{DynamicResource ShadowOpacity}"
+                    BlurRadius="16"
+                    ShadowDepth="8"
                     RenderingBias="Quality"/>
 
+  <Style TargetType="Window">
+    <Setter Property="UseLayoutRounding" Value="True"/>
+    <Setter Property="WindowStyle" Value="None"/>
+    <Setter Property="AllowsTransparency" Value="True"/>
+    <Setter Property="FontSize" Value="{StaticResource FontSize}"/>
+    <Setter Property="Margin" Value="24"/>
+    <Setter Property="Background" Value="{DynamicResource AppSurfaceBackgroundBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource AppSurfaceBorderBrush}"/>
+    <Setter Property="Effect" Value="{StaticResource DefaultDropShadowEffect}"/>
+  </Style>
+  
+  <Style TargetType="controls:CaptionButton">
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="HoverBackgroundBrush" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+    <Setter Property="HoverIconBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+    <Setter Property="PressedBackgroundBrush" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+    <Setter Property="PressedIconBrush" Value="{DynamicResource TextSecondaryBrush}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="controls:CaptionButton">
+          <Border x:Name="_border"
+                  Width="46" Height="32"
+                  Background="Transparent"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+            <icons:SvgIcon x:Name="_icon"
+                           Icon="{TemplateBinding Icon}"
+                           Width="10" Height="10"
+                           Color="{DynamicResource TextPrimaryBrush}"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border"
+                      Property="Background"
+                      Value="{Binding HoverBackgroundBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
+              <Setter TargetName="_icon"
+                      Property="Color"
+                      Value="{Binding HoverIconBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border"
+                      Property="Background"
+                      Value="{Binding PressedBackgroundBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
+              <Setter TargetName="_icon"
+                      Property="Color"
+                      Value="{Binding PressedIconBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
   <Style x:Key="ContextMenuBorderStyle" TargetType="Border">
     <Setter Property="CornerRadius" Value="7"/>
-    <Setter Property="Margin" Value="8"/>
-    <Setter Property="Background" Value="{DynamicResource AcrylicBackgroundBrush}"/>
+    <Setter Property="Margin" Value="24"/>
     <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource PopupBorderBrush}"/>
     <Setter Property="Effect" Value="{StaticResource DefaultDropShadowEffect}"/>
+    <Setter Property="Background" Value="{DynamicResource AcrylicBackgroundBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ContextMenuBorderBrush}"/>
   </Style>
   <Style x:Key="ContextMenuStackPanelStyle" TargetType="StackPanel">
     <Setter Property="IsItemsHost" Value="True"/>
@@ -78,13 +126,13 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <icons:SvgIcon Grid.Column="0" 
-                       x:Name="CheckIcon"
+                       x:Name="_checkIcon"
                        Visibility="Collapsed"
                        Icon="Check" Color="{DynamicResource TextPrimaryBrush}"
                        Width="11" Height="11"
                        VerticalAlignment="Center"
                        Margin="15, 0, 3, 0"/>
-        <TextBlock Grid.Column="1" Style="{StaticResource MenuItemTextBlockStyle}"/>
+        <TextBlock x:Name="_text" Grid.Column="1" Style="{StaticResource MenuItemTextBlockStyle}"/>
       </Grid>
     </Border>
     <ControlTemplate.Triggers>
@@ -93,15 +141,23 @@
           <Condition Property="IsCheckable" Value="True"/>
           <Condition Property="IsChecked" Value="False"/>
         </MultiTrigger.Conditions>
-        <Setter TargetName="CheckIcon" Property="Visibility" Value="Hidden"/>
+        <Setter TargetName="_checkIcon" Property="Visibility" Value="Hidden"/>
       </MultiTrigger>
       <MultiTrigger>
         <MultiTrigger.Conditions>
           <Condition Property="IsCheckable" Value="True"/>
           <Condition Property="IsChecked" Value="True"/>
         </MultiTrigger.Conditions>
-        <Setter TargetName="CheckIcon" Property="Visibility" Value="Visible"/>
+        <Setter TargetName="_checkIcon" Property="Visibility" Value="Visible"/>
       </MultiTrigger>
+      <Trigger Property="IsPressed" Value="True">
+        <Setter TargetName="_checkIcon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+      </Trigger>
+      <Trigger Property="IsEnabled" Value="False">
+        <Setter TargetName="_checkIcon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
+        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+      </Trigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
   <ControlTemplate x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}" TargetType="MenuItem">
@@ -134,6 +190,10 @@
       <Trigger Property="IsPressed" Value="True">
         <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+      </Trigger>
+      <Trigger Property="IsEnabled" Value="False">
+        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
       </Trigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>

@@ -192,4 +192,6 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.S4200.severity = none
 dotnet_diagnostic.VSTHRD100.severity = none
+dotnet_diagnostic.SYSLIB1054.severity = none
