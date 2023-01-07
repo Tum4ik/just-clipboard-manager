@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Services.Dialogs;
@@ -11,6 +12,7 @@ using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
+[INotifyPropertyChanged]
 internal partial class TrayIconViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
@@ -34,9 +36,23 @@ internal partial class TrayIconViewModel
     _themeService = themeService;
     _dialogService = dialogService;
 
+    // todo: from settings
+#if DEBUG
+    var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Alt, Key.V);
+#else
     var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
+#endif
     _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKeyAsync);
   }
+
+
+  [ObservableProperty]
+  private string _trayIcon
+#if DEBUG
+    = "/Resources/Icons/tray-dev.ico";
+#else
+    = "/Resources/Icons/tray.ico";
+#endif
 
 
   [RelayCommand]

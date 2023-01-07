@@ -8,7 +8,7 @@
                 xmlns:services="clr-namespace:Tum4ik.JustClipboardManager.Services"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
-                IconSource="/Resources/Icons/tray.ico"
+                IconSource="{Binding TrayIcon}"
                 UseLayoutRounding="True">
   <tb:TaskbarIcon.ContextMenu>
     <ContextMenu>

@@ -67,6 +67,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     else
     {
       GlobalDeleteAtom(atom);
+      // todo: notify user the hot key is already registered, suggest to choose another hot key
       throw new HotKeyRegistrationException($"Impossible to register hot key '{descriptor}'.");
     }
   }
@@ -80,7 +81,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
         var atom = wParam.ToInt32();
         if (_registeredActionCallbacks.TryGetValue(atom, out var action))
         {
-          action.DynamicInvoke(); // TODO: get rid of DynamicInvoke (it's very slow)
+          // TODO: get rid of DynamicInvoke (it's very slow)
+          // check https://github.com/upta/pubsub/blob/master/PubSub/Core/Hub.cs
+          action.DynamicInvoke(); 
         }
         break;
     }
