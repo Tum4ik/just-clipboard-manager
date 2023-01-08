@@ -11,68 +11,12 @@
              xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
              x:ClassModifier="internal"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}"
-             x:Name="_this">
+             d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}">
   <UserControl.Resources>
     <math:MathConverter x:Key="MathConverter"/>
   </UserControl.Resources>
   <DockPanel>
-    <Grid DockPanel.Dock="Top" Height="32">
-      <Grid.ColumnDefinitions>
-        <!-- Icon -->
-        <ColumnDefinition Width="Auto"/>
-        <!-- App name -->
-        <ColumnDefinition Width="Auto"/>
-        <!-- Tag -->
-        <ColumnDefinition Width="Auto"/>
-        <!-- Free space -->
-        <ColumnDefinition Width="*"/>
-        <!-- Caption buttons -->
-        <ColumnDefinition Width="Auto"/>
-      </Grid.ColumnDefinitions>
-      <Image Grid.Column="0" Source="/Resources/Icons/tray.ico"
-             Width="16" Height="16"
-             VerticalAlignment="Center"
-             Margin="16, 0"/>
-      <TextBlock Grid.Column="1" Text="{Binding Title}"
-                 FontSize="12"
-                 VerticalAlignment="Center"
-                 Margin="0, 0, 8, 0"/>
-      <TextBlock Grid.Column="2" Text="{Binding Tag}"
-                 FontSize="12"
-                 Foreground="{DynamicResource TextSecondaryBrush}"
-                 VerticalAlignment="Center"/>
-      <StackPanel Grid.Column="4" Orientation="Horizontal"
-                  WindowChrome.IsHitTestVisibleInChrome="True">
-        <controls:CaptionButton Icon="ChromeMinimize"
-                                Command="{Binding MinimizeCommand}"/>
-        <controls:CaptionButton Command="{Binding MaximizeRestoreCommand}">
-          <i:Interaction.Triggers>
-            <i:DataTrigger Binding="{Binding WindowState}" Value="Normal">
-              <i:ChangePropertyAction PropertyName="Icon" Value="ChromeMaximize"/>
-            </i:DataTrigger>
-            <i:DataTrigger Binding="{Binding WindowState}" Value="Maximized">
-              <i:ChangePropertyAction PropertyName="Icon" Value="ChromeRestore"/>
-            </i:DataTrigger>
-          </i:Interaction.Triggers>
-        </controls:CaptionButton>
-        <controls:CaptionButton Icon="ChromeClose"
-                                Command="{Binding CloseCommand}"
-                                HoverBackgroundBrush="{DynamicResource ShellCloseButtonHoverBackgroundBrush}"
-                                HoverIconBrush="{DynamicResource ShellCloseButtonHoverIconBrush}"
-                                PressedBackgroundBrush="{DynamicResource ShellCloseButtonPressedBackgroundBrush}"
-                                PressedIconBrush="{DynamicResource ShellCloseButtonPressedIconBrush}">
-          <i:Interaction.Triggers>
-            <i:DataTrigger Binding="{Binding WindowState}" Value="Normal">
-              <i:ChangePropertyAction PropertyName="CornerRadius" Value="0, 7, 0, 0"/>
-            </i:DataTrigger>
-            <i:DataTrigger Binding="{Binding WindowState}" Value="Maximized">
-              <i:ChangePropertyAction PropertyName="CornerRadius" Value="0"/>
-            </i:DataTrigger>
-          </i:Interaction.Triggers>
-        </controls:CaptionButton>
-      </StackPanel>
-    </Grid>
+    <TextBlock Text="Tabs"/>
     <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}" />
   </DockPanel>
 </UserControl>

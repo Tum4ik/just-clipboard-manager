@@ -3,16 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         mc:Ignorable="d"
         x:ClassModifier="internal"
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen"
         Width="832" Height="632"
         Icon="/Resources/Icons/tray.ico"
-        WindowState="{Binding WindowState}"
         StateChanged="Window_StateChanged">
   <WindowChrome.WindowChrome>
-    <WindowChrome CaptionHeight="49"/>
+    <WindowChrome CaptionHeight="32" ResizeBorderThickness="0"/>
   </WindowChrome.WindowChrome>
   <Window.Template>
     <ControlTemplate TargetType="Window">
@@ -24,7 +24,58 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 Effect="{TemplateBinding Effect}">
-          <ContentPresenter/>
+          <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="32">
+              <Grid.ColumnDefinitions>
+                <!-- Icon -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- App name -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Tag -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Free space -->
+                <ColumnDefinition Width="*"/>
+                <!-- Caption buttons -->
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <Image x:Name="_icon"
+                     Grid.Column="0"
+                     Source="/Resources/Icons/tray.ico"
+                     Width="16" Height="16"
+                     VerticalAlignment="Center"
+                     Margin="16, 0"/>
+              <TextBlock x:Name="_title"
+                         Grid.Column="1"
+                         Text="{Binding DataContext.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                         FontSize="12"
+                         VerticalAlignment="Center"
+                         Margin="0, 0, 8, 0"/>
+              <TextBlock x:Name="_tag"
+                         Grid.Column="2"
+                         Text="{Binding DataContext.Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                         FontSize="12"
+                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         VerticalAlignment="Center"/>
+              <StackPanel Grid.Column="4" Orientation="Horizontal"
+                          WindowChrome.IsHitTestVisibleInChrome="True">
+                <controls:CaptionButton x:Name="_chromeMinimizeButton"
+                                        Icon="ChromeMinimize"
+                                        Click="MinimizeButton_Click"/>
+                <controls:CaptionButton x:Name="_chromeMaximizeRestoreButton"
+                                        Icon="ChromeMaximize"
+                                        Click="MaximizeRestoreButton_Click"/>
+                <controls:CaptionButton x:Name="_chromeCloseButton"
+                                        CornerRadius="0, 7, 0, 0"
+                                        Icon="ChromeClose"
+                                        Click="CloseButton_Click"
+                                        HoverBackgroundBrush="{DynamicResource ShellCloseButtonHoverBackgroundBrush}"
+                                        HoverIconBrush="{DynamicResource ShellCloseButtonHoverIconBrush}"
+                                        PressedBackgroundBrush="{DynamicResource ShellCloseButtonPressedBackgroundBrush}"
+                                        PressedIconBrush="{DynamicResource ShellCloseButtonPressedIconBrush}"/>
+              </StackPanel>
+            </Grid>
+            <ContentPresenter/>
+          </DockPanel>
         </Border>
       </Border>
       <ControlTemplate.Triggers>
@@ -32,6 +83,16 @@
           <Setter TargetName="_border" Property="CornerRadius" Value="0"/>
           <Setter Property="Effect" Value="{x:Null}"/>
           <Setter Property="BorderThickness" Value="0"/>
+          <Setter TargetName="_chromeMaximizeRestoreButton" Property="Icon" Value="ChromeRestore"/>
+          <Setter TargetName="_chromeCloseButton" Property="CornerRadius" Value="0"/>
+        </Trigger>
+        <Trigger Property="IsActive" Value="False">
+          <Setter TargetName="_icon" Property="Opacity" Value="0.5"/>
+          <Setter TargetName="_title" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_tag" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_chromeMinimizeButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_chromeMaximizeRestoreButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_chromeCloseButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

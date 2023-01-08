@@ -22,7 +22,7 @@
     <Setter Property="WindowStyle" Value="None"/>
     <Setter Property="AllowsTransparency" Value="True"/>
     <Setter Property="FontSize" Value="{StaticResource FontSize}"/>
-    <Setter Property="Margin" Value="24"/>
+    <Setter Property="Margin" Value="24, 0, 24, 24"/>
     <Setter Property="Background" Value="{DynamicResource AppSurfaceBackgroundBrush}"/>
     <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="BorderBrush" Value="{DynamicResource AppSurfaceBorderBrush}"/>
@@ -32,6 +32,7 @@
   <Style TargetType="controls:CaptionButton">
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="HoverBackgroundBrush" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+    <Setter Property="IconColor" Value="{DynamicResource TextPrimaryBrush}"/>
     <Setter Property="HoverIconBrush" Value="{DynamicResource TextPrimaryBrush}"/>
     <Setter Property="PressedBackgroundBrush" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
     <Setter Property="PressedIconBrush" Value="{DynamicResource TextSecondaryBrush}"/>
@@ -45,7 +46,7 @@
             <icons:SvgIcon x:Name="_icon"
                            Icon="{TemplateBinding Icon}"
                            Width="10" Height="10"
-                           Color="{DynamicResource TextPrimaryBrush}"/>
+                           Color="{TemplateBinding IconColor}"/>
           </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">

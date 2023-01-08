@@ -47,6 +47,16 @@ internal class CaptionButton : Button
   }
 
 
+  public static readonly DependencyProperty IconColorProperty = DependencyProperty.Register(
+    nameof(IconColor), typeof(Brush), typeof(CaptionButton)
+  );
+  public Brush IconColor
+  {
+    get => (Brush) GetValue(IconColorProperty);
+    set => SetValue(IconColorProperty, value);
+  }
+
+
   public static readonly DependencyProperty HoverIconBrushProperty = DependencyProperty.Register(
     nameof(HoverIconBrush), typeof(Brush), typeof(CaptionButton)
   );

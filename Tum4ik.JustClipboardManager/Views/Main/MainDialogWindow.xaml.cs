@@ -17,7 +17,6 @@ internal partial class MainDialogWindow : IDialogWindow
   public MainDialogWindow(IUser32DllService user32Dll,
                           ISHCoreDllService shCoreDll)
   {
-    
     _user32Dll = user32Dll;
     _shCoreDll = shCoreDll;
 
@@ -54,5 +53,31 @@ internal partial class MainDialogWindow : IDialogWindow
     {
       Margin = _initialMargin;
     }
+  }
+
+
+  private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+  {
+    WindowState = WindowState.Minimized;
+  }
+
+
+  private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
+  {
+    if (WindowState == WindowState.Normal)
+    {
+      WindowState = WindowState.Maximized;
+    }
+    else if (WindowState == WindowState.Maximized)
+    {
+      WindowState = WindowState.Normal;
+    }
+  }
+
+
+  private void CloseButton_Click(object sender, RoutedEventArgs e)
+  {
+    Result = new DialogResult();
+    Close();
   }
 }
