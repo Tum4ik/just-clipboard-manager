@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Services.Dialogs;
@@ -43,7 +42,6 @@ internal partial class MainDialogWindow : IDialogWindow
     switch (msg)
     {
       case 0x0112: // WM_SYSCOMMAND
-        //Debug.WriteLine(wParam.ToString("X"));
         switch (wParam)
         {
           case 0xF030: // SC_MAXIMIZE
@@ -84,7 +82,6 @@ internal partial class MainDialogWindow : IDialogWindow
 
   private void MinimizeButton_Click(object sender, RoutedEventArgs e)
   {
-    //WindowState = WindowState.Minimized;
     SystemCommands.MinimizeWindow(this);
   }
 
@@ -93,12 +90,10 @@ internal partial class MainDialogWindow : IDialogWindow
   {
     if (WindowState == WindowState.Normal)
     {
-      //WindowState = WindowState.Maximized;
       SystemCommands.MaximizeWindow(this);
     }
     else if (WindowState == WindowState.Maximized)
     {
-      //WindowState = WindowState.Normal;
       SystemCommands.RestoreWindow(this);
     }
   }

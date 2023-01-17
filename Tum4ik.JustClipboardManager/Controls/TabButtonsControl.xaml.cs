@@ -16,12 +16,10 @@ public partial class TabButtonsControl
   public TabButtonsControl()
   {
     InitializeComponent();
-    _scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
   }
 
 
   public Collection<TabButton> Tabs { get; } = new();
-
 
 
   private void Root_Loaded(object sender, RoutedEventArgs e)
@@ -45,15 +43,18 @@ public partial class TabButtonsControl
     }
   }
 
-  
+
+  private TabButton? _checkedTab;
+
   private void Tab_Checked(object tab, RoutedEventArgs e)
   {
-    var checkedTab = (TabButton) tab;
-    checkedTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
-    checkedTab.UncheckedRightSeparatorVisibility = Visibility.Collapsed;
-    checkedTab.RenderTransform = null;
+    _checkedTab = (TabButton) tab;
+    _checkedTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
+    _checkedTab.UncheckedRightSeparatorVisibility = Visibility.Collapsed;
+    _checkedTab.RenderTransform = null;
+    _checkedTab.BringIntoView();
 
-    var checkedTabIndex = Tabs.IndexOf(checkedTab);
+    var checkedTabIndex = Tabs.IndexOf(_checkedTab);
     for (var i = 0; i < checkedTabIndex; i++)
     {
       var beforeTab = Tabs[i];
@@ -71,34 +72,13 @@ public partial class TabButtonsControl
   }
 
 
-  private double _adjustedOffset;
-
   private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
   {
-    var scrollButtonsVisibility = Visibility.Collapsed;
-    if (e.ViewportWidth < e.ExtentWidth)
+    SetScrollButtonsVisibility(e);
+    if (e.ViewportWidthChange != 0)
     {
-      scrollButtonsVisibility = Visibility.Visible;
+      _checkedTab?.BringIntoView();
     }
-
-    _scrollTabLeftButton.Visibility = scrollButtonsVisibility;
-    _scrollTabRightButton.Visibility = scrollButtonsVisibility;
-
-    if (e.HorizontalOffset == _adjustedOffset)
-    {
-      return;
-    }
-
-    if (e.HorizontalChange < 0)
-    {
-      _adjustedOffset = e.HorizontalOffset - 4;
-    }
-    else if (e.HorizontalChange > 0)
-    {
-      _adjustedOffset = e.HorizontalOffset + 4;
-    }
-
-    _scrollViewer.ScrollToHorizontalOffset(_adjustedOffset);
   }
 
 
@@ -113,6 +93,19 @@ public partial class TabButtonsControl
   private void ScrollRight(double amount)
   {
     _scrollViewer.ScrollToHorizontalOffset(_scrollViewer.HorizontalOffset + amount);
+  }
+
+
+  private void SetScrollButtonsVisibility(ScrollChangedEventArgs e)
+  {
+    var scrollButtonsVisibility = Visibility.Collapsed;
+    if (e.ViewportWidth < e.ExtentWidth)
+    {
+      scrollButtonsVisibility = Visibility.Visible;
+    }
+
+    _scrollTabLeftButton.Visibility = scrollButtonsVisibility;
+    _scrollTabRightButton.Visibility = scrollButtonsVisibility;
   }
 
 
