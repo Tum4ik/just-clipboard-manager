@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Services.Dialogs;
@@ -23,17 +24,44 @@ internal partial class MainDialogWindow : IDialogWindow
     InitializeComponent();
 
     _hwnd = new WindowInteropHelper(this).EnsureHandle();
+    HwndSource.FromHwnd(_hwnd).AddHook(HwndHook);
+    _initialResizeMode = ResizeMode;
     _initialMargin = Margin;
   }
 
 
   private readonly nint _hwnd;
+  private readonly ResizeMode _initialResizeMode;
   private readonly Thickness _initialMargin;
 
 
   public IDialogResult? Result { get; set; }
 
-  
+
+  private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
+  {
+    switch (msg)
+    {
+      case 0x0112: // WM_SYSCOMMAND
+        //Debug.WriteLine(wParam.ToString("X"));
+        switch (wParam)
+        {
+          case 0xF030: // SC_MAXIMIZE
+          case 0xF032: // SC_MAXIMIZE_DBLCLICK
+            ResizeMode = ResizeMode.NoResize;
+            break;
+          case 0xF120: // SC_RESTORE
+          case 0xF122: // SC_RESTORE_DBLCLICK
+            ResizeMode = _initialResizeMode;
+            break;
+        }
+        break;
+    }
+    return nint.Zero;
+  }
+
+
+
   private void Window_StateChanged(object sender, EventArgs e)
   {
     if (WindowState == WindowState.Maximized)
@@ -42,11 +70,9 @@ internal partial class MainDialogWindow : IDialogWindow
       if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
           && _shCoreDll.GetDpiForMonitor(monitorHandle, MonitorDpiType.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
       {
-        var compensationMarginX = 7 / (dpiX / 96d);
-        var compensationMarginY = 7 / (dpiY / 96d);
-        MaxWidth = (monitorInfo.WorkArea.Right - monitorInfo.WorkArea.Left) / (dpiX / 96d) + compensationMarginX;
-        MaxHeight = (monitorInfo.WorkArea.Bottom - monitorInfo.WorkArea.Top) / (dpiY / 96d) + compensationMarginY;
-        Margin = new(compensationMarginX, compensationMarginY, 0, 0);
+        MaxWidth = (monitorInfo.WorkArea.Right - monitorInfo.WorkArea.Left) / (dpiX / 96d);
+        MaxHeight = (monitorInfo.WorkArea.Bottom - monitorInfo.WorkArea.Top) / (dpiY / 96d);
+        Margin = new(0, 0, 0, 0);
       }
     }
     else if (WindowState == WindowState.Normal)
@@ -58,7 +84,8 @@ internal partial class MainDialogWindow : IDialogWindow
 
   private void MinimizeButton_Click(object sender, RoutedEventArgs e)
   {
-    WindowState = WindowState.Minimized;
+    //WindowState = WindowState.Minimized;
+    SystemCommands.MinimizeWindow(this);
   }
 
 
@@ -66,11 +93,13 @@ internal partial class MainDialogWindow : IDialogWindow
   {
     if (WindowState == WindowState.Normal)
     {
-      WindowState = WindowState.Maximized;
+      //WindowState = WindowState.Maximized;
+      SystemCommands.MaximizeWindow(this);
     }
     else if (WindowState == WindowState.Maximized)
     {
-      WindowState = WindowState.Normal;
+      //WindowState = WindowState.Normal;
+      SystemCommands.RestoreWindow(this);
     }
   }
 

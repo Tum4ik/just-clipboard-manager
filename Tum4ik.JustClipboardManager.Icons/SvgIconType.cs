@@ -8,5 +8,7 @@ public enum SvgIconType
   [SvgIconResource("chrome-minimize")] ChromeMinimize,
   [SvgIconResource("chrome-restore")] ChromeRestore,
   [SvgIconResource("file")] File,
-  [SvgIconResource("files")] Files
+  [SvgIconResource("files")] Files,
+  [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
+  [SvgIconResource("scroll-right-arrow")] ScrollRightArrow
 }

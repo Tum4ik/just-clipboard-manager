@@ -48,6 +48,7 @@
       </Grid>
     </VisualBrush.Visual>
   </VisualBrush>
+  <SolidColorBrush x:Key="AppContentAreaBackgroundBrush" Color="#282828"/>
 
   <SolidColorBrush x:Key="ItemDividerBrush" Color="White" Opacity="0.0837"/>
   <SolidColorBrush x:Key="ItemHoverBackgroundBrush" Color="White" Opacity="0.0605"/>

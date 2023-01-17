@@ -1,12 +1,10 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Net;
 using System.Net.Http;
+using Microsoft.AppCenter.Crashes;
 using Octokit;
 using FileMode = System.IO.FileMode;
-using System;
-using Microsoft.AppCenter.Crashes;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class UpdateService : IUpdateService
@@ -56,6 +54,10 @@ internal class UpdateService : IUpdateService
           }
         );
       }
+    }
+    catch (TaskCanceledException)
+    {
+      // TODO
     }
     catch (HttpRequestException)
     {

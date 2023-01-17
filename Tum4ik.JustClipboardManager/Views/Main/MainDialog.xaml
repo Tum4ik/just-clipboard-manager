@@ -16,7 +16,17 @@
     <math:MathConverter x:Key="MathConverter"/>
   </UserControl.Resources>
   <DockPanel>
-    <TextBlock Text="Tabs"/>
-    <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}" />
+    <controls:TabButtonsControl DockPanel.Dock="Top">
+      <controls:TabButton Text="Налаштування"/>
+      <controls:TabButton Text="About"/>
+      <controls:TabButton Text="Test 1"/>
+      <controls:TabButton Text="Test 2"/>
+      <controls:TabButton Text="Test 3"/>
+      <controls:TabButton Text="Test 4"/>
+    </controls:TabButtonsControl>
+    <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
+            CornerRadius="0, 0, 7, 7">
+      <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
+    </Border>
   </DockPanel>
 </UserControl>
