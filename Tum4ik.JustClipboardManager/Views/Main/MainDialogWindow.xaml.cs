@@ -24,13 +24,11 @@ internal partial class MainDialogWindow : IDialogWindow
 
     _hwnd = new WindowInteropHelper(this).EnsureHandle();
     HwndSource.FromHwnd(_hwnd).AddHook(HwndHook);
-    _initialResizeMode = ResizeMode;
     _initialMargin = Margin;
   }
 
 
   private readonly nint _hwnd;
-  private readonly ResizeMode _initialResizeMode;
   private readonly Thickness _initialMargin;
 
 
@@ -41,16 +39,23 @@ internal partial class MainDialogWindow : IDialogWindow
   {
     switch (msg)
     {
+      case 0x00A3: // WM_NCLBUTTONDBLCLK
+        if (WindowState == WindowState.Normal)
+        {
+          SystemCommands.MaximizeWindow(this);
+          handled = true;
+        }
+        break;
       case 0x0112: // WM_SYSCOMMAND
         switch (wParam)
         {
           case 0xF030: // SC_MAXIMIZE
           case 0xF032: // SC_MAXIMIZE_DBLCLICK
-            ResizeMode = ResizeMode.NoResize;
+            BeforeMaximize();
             break;
           case 0xF120: // SC_RESTORE
           case 0xF122: // SC_RESTORE_DBLCLICK
-            ResizeMode = _initialResizeMode;
+            BeforeRestoe();
             break;
         }
         break;
@@ -59,24 +64,22 @@ internal partial class MainDialogWindow : IDialogWindow
   }
 
 
-
-  private void Window_StateChanged(object sender, EventArgs e)
+  private void BeforeMaximize()
   {
-    if (WindowState == WindowState.Maximized)
+    var monitorHandle = _user32Dll.MonitorFromWindow(_hwnd, MonitorOptions.MONITOR_DEFAULTTONEAREST);
+    if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
+        && _shCoreDll.GetDpiForMonitor(monitorHandle, MonitorDpiType.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
     {
-      var monitorHandle = _user32Dll.MonitorFromWindow(_hwnd, MonitorOptions.MONITOR_DEFAULTTONEAREST);
-      if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
-          && _shCoreDll.GetDpiForMonitor(monitorHandle, MonitorDpiType.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
-      {
-        MaxWidth = (monitorInfo.WorkArea.Right - monitorInfo.WorkArea.Left) / (dpiX / 96d);
-        MaxHeight = (monitorInfo.WorkArea.Bottom - monitorInfo.WorkArea.Top) / (dpiY / 96d);
-        Margin = new(0, 0, 0, 0);
-      }
+      MaxWidth = (monitorInfo.WorkArea.Right - monitorInfo.WorkArea.Left) / (dpiX / 96d);
+      MaxHeight = (monitorInfo.WorkArea.Bottom - monitorInfo.WorkArea.Top) / (dpiY / 96d);
+      Margin = new(0, 0, 0, 0);
     }
-    else if (WindowState == WindowState.Normal)
-    {
-      Margin = _initialMargin;
-    }
+  }
+
+
+  private void BeforeRestoe()
+  {
+    Margin = _initialMargin;
   }
 
 

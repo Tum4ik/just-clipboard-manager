@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Input;
@@ -28,6 +29,7 @@ public partial class TabButtonsControl
     foreach (var tab in Tabs)
     {
       tab.GroupName = groupName;
+      tab.PreviewMouseLeftButtonDown += Tab_PreviewMouseLeftButtonDown;
       tab.Checked += Tab_Checked;
 
       if (tab.IsChecked is true)
@@ -42,12 +44,30 @@ public partial class TabButtonsControl
       }
     }
   }
-
+  
 
   private TabButton? _checkedTab;
 
+
+  private void Tab_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+  {
+    var tab = (TabButton) sender;
+    tab.PreviewMouseLeftButtonUp += Tab_PreviewMouseLeftButtonUp;
+    e.Handled = true;
+  }
+
+
+  private void Tab_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+  {
+    var tab = (TabButton) sender;
+    tab.PreviewMouseLeftButtonUp -= Tab_PreviewMouseLeftButtonUp;
+    tab.IsChecked = true;
+  }
+
+
   private void Tab_Checked(object tab, RoutedEventArgs e)
   {
+    EnableFluidScroll();
     _checkedTab = (TabButton) tab;
     _checkedTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
     _checkedTab.UncheckedRightSeparatorVisibility = Visibility.Collapsed;
@@ -75,9 +95,13 @@ public partial class TabButtonsControl
   private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
   {
     SetScrollButtonsVisibility(e);
-    if (e.ViewportWidthChange != 0)
+    if (e.ViewportWidthChange < 0)
     {
       _checkedTab?.BringIntoView();
+    }
+    else if (e.ViewportWidthChange > 0)
+    {
+      DisableFluidScroll();
     }
   }
 
@@ -85,6 +109,7 @@ public partial class TabButtonsControl
   [RelayCommand]
   private void ScrollLeft(double amount)
   {
+    EnableFluidScroll();
     _scrollViewer.ScrollToHorizontalOffset(_scrollViewer.HorizontalOffset - amount);
   }
 
@@ -92,6 +117,7 @@ public partial class TabButtonsControl
   [RelayCommand]
   private void ScrollRight(double amount)
   {
+    EnableFluidScroll();
     _scrollViewer.ScrollToHorizontalOffset(_scrollViewer.HorizontalOffset + amount);
   }
 
@@ -109,9 +135,13 @@ public partial class TabButtonsControl
   }
 
 
-  private static void ActivateTab(TabButton tab)
+  private void EnableFluidScroll()
   {
-    tab.IsChecked = true;
-    tab.Focus();
+    _fluidMoveBehavior.Duration = TimeSpan.FromMilliseconds(300);
+  }
+
+  private void DisableFluidScroll()
+  {
+    _fluidMoveBehavior.Duration = TimeSpan.Zero;
   }
 }

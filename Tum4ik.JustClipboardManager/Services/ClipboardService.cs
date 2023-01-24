@@ -114,43 +114,51 @@ internal class ClipboardService : IClipboardService
 
       if (clipType == ClipType.Unrecognized)
       {
-        if (dataObject.GetDataPresent("Scalable Vector Graphics"))
+        try
         {
+          if (dataObject.GetDataPresent("Scalable Vector Graphics"))
+          {
 
-        }
-        else if (dataObject.GetDataPresent(DataFormats.UnicodeText))
-        {
-          var text = (string) dataObject.GetData(DataFormats.UnicodeText);
-          if (string.IsNullOrWhiteSpace(text))
-          {
-            return;
           }
-          clipType = ClipType.Text;
-          text = text.Trim();
-          searchLabel = text;
-          representationData = GetStringBytes(text);
-        }
-        else if (dataObject.GetDataPresent(typeof(Bitmap)))
-        {
-          clipType = ClipType.Image;
-          var representationDataObject = dataObject.GetData(typeof(Bitmap));
-          representationData = GetBitmapBytes((Bitmap) representationDataObject);
-        }
-        else if (dataObject.GetDataPresent(DataFormats.FileDrop))
-        {
-          var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
-          if (filePaths.Length == 1)
+          else if (dataObject.GetDataPresent(DataFormats.UnicodeText))
           {
-            clipType = ClipType.SingleFile;
-            searchLabel = filePaths[0];
-            representationData = GetStringBytes(filePaths[0]);
+            var text = (string) dataObject.GetData(DataFormats.UnicodeText);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+              return;
+            }
+            clipType = ClipType.Text;
+            text = text.Trim();
+            searchLabel = text;
+            representationData = GetStringBytes(text);
           }
-          else
+          else if (dataObject.GetDataPresent(typeof(Bitmap)))
           {
-            clipType = ClipType.FilesList;
-            searchLabel = string.Join(";", filePaths);
-            representationData = GetStringArrayBytes(filePaths);
+            clipType = ClipType.Image;
+            var representationDataObject = dataObject.GetData(typeof(Bitmap));
+            representationData = GetBitmapBytes((Bitmap) representationDataObject);
           }
+          else if (dataObject.GetDataPresent(DataFormats.FileDrop))
+          {
+            var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
+            if (filePaths.Length == 1)
+            {
+              clipType = ClipType.SingleFile;
+              searchLabel = filePaths[0];
+              representationData = GetStringBytes(filePaths[0]);
+            }
+            else
+            {
+              clipType = ClipType.FilesList;
+              searchLabel = string.Join(";", filePaths);
+              representationData = GetStringArrayBytes(filePaths);
+            }
+          }
+        }
+        catch (COMException e)
+        {
+          Crashes.TrackError(e);
+          continue;
         }
       }
 
@@ -205,7 +213,7 @@ internal class ClipboardService : IClipboardService
     {
       "System.String" => GetStringFromBytes(data),
       "System.String[]" => GetStringArrayFromBytes(data),
-      "System.Windows.Interop.InteropBitmap"=> GetBitmapSourceFromBytes(data),
+      "System.Windows.Interop.InteropBitmap" => GetBitmapSourceFromBytes(data),
       "System.Drawing.Bitmap" => GetBitmapFromBytes(data),
       "System.IO.MemoryStream" => GetMemoryStreamFromBytes(data),
       "System.Boolean" => GetBooleanFromBytes(data),

@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
       xmlns:system="clr-namespace:System;assembly=netstandard"
       mc:Ignorable="d"
@@ -39,6 +40,11 @@
         </Setter.Value>
       </Setter>
     </Style>
+    <Style x:Key="HiddenTabHoverHiderStyle" TargetType="Border">
+      <Setter Property="Width" Value="3"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Panel.ZIndex" Value="2"/>
+    </Style>
   </Grid.Resources>
   <Grid.ColumnDefinitions>
     <ColumnDefinition Width="Auto"/>
@@ -56,12 +62,22 @@
           Margin="4, 0, 0, 0"
           Command="{Binding ScrollLeftCommand, ElementName=_this}"
           CommandParameter="{StaticResource ScrollAmount}"/>
+  <Border Grid.Column="0"
+          HorizontalAlignment="Right"
+          Style="{StaticResource HiddenTabHoverHiderStyle}">
+    <Border.RenderTransform>
+      <TranslateTransform X="3"/>
+    </Border.RenderTransform>
+  </Border>
   <ScrollViewer x:Name="_scrollViewer"
                 Grid.Column="1"
                 VerticalScrollBarVisibility="Disabled"
                 HorizontalScrollBarVisibility="Hidden"
                 ScrollChanged="ScrollViewer_ScrollChanged">
-    <ItemsControl ItemsSource="{Binding Tabs, ElementName=_this}">
+    <ItemsControl x:Name="_itemsControl" ItemsSource="{Binding Tabs, ElementName=_this}">
+      <i:Interaction.Behaviors>
+        <i:FluidMoveBehavior x:Name="_fluidMoveBehavior"/>
+      </i:Interaction.Behaviors>
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <StackPanel Orientation="Horizontal"/>
@@ -69,6 +85,13 @@
       </ItemsControl.ItemsPanel>
     </ItemsControl>
   </ScrollViewer>
+  <Border Grid.Column="2"
+          HorizontalAlignment="Left"
+          Style="{StaticResource HiddenTabHoverHiderStyle}">
+    <Border.RenderTransform>
+      <TranslateTransform X="-3"/>
+    </Border.RenderTransform>
+  </Border>
   <Button x:Name="_scrollTabRightButton"
           Grid.Column="2"
           icons:SvgIcon.AttachedIcon="ScrollRightArrow"

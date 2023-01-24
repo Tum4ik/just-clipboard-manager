@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
         Width="832" Height="632"
         Icon="/Resources/Icons/tray.ico"
-        StateChanged="Window_StateChanged">
+        ResizeMode="NoResize">
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="32" ResizeBorderThickness="0"/>
   </WindowChrome.WindowChrome>
