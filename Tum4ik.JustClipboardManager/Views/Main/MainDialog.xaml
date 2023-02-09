@@ -20,7 +20,7 @@
       <controls:TabButton Text="Налаштування"/>
       <controls:TabButton Text="About"/>
       <controls:TabButton Text="Test 1"/>
-      <controls:TabButton Text="Test 2"/>
+      <controls:TabButton Text="Test 2" IsChecked="True"/>
       <controls:TabButton Text="Test 3"/>
       <controls:TabButton Text="Test 4"/>
     </controls:TabButtonsControl>

@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 
@@ -31,6 +33,7 @@ public partial class TabButtonsControl
       tab.GroupName = groupName;
       tab.PreviewMouseLeftButtonDown += Tab_PreviewMouseLeftButtonDown;
       tab.Checked += Tab_Checked;
+      tab.MouseEnter += Tab_MouseEnter;
 
       if (tab.IsChecked is true)
       {
@@ -44,7 +47,7 @@ public partial class TabButtonsControl
       }
     }
   }
-  
+
 
   private TabButton? _checkedTab;
 
@@ -69,6 +72,7 @@ public partial class TabButtonsControl
   {
     EnableFluidScroll();
     _checkedTab = (TabButton) tab;
+    _checkedTab.MouseLeave -= Tab_MouseLeave;
     _checkedTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
     _checkedTab.UncheckedRightSeparatorVisibility = Visibility.Collapsed;
     _checkedTab.RenderTransform = null;
@@ -78,6 +82,7 @@ public partial class TabButtonsControl
     for (var i = 0; i < checkedTabIndex; i++)
     {
       var beforeTab = Tabs[i];
+      beforeTab.MouseLeave -= Tab_MouseLeave;
       beforeTab.UncheckedLeftSeparatorVisibility = Visibility.Visible;
       beforeTab.UncheckedRightSeparatorVisibility = Visibility.Collapsed;
       beforeTab.RenderTransform = new TranslateTransform(4, 0);
@@ -85,10 +90,92 @@ public partial class TabButtonsControl
     for (var i = checkedTabIndex + 1; i < Tabs.Count; i++)
     {
       var afterTab = Tabs[i];
+      afterTab.MouseLeave -= Tab_MouseLeave;
       afterTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
       afterTab.UncheckedRightSeparatorVisibility = Visibility.Visible;
       afterTab.RenderTransform = new TranslateTransform(-4, 0);
     }
+  }
+
+
+  private void Tab_MouseEnter(object sender, MouseEventArgs e)
+  {
+    var tab = (TabButton) sender;
+    if (tab.IsChecked is true)
+    {
+      return;
+    }
+
+    var tabIndex = Tabs.IndexOf(tab);
+    HideSeparators(tabIndex, HideType.Both, tab);
+    HideSeparators(tabIndex - 1, HideType.Right);
+    HideSeparators(tabIndex + 1, HideType.Left);
+    tab.MouseLeave += Tab_MouseLeave;
+  }
+
+  private int count;
+
+  private void Tab_MouseLeave(object sender, MouseEventArgs e)
+  {
+    Debug.WriteLine(count++);
+    var tab = (TabButton) sender;
+    tab.MouseLeave -= Tab_MouseLeave;
+    if (tab.IsChecked is true)
+    {
+      return;
+    }
+
+    RestoreSeparators();
+  }
+
+
+  private readonly Dictionary<int, (Visibility left, Visibility right)> _tabIndexToSeparatorsVisibilities = new();
+
+  private void HideSeparators(int tabIndex, HideType hideType, TabButton? tab = null)
+  {
+    if (tabIndex < 0 || tabIndex >= Tabs.Count)
+    {
+      return;
+    }
+
+    tab ??= Tabs[tabIndex];
+    if (tab.IsChecked is true)
+    {
+      return;
+    }
+
+    _tabIndexToSeparatorsVisibilities[tabIndex]
+      = (tab.UncheckedLeftSeparatorVisibility, tab.UncheckedRightSeparatorVisibility);
+    if (hideType == HideType.Left || hideType == HideType.Both)
+    {
+      tab.UncheckedLeftSeparatorVisibility = Visibility.Hidden;
+    }
+    if (hideType == HideType.Right || hideType == HideType.Both)
+    {
+      tab.UncheckedRightSeparatorVisibility = Visibility.Hidden;
+    }
+  }
+
+
+  private enum HideType
+  {
+    Both, Left, Right
+  }
+
+
+  private void RestoreSeparators()
+  {
+    foreach (var (tabIndex, (left, right)) in _tabIndexToSeparatorsVisibilities)
+    {
+      var tab = Tabs[tabIndex];
+      if (tab.IsChecked is true)
+      {
+        continue;
+      }
+      tab.UncheckedLeftSeparatorVisibility = left;
+      tab.UncheckedRightSeparatorVisibility = right;
+    }
+    _tabIndexToSeparatorsVisibilities.Clear();
   }
 
 
