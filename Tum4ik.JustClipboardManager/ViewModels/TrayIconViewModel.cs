@@ -12,8 +12,7 @@ using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-[INotifyPropertyChanged]
-internal partial class TrayIconViewModel
+internal partial class TrayIconViewModel : ObservableObject
 {
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
@@ -56,9 +55,13 @@ internal partial class TrayIconViewModel
 
 
   [RelayCommand]
-  private void Settings()
+  private void OpenMainDialog(string viewName)
   {
-    _dialogService.Show(DialogNames.MainDialog);
+    var parameters = new DialogParameters
+    {
+      { DialogParameterNames.ViewToShow, viewName }
+    };
+    _dialogService.Show(DialogNames.MainDialog, parameters, r => { });
   }
 
 

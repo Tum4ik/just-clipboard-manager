@@ -1,17 +1,21 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main;
 
-[INotifyPropertyChanged]
-internal partial class MainDialogViewModel : IDialogAware
+internal partial class MainDialogViewModel : ObservableObject, IDialogAware
 {
   public MainDialogViewModel(IInfoService infoService)
   {
     Title = infoService.GetProductName();
   }
 
+
+  [ObservableProperty] private bool _isSettingsTabChecked;
+  [ObservableProperty] private bool _isAboutTabChecked;
+  
 
   public bool CanCloseDialog()
   {
@@ -24,6 +28,18 @@ internal partial class MainDialogViewModel : IDialogAware
 
   public void OnDialogOpened(IDialogParameters parameters)
   {
+    if (parameters.TryGetValue(DialogParameterNames.ViewToShow, out string viewName))
+    {
+      switch (viewName)
+      {
+        default:
+          IsSettingsTabChecked = true;
+          break;
+        case ViewNames.AboutView:
+          IsAboutTabChecked = true;
+          break;
+      }
+    }
   }
 
   public string Title { get; }

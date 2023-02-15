@@ -6,15 +6,20 @@
                 xmlns:tb="http://www.hardcodet.net/taskbar" 
                 xmlns:viewmodels="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
                 xmlns:services="clr-namespace:Tum4ik.JustClipboardManager.Services"
+                xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="{Binding TrayIcon}"
                 UseLayoutRounding="True">
   <tb:TaskbarIcon.ContextMenu>
     <ContextMenu>
-      <MenuItem Header="Clips"/>
-      <MenuItem Header="Settings" Command="{Binding SettingsCommand}"/>
-      <MenuItem Header="About"/>
+      <!--<MenuItem Header="Clips"/>-->
+      <MenuItem Header="Settings"
+                Command="{Binding OpenMainDialogCommand}"
+                CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
+      <MenuItem Header="About"
+                Command="{Binding OpenMainDialogCommand}"
+                CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       <Separator/>
       <MenuItem Header="Theme">
         <MenuItem Header="Light" IsCheckable="True"

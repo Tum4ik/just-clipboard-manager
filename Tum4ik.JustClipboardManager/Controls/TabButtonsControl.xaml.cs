@@ -1,12 +1,10 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 
@@ -113,11 +111,9 @@ public partial class TabButtonsControl
     tab.MouseLeave += Tab_MouseLeave;
   }
 
-  private int count;
 
   private void Tab_MouseLeave(object sender, MouseEventArgs e)
   {
-    Debug.WriteLine(count++);
     var tab = (TabButton) sender;
     tab.MouseLeave -= Tab_MouseLeave;
     if (tab.IsChecked is true)
