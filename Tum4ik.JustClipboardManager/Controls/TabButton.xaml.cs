@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using Tum4ik.JustClipboardManager.Icons;
 
 namespace Tum4ik.JustClipboardManager.Controls;
@@ -52,5 +51,21 @@ public partial class TabButton
   {
     get => (Visibility) GetValue(UncheckedRightSeparatorVisibilityProperty);
     set => SetValue(UncheckedRightSeparatorVisibilityProperty, value);
+  }
+
+
+  private void RadioButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+  {
+    IsPressed = true;
+  }
+
+  private void RadioButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+  {
+    IsPressed = false;
+  }
+
+  private void RadioButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+  {
+    IsPressed = false;
   }
 }

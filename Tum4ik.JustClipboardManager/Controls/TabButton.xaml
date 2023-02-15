@@ -7,7 +7,10 @@
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
-             Cursor="Hand">
+             Cursor="Hand"
+             PreviewMouseLeftButtonDown="RadioButton_PreviewMouseLeftButtonDown"
+             PreviewMouseLeftButtonUp="RadioButton_PreviewMouseLeftButtonUp"
+             MouseLeave="RadioButton_MouseLeave">
   <RadioButton.Resources>
     <math:MathConverter x:Key="MathConverter"/>
   </RadioButton.Resources>
@@ -56,9 +59,22 @@
             </Style>
           </Canvas.Resources>
           <StackPanel Orientation="Horizontal">
-            <icons:SvgIcon Icon="{TemplateBinding Icon}"
-                           Width="16" Height="16"/>
-            <TextBlock Text="{TemplateBinding Text}"/>
+            <Canvas.Top>
+              <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="(x-y)/2">
+                <Binding Path="Parent.ActualHeight" RelativeSource="{RelativeSource Self}"/>
+                <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+              </MultiBinding>
+            </Canvas.Top>
+            <icons:SvgIcon x:Name="_icon"
+                           Icon="{TemplateBinding Icon}"
+                           Color="{DynamicResource TextPrimaryBrush}"
+                           Width="16" Height="16"
+                           VerticalAlignment="Center"
+                           Margin="8, 0"/>
+            <TextBlock x:Name="_text"
+                       Text="{TemplateBinding Text}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
           </StackPanel>
 
           <!-- Checked state -->
@@ -89,6 +105,9 @@
         </Canvas>
       </Border>
       <ControlTemplate.Triggers>
+        <Trigger Property="IsPressed" Value="True">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource TabPressedBackgroundBrush}"/>
+        </Trigger>
         <Trigger Property="IsChecked" Value="True">
           <Setter Property="Panel.ZIndex" Value="1"/>
           <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource ContextMenuBorderBrush}"/>
@@ -99,11 +118,15 @@
         </Trigger>
         <Trigger Property="IsChecked" Value="False">
           <Setter Property="Panel.ZIndex" Value="0"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_text" Property="FontWeight" Value="Regular"/>
         </Trigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="IsMouseOver" Value="True"/>
             <Condition Property="IsChecked" Value="False"/>
+            <Condition Property="IsPressed" Value="False"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
         </MultiTrigger>

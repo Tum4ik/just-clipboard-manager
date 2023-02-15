@@ -17,8 +17,12 @@
   </UserControl.Resources>
   <DockPanel>
     <controls:TabButtonsControl DockPanel.Dock="Top">
-      <controls:TabButton Text="Налаштування" IsChecked="{Binding IsSettingsTabChecked}"/>
-      <controls:TabButton Text="About" IsChecked="{Binding IsAboutTabChecked}"/>
+      <controls:TabButton Text="Налаштування"
+                          Icon="Settings"
+                          IsChecked="{Binding IsSettingsTabChecked}"/>
+      <controls:TabButton Text="About"
+                          Icon="Info"
+                          IsChecked="{Binding IsAboutTabChecked}"/>
     </controls:TabButtonsControl>
     <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
             CornerRadius="0, 0, 7, 7">

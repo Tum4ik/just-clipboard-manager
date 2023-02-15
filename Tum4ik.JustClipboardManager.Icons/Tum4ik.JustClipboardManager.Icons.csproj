@@ -21,8 +21,10 @@
     <None Remove="Resources\chrome-restore.svg" />
     <None Remove="Resources\file.svg" />
     <None Remove="Resources\files.svg" />
+    <None Remove="Resources\info.svg" />
     <None Remove="Resources\scroll-left-arrow.svg" />
     <None Remove="Resources\scroll-right-arrow.svg" />
+    <None Remove="Resources\settings.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +36,10 @@
     <Resource Include="Resources\chrome-restore.svg" />
     <Resource Include="Resources\file.svg" />
     <Resource Include="Resources\files.svg" />
+    <Resource Include="Resources\info.svg" />
     <Resource Include="Resources\scroll-left-arrow.svg" />
     <Resource Include="Resources\scroll-right-arrow.svg" />
+    <Resource Include="Resources\settings.svg" />
   </ItemGroup>
 
 </Project>

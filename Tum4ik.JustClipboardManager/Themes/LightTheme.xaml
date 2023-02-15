@@ -48,6 +48,7 @@
   <SolidColorBrush x:Key="ItemDividerBrush" Color="Black" Opacity="0.0803"/>
   <SolidColorBrush x:Key="ItemHoverBackgroundBrush" Color="Black" Opacity="0.0373"/>
   <SolidColorBrush x:Key="ItemPressedBackgroundBrush" Color="Black" Opacity="0.0241"/>
+  <SolidColorBrush x:Key="TabPressedBackgroundBrush" Color="White" Opacity="0.7"/>
 
   <SolidColorBrush x:Key="ShellCloseButtonHoverBackgroundBrush" Color="#C42B1C"/>
   <SolidColorBrush x:Key="ShellCloseButtonPressedBackgroundBrush" Color="#C42B1C" Opacity="0.9"/>
