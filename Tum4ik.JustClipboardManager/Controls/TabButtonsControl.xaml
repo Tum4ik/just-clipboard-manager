@@ -74,7 +74,8 @@
                 VerticalScrollBarVisibility="Disabled"
                 HorizontalScrollBarVisibility="Hidden"
                 ScrollChanged="ScrollViewer_ScrollChanged">
-    <ItemsControl x:Name="_itemsControl" ItemsSource="{Binding Tabs, ElementName=_this}">
+    <ItemsControl x:Name="_itemsControl" ItemsSource="{Binding Tabs, ElementName=_this}"
+                  Focusable="False">
       <i:Interaction.Behaviors>
         <i:FluidMoveBehavior x:Name="_fluidMoveBehavior"/>
       </i:Interaction.Behaviors>

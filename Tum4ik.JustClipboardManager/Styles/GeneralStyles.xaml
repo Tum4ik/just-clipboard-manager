@@ -5,7 +5,7 @@
                     xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls">
 
   <system:Double x:Key="FontSize">14</system:Double>
-  
+
   <ContextMenu x:Key="ContextMenuDisabled" Visibility="Collapsed"/>
 
 
@@ -28,7 +28,23 @@
     <Setter Property="BorderBrush" Value="{DynamicResource AppSurfaceBorderBrush}"/>
     <Setter Property="Effect" Value="{StaticResource DefaultDropShadowEffect}"/>
   </Style>
-  
+
+  <Style x:Key="FocusStyle">
+    <Setter Property="Control.Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Rectangle StrokeThickness="2"
+                     Stroke="{DynamicResource TextPrimaryBrush}"
+                     RadiusX="7" RadiusY="7"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="controls:TabButton">
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
+  </Style>
+
   <Style TargetType="controls:CaptionButton">
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="HoverBackgroundBrush" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
@@ -70,7 +86,7 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
+
   <Style x:Key="ContextMenuBorderStyle" TargetType="Border">
     <Setter Property="CornerRadius" Value="7"/>
     <Setter Property="Margin" Value="24"/>

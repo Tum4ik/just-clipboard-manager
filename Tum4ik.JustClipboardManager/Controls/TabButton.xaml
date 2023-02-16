@@ -10,10 +10,14 @@
              Cursor="Hand"
              PreviewMouseLeftButtonDown="RadioButton_PreviewMouseLeftButtonDown"
              PreviewMouseLeftButtonUp="RadioButton_PreviewMouseLeftButtonUp"
-             MouseLeave="RadioButton_MouseLeave">
+             MouseLeave="RadioButton_MouseLeave"
+             x:Name="this">
   <RadioButton.Resources>
     <math:MathConverter x:Key="MathConverter"/>
   </RadioButton.Resources>
+  <RadioButton.InputBindings>
+    <KeyBinding Key="Return" Command="{Binding EnterKeyPressedCommand, ElementName=this}"/>
+  </RadioButton.InputBindings>
   <RadioButton.Template>
     <ControlTemplate TargetType="controls:TabButton">
       <Border x:Name="_border"

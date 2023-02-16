@@ -1,4 +1,5 @@
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Tum4ik.JustClipboardManager.Icons;
 
 namespace Tum4ik.JustClipboardManager.Controls;
@@ -51,6 +52,13 @@ public partial class TabButton
   {
     get => (Visibility) GetValue(UncheckedRightSeparatorVisibilityProperty);
     set => SetValue(UncheckedRightSeparatorVisibilityProperty, value);
+  }
+
+
+  [RelayCommand]
+  private void EnterKeyPressed()
+  {
+    IsChecked = true;
   }
 
 
