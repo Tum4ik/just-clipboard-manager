@@ -14,6 +14,13 @@
              x:Name="this">
   <RadioButton.Resources>
     <math:MathConverter x:Key="MathConverter"/>
+    <VisualBrush x:Key="CheckedBackgroundBrush" TileMode="None" Stretch="Fill">
+      <VisualBrush.Visual>
+        <Grid Width="1" Height="1" Background="{DynamicResource AppSurfaceBackgroundBrush}">
+          <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"/>
+        </Grid>
+      </VisualBrush.Visual>
+    </VisualBrush>
   </RadioButton.Resources>
   <RadioButton.InputBindings>
     <KeyBinding Key="Return" Command="{Binding EnterKeyPressedCommand, ElementName=this}"/>
@@ -33,7 +40,7 @@
               <Path Data="M0.5,0.5 L0.54171246,0.5 0.54685676,0.53104976 C0.76677716,1.7622338 1.7377663,2.733223 2.9689503,2.9531431 L3,2.9582875 3,3 0.5,3 z"
                     HorizontalAlignment="Left"
                     Height="3.5"
-                    Stroke="{DynamicResource AppContentAreaBackgroundBrush}"
+                    Stroke="{StaticResource CheckedBackgroundBrush}"
                     Stretch="Fill"
                     StrokeThickness="1"
                     VerticalAlignment="Bottom"
@@ -115,7 +122,7 @@
         <Trigger Property="IsChecked" Value="True">
           <Setter Property="Panel.ZIndex" Value="1"/>
           <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource ContextMenuBorderBrush}"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AppContentAreaBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{StaticResource CheckedBackgroundBrush}"/>
           <Setter TargetName="_border" Property="Margin" Value="4, 0"/>
           <Setter TargetName="_rightBottomFacet" Property="Visibility" Value="Visible"/>
           <Setter TargetName="_leftBottomFacet" Property="Visibility" Value="Visible"/>

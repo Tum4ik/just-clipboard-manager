@@ -16,11 +16,7 @@
                     BlurRadius="16"
                     ShadowDepth="8"
                     RenderingBias="Quality"/>
-
-  <Rectangle x:Key="FocusRectangle" x:Shared="False"
-             StrokeThickness="2"
-             Stroke="{DynamicResource TextPrimaryBrush}"
-             RadiusX="7" RadiusY="7"/>
+  
 
   <Style TargetType="Window">
     <Setter Property="UseLayoutRounding" Value="True"/>
@@ -34,11 +30,17 @@
     <Setter Property="Effect" Value="{StaticResource DefaultDropShadowEffect}"/>
   </Style>
 
+  <Style TargetType="ContentControl">
+    <Setter Property="Focusable" Value="False"/>
+  </Style>
+
   <Style x:Key="FocusStyle">
     <Setter Property="Control.Template">
       <Setter.Value>
         <ControlTemplate>
-          <ContentPresenter Content="{StaticResource FocusRectangle}"/>
+          <Rectangle StrokeThickness="2"
+                     Stroke="{DynamicResource TextPrimaryBrush}"
+                     RadiusX="7" RadiusY="7"/>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -47,9 +49,13 @@
   <Style TargetType="controls:TabButton">
     <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
   </Style>
+  <Style TargetType="controls:NavigationButton">
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
+  </Style>
 
   <Style TargetType="controls:CaptionButton">
     <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Focusable" Value="False"/>
     <Setter Property="HoverBackgroundBrush" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
     <Setter Property="IconColor" Value="{DynamicResource TextPrimaryBrush}"/>
     <Setter Property="HoverIconBrush" Value="{DynamicResource TextPrimaryBrush}"/>
@@ -58,20 +64,15 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="controls:CaptionButton">
-          <Grid>
-            <Border x:Name="_border"
-                    Width="46" Height="32"
-                    Background="Transparent"
-                    CornerRadius="{TemplateBinding CornerRadius}">
-              <icons:SvgIcon x:Name="_icon"
-                             Icon="{TemplateBinding Icon}"
-                             Width="10" Height="10"
-                             Color="{TemplateBinding IconColor}"/>
-            </Border>
-            <ContentPresenter x:Name="_focusFrame"
-                              Content="{StaticResource FocusRectangle}"
-                              Visibility="Hidden"/>
-          </Grid>
+          <Border x:Name="_border"
+                  Width="46" Height="32"
+                  Background="Transparent"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+            <icons:SvgIcon x:Name="_icon"
+                           Icon="{TemplateBinding Icon}"
+                           Width="10" Height="10"
+                           Color="{TemplateBinding IconColor}"/>
+          </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="_border"
@@ -88,9 +89,6 @@
               <Setter TargetName="_icon"
                       Property="Color"
                       Value="{Binding PressedIconBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-              <Setter TargetName="_focusFrame" Property="Visibility" Value="Visible"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

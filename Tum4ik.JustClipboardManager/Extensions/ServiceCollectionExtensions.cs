@@ -54,7 +54,7 @@ internal static class ServiceCollectionExtensions
   /// <returns>The <see cref="IServiceCollection"/>.</returns>
   public static IServiceCollection RegisterForNavigation<TView, TViewModel>(this IServiceCollection services,
                                                                             string name)
-    where TView : ContentControl
+    where TView : FrameworkElement
     where TViewModel : class
   {
     ViewModelLocationProvider.Register<TView, TViewModel>();

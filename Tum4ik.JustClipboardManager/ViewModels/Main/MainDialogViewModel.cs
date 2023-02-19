@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services;
@@ -7,8 +9,13 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main;
 
 internal partial class MainDialogViewModel : ObservableObject, IDialogAware
 {
-  public MainDialogViewModel(IInfoService infoService)
+  private readonly IRegionManager _regionManager;
+
+  public MainDialogViewModel(IInfoService infoService,
+                             IRegionManager regionManager)
   {
+    _regionManager = regionManager;
+
     Title = infoService.GetProductName();
   }
 
@@ -24,6 +31,8 @@ internal partial class MainDialogViewModel : ObservableObject, IDialogAware
 
   public void OnDialogClosed()
   {
+    _regionManager.Regions[RegionNames.MainDialogContent].RemoveAll();
+    _regionManager.Regions.Remove(RegionNames.MainDialogContent);
   }
 
   public void OnDialogOpened(IDialogParameters parameters)
@@ -49,4 +58,11 @@ internal partial class MainDialogViewModel : ObservableObject, IDialogAware
 #endif
 
   public event Action<IDialogResult>? RequestClose;
+
+
+  [RelayCommand]
+  private void Navigate(string viewName)
+  {
+    _regionManager.RequestNavigate(RegionNames.MainDialogContent, viewName);
+  }
 }

@@ -36,12 +36,6 @@ public partial class TabButtonsControl
       if (tab.IsChecked is true)
       {
         Tab_Checked(tab, e);
-        var command = tab.Command;
-        var commandParameter = tab.CommandParameter;
-        if (command is not null && command.CanExecute(commandParameter))
-        {
-          command.Execute(commandParameter);
-        }
       }
     }
   }
@@ -76,6 +70,8 @@ public partial class TabButtonsControl
     _checkedTab.RenderTransform = null;
     _checkedTab.BringIntoView();
 
+    ExecuteTabCommand(_checkedTab);
+
     var checkedTabIndex = Tabs.IndexOf(_checkedTab);
     for (var i = 0; i < checkedTabIndex; i++)
     {
@@ -92,6 +88,17 @@ public partial class TabButtonsControl
       afterTab.UncheckedLeftSeparatorVisibility = Visibility.Collapsed;
       afterTab.UncheckedRightSeparatorVisibility = Visibility.Visible;
       afterTab.RenderTransform = new TranslateTransform(-4, 0);
+    }
+  }
+
+
+  private static void ExecuteTabCommand(TabButton tab)
+  {
+    var command = tab.Command;
+    var commandParameter = tab.CommandParameter;
+    if (command is not null && command.CanExecute(commandParameter))
+    {
+      command.Execute(commandParameter);
     }
   }
 

@@ -4,29 +4,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:math="http://hexinnovation.com/math"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
              x:ClassModifier="internal"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}">
-  <UserControl.Resources>
-    <math:MathConverter x:Key="MathConverter"/>
-  </UserControl.Resources>
   <DockPanel>
     <controls:TabButtonsControl DockPanel.Dock="Top">
+      <controls:TabButtonsControl.Resources>
+        <Style TargetType="controls:TabButton" BasedOn="{StaticResource {x:Type controls:TabButton}}">
+          <Setter Property="Command" Value="{Binding NavigateCommand}"/>
+        </Style>
+      </controls:TabButtonsControl.Resources>
       <controls:TabButton Text="Налаштування"
                           Icon="Settings"
-                          IsChecked="{Binding IsSettingsTabChecked}"/>
+                          IsChecked="{Binding IsSettingsTabChecked}"
+                          CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
       <controls:TabButton Text="About"
                           Icon="Info"
-                          IsChecked="{Binding IsAboutTabChecked}"/>
+                          IsChecked="{Binding IsAboutTabChecked}"
+                          CommandParameter="{x:Static const:ViewNames.AboutView}"/>
     </controls:TabButtonsControl>
     <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
             CornerRadius="0, 0, 7, 7">
-      <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
+      <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
+                      prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
     </Border>
   </DockPanel>
 </UserControl>

@@ -21,8 +21,10 @@ using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
+using Tum4ik.JustClipboardManager.Views.Main.Settings;
 
 namespace Tum4ik.JustClipboardManager;
 
@@ -102,7 +104,7 @@ public partial class App : ISingleInstance
     var defaultRegionBehaviors = _serviceProvider.GetRequiredService<IRegionBehaviorFactory>();
     RegisterDefaultRegionBehaviors(defaultRegionBehaviors);
 
-    var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
+    //var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
     //moduleManager.Run();
 
     RemoveOldClips(_serviceProvider);
@@ -135,7 +137,7 @@ public partial class App : ISingleInstance
     services
       .AddSingleton<IContainerExtension>(sp => new ServiceContainerExtension(sp))
       .AddConfiguration()
-      .AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
+      //.AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
       .AddPrismServices()
       .AddPrismBehaviors()
       .AddRegionAdapters()
@@ -159,7 +161,9 @@ public partial class App : ISingleInstance
       })
       .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
-      .RegisterDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog);
+      .RegisterDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
+      .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
+      .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
 
     return services.BuildServiceProvider();
   }
