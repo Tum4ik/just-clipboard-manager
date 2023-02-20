@@ -11,6 +11,7 @@ using Prism.Regions.Behaviors;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Ioc;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Views.Main;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
@@ -74,10 +75,20 @@ internal static class ServiceCollectionExtensions
   /// <param name="name">The unique name to register with the dialog.</param>
   /// <returns>The <see cref="IServiceCollection"/>.</returns>
   public static IServiceCollection RegisterDialog<TView, TViewModel>(this IServiceCollection services, string name)
-    where TView : ContentControl
+    where TView : FrameworkElement
     where TViewModel : class, IDialogAware
   {
     return services.RegisterForNavigation<TView, TViewModel>(name);
+  }
+
+
+  public static IServiceCollection RegisterSingleInstanceDialog<TView, TViewModel>(this IServiceCollection services,
+                                                                                   string name)
+    where TView : FrameworkElement
+    where TViewModel : class, IDialogAware
+  {
+    SingleInstanceDialogsProvider.RegisterSingleInstanceDialog(name);
+    return services.RegisterDialog<TView, TViewModel>(name);
   }
 
 
@@ -103,7 +114,7 @@ internal static class ServiceCollectionExtensions
   public static IServiceCollection AddPrismServices(this IServiceCollection services)
   {
     return services
-      .AddSingleton<IDialogService, DialogService>()
+      .AddSingleton<IDialogService, ExtendedDialogService>()
       .AddSingleton<IModuleInitializer, ModuleInitializer>()
       .AddSingleton<IModuleManager, ModuleManager>()
       .AddSingleton<RegionAdapterMappings>()

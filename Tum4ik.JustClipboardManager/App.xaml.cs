@@ -161,7 +161,7 @@ public partial class App : ISingleInstance
       })
       .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
-      .RegisterDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
+      .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
       .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
       .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
 

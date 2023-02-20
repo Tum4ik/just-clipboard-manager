@@ -27,6 +27,17 @@ internal interface IUser32DllService
   /// </returns>
   bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int x, int y, int cx, int cy, SizingAndPositioning uFlags);
 
+  /// <summary>
+  /// Sets the specified window's show state.
+  /// </summary>
+  /// <param name="hWnd">A handle to the window.</param>
+  /// <param name="nCmdShow">Controls how the window is to be shown.</param>
+  /// <returns>
+  /// If the window was previously visible, the return value is nonzero.
+  /// If the window was previously hidden, the return value is zero.
+  /// </returns>
+  bool ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
+
   nint MonitorFromPoint(Win32Point pt, MonitorOptions dwFlags);
 
   /// <summary>
@@ -75,6 +86,12 @@ internal class User32DllService : IUser32DllService
   }
 
 
+  public bool ShowWindow(nint hWnd, ShowWindowCommand nCmdShow)
+  {
+    return _ShowWindow(hWnd, nCmdShow);
+  }
+
+
   public nint MonitorFromPoint(Win32Point pt, MonitorOptions dwFlags)
   {
     return _MonitorFromPoint(pt, dwFlags);
@@ -107,6 +124,12 @@ internal class User32DllService : IUser32DllService
   private static extern bool _SetWindowPos(
     nint hWnd, nint hWndInsertAfter, int x, int y, int cx, int cy, SizingAndPositioning uFlags
   );
+
+
+  [DllImport("user32.dll", EntryPoint = "ShowWindow")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  [return: MarshalAs(UnmanagedType.Bool)]
+  private static extern bool _ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
 
 
   [DllImport("user32.dll", EntryPoint = "MonitorFromPoint")]
