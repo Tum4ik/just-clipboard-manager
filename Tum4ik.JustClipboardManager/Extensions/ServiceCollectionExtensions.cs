@@ -11,7 +11,7 @@ using Prism.Regions.Behaviors;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Ioc;
-using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Views.Main;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
@@ -126,7 +126,7 @@ internal static class ServiceCollectionExtensions
       .AddTransient<IRegionNavigationJournalEntry, RegionNavigationJournalEntry>()
       .AddTransient<IRegionNavigationJournal, RegionNavigationJournal>()
       .AddTransient<IRegionNavigationService, RegionNavigationService>()
-      .AddTransient<IDialogWindow, MainDialogWindow>();
+      .AddTransient<IDialogWindowExtended, MainDialogWindow>();
   }
 
 

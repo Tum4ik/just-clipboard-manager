@@ -1,20 +1,21 @@
 using System.Windows;
-using System.Windows.Interop;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
-namespace Tum4ik.JustClipboardManager.Services;
+namespace Tum4ik.JustClipboardManager.Services.Dialogs;
 
 internal class ExtendedDialogService : DialogService, IDialogService
 {
+  private readonly IContainerExtension _containerExtension;
   private readonly IUser32DllService _user32Dll;
 
   public ExtendedDialogService(IContainerExtension containerExtension,
                                IUser32DllService user32Dll)
     : base(containerExtension)
   {
+    _containerExtension = containerExtension;
     _user32Dll = user32Dll;
   }
 
@@ -24,7 +25,7 @@ internal class ExtendedDialogService : DialogService, IDialogService
     ShowInternal(name, parameters, cb => base.Show(name, parameters, cb), callback);
   }
 
-  public new void Show(string name, IDialogParameters parameters, Action<IDialogResult> callback, string windowName)
+  public new void Show(string name, IDialogParameters parameters, Action<IDialogResult> callback, string? windowName)
   {
     ShowInternal(name, parameters, cb => base.Show(name, parameters, cb, windowName), callback);
   }
@@ -37,21 +38,36 @@ internal class ExtendedDialogService : DialogService, IDialogService
   public new void ShowDialog(string name,
                              IDialogParameters parameters,
                              Action<IDialogResult> callback,
-                             string windowName)
+                             string? windowName)
   {
     ShowInternal(name, parameters, cb => base.ShowDialog(name, parameters, cb, windowName), callback);
   }
 
 
-  private static readonly Dictionary<string, IDialogWindow> s_openDialogs = new();
+  private static readonly Dictionary<string, IDialogWindowExtended> s_openDialogs = new();
 
 
-  protected override void ConfigureDialogWindowContent(string dialogName, IDialogWindow window, IDialogParameters parameters)
+  protected override IDialogWindow CreateDialogWindow(string? name)
+  {
+    if (string.IsNullOrWhiteSpace(name))
+    {
+      return _containerExtension.Resolve<IDialogWindowExtended>();
+    }
+    else
+    {
+      return _containerExtension.Resolve<IDialogWindowExtended>(name);
+    }
+  }
+
+
+  protected override void ConfigureDialogWindowContent(string dialogName,
+                                                       IDialogWindow window,
+                                                       IDialogParameters parameters)
   {
     base.ConfigureDialogWindowContent(dialogName, window, parameters);
     if (SingleInstanceDialogsProvider.IsSingleInstanceDialog(dialogName))
     {
-      s_openDialogs[dialogName] = window;
+      s_openDialogs[dialogName] = (IDialogWindowExtended) window;
     }
   }
 
@@ -65,19 +81,16 @@ internal class ExtendedDialogService : DialogService, IDialogService
     if (SingleInstanceDialogsProvider.IsSingleInstanceDialog(name))
     {
       if (s_openDialogs.TryGetValue(name, out var dialogWindow)
-          && dialogWindow.Content is FrameworkElement content
-          && content.DataContext is IDialogAware viewModel)
+          && dialogWindow.DataContext is IDialogAware viewModel)
       {
-        viewModel.OnDialogOpened(parameters ?? new DialogParameters());
-        var window = (Window)dialogWindow;
-        if (window.WindowState == WindowState.Minimized)
+        viewModel.OnDialogOpened(parameters);
+        if (dialogWindow.WindowState == WindowState.Minimized)
         {
-          var hwnd = new WindowInteropHelper(window).EnsureHandle();
-          _user32Dll.ShowWindow(hwnd, ShowWindowCommand.SW_RESTORE);
+          _user32Dll.ShowWindow(dialogWindow.Handle, ShowWindowCommand.SW_RESTORE);
         }
-        else if (!window.IsActive)
+        else if (!dialogWindow.IsActive)
         {
-          window.Activate();
+          dialogWindow.Activate();
         }
 
         return;
@@ -85,7 +98,7 @@ internal class ExtendedDialogService : DialogService, IDialogService
 
       finalCallback = r =>
       {
-        originalCallback?.Invoke(r);
+        originalCallback.Invoke(r);
         s_openDialogs.Remove(name);
       };
     }

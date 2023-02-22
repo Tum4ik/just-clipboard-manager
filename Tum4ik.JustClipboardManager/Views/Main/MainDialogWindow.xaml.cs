@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Interop;
 using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
@@ -9,7 +10,7 @@ namespace Tum4ik.JustClipboardManager.Views.Main;
 /// <summary>
 /// Interaction logic for MainDialogWindow.xaml
 /// </summary>
-internal partial class MainDialogWindow : IDialogWindow
+internal partial class MainDialogWindow : IDialogWindowExtended
 {
   private readonly IUser32DllService _user32Dll;
   private readonly ISHCoreDllService _shCoreDll;
@@ -22,17 +23,19 @@ internal partial class MainDialogWindow : IDialogWindow
 
     InitializeComponent();
 
-    _hwnd = new WindowInteropHelper(this).EnsureHandle();
-    HwndSource.FromHwnd(_hwnd).AddHook(HwndHook);
+    HwndSource.FromHwnd(Handle).AddHook(HwndHook);
     _initialMargin = Margin;
   }
 
 
-  private readonly nint _hwnd;
   private readonly Thickness _initialMargin;
 
 
   public IDialogResult? Result { get; set; }
+
+
+  private nint? _handle;
+  public nint Handle => _handle ??= new WindowInteropHelper(this).EnsureHandle();
 
 
   private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
@@ -55,7 +58,7 @@ internal partial class MainDialogWindow : IDialogWindow
             break;
           case 0xF120: // SC_RESTORE
           case 0xF122: // SC_RESTORE_DBLCLICK
-            BeforeRestoe();
+            BeforeRestore();
             break;
         }
         break;
@@ -66,7 +69,7 @@ internal partial class MainDialogWindow : IDialogWindow
 
   private void BeforeMaximize()
   {
-    var monitorHandle = _user32Dll.MonitorFromWindow(_hwnd, MonitorOptions.MONITOR_DEFAULTTONEAREST);
+    var monitorHandle = _user32Dll.MonitorFromWindow(Handle, MonitorOptions.MONITOR_DEFAULTTONEAREST);
     if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
         && _shCoreDll.GetDpiForMonitor(monitorHandle, MonitorDpiType.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
     {
@@ -77,7 +80,7 @@ internal partial class MainDialogWindow : IDialogWindow
   }
 
 
-  private void BeforeRestoe()
+  private void BeforeRestore()
   {
     Margin = _initialMargin;
   }
