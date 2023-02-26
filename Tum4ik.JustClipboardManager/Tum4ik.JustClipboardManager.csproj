@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Controls\ModernComboBox.xaml" />
     <None Remove="Controls\NavigationButton.xaml" />
     <None Remove="Controls\NavigationPanel.xaml" />
     <None Remove="Controls\TabButton.xaml" />
@@ -40,6 +41,8 @@
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
+    <None Remove="Views\Main\Settings\SettingsGeneralView.xaml" />
+    <None Remove="Views\Main\Settings\SettingsInterfaceView.xaml" />
     <None Remove="Views\Main\Settings\SettingsView.xaml" />
   </ItemGroup>
 

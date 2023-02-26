@@ -7,10 +7,14 @@ public enum SvgIconType
   [SvgIconResource("chrome-maximize")] ChromeMaximize,
   [SvgIconResource("chrome-minimize")] ChromeMinimize,
   [SvgIconResource("chrome-restore")] ChromeRestore,
+  [SvgIconResource("display-settings")] DisplaySettings,
+  [SvgIconResource("expand-arrow")] ExpandArrow,
   [SvgIconResource("file")] File,
   [SvgIconResource("files")] Files,
   [SvgIconResource("info")] Info,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
-  [SvgIconResource("settings")] Settings
+  [SvgIconResource("settings")] Settings,
+  [SvgIconResource("ukraine")] Ukraine,
+  [SvgIconResource("usa")] USA
 }

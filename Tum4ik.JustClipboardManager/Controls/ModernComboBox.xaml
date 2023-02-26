@@ -1,0 +1,158 @@
+<ComboBox x:Class="Tum4ik.JustClipboardManager.Controls.ModernComboBox"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+          xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+          mc:Ignorable="d"
+          x:Name="this"
+          Height="32"
+          MinWidth="128">
+  <ComboBox.Template>
+    <ControlTemplate TargetType="controls:ModernComboBox">
+      <Grid>
+        <ToggleButton x:Name="_toggleButton"
+                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                      Cursor="Hand">
+          <ToggleButton.Template>
+            <ControlTemplate TargetType="ToggleButton">
+              <Border x:Name="_border"
+                      CornerRadius="4"
+                      BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
+                      Background="{DynamicResource ControlBackgroundBrush}">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
+                  <ContentControl x:Name="_selectedItemContent"
+                                  Grid.Column="0"
+                                  Content="{Binding SelectedItem, ElementName=this}"
+                                  ContentTemplate="{Binding SelectedItemTemplate, ElementName=this}"/>
+                  <icons:SvgIcon x:Name="_expandArrowIcon"
+                                 Grid.Column="1"
+                                 Icon="ExpandArrow"
+                                 Width="8" Height="6"
+                                 Color="{DynamicResource TextSecondaryBrush}"
+                                 Margin="15, 1, 15, 0"/>
+                </Grid>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                  <Setter TargetName="_border"
+                          Property="Background" Value="{DynamicResource ControlHoverBackgroundBrush}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="_border"
+                          Property="Background" Value="{DynamicResource ControlPressedBackgroundBrush}"/>
+                  <Setter TargetName="_border"
+                          Property="BorderBrush" Value="{DynamicResource ControlPressedBorderBrush}"/>
+                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                  <Setter TargetName="_border"
+                          Property="Background" Value="{DynamicResource ControlDisabledBackgroundBrush}"/>
+                  <Setter TargetName="_border"
+                          Property="BorderBrush" Value="{DynamicResource ControlDisabledBorderBrush}"/>
+                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </ToggleButton.Template>
+        </ToggleButton>
+        <Popup AllowsTransparency="True"
+               IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+               StaysOpen="False"
+               PopupAnimation="Slide">
+          <Border Style="{StaticResource ContextMenuBorderStyle}"
+                  Width="{Binding ActualWidth, ElementName=_toggleButton}">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                          Margin="0, -1">
+              <StackPanel Style="{StaticResource ContextMenuStackPanelStyle}"/>
+            </ScrollViewer>
+          </Border>
+        </Popup>
+        <Rectangle x:Name="_focusRect"
+                   Style="{StaticResource FocusRectStyle}"
+                   Visibility="Hidden"/>
+      </Grid>
+      <ControlTemplate.Triggers>
+        <Trigger Property="IsKeyboardFocused" Value="True">
+          <Setter TargetName="_focusRect" Property="Visibility" Value="Visible"/>
+        </Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+  </ComboBox.Template>
+  <ComboBox.ItemContainerStyle>
+    <Style TargetType="ComboBoxItem">
+      <Setter Property="Margin" Value="0"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ComboBoxItem">
+            <RadioButton IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                         GroupName="Settings_Languages"
+                         Focusable="False"
+                         Click="RadioButton_Click">
+              <ContentPresenter/>
+              <RadioButton.Template>
+                <ControlTemplate TargetType="RadioButton">
+                  <Border x:Name="_border"
+                          CornerRadius="4" Height="36"
+                          Background="Transparent"
+                          Margin="4, 2">
+                    <Grid>
+                      <Rectangle x:Name="_selectionPointer"
+                                 Width="3" Height="16" RadiusX="1.5" RadiusY="1.5"
+                                 Fill="{DynamicResource AccentDefaultBrush}"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Visibility="Hidden"/>
+                      <ContentControl x:Name="_itemContent"
+                                      Content="{TemplateBinding Content}"/>
+                    </Grid>
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter TargetName="_border"
+                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                      <Setter TargetName="_selectionPointer"
+                              Property="Fill" Value="{DynamicResource AccentSecondaryBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                      <Setter TargetName="_itemContent"
+                              Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                      <Setter TargetName="_selectionPointer"
+                              Property="Fill" Value="{DynamicResource AccentTertiaryBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="True">
+                      <Setter TargetName="_border"
+                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                      <Setter TargetName="_selectionPointer" Property="Visibility" Value="Visible"/>
+                    </Trigger>
+                    <MultiTrigger>
+                      <MultiTrigger.Conditions>
+                        <Condition Property="IsPressed" Value="True"/>
+                        <Condition Property="IsChecked" Value="False"/>
+                      </MultiTrigger.Conditions>
+                      <Setter TargetName="_border"
+                              Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                    </MultiTrigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                      <Setter TargetName="_itemContent"
+                              Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </RadioButton.Template>
+            </RadioButton>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </ComboBox.ItemContainerStyle>
+</ComboBox>

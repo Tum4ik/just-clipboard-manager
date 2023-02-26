@@ -61,4 +61,15 @@
   <SolidColorBrush x:Key="ShellCloseButtonHoverBackgroundBrush" Color="#C42B1C"/>
   <SolidColorBrush x:Key="ShellCloseButtonPressedBackgroundBrush" Color="#C42B1C" Opacity="0.9"/>
 
+  <SolidColorBrush x:Key="ControlBackgroundBrush" Color="White" Opacity="0.0605"/>
+  <SolidColorBrush x:Key="ControlHoverBackgroundBrush" Color="White" Opacity="0.0837"/>
+  <SolidColorBrush x:Key="ControlPressedBackgroundBrush" Color="White" Opacity="0.0326"/>
+  <SolidColorBrush x:Key="ControlDisabledBackgroundBrush" Color="White" Opacity="0.0419"/>
+  <LinearGradientBrush x:Key="ControlBorderBrush" StartPoint="0, 0" EndPoint="0, 1">
+    <GradientStop Color="#17FFFFFF" Offset="0" />
+    <GradientStop Color="#11FFFFFF" Offset="0.094" />
+  </LinearGradientBrush>
+  <SolidColorBrush x:Key="ControlPressedBorderBrush" Color="White" Opacity="0.0698"/>
+  <SolidColorBrush x:Key="ControlDisabledBorderBrush" Color="White" Opacity="0.0698"/>
+
 </ResourceDictionary>

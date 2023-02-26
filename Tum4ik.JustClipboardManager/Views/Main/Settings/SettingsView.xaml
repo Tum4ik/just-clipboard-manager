@@ -13,17 +13,20 @@
     <controls:NavigationPanel.Resources>
       <Style TargetType="controls:NavigationButton" BasedOn="{StaticResource {x:Type controls:NavigationButton}}">
         <Setter Property="Margin" Value="4, 2"/>
+        <Setter Property="Command" Value="{Binding NavigateCommand}"/>
       </Style>
     </controls:NavigationPanel.Resources>
-    <controls:NavigationButton Icon="Check" Text="Test1"/>
-    <controls:NavigationButton Icon="File" Text="Test2"/>
-    <controls:NavigationButton Icon="Info" Text="Test3"/>
+    <controls:NavigationButton Icon="Settings" Text="General"
+                               CommandParameter="{x:Static const:ViewNames.SettingsGeneralView}"/>
+    <controls:NavigationButton Icon="DisplaySettings" Text="Interface"
+                               CommandParameter="{x:Static const:ViewNames.SettingsInterfaceView}"/>
   </controls:NavigationPanel>
   <Border CornerRadius="7, 0, 7, 0"
           BorderThickness="1, 1, 0, 0"
           BorderBrush="{DynamicResource ContextMenuBorderBrush}"
           Background="{DynamicResource ViewContentAreaBackgroundBrush}"
-          Margin="0, 32, 0, 0">
+          Margin="0, 32, 0, 0"
+          Padding="8">
     <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogSettingsViewContent}"/>
   </Border>
 </DockPanel>

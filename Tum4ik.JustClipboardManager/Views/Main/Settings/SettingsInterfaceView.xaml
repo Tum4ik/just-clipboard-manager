@@ -1,0 +1,48 @@
+<UserControl x:Class="Tum4ik.JustClipboardManager.Views.Main.Settings.SettingsInterfaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SettingsInterfaceViewModel}"
+             Focusable="False">
+  <UserControl.Resources>
+    <DataTemplate x:Key="LanguageItemTemplate" DataType="vm:Language">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0"
+                   Text="{Binding Culture.NativeName}"
+                   VerticalAlignment="Center"
+                   Margin="12, 0, 0, 0"/>
+        <icons:SvgIcon Grid.Column="1"
+                       Icon="{Binding Icon}"
+                       Width="16" Height="16"
+                       Margin="12, 0"/>
+        <i:Interaction.Triggers>
+          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                         Value="True">
+            <i:ChangePropertyAction PropertyName="Opacity" Value="0.75"/>
+          </i:DataTrigger>
+          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                         Value="False">
+            <i:ChangePropertyAction PropertyName="Opacity" Value="1"/>
+          </i:DataTrigger>
+        </i:Interaction.Triggers>
+      </Grid>
+    </DataTemplate>
+  </UserControl.Resources>
+  <StackPanel>
+    <controls:ModernComboBox ItemsSource="{Binding Languages}"
+                             SelectedItem="{Binding SelectedLanguage}"
+                             SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
+                             ItemTemplate="{StaticResource LanguageItemTemplate}"
+                             Width="250"/>
+  </StackPanel>
+</UserControl>

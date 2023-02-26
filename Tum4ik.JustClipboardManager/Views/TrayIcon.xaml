@@ -12,7 +12,7 @@
                 IconSource="{Binding TrayIcon}"
                 UseLayoutRounding="True">
   <tb:TaskbarIcon.ContextMenu>
-    <ContextMenu>
+    <ContextMenu Background="White">
       <!--<MenuItem Header="Clips"/>-->
       <MenuItem Header="Settings"
                 Command="{Binding OpenMainDialogCommand}"
@@ -21,7 +21,7 @@
                 Command="{Binding OpenMainDialogCommand}"
                 CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       <Separator/>
-      <MenuItem Header="Theme">
+      <MenuItem Header="Theme" Background="White">
         <MenuItem Header="Light" IsCheckable="True"
                   Command="{Binding ChangeThemeCommand}"
                   CommandParameter="{x:Static services:Theme.Light}"/>
@@ -29,7 +29,7 @@
                   Command="{Binding ChangeThemeCommand}"
                   CommandParameter="{x:Static services:Theme.Dark}"/>
       </MenuItem>
-      <MenuItem Header="Language">
+      <MenuItem Header="Language" Background="White">
         <MenuItem Header="English" IsCheckable="True"/>
         <MenuItem Header="Ukrainian" IsCheckable="True" IsEnabled="False"/>
       </MenuItem>

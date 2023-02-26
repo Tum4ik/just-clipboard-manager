@@ -163,6 +163,8 @@ public partial class App : ISingleInstance
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
       .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
       .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
+      .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
+      .RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView)
       .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
 
     return services.BuildServiceProvider();

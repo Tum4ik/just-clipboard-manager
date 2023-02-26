@@ -19,12 +19,16 @@
     <None Remove="Resources\chrome-maximize.svg" />
     <None Remove="Resources\chrome-minimize.svg" />
     <None Remove="Resources\chrome-restore.svg" />
+    <None Remove="Resources\display-settings.svg" />
+    <None Remove="Resources\expand-arrow.svg" />
     <None Remove="Resources\file.svg" />
     <None Remove="Resources\files.svg" />
     <None Remove="Resources\info.svg" />
     <None Remove="Resources\scroll-left-arrow.svg" />
     <None Remove="Resources\scroll-right-arrow.svg" />
     <None Remove="Resources\settings.svg" />
+    <None Remove="Resources\ukraine.svg" />
+    <None Remove="Resources\usa.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,12 +38,16 @@
     <Resource Include="Resources\chrome-maximize.svg" />
     <Resource Include="Resources\chrome-minimize.svg" />
     <Resource Include="Resources\chrome-restore.svg" />
+    <Resource Include="Resources\display-settings.svg" />
+    <Resource Include="Resources\expand-arrow.svg" />
     <Resource Include="Resources\file.svg" />
     <Resource Include="Resources\files.svg" />
     <Resource Include="Resources\info.svg" />
     <Resource Include="Resources\scroll-left-arrow.svg" />
     <Resource Include="Resources\scroll-right-arrow.svg" />
     <Resource Include="Resources\settings.svg" />
+    <Resource Include="Resources\ukraine.svg" />
+    <Resource Include="Resources\usa.svg" />
   </ItemGroup>
 
 </Project>
