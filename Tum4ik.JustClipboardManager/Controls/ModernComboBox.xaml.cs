@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -56,5 +57,13 @@ public partial class ModernComboBox
       DataType = typeof(string),
       VisualTree = visualTree
     };
+  }
+
+
+  private void Popup_Opened(object sender, EventArgs e)
+  {
+    var popup = (Popup) sender;
+    var verticalOffset = (SelectedIndex + 1) * 36 + 3 + SelectedIndex * 4;
+    popup.VerticalOffset = -verticalOffset;
   }
 }
