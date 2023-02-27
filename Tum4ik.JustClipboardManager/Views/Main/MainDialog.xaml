@@ -17,11 +17,11 @@
           <Setter Property="Command" Value="{Binding NavigateCommand}"/>
         </Style>
       </controls:TabButtonsControl.Resources>
-      <controls:TabButton Text="Налаштування"
+      <controls:TabButton Text="{Binding Translate[Settings]}"
                           Icon="Settings"
                           IsChecked="{Binding IsSettingsTabChecked}"
                           CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
-      <controls:TabButton Text="About"
+      <controls:TabButton Text="{Binding Translate[About]}"
                           Icon="Info"
                           IsChecked="{Binding IsAboutTabChecked}"
                           CommandParameter="{x:Static const:ViewNames.AboutView}"/>

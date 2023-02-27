@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Markup;
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located
@@ -12,3 +13,7 @@ using System.Windows;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("Tum4ik.JustClipboardManager.UnitTests")]
+
+#if DEBUG
+[assembly: XmlnsDefinition("debug-mode", "Tum4ik.JustClipboardManager")]
+#endif

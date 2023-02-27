@@ -1,18 +1,24 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main;
 
-internal partial class MainDialogViewModel : ObservableObject, IDialogAware
+internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
 {
   private readonly IRegionManager _regionManager;
 
   public MainDialogViewModel(IInfoService infoService,
-                             IRegionManager regionManager)
+                             IRegionManager regionManager,
+                             ITranslationService translationService,
+                             IEventAggregator eventAggregator)
+    : base(translationService, eventAggregator)
   {
     _regionManager = regionManager;
 
@@ -31,8 +37,16 @@ internal partial class MainDialogViewModel : ObservableObject, IDialogAware
 
   public void OnDialogClosed()
   {
-    _regionManager.Regions[RegionNames.MainDialogContent].RemoveAll();
-    _regionManager.Regions.Remove(RegionNames.MainDialogContent);
+    var names = new List<string>();
+    foreach (var region in _regionManager.Regions)
+    {
+      region.RemoveAll();
+      names.Add(region.Name);
+    }
+    foreach (var name in names)
+    {
+      _regionManager.Regions.Remove(name);
+    }
   }
 
   public void OnDialogOpened(IDialogParameters parameters)
@@ -52,11 +66,6 @@ internal partial class MainDialogViewModel : ObservableObject, IDialogAware
   }
 
   public string Title { get; }
-  public string? Tag { get; }
-#if DEBUG
-  = "Development";
-#endif
-
   public event Action<IDialogResult>? RequestClose;
 
 

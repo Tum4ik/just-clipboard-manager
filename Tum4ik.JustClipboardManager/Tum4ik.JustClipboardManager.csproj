@@ -84,17 +84,47 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
+    <Compile Update="Properties\InternalSettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>InternalSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SettingsGeneral.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingsGeneral.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SettingsInterface.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingsInterface.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Translations\Translation.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Translation.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
+    <EmbeddedResource Update="Resources\Translations\Translation.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Translation.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\InternalSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>InternalSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\SettingsGeneral.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsGeneral.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\SettingsInterface.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsInterface.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

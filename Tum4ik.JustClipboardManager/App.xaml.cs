@@ -17,8 +17,10 @@ using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc;
+using Tum4ik.JustClipboardManager.Resources.Translations;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
 using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
@@ -126,7 +128,7 @@ public partial class App : ISingleInstance
   private static void RemoveOldClips(ServiceProvider serviceProvider)
   {
     var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
-    _ = clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
+    _ = clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: before date from settings
   }
 
 
@@ -151,6 +153,10 @@ public partial class App : ISingleInstance
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboardService, ClipboardService>()
+      .AddSingleton<ISettingsService, SettingsService>()
+      .AddSingleton<ITranslationService>(
+        sp => new TranslationService(sp.GetRequiredService<ISettingsService>(), typeof(Translation))
+      )
       .AddSingleton<IThemeService, ThemeService>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()

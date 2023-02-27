@@ -1,36 +1,37 @@
-using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Tum4ik.JustClipboardManager.Icons;
+using Prism.Events;
+using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
-internal partial class SettingsInterfaceViewModel : ObservableObject
+internal partial class SettingsInterfaceViewModel : TranslationViewModel
 {
-  public SettingsInterfaceViewModel()
+  private readonly ITranslationService _translationService;
+  private readonly ISettingsService _settingsService;
+
+  public SettingsInterfaceViewModel(ITranslationService translationService,
+                                    IEventAggregator eventAggregator,
+                                    ISettingsService settingsService)
+    : base(translationService, eventAggregator)
   {
-    SelectedLanguage = Languages.Skip(1).First();
+    _translationService = translationService;
+    _settingsService = settingsService;
+
+    Languages = _translationService.SupportedLanguages;
+    SelectedLanguage = Languages.SingleOrDefault(l => l.Culture.Equals(_settingsService.Language));
   }
 
 
-  public IEnumerable<Language> Languages { get; } = new[]
-  {
-    new Language(new("en-US"), SvgIconType.USA),
-    new Language(new("uk-UA"), SvgIconType.Ukraine)
-  };
+  public Language[] Languages { get; }
 
 
   [ObservableProperty] private Language? _selectedLanguage;
-}
-
-
-internal class Language
-{
-  public Language(CultureInfo culture, SvgIconType icon)
+  partial void OnSelectedLanguageChanged(Language? value)
   {
-    Culture = culture;
-    Icon = icon;
+    if (value is not null)
+    {
+      _settingsService.Language = value.Culture;
+    }
   }
-
-
-  public CultureInfo Culture { get; }
-  public SvgIconType Icon { get; }
 }

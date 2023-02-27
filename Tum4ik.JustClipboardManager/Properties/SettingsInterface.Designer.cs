@@ -12,12 +12,12 @@ namespace Tum4ik.JustClipboardManager.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    internal sealed partial class SettingsInterface : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        private static SettingsInterface defaultInstance = ((SettingsInterface)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SettingsInterface())));
         
-        public static Settings Default {
+        public static SettingsInterface Default {
             get {
                 return defaultInstance;
             }
@@ -25,7 +25,7 @@ namespace Tum4ik.JustClipboardManager.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("en")]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
         public string Language {
             get {
                 return ((string)(this["Language"]));
@@ -44,18 +44,6 @@ namespace Tum4ik.JustClipboardManager.Properties {
             }
             set {
                 this["Theme"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool RunOnWindowsStartup {
-            get {
-                return ((bool)(this["RunOnWindowsStartup"]));
-            }
-            set {
-                this["RunOnWindowsStartup"] = value;
             }
         }
     }
