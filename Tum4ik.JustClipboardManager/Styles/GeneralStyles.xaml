@@ -144,11 +144,6 @@
       </DataTrigger>
     </Style.Triggers>
   </Style>
-  <Style x:Key="MenuItemTextBlockStyle" TargetType="TextBlock">
-    <Setter Property="Text" Value="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"/>
-    <Setter Property="VerticalAlignment" Value="Center"/>
-    <Setter Property="Margin" Value="12, 0"/>
-  </Style>
   <ControlTemplate x:Key="{x:Static MenuItem.SubmenuItemTemplateKey}" TargetType="MenuItem">
     <Border Style="{StaticResource MenuItemBorderStyle}">
       <Grid>
@@ -163,7 +158,9 @@
                        Width="11" Height="11"
                        VerticalAlignment="Center"
                        Margin="15, 0, 3, 0"/>
-        <TextBlock x:Name="_text" Grid.Column="1" Style="{StaticResource MenuItemTextBlockStyle}"/>
+        <ContentPresenter Grid.Column="1" ContentSource="Header"
+                          VerticalAlignment="Center"
+                          Margin="12, 0"/>
       </Grid>
     </Border>
     <ControlTemplate.Triggers>
@@ -183,11 +180,11 @@
       </MultiTrigger>
       <Trigger Property="IsPressed" Value="True">
         <Setter TargetName="_checkIcon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
-        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
       </Trigger>
       <Trigger Property="IsEnabled" Value="False">
         <Setter TargetName="_checkIcon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
-        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
       </Trigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
@@ -198,7 +195,9 @@
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="_text" Grid.Column="0" Style="{StaticResource MenuItemTextBlockStyle}"/>
+        <ContentPresenter Grid.Column="0" ContentSource="Header"
+                          VerticalAlignment="Center"
+                          Margin="12, 0"/>
         <icons:SvgIcon x:Name="_icon"
                        Grid.Column="1"
                        Icon="Chevron" Color="{DynamicResource TextSecondaryBrush}"
@@ -218,12 +217,16 @@
       </Grid>
     </Border>
     <ControlTemplate.Triggers>
-      <Trigger Property="IsPressed" Value="True">
-        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+      <MultiTrigger>
+        <MultiTrigger.Conditions>
+          <Condition Property="IsPressed" Value="True"/>
+          <Condition SourceName="Popup" Property="IsOpen" Value="False"/>
+        </MultiTrigger.Conditions>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
-      </Trigger>
+      </MultiTrigger>
       <Trigger Property="IsEnabled" Value="False">
-        <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
         <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
       </Trigger>
     </ControlTemplate.Triggers>

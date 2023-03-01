@@ -9,21 +9,21 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Base;
 internal abstract class TranslationViewModel : ObservableObject, IDestructible
 {
   public ITranslationService Translate { get; }
-  private readonly IEventAggregator _eventAggregator;
+  protected readonly IEventAggregator EventAggregator;
 
   protected TranslationViewModel(ITranslationService translationService,
                                  IEventAggregator eventAggregator)
   {
     Translate = translationService;
-    _eventAggregator = eventAggregator;
+    EventAggregator = eventAggregator;
 
-    _eventAggregator.GetEvent<LanguageChangedEvent>().Subscribe(LanguageChanged);
+    EventAggregator.GetEvent<LanguageChangedEvent>().Subscribe(LanguageChanged);
   }
 
 
   public virtual void Destroy()
   {
-    _eventAggregator.GetEvent<LanguageChangedEvent>().Unsubscribe(LanguageChanged);
+    EventAggregator.GetEvent<LanguageChangedEvent>().Unsubscribe(LanguageChanged);
   }
 
 

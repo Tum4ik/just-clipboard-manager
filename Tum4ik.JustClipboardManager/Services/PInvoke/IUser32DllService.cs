@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
@@ -38,6 +39,16 @@ internal interface IUser32DllService
   /// </returns>
   bool ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
 
+  /// <summary>
+  /// Retrieves a handle to the foreground window (the window with which the user is currently working). The system
+  /// assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
+  /// </summary>
+  /// <returns>
+  /// C++ ( Type: Type: HWND )<br /> The return value is a handle to the foreground window. The foreground window
+  /// can be NULL in certain circumstances, such as when a window is losing activation.
+  /// </returns>
+  nint GetForegroundWindow();
+
   nint MonitorFromPoint(Win32Point pt, MonitorOptions dwFlags);
 
   /// <summary>
@@ -71,6 +82,7 @@ internal interface IUser32DllService
 }
 
 
+[ExcludeFromCodeCoverage]
 internal class User32DllService : IUser32DllService
 {
   public bool GetCursorPos(ref Win32Point pt)
@@ -80,7 +92,7 @@ internal class User32DllService : IUser32DllService
 
 
   public bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int x, int y, int cx, int cy,
-                            SizingAndPositioning uFlags)
+                           SizingAndPositioning uFlags)
   {
     return _SetWindowPos(hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
   }
@@ -89,6 +101,12 @@ internal class User32DllService : IUser32DllService
   public bool ShowWindow(nint hWnd, ShowWindowCommand nCmdShow)
   {
     return _ShowWindow(hWnd, nCmdShow);
+  }
+
+
+  public nint GetForegroundWindow()
+  {
+    return _GetForegroundWindow();
   }
 
 
@@ -130,6 +148,10 @@ internal class User32DllService : IUser32DllService
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
   private static extern bool _ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
+
+  [DllImport("user32.dll", EntryPoint = "GetForegroundWindow")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern nint _GetForegroundWindow();
 
 
   [DllImport("user32.dll", EntryPoint = "MonitorFromPoint")]

@@ -115,4 +115,10 @@
   <data name="Interface" xml:space="preserve">
     <value>Інтерфейс</value>
   </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Вихід</value>
+  </data>
 </root>

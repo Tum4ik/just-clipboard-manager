@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,31 +8,38 @@ using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class TrayIconViewModel : ObservableObject
+internal partial class TrayIconViewModel : TranslationSelectionViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
-  private readonly IEventAggregator _eventAggregator;
   private readonly IThemeService _themeService;
   private readonly IDialogService _dialogService;
+  private readonly IUser32DllService _user32Dll;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
                            IEventAggregator eventAggregator,
                            IThemeService themeService,
-                           IDialogService dialogService)
+                           IDialogService dialogService,
+                           ITranslationService translationService,
+                           IUser32DllService user32Dll,
+                           ISettingsService settingsService)
+    : base(translationService, eventAggregator, settingsService)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
-    _eventAggregator = eventAggregator;
     _themeService = themeService;
     _dialogService = dialogService;
+    _user32Dll = user32Dll;
 
     // todo: from settings
 #if DEBUG
@@ -73,6 +79,16 @@ internal partial class TrayIconViewModel : ObservableObject
 
 
   [RelayCommand]
+  private void ChangeLanguage(Language language)
+  {
+    SelectedLanguage = language;
+    // Important to trigger SelectedLanguage changed to keep it checked on the UI side
+    // in case the SelectedLanguage property value is not changed.
+    OnPropertyChanged(nameof(SelectedLanguage));
+  }
+
+
+  [RelayCommand]
   private static void Exit()
   {
     Application.Current.Shutdown();
@@ -84,9 +100,9 @@ internal partial class TrayIconViewModel : ObservableObject
 
   private async Task HandleInsertHotKeyAsync()
   {
-    var targetWindowToPaste = GetForegroundWindow();
+    var targetWindowToPaste = _user32Dll.GetForegroundWindow();
     _tcs = new();
-    _eventAggregator
+    EventAggregator
       .GetEvent<PasteWindowResultEvent>()
       .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
     _pasteWindowService.ShowWindow(targetWindowToPaste);
@@ -104,20 +120,7 @@ internal partial class TrayIconViewModel : ObservableObject
 
   private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
   {
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
+    EventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
     _tcs?.SetResult(formattedDataObjects);
   }
-
-
-  /// <summary>
-  /// Retrieves a handle to the foreground window (the window with which the user is currently working). The system
-  /// assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
-  /// </summary>
-  /// <returns>
-  /// C++ ( Type: Type: HWND )<br /> The return value is a handle to the foreground window. The foreground window
-  /// can be NULL in certain circumstances, such as when a window is losing activation.
-  /// </returns>
-  [DllImport("user32.dll")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern nint GetForegroundWindow();
 }

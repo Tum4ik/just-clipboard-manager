@@ -115,4 +115,10 @@
   <data name="Interface" xml:space="preserve">
     <value>Interface</value>
   </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
 </root>
