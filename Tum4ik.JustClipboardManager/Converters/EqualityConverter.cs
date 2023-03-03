@@ -8,7 +8,7 @@ internal class EqualityConverter : IMultiValueConverter
   {
     if (values.Length != 2)
     {
-      throw new ArgumentException($"{nameof(EqualityConverter)} must accept two values.");
+      throw new ArgumentException($"{nameof(EqualityConverter)} must accept two bindings.");
     }
 
     return values[0].Equals(values[1]);

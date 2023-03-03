@@ -121,4 +121,10 @@
   <data name="Exit" xml:space="preserve">
     <value>Вихід</value>
   </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Темна</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Світла</value>
+  </data>
 </root>

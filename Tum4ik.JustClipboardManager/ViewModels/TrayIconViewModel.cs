@@ -9,37 +9,39 @@ using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class TrayIconViewModel : TranslationSelectionViewModel
+internal partial class TrayIconViewModel : TranslationViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IPasteWindowService _pasteWindowService;
   private readonly IPasteService _pasteService;
-  private readonly IThemeService _themeService;
+  private readonly IEventAggregator _eventAggregator;
   private readonly IDialogService _dialogService;
   private readonly IUser32DllService _user32Dll;
+  public IThemeService ThemeService { get; }
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IPasteWindowService pasteWindowService,
                            IPasteService pasteService,
                            IEventAggregator eventAggregator,
-                           IThemeService themeService,
                            IDialogService dialogService,
                            ITranslationService translationService,
                            IUser32DllService user32Dll,
-                           ISettingsService settingsService)
-    : base(translationService, eventAggregator, settingsService)
+                           IThemeService themeService)
+    : base(translationService)
   {
     _keyboardHookService = keyboardHookService;
     _pasteWindowService = pasteWindowService;
     _pasteService = pasteService;
-    _themeService = themeService;
+    _eventAggregator = eventAggregator;
     _dialogService = dialogService;
     _user32Dll = user32Dll;
+    ThemeService = themeService;
 
     // todo: from settings
 #if DEBUG
@@ -59,7 +61,7 @@ internal partial class TrayIconViewModel : TranslationSelectionViewModel
     = "/Resources/Icons/tray.ico";
 #endif
 
-
+ 
   [RelayCommand]
   private void OpenMainDialog(string viewName)
   {
@@ -72,19 +74,20 @@ internal partial class TrayIconViewModel : TranslationSelectionViewModel
 
 
   [RelayCommand]
-  private void ChangeTheme(Theme theme)
+  private void ChangeTheme(ColorTheme theme)
   {
-    _themeService.SetTheme(theme);
+    ThemeService.SelectedTheme = theme;
+    OnPropertyChanged(nameof(ThemeService));
   }
 
 
   [RelayCommand]
   private void ChangeLanguage(Language language)
   {
-    SelectedLanguage = language;
+    Translate.SelectedLanguage = language;
     // Important to trigger SelectedLanguage changed to keep it checked on the UI side
     // in case the SelectedLanguage property value is not changed.
-    OnPropertyChanged(nameof(SelectedLanguage));
+    OnPropertyChanged(nameof(Translate));
   }
 
 
@@ -102,7 +105,7 @@ internal partial class TrayIconViewModel : TranslationSelectionViewModel
   {
     var targetWindowToPaste = _user32Dll.GetForegroundWindow();
     _tcs = new();
-    EventAggregator
+    _eventAggregator
       .GetEvent<PasteWindowResultEvent>()
       .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
     _pasteWindowService.ShowWindow(targetWindowToPaste);
@@ -120,7 +123,7 @@ internal partial class TrayIconViewModel : TranslationSelectionViewModel
 
   private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
   {
-    EventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
     _tcs?.SetResult(formattedDataObjects);
   }
 }

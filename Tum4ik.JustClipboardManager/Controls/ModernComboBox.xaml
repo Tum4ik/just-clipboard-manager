@@ -96,7 +96,6 @@
         <Setter.Value>
           <ControlTemplate TargetType="ComboBoxItem">
             <RadioButton IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                         GroupName="Settings_Languages"
                          Focusable="False"
                          Click="RadioButton_Click">
               <ContentPresenter/>

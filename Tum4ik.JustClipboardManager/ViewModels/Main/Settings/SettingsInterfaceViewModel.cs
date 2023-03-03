@@ -1,15 +1,16 @@
-using Prism.Events;
-using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
-internal class SettingsInterfaceViewModel : TranslationSelectionViewModel
+internal partial class SettingsInterfaceViewModel : TranslationViewModel
 {
+  public IThemeService ThemeService { get; }
+
   public SettingsInterfaceViewModel(ITranslationService translationService,
-                                    IEventAggregator eventAggregator,
-                                    ISettingsService settingsService)
-    : base(translationService, eventAggregator, settingsService)
+                                    IThemeService themeService)
+    : base(translationService)
   {
+    ThemeService = themeService;
   }
 }

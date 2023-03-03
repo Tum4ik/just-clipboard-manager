@@ -20,6 +20,7 @@ using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Resources.Translations;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;

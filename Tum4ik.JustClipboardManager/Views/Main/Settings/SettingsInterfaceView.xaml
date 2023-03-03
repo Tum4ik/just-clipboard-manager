@@ -8,10 +8,14 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              xmlns:translation="clr-namespace:Tum4ik.JustClipboardManager.Services.Translation"
+             xmlns:theme="clr-namespace:Tum4ik.JustClipboardManager.Services.Theme"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SettingsInterfaceViewModel}"
-             Focusable="False">
+             Focusable="False"
+             x:Name="this">
   <UserControl.Resources>
+    <converters:TranslateConverter x:Key="TranslateConverter"/>
     <DataTemplate x:Key="LanguageItemTemplate" DataType="translation:Language">
       <Grid>
         <Grid.ColumnDefinitions>
@@ -38,13 +42,52 @@
         </i:Interaction.Triggers>
       </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="ThemeItemTemplate" DataType="theme:ColorTheme">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0"
+                   VerticalAlignment="Center"
+                   Margin="12, 0, 0, 0">
+          <TextBlock.Text>
+            <MultiBinding Converter="{StaticResource TranslateConverter}">
+              <Binding Path="DataContext.Translate" ElementName="this"/>
+              <Binding Path="Name"/>
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <icons:SvgIcon Grid.Column="1"
+                       Icon="{Binding Icon}"
+                       Color="{DynamicResource TextSecondaryBrush}"
+                       Width="16" Height="16"
+                       Margin="12, 0"/>
+        <i:Interaction.Triggers>
+          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                         Value="True">
+            <i:ChangePropertyAction PropertyName="Opacity" Value="0.75"/>
+          </i:DataTrigger>
+          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                         Value="False">
+            <i:ChangePropertyAction PropertyName="Opacity" Value="1"/>
+          </i:DataTrigger>
+        </i:Interaction.Triggers>
+      </Grid>
+    </DataTemplate>
   </UserControl.Resources>
   <StackPanel>
     <TextBlock Text="{Binding Translate[Language]}"/>
-    <controls:ModernComboBox ItemsSource="{Binding Languages}"
-                             SelectedItem="{Binding SelectedLanguage}"
+    <controls:ModernComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
+                             SelectedItem="{Binding Translate.SelectedLanguage}"
                              SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
                              ItemTemplate="{StaticResource LanguageItemTemplate}"
+                             Width="250"/>
+    <TextBlock Text="{Binding Translate[Theme]}"/>
+    <controls:ModernComboBox ItemsSource="{Binding ThemeService.Themes}"
+                             SelectedItem="{Binding ThemeService.SelectedTheme}"
+                             SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
+                             ItemTemplate="{StaticResource ThemeItemTemplate}"
                              Width="250"/>
   </StackPanel>
 </UserControl>
