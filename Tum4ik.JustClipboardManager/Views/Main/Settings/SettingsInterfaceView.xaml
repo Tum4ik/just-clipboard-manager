@@ -76,18 +76,30 @@
       </Grid>
     </DataTemplate>
   </UserControl.Resources>
-  <StackPanel>
-    <TextBlock Text="{Binding Translate[Language]}"/>
-    <controls:ModernComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <StackPanel Grid.Column="1">
+      <StackPanel.Resources>
+        <Style TargetType="controls:ModernComboBox">
+          <Setter Property="Margin" Value="0, 8, 0, 16"/>
+        </Style>
+      </StackPanel.Resources>
+      <TextBlock Text="{Binding Translate[Language]}"/>
+      <controls:ModernComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
                              SelectedItem="{Binding Translate.SelectedLanguage}"
                              SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
                              ItemTemplate="{StaticResource LanguageItemTemplate}"
                              Width="250"/>
-    <TextBlock Text="{Binding Translate[Theme]}"/>
-    <controls:ModernComboBox ItemsSource="{Binding ThemeService.Themes}"
+      <TextBlock Text="{Binding Translate[Theme]}"/>
+      <controls:ModernComboBox ItemsSource="{Binding ThemeService.Themes}"
                              SelectedItem="{Binding ThemeService.SelectedTheme}"
                              SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
                              ItemTemplate="{StaticResource ThemeItemTemplate}"
                              Width="250"/>
-  </StackPanel>
+    </StackPanel>
+  </Grid>
 </UserControl>

@@ -30,7 +30,7 @@ internal class UpdateService : IUpdateService
         .ConfigureAwait(false);
       if (Version.TryParse(latestRelease.TagName, out var latestReleaseVersion))
       {
-        if (latestReleaseVersion > _infoService.GetVersion())
+        if (latestReleaseVersion > _infoService.Version)
         {
           var osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets

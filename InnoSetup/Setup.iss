@@ -80,15 +80,15 @@ Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\efbundle.exe
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 Name: "{autodesktop}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: desktopicon; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 Name: "{autostartup}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: autostart; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 
 [Run]
 Filename: "{tmp}\efbundle.exe"; Flags: runhidden

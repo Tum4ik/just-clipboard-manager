@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -145,7 +146,6 @@ public partial class App : ISingleInstance
       .AddPrismBehaviors()
       .AddRegionAdapters()
       .AddDatabase()
-      .AddTransient<IClipRepository, ClipRepository>()
       .AddSingleton<IUser32DllService, User32DllService>()
       .AddSingleton<ISHCoreDllService, SHCoreDllService>()
       .AddSingleton<GeneralHookService>()
@@ -159,13 +159,16 @@ public partial class App : ISingleInstance
         sp => new TranslationService(sp.GetRequiredService<ISettingsService>(), typeof(Translation))
       )
       .AddSingleton<IThemeService, ThemeService>()
+      .AddTransient<IClipRepository, ClipRepository>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
       .AddTransient<IGitHubClient>(sp =>
       {
-        var version = sp.GetRequiredService<IInfoService>().GetInformationalVersion();
+        var version = sp.GetRequiredService<IInfoService>().InformationalVersion;
         return new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
       })
+      .AddTransient(sp => new WshShell())
+      .AddTransient<IShortcutService, ShortcutService>()
       .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
       .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)

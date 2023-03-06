@@ -47,6 +47,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
@@ -127,5 +139,13 @@
       <LastGenOutput>SettingsInterface.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico"/>
+      <FilesToCopy Condition="'$(Configuration)'=='Release'" Include="Resources\Icons\tray.ico"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)"/>
+  </Target>
 
 </Project>

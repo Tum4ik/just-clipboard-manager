@@ -20,7 +20,7 @@ internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
   {
     _regionManager = regionManager;
 
-    Title = infoService.GetProductName();
+    Title = infoService.ProductName;
   }
 
 
