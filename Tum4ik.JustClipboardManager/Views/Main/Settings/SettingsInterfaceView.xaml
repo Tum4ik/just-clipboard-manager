@@ -84,22 +84,22 @@
     </Grid.ColumnDefinitions>
     <StackPanel Grid.Column="1">
       <StackPanel.Resources>
-        <Style TargetType="controls:ModernComboBox">
+        <Style TargetType="controls:WinUiComboBox">
           <Setter Property="Margin" Value="0, 8, 0, 16"/>
         </Style>
       </StackPanel.Resources>
       <TextBlock Text="{Binding Translate[Language]}"/>
-      <controls:ModernComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
-                             SelectedItem="{Binding Translate.SelectedLanguage}"
-                             SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
-                             ItemTemplate="{StaticResource LanguageItemTemplate}"
-                             Width="250"/>
+      <controls:WinUiComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
+                              SelectedItem="{Binding Translate.SelectedLanguage}"
+                              SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
+                              ItemTemplate="{StaticResource LanguageItemTemplate}"
+                              Width="250"/>
       <TextBlock Text="{Binding Translate[Theme]}"/>
-      <controls:ModernComboBox ItemsSource="{Binding ThemeService.Themes}"
-                             SelectedItem="{Binding ThemeService.SelectedTheme}"
-                             SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
-                             ItemTemplate="{StaticResource ThemeItemTemplate}"
-                             Width="250"/>
+      <controls:WinUiComboBox ItemsSource="{Binding ThemeService.Themes}"
+                              SelectedItem="{Binding ThemeService.SelectedTheme}"
+                              SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
+                              ItemTemplate="{StaticResource ThemeItemTemplate}"
+                              Width="250"/>
     </StackPanel>
   </Grid>
 </UserControl>

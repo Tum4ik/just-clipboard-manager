@@ -6,18 +6,18 @@ using System.Windows.Input;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 /// <summary>
-/// Interaction logic for ModernComboBox.xaml
+/// Interaction logic for WinUiComboBox.xaml
 /// </summary>
-public partial class ModernComboBox
+public partial class WinUiComboBox
 {
-  public ModernComboBox()
+  public WinUiComboBox()
   {
     InitializeComponent();
   }
 
 
   public static readonly DependencyProperty SelectedItemTemplateProperty = DependencyProperty.Register(
-    nameof(SelectedItemTemplate), typeof(DataTemplate), typeof(ModernComboBox), new(DefaultSelectedItemTemplate())
+    nameof(SelectedItemTemplate), typeof(DataTemplate), typeof(WinUiComboBox), new(DefaultSelectedItemTemplate())
   );
   public DataTemplate SelectedItemTemplate
   {

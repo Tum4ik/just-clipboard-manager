@@ -30,11 +30,11 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Controls\ModernComboBox.xaml" />
     <None Remove="Controls\NavigationButton.xaml" />
     <None Remove="Controls\NavigationPanel.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
+    <None Remove="Controls\WinUiComboBox.xaml" />
     <None Remove="Resources\Assets\noise-256.png" />
     <None Remove="Resources\Icons\tray-dev.ico" />
     <None Remove="Resources\Icons\tray.ico" />
@@ -142,10 +142,10 @@
 
   <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico"/>
-      <FilesToCopy Condition="'$(Configuration)'=='Release'" Include="Resources\Icons\tray.ico"/>
+      <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
+      <FilesToCopy Condition="'$(Configuration)'=='Release'" Include="Resources\Icons\tray.ico" />
     </ItemGroup>
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)"/>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>
