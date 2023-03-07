@@ -34,6 +34,7 @@
     <None Remove="Controls\NavigationPanel.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
+    <None Remove="Controls\WinUiCheckBox.xaml" />
     <None Remove="Controls\WinUiComboBox.xaml" />
     <None Remove="Resources\Assets\noise-256.png" />
     <None Remove="Resources\Icons\tray-dev.ico" />
