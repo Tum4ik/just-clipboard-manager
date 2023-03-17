@@ -9,13 +9,14 @@ internal partial class TranslationService : ResourceManager, ITranslationService
 {
   private readonly ISettingsService _settingsService;
 
-  public TranslationService(ISettingsService settingsService,
-                            Type resourceSource)
-    : base(resourceSource)
+  public TranslationService(ISettingsService settingsService)
+    : base(typeof(Resources.Translations.Translation))
   {
     _settingsService = settingsService;
 
-    _selectedLanguage = SupportedLanguages.Single(l => l.Culture.Equals(settingsService.Language));
+    _selectedLanguage
+      = SupportedLanguages.SingleOrDefault(l => l.Culture.Equals(settingsService.Language))
+      ?? SupportedLanguages.First();
   }
 
 

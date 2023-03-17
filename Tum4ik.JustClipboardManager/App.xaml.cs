@@ -18,7 +18,6 @@ using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc;
-using Tum4ik.JustClipboardManager.Resources.Translations;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.Theme;
@@ -155,9 +154,7 @@ public partial class App : ISingleInstance
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboardService, ClipboardService>()
       .AddSingleton<ISettingsService, SettingsService>()
-      .AddSingleton<ITranslationService>(
-        sp => new TranslationService(sp.GetRequiredService<ISettingsService>(), typeof(Translation))
-      )
+      .AddSingleton<ITranslationService, TranslationService>()
       .AddSingleton<IThemeService, ThemeService>()
       .AddTransient<IClipRepository, ClipRepository>()
       .AddTransient<IInfoService, InfoService>()

@@ -59,6 +59,7 @@ internal class ClipboardService : IClipboardService
     catch (Exception e)
     {
       Crashes.TrackError(e);
+      throw;
     }
   }
 
