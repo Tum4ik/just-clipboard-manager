@@ -115,6 +115,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hotkeys.
+        /// </summary>
+        internal static string Hotkeys {
+            get {
+                return ResourceManager.GetString("Hotkeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interface.
         /// </summary>
         internal static string Interface {

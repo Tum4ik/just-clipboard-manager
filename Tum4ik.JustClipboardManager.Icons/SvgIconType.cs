@@ -13,6 +13,7 @@ public enum SvgIconType
   [SvgIconResource("file")] File,
   [SvgIconResource("files")] Files,
   [SvgIconResource("info")] Info,
+  [SvgIconResource("keyboard")] Keyboard,
   [SvgIconResource("light-mode")] LightMode,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,

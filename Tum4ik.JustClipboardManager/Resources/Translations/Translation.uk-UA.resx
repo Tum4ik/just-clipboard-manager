@@ -130,4 +130,7 @@
   <data name="AutoStartApplication" xml:space="preserve">
     <value>Автозапуск додатку</value>
   </data>
+  <data name="Hotkeys" xml:space="preserve">
+    <value>Гарячі клавіші</value>
+  </data>
 </root>

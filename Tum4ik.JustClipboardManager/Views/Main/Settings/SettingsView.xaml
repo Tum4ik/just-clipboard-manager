@@ -21,6 +21,8 @@
                                IsChecked="True"/>
     <controls:NavigationButton Icon="DisplaySettings" Text="{Binding Translate[Interface]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsInterfaceView}"/>
+    <controls:NavigationButton Icon="Keyboard" Text="{Binding Translate[Hotkeys]}"
+                               CommandParameter="{x:Static const:ViewNames.SettingsHotkeysView}"/>
   </controls:NavigationPanel>
   <Border CornerRadius="7, 0, 7, 0"
           BorderThickness="1, 1, 0, 0"

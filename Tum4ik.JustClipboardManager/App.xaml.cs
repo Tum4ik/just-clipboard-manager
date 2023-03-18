@@ -172,6 +172,7 @@ public partial class App : ISingleInstance
       .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
       .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
       .RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView)
+      .RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView)
       .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
 
     return services.BuildServiceProvider();

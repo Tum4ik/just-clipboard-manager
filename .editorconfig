@@ -39,7 +39,7 @@ indent_size = 2
 indent_size = 2
 
 # XML files
-[*.xml]
+[*.xml, *.svg]
 indent_size = 2
 
 # Powershell files
