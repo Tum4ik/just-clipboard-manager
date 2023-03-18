@@ -9,12 +9,13 @@
              d:DataContext="{d:DesignInstance Type=vm:SettingsGeneralViewModel}">
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto"/>
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
     <StackPanel Grid.Column="1">
-      <controls:WinUiCheckBox IsChecked="{Binding AutoStartApplication}"/>
+      <controls:WinUiCheckBox Content="{Binding Translate[AutoStartApplication]}"
+                              IsChecked="{Binding AutoStartApplication}"/>
     </StackPanel>
   </Grid>
 </UserControl>

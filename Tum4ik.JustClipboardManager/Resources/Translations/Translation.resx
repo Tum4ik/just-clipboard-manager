@@ -127,4 +127,7 @@
   <data name="Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <data name="AutoStartApplication" xml:space="preserve">
+    <value>Auto-start application</value>
+  </data>
 </root>

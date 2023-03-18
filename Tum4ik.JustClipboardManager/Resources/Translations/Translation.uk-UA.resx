@@ -127,4 +127,7 @@
   <data name="Light" xml:space="preserve">
     <value>Світла</value>
   </data>
+  <data name="AutoStartApplication" xml:space="preserve">
+    <value>Автозапуск додатку</value>
+  </data>
 </root>

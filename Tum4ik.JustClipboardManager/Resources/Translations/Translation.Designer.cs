@@ -70,6 +70,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-start application.
+        /// </summary>
+        internal static string AutoStartApplication {
+            get {
+                return ResourceManager.GetString("AutoStartApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         internal static string Dark {

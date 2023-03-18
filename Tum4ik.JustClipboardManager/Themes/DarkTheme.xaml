@@ -9,12 +9,16 @@
   <SolidColorBrush x:Key="TextSecondaryBrush" Color="White" Opacity="0.786"/>
   <SolidColorBrush x:Key="TextTertiaryBrush" Color="White" Opacity="0.5442"/>
   <SolidColorBrush x:Key="TextDisabledBrush" Color="White" Opacity="0.3628"/>
+  <SolidColorBrush x:Key="TextOnAccentPrimaryBrush" Color="Black"/>
+  <SolidColorBrush x:Key="TextOnAccentSecondaryBrush" Color="Black" Opacity="0.5"/>
+  <SolidColorBrush x:Key="TextOnAccentDisabledBrush" Color="White" Opacity="0.5302"/>
 
   <system:Double x:Key="ShadowOpacity">0.26</system:Double>
 
   <SolidColorBrush x:Key="AccentDefaultBrush" Color="#60CDFF"/>
   <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#60CDFF" Opacity="0.9"/>
   <SolidColorBrush x:Key="AccentTertiaryBrush" Color="#60CDFF" Opacity="0.8"/>
+  <SolidColorBrush x:Key="AccentDisabledBrush" Color="White" Opacity="0.1581"/>
 
   <SolidColorBrush x:Key="AppSurfaceBorderBrush" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="Black" Opacity="0.2"/>
@@ -71,5 +75,11 @@
   </LinearGradientBrush>
   <SolidColorBrush x:Key="ControlPressedBorderBrush" Color="White" Opacity="0.0698"/>
   <SolidColorBrush x:Key="ControlDisabledBorderBrush" Color="White" Opacity="0.0698"/>
+
+  <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="White" Opacity="0.6047"/>
+  <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="Black" Opacity="0.1"/>
+  <SolidColorBrush x:Key="CheckBoxHoverBackgroundBrush" Color="White" Opacity="0.0419"/>
+  <SolidColorBrush x:Key="CheckBoxPressedBackgroundBrush" Color="White" Opacity="0.0698"/>
+  <SolidColorBrush x:Key="CheckBoxDisabledBorderBrush" Color="White" Opacity="0.1581"/>
 
 </ResourceDictionary>
