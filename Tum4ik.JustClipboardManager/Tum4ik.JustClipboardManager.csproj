@@ -34,6 +34,7 @@
     <None Remove="Controls\NavigationPanel.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
+    <None Remove="Controls\WinUiButton.xaml" />
     <None Remove="Controls\WinUiCheckBox.xaml" />
     <None Remove="Controls\WinUiComboBox.xaml" />
     <None Remove="Resources\Assets\noise-256.png" />
@@ -108,6 +109,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SettingsGeneral.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\SettingsHotkeys.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingsHotkeys.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\SettingsInterface.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -135,6 +141,10 @@
     <None Update="Properties\SettingsGeneral.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsGeneral.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\SettingsHotkeys.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsHotkeys.Designer.cs</LastGenOutput>
     </None>
     <None Update="Properties\SettingsInterface.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -147,6 +147,7 @@ public partial class App : ISingleInstance
       .AddDatabase()
       .AddSingleton<IUser32DllService, User32DllService>()
       .AddSingleton<ISHCoreDllService, SHCoreDllService>()
+      .AddSingleton<IKernel32DllService, Kernel32DllService>()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()
@@ -161,8 +162,8 @@ public partial class App : ISingleInstance
       .AddTransient<IUpdateService, UpdateService>()
       .AddTransient<IGitHubClient>(sp =>
       {
-        var version = sp.GetRequiredService<IInfoService>().InformationalVersion;
-        return new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
+        var infoService = sp.GetRequiredService<IInfoService>();
+        return new GitHubClient(new ProductHeaderValue(infoService.ProductName, infoService.InformationalVersion));
       })
       .AddTransient(sp => new WshShell())
       .AddTransient<IShortcutService, ShortcutService>()

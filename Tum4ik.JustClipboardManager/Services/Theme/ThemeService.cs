@@ -15,7 +15,7 @@ internal partial class ThemeService : ObservableObject, IThemeService
     _settingsService = settingsService;
 
     Application.Current.Resources.MergedDictionaries.Add(_themeDictionary);
-    _selectedTheme = Themes.Single(t => t.Name == settingsService.Theme);
+    _selectedTheme = Themes.SingleOrDefault(t => t.Name == settingsService.Theme) ?? Themes.First();
     SetTheme(_selectedTheme);
   }
 

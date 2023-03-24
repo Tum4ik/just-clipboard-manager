@@ -28,6 +28,7 @@
                    Margin="12, 0, 0, 0"/>
         <icons:SvgIcon Grid.Column="1"
                        Icon="{Binding Icon}"
+                       Color="{x:Null}"
                        Width="16" Height="16"
                        Margin="12, 0"/>
         <i:Interaction.Triggers>

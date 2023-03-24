@@ -7,6 +7,7 @@ using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.Theme;
@@ -32,7 +33,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
                            IDialogService dialogService,
                            ITranslationService translationService,
                            IUser32DllService user32Dll,
-                           IThemeService themeService)
+                           IThemeService themeService,
+                           ISettingsService settingsService)
     : base(translationService)
   {
     _keyboardHookService = keyboardHookService;
@@ -43,13 +45,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
     _user32Dll = user32Dll;
     ThemeService = themeService;
 
-    // todo: from settings
-#if DEBUG
-    var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Alt, Key.V);
-#else
-    var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
-#endif
-    _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKeyAsync);
+    // todo: hotkey may be already registered in the OS, needs to be handled such situation
+    _keyboardHookService.RegisterHotKey(settingsService.HotkeyShowPasteWindow, HandleInsertHotKeyAsync);
   }
 
 
@@ -69,7 +66,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
     {
       { DialogParameterNames.ViewToShow, viewName }
     };
-    _dialogService.Show(DialogNames.MainDialog, parameters, r => { });
+    _dialogService.Show(DialogNames.MainDialog, parameters);
   }
 
 

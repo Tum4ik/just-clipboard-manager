@@ -3,10 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings" xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}">
-    <Grid>
-            
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
+             x:Name="this">
+  <ItemsControl ItemsSource="{Binding Hotkeys}"
+                Grid.IsSharedSizeScope="True"
+                HorizontalAlignment="Center">
+    <ItemsControl.ItemTemplate>
+      <DataTemplate>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="HotkeyLabel"/>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="ControlButtons"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0"
+                     Text="{Binding Description}"
+                     TextWrapping="Wrap"/>
+          <TextBlock Grid.Column="1"
+                     Text="{Binding KeybindDescriptor}"
+                     VerticalAlignment="Center"
+                     Margin="16, 0"/>
+          <controls:WinUiButton Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Icon="Edit"
+                                Command="{Binding DataContext.BindHotkeyCommand, ElementName=this}"
+                                CommandParameter="{Binding}"/>
+        </Grid>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
 </UserControl>

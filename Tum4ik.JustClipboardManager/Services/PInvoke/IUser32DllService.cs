@@ -79,6 +79,10 @@ internal interface IUser32DllService
   /// If the function fails, the return value is false.
   /// </returns>
   bool GetMonitorInfo(nint hMonitor, out MonitorInfo monitorInfo);
+
+  bool RegisterHotKey(nint hWnd, int id, int modifiers, int vKey);
+
+  bool UnregisterHotKey(nint hWnd, int id);
 }
 
 
@@ -130,6 +134,18 @@ internal class User32DllService : IUser32DllService
   }
 
 
+  public bool RegisterHotKey(nint hWnd, int id, int modifiers, int vKey)
+  {
+    return _RegisterHotKey(hWnd, id, modifiers, vKey);
+  }
+
+
+  public bool UnregisterHotKey(nint hWnd, int id)
+  {
+    return _UnregisterHotKey(hWnd, id);
+  }
+
+
   [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
@@ -148,6 +164,7 @@ internal class User32DllService : IUser32DllService
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
   private static extern bool _ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
+
 
   [DllImport("user32.dll", EntryPoint = "GetForegroundWindow")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -168,4 +185,16 @@ internal class User32DllService : IUser32DllService
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
   private static extern bool _GetMonitorInfo(nint hMonitor, ref MonitorInfo lpmi);
+
+
+  [DllImport("user32.dll", EntryPoint = "RegisterHotKey")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  [return: MarshalAs(UnmanagedType.Bool)]
+  private static extern bool _RegisterHotKey(nint hWnd, int id, int modifiers, int vKey);
+
+
+  [DllImport("user32.dll", EntryPoint = "UnregisterHotKey")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  [return: MarshalAs(UnmanagedType.Bool)]
+  private static extern bool _UnregisterHotKey(nint hWnd, int id);
 }

@@ -50,17 +50,9 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private async void OnClipboardChanged()
+  private void OnClipboardChanged()
   {
-    try
-    {
-      await SaveClipAsync().ConfigureAwait(false);
-    }
-    catch (Exception e)
-    {
-      Crashes.TrackError(e);
-      throw;
-    }
+    SaveClipAsync().Await(e => throw e);
   }
 
 

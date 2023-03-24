@@ -10,10 +10,9 @@
                 xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
-                IconSource="{Binding TrayIcon}"
-                UseLayoutRounding="True">
+                IconSource="{Binding TrayIcon}">
   <tb:TaskbarIcon.ContextMenu>
-    <ContextMenu Background="White">
+    <ContextMenu Background="White" UseLayoutRounding="True">
       <ContextMenu.Resources>
         <converters:EqualityConverter x:Key="EqualityConverter"/>
         <converters:TranslateConverter x:Key="TranslateConverter"/>
@@ -54,7 +53,7 @@
                 <ColumnDefinition Width="Auto"/>
               </Grid.ColumnDefinitions>
               <TextBlock Grid.Column="0" Text="{Binding Culture.NativeName}"/>
-              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}"
+              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}" Color="{x:Null}"
                              Width="16" Height="16" Margin="12, 0, 0, 0"/>
             </Grid>
           </DataTemplate>
