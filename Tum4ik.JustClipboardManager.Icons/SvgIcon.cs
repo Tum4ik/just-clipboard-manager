@@ -59,13 +59,13 @@ public class SvgIcon : SvgViewbox
   public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
       nameof(Color), typeof(Brush), typeof(SvgIcon), new((d, e) =>
       {
-        var newBrush = (Brush) e.NewValue;
+        var newBrush = (Brush?) e.NewValue;
         UpdateColor(d, newBrush);
       })
   );
-  public Brush Color
+  public Brush? Color
   {
-    get => (Brush) GetValue(ColorProperty);
+    get => (Brush?) GetValue(ColorProperty);
     set => SetValue(ColorProperty, value);
   }
 

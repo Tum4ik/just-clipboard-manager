@@ -9,6 +9,7 @@ public enum SvgIconType
   [SvgIconResource("chrome-restore")] ChromeRestore,
   [SvgIconResource("dark-mode")] DarkMode,
   [SvgIconResource("display-settings")] DisplaySettings,
+  [SvgIconResource("edit")] Edit,
   [SvgIconResource("expand-arrow")] ExpandArrow,
   [SvgIconResource("file")] File,
   [SvgIconResource("files")] Files,
