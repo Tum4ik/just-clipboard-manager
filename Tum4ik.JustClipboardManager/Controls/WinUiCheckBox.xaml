@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <Border x:Name="_border"
                 Grid.Column="0"
-                Width="20" Height="20" CornerRadius="3"
+                Width="20" Height="20" CornerRadius="4"
                 BorderThickness="1" BorderBrush="{DynamicResource CheckBoxBorderBrush}"
                 Background="{DynamicResource CheckBoxBackgroundBrush}">
           <icons:SvgIcon x:Name="_check"

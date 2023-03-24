@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Tum4ik.JustClipboardManager.Icons;
 
@@ -74,5 +75,29 @@ internal class CaptionButton : Button
   {
     get => (Brush) GetValue(PressedIconBrushProperty);
     set => SetValue(PressedIconBrushProperty, value);
+  }
+
+
+  public static readonly DependencyProperty IsKeyboardNavigatedFocusProperty = DependencyProperty.Register(
+    nameof(IsKeyboardNavigatedFocus), typeof(bool), typeof(CaptionButton)
+  );
+  public bool IsKeyboardNavigatedFocus
+  {
+    get => (bool) GetValue(IsKeyboardNavigatedFocusProperty);
+    set => SetValue(IsKeyboardNavigatedFocusProperty, value);
+  }
+
+
+  protected override void OnGotFocus(RoutedEventArgs e)
+  {
+    base.OnGotFocus(e);
+    IsKeyboardNavigatedFocus = InputManager.Current.MostRecentInputDevice is KeyboardDevice;
+  }
+
+
+  protected override void OnLostFocus(RoutedEventArgs e)
+  {
+    base.OnLostFocus(e);
+    IsKeyboardNavigatedFocus = false;
   }
 }

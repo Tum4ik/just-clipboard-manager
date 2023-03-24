@@ -60,7 +60,6 @@
 
   <Style TargetType="controls:CaptionButton">
     <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="Focusable" Value="False"/>
     <Setter Property="HoverBackgroundBrush" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
     <Setter Property="IconColor" Value="{DynamicResource TextPrimaryBrush}"/>
     <Setter Property="HoverIconBrush" Value="{DynamicResource TextPrimaryBrush}"/>
@@ -79,6 +78,10 @@
                            Color="{TemplateBinding IconColor}"/>
           </Border>
           <ControlTemplate.Triggers>
+            <Trigger Property="IsKeyboardNavigatedFocus" Value="True">
+              <Setter TargetName="_border" Property="BorderThickness" Value="2"/>
+              <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="_border"
                       Property="Background"
@@ -245,6 +248,10 @@
 
   <Style TargetType="TextBox">
     <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>
+  </Style>
+
+  <Style TargetType="icons:SvgIcon">
+    <Setter Property="Color" Value="{DynamicResource TextPrimaryBrush}"/>
   </Style>
 
 </ResourceDictionary>

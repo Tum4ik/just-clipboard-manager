@@ -75,6 +75,11 @@
   <SolidColorBrush x:Key="ControlPressedBorderBrush" Color="Black" Opacity="0.0578"/>
   <SolidColorBrush x:Key="ControlDisabledBorderBrush" Color="Black" Opacity="0.0578"/>
 
+  <LinearGradientBrush x:Key="ControlAccentBorderBrush" StartPoint="0, 0" EndPoint="0, 1">
+    <GradientStop Color="#14FFFFFF" Offset="0.906"/>
+    <GradientStop Color="#66000000" Offset="1"/>
+  </LinearGradientBrush>
+
   <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="Black" Opacity="0.6063"/>
   <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="Black" Opacity="0.0241"/>
   <SolidColorBrush x:Key="CheckBoxHoverBackgroundBrush" Color="Black" Opacity="0.0578"/>
