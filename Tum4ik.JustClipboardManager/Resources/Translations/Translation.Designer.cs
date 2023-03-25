@@ -160,6 +160,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show paste window.
+        /// </summary>
+        internal static string ShowPasteWindow {
+            get {
+                return ResourceManager.GetString("ShowPasteWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Theme.
         /// </summary>
         internal static string Theme {

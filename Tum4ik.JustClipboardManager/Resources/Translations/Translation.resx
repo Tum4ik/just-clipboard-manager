@@ -133,4 +133,7 @@
   <data name="Hotkeys" xml:space="preserve">
     <value>Hotkeys</value>
   </data>
+  <data name="ShowPasteWindow" xml:space="preserve">
+    <value>Show paste window</value>
+  </data>
 </root>

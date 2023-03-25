@@ -133,4 +133,7 @@
   <data name="Hotkeys" xml:space="preserve">
     <value>Гарячі клавіші</value>
   </data>
+  <data name="ShowPasteWindow" xml:space="preserve">
+    <value>Показати вікно вставки</value>
+  </data>
 </root>

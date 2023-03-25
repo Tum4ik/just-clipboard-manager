@@ -9,7 +9,7 @@ internal class BytesToFilesListConverter : IValueConverter
   {
     var bytes = (byte[]) value;
     var str = Encoding.UTF8.GetString(bytes);
-    return str.Replace(";", Environment.NewLine);
+    return str.Replace(";", Environment.NewLine, StringComparison.OrdinalIgnoreCase);
   }
 
 

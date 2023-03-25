@@ -12,7 +12,7 @@ internal partial class SettingsHotkeysViewModel : TranslationViewModel
                                   ISettingsService settingsService)
     : base(translationService)
   {
-    Hotkeys.Add(new() { Description = "Show paste window", KeybindDescriptor = settingsService.HotkeyShowPasteWindow });
+    Hotkeys.Add(new() { Description = "ShowPasteWindow", KeybindDescriptor = settingsService.HotkeyShowPasteWindow });
   }
 
 

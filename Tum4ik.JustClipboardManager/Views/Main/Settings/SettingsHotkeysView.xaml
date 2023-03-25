@@ -3,10 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings" xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
              x:Name="this">
+  <UserControl.Resources>
+    <converters:TranslateConverter x:Key="TranslateConverter"/>
+  </UserControl.Resources>
   <ItemsControl ItemsSource="{Binding Hotkeys}"
                 Grid.IsSharedSizeScope="True"
                 HorizontalAlignment="Center">
@@ -19,12 +24,24 @@
             <ColumnDefinition Width="Auto" SharedSizeGroup="ControlButtons"/>
           </Grid.ColumnDefinitions>
           <TextBlock Grid.Column="0"
-                     Text="{Binding Description}"
-                     TextWrapping="Wrap"/>
-          <TextBlock Grid.Column="1"
-                     Text="{Binding KeybindDescriptor}"
-                     VerticalAlignment="Center"
-                     Margin="16, 0"/>
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Center">
+            <TextBlock.Text>
+              <MultiBinding Converter="{StaticResource TranslateConverter}">
+                <Binding Path="DataContext.Translate" ElementName="this"/>
+                <Binding Path="Description"/>
+              </MultiBinding>
+            </TextBlock.Text>
+          </TextBlock>
+          <Border Grid.Column="1"
+                  CornerRadius="4"
+                  VerticalAlignment="Center"
+                  Margin="8, 0"
+                  Background="{DynamicResource ItemHoverBackgroundBrush}">
+            <TextBlock Text="{Binding KeybindDescriptor}"
+                       TextAlignment="Center"
+                       Margin="8, 4"/>
+          </Border>
           <controls:WinUiButton Grid.Column="2"
                                 VerticalAlignment="Center"
                                 Icon="Edit"
