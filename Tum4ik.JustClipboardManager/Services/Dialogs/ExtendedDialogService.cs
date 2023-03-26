@@ -1,6 +1,7 @@
 using System.Windows;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
@@ -44,19 +45,16 @@ internal class ExtendedDialogService : DialogService, IDialogService
   }
 
 
-  private static readonly Dictionary<string, IDialogWindowExtended> s_openDialogs = new();
+  private static readonly Dictionary<string, IDialogWindow> s_openDialogs = new();
 
 
   protected override IDialogWindow CreateDialogWindow(string? name)
   {
     if (string.IsNullOrWhiteSpace(name))
     {
-      return _containerExtension.Resolve<IDialogWindowExtended>();
+      name = WindowNames.SimpleDialogWindow;
     }
-    else
-    {
-      return _containerExtension.Resolve<IDialogWindowExtended>(name);
-    }
+    return _containerExtension.Resolve<IDialogWindow>(name);
   }
 
 
@@ -67,7 +65,7 @@ internal class ExtendedDialogService : DialogService, IDialogService
     base.ConfigureDialogWindowContent(dialogName, window, parameters);
     if (SingleInstanceDialogsProvider.IsSingleInstanceDialog(dialogName))
     {
-      s_openDialogs[dialogName] = (IDialogWindowExtended) window;
+      s_openDialogs[dialogName] = window;
     }
   }
 
@@ -84,13 +82,16 @@ internal class ExtendedDialogService : DialogService, IDialogService
           && dialogWindow.DataContext is IDialogAware viewModel)
       {
         viewModel.OnDialogOpened(parameters);
-        if (dialogWindow.WindowState == WindowState.Minimized)
+        if (dialogWindow is IDialogWindowExtended dialogWindowExtended)
         {
-          _user32Dll.ShowWindow(dialogWindow.Handle, ShowWindowCommand.SW_RESTORE);
-        }
-        else if (!dialogWindow.IsActive)
-        {
-          dialogWindow.Activate();
+          if (dialogWindowExtended.WindowState == WindowState.Minimized)
+          {
+            _user32Dll.ShowWindow(dialogWindowExtended.Handle, ShowWindowCommand.SW_RESTORE);
+          }
+          else if (!dialogWindowExtended.IsActive)
+          {
+            dialogWindowExtended.Activate();
+          }
         }
 
         return;

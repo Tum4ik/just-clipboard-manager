@@ -43,10 +43,12 @@
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
+    <None Remove="Views\Main\Settings\EditHotkeyDialog.xaml" />
     <None Remove="Views\Main\Settings\SettingsGeneralView.xaml" />
     <None Remove="Views\Main\Settings\SettingsHotkeysView.xaml" />
     <None Remove="Views\Main\Settings\SettingsInterfaceView.xaml" />
     <None Remove="Views\Main\Settings\SettingsView.xaml" />
+    <None Remove="Views\Shared\SimpleDialogWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>

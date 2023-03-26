@@ -57,6 +57,9 @@
   </VisualBrush>
   <SolidColorBrush x:Key="ViewContentAreaBackgroundBrush" Color="#3A3A3A" Opacity="0.3"/>
 
+  <Brush x:Key="SimpleDialogBackgroundBrush">#202020</Brush>
+  <SolidColorBrush x:Key="SimpleDialogContentBackgroundBrush" Color="White" Opacity="0.0538"/>
+
   <SolidColorBrush x:Key="ItemDividerBrush" Color="White" Opacity="0.0837"/>
   <SolidColorBrush x:Key="ItemHoverBackgroundBrush" Color="White" Opacity="0.0605"/>
   <SolidColorBrush x:Key="ItemPressedBackgroundBrush" Color="White" Opacity="0.0419"/>

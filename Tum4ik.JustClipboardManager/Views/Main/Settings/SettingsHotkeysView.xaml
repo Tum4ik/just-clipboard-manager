@@ -45,7 +45,7 @@
           <controls:WinUiButton Grid.Column="2"
                                 VerticalAlignment="Center"
                                 Icon="Edit"
-                                Command="{Binding DataContext.BindHotkeyCommand, ElementName=this}"
+                                Command="{Binding DataContext.EditHotkeyCommand, ElementName=this}"
                                 CommandParameter="{Binding}"/>
         </Grid>
       </DataTemplate>

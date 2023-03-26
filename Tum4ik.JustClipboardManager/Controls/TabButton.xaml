@@ -28,7 +28,7 @@
   <RadioButton.Template>
     <ControlTemplate TargetType="controls:TabButton">
       <Border x:Name="_border"
-              CornerRadius="7, 7, 0, 0"
+              CornerRadius="8, 8, 0, 0"
               BorderThickness="1, 1, 1, 0"
               BorderBrush="Transparent"
               Background="Transparent"

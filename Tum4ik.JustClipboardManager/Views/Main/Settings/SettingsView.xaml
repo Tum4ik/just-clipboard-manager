@@ -24,7 +24,7 @@
     <controls:NavigationButton Icon="Keyboard" Text="{Binding Translate[Hotkeys]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsHotkeysView}"/>
   </controls:NavigationPanel>
-  <Border CornerRadius="7, 0, 7, 0"
+  <Border CornerRadius="8, 0, 8, 0"
           BorderThickness="1, 1, 0, 0"
           BorderBrush="{DynamicResource ContextMenuBorderBrush}"
           Background="{DynamicResource ViewContentAreaBackgroundBrush}"

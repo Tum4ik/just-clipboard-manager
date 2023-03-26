@@ -136,4 +136,13 @@
   <data name="ShowPasteWindow" xml:space="preserve">
     <value>Show paste window</value>
   </data>
+  <data name="EditHotkey" xml:space="preserve">
+    <value>Edit hotkey</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
 </root>

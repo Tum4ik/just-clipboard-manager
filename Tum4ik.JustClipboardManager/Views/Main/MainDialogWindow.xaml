@@ -19,7 +19,7 @@
     <ControlTemplate TargetType="Window">
       <Border>
         <Border x:Name="_border"
-                CornerRadius="7"
+                CornerRadius="8"
                 Margin="{TemplateBinding Margin}"
                 Background="{TemplateBinding Background}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -74,7 +74,7 @@
                                         Icon="ChromeMaximize"
                                         Click="MaximizeRestoreButton_Click"/>
                 <controls:CaptionButton x:Name="_chromeCloseButton"
-                                        CornerRadius="0, 7, 0, 0"
+                                        CornerRadius="0, 8, 0, 0"
                                         Icon="ChromeClose"
                                         Click="CloseButton_Click"
                                         HoverBackgroundBrush="{DynamicResource ShellCloseButtonHoverBackgroundBrush}"

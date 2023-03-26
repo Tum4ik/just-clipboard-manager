@@ -54,6 +54,9 @@
   <SolidColorBrush x:Key="AppContentAreaBackgroundBrush" Color="White" Opacity="0.7"/>
   <SolidColorBrush x:Key="ViewContentAreaBackgroundBrush" Color="White" Opacity="0.5"/>
 
+  <Brush x:Key="SimpleDialogBackgroundBrush">#F3F3F3</Brush>
+  <Brush x:Key="SimpleDialogContentBackgroundBrush">White</Brush>
+
   <SolidColorBrush x:Key="ItemDividerBrush" Color="Black" Opacity="0.0803"/>
   <SolidColorBrush x:Key="ItemHoverBackgroundBrush" Color="Black" Opacity="0.0373"/>
   <SolidColorBrush x:Key="ItemPressedBackgroundBrush" Color="Black" Opacity="0.0241"/>

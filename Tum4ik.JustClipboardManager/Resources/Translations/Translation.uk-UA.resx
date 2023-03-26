@@ -136,4 +136,13 @@
   <data name="ShowPasteWindow" xml:space="preserve">
     <value>Показати вікно вставки</value>
   </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Прийняти</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="EditHotkey" xml:space="preserve">
+    <value>Редагувати гарячу клавішу</value>
+  </data>
 </root>

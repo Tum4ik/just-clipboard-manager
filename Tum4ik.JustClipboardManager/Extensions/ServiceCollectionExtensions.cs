@@ -92,6 +92,14 @@ internal static class ServiceCollectionExtensions
   }
 
 
+  public static IServiceCollection RegisterDialogWindow<TWindow>(this IServiceCollection services, string name)
+    where TWindow : class, IDialogWindow
+  {
+    ServiceKeyToTypeMappings.Add(name, typeof(TWindow));
+    return services.AddTransient<TWindow>();
+  }
+
+
   public static IServiceCollection AddConfiguration(this IServiceCollection services)
   {
     var assembly = Assembly.GetExecutingAssembly();
@@ -125,8 +133,7 @@ internal static class ServiceCollectionExtensions
       .AddSingleton<IRegionBehaviorFactory, RegionBehaviorFactory>()
       .AddTransient<IRegionNavigationJournalEntry, RegionNavigationJournalEntry>()
       .AddTransient<IRegionNavigationJournal, RegionNavigationJournal>()
-      .AddTransient<IRegionNavigationService, RegionNavigationService>()
-      .AddTransient<IDialogWindowExtended, MainDialogWindow>();
+      .AddTransient<IRegionNavigationService, RegionNavigationService>();
   }
 
 

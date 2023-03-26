@@ -27,7 +27,7 @@
                           CommandParameter="{x:Static const:ViewNames.AboutView}"/>
     </controls:TabButtonsControl>
     <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
-            CornerRadius="0, 0, 7, 7">
+            CornerRadius="0, 0, 8, 8">
       <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
                       prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
     </Border>

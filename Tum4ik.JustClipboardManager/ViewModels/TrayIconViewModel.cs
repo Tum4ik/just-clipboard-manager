@@ -66,7 +66,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
     {
       { DialogParameterNames.ViewToShow, viewName }
     };
-    _dialogService.Show(DialogNames.MainDialog, parameters);
+    _dialogService.ShowMainAppDialog(parameters);
   }
 
 

@@ -70,11 +70,29 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Accept.
+        /// </summary>
+        internal static string Accept {
+            get {
+                return ResourceManager.GetString("Accept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-start application.
         /// </summary>
         internal static string AutoStartApplication {
             get {
                 return ResourceManager.GetString("AutoStartApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
@@ -93,6 +111,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Development {
             get {
                 return ResourceManager.GetString("Development", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit hotkey.
+        /// </summary>
+        internal static string EditHotkey {
+            get {
+                return ResourceManager.GetString("EditHotkey", resourceCulture);
             }
         }
         

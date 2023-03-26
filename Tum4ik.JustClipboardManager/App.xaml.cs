@@ -28,6 +28,7 @@ using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
 using Tum4ik.JustClipboardManager.Views.Main.Settings;
+using Tum4ik.JustClipboardManager.Views.Shared;
 
 namespace Tum4ik.JustClipboardManager;
 
@@ -169,7 +170,10 @@ public partial class App : ISingleInstance
       .AddTransient<IShortcutService, ShortcutService>()
       .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
+      .RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow)
+      .RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow)
       .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
+      .RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog)
       .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
       .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
       .RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView)
