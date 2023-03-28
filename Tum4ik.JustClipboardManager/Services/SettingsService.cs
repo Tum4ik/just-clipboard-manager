@@ -58,39 +58,39 @@ internal class SettingsService : ISettingsService
   }
 
 
-  private KeybindDescriptor? _keybindDescriptor;
-  public KeybindDescriptor HotkeyShowPasteWindow
+  private KeyBindingDescriptor? _keyBindingDescriptor;
+  public KeyBindingDescriptor HotkeyShowPasteWindow
   {
     get
     {
-      if (_keybindDescriptor is not null)
+      if (_keyBindingDescriptor is not null)
       {
-        return _keybindDescriptor;
+        return _keyBindingDescriptor;
       }
 
-      var defaultKeybind = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
+      var defaultKeyBinding = new KeyBindingDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
       if (string.IsNullOrEmpty(SettingsHotkeys.Default.ShowPasteWindow))
       {
-        _keybindDescriptor = defaultKeybind;
-        return _keybindDescriptor;
+        _keyBindingDescriptor = defaultKeyBinding;
+        return _keyBindingDescriptor;
       }
 
       try
       {
-        _keybindDescriptor = JsonSerializer.Deserialize<KeybindDescriptor>(SettingsHotkeys.Default.ShowPasteWindow);
+        _keyBindingDescriptor = JsonSerializer.Deserialize<KeyBindingDescriptor>(SettingsHotkeys.Default.ShowPasteWindow);
       }
       catch (JsonException)
       {
-        _keybindDescriptor = defaultKeybind;
+        _keyBindingDescriptor = defaultKeyBinding;
       }
 
-      return _keybindDescriptor ??= defaultKeybind;
+      return _keyBindingDescriptor ??= defaultKeyBinding;
     }
     set
     {
       SettingsHotkeys.Default.ShowPasteWindow = JsonSerializer.Serialize(value);
       SettingsHotkeys.Default.Save();
-      _keybindDescriptor = value;
+      _keyBindingDescriptor = value;
     }
   }
 }

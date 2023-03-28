@@ -145,4 +145,7 @@
   <data name="EditHotkey" xml:space="preserve">
     <value>Редагувати гарячу клавішу</value>
   </data>
+  <data name="PressHotkey" xml:space="preserve">
+    <value>Натисніть гарячу клавішу</value>
+  </data>
 </root>

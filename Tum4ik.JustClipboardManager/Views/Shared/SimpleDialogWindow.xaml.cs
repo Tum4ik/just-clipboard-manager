@@ -12,5 +12,5 @@ public partial class SimpleDialogWindow : IDialogWindow
   }
 
 
-  public IDialogResult Result { get; set; }
+  public IDialogResult? Result { get; set; }
 }

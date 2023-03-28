@@ -4,5 +4,5 @@ namespace Tum4ik.JustClipboardManager.Data.Models;
 internal partial class Hotkey : ObservableObject
 {
   public string? Description { get; init; }
-  [ObservableProperty] private KeybindDescriptor? _keybindDescriptor;
+  [ObservableProperty] private KeyBindingDescriptor? _keyBindingDescriptor;
 }

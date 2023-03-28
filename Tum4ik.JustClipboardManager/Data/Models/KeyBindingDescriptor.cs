@@ -2,7 +2,7 @@ using System.Windows.Input;
 
 namespace Tum4ik.JustClipboardManager.Data.Models;
 
-internal record KeybindDescriptor(ModifierKeys Modifiers, Key Key)
+internal record KeyBindingDescriptor(ModifierKeys Modifiers, Key Key)
 {
   public override string ToString()
   {
@@ -14,7 +14,7 @@ internal record KeybindDescriptor(ModifierKeys Modifiers, Key Key)
     var key = Key.ToString()
       .Replace(Key.None.ToString(), string.Empty, StringComparison.OrdinalIgnoreCase)
       .Replace(Key.Escape.ToString(), "Esc", StringComparison.OrdinalIgnoreCase);
-    var separator = string.IsNullOrEmpty(key) ? string.Empty : " + ";
+    var separator = (string.IsNullOrEmpty(modifiers) || string.IsNullOrEmpty(key)) ? string.Empty : " + ";
     return $"{modifiers}{separator}{key}";
   }
 }

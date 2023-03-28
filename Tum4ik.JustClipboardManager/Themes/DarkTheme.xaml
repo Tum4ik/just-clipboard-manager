@@ -90,4 +90,7 @@
   <SolidColorBrush x:Key="CheckBoxPressedBackgroundBrush" Color="White" Opacity="0.0698"/>
   <SolidColorBrush x:Key="CheckBoxDisabledBorderBrush" Color="White" Opacity="0.1581"/>
 
+  <SolidColorBrush x:Key="TextBoxBorderBrush" Color="White" Opacity="0.08"/>
+  <SolidColorBrush x:Key="TextBoxBorderUnderlineBrush" Color="White" Opacity="0.5442"/>
+
 </ResourceDictionary>

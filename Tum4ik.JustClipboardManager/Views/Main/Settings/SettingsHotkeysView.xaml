@@ -38,7 +38,7 @@
                   VerticalAlignment="Center"
                   Margin="8, 0"
                   Background="{DynamicResource ItemHoverBackgroundBrush}">
-            <TextBlock Text="{Binding KeybindDescriptor}"
+            <TextBlock Text="{Binding KeyBindingDescriptor}"
                        TextAlignment="Center"
                        Margin="8, 4"/>
           </Border>

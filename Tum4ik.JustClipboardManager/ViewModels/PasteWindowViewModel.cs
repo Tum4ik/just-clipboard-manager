@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,8 +9,7 @@ using Tum4ik.JustClipboardManager.Events;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-[INotifyPropertyChanged]
-internal partial class PasteWindowViewModel
+internal partial class PasteWindowViewModel : ObservableObject
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
@@ -44,7 +42,7 @@ internal partial class PasteWindowViewModel
         SearchStarted?.Invoke();
         Clips.Clear();
         _loadedClipsCount = 0;
-        _ = LoadNextClipsBatchAsync();
+        LoadNextClipsBatchAsync().Await(e => throw e);
       }
     }
   }

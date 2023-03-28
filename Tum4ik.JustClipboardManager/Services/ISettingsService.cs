@@ -8,5 +8,5 @@ internal interface ISettingsService
   CultureInfo Language { get; set; }
   string Theme { get; set; }
 
-  KeybindDescriptor HotkeyShowPasteWindow { get; set; }
+  KeyBindingDescriptor HotkeyShowPasteWindow { get; set; }
 }

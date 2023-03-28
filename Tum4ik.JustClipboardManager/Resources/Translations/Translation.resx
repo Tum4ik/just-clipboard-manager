@@ -145,4 +145,7 @@
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
   </data>
+  <data name="PressHotkey" xml:space="preserve">
+    <value>Press the hotkey</value>
+  </data>
 </root>

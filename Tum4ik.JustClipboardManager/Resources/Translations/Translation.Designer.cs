@@ -178,6 +178,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press the hotkey.
+        /// </summary>
+        internal static string PressHotkey {
+            get {
+                return ResourceManager.GetString("PressHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {

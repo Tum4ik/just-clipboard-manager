@@ -19,7 +19,7 @@ internal partial class SettingsHotkeysViewModel : TranslationViewModel
   {
     _dialogService = dialogService;
 
-    Hotkeys.Add(new() { Description = "ShowPasteWindow", KeybindDescriptor = settingsService.HotkeyShowPasteWindow });
+    Hotkeys.Add(new() { Description = "ShowPasteWindow", KeyBindingDescriptor = settingsService.HotkeyShowPasteWindow });
   }
 
 
