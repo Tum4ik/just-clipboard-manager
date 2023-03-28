@@ -74,4 +74,11 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   {
     (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyUp(args.Key);
   }
+
+
+  [RelayCommand]
+  private void ResetHotkey()
+  {
+    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.ResetRecord();
+  }
 }

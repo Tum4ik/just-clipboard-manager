@@ -34,7 +34,9 @@ internal class KeyBindingRecordingService : IKeyBindingRecordingService
 
   public (KeyBindingDescriptor descriptor, bool completed) ResetRecord()
   {
-    return (new(ModifierKeys.None, Key.None), false);
+    _pressedModifiers = ModifierKeys.None;
+    _pressedKey = Key.None;
+    return (new(_pressedModifiers, _pressedKey), false);
   }
 
 

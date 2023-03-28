@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:EditHotkeyDialogViewModel}">
   <Border CornerRadius="4" MinWidth="160" Height="32"
@@ -23,19 +24,57 @@
         </Grid.Resources>
         <TextBlock x:Name="_hotkeyPlaceholer"
                    Text="{Binding Translate[PressHotkey]}"
-                   Foreground="{DynamicResource TextSecondaryBrush}">
-          <i:Interaction.Triggers>
-            <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="">
-              <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-            </i:DataTrigger>
-            <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="" Comparison="NotEqual">
-              <i:ChangePropertyAction PropertyName="Visibility" Value="Hidden"/>
-            </i:DataTrigger>
-          </i:Interaction.Triggers>
-        </TextBlock>
-        <TextBlock x:Name="_hotkeyValue"
-                   Text="{Binding KeyBindingDescriptor}"/>
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock x:Name="_hotkeyValue"
+                     Grid.Column="0"
+                     VerticalAlignment="Center"
+                     Text="{Binding KeyBindingDescriptor}"/>
+          <Button x:Name="_clearButton"
+                  Grid.Column="1"
+                  Cursor="Hand"
+                  Command="{Binding ResetHotkeyCommand}"
+                  Margin="3, 0">
+            <Button.Template>
+              <ControlTemplate TargetType="Button">
+                <Border x:Name="_clearButtonBorder"
+                        Width="28" Height="24" CornerRadius="4"
+                        Background="Transparent">
+                  <icons:SvgIcon x:Name="_clearButtonIcon"
+                                 Width="12" Height="12"
+                                 Icon="ChromeClose" Color="{DynamicResource TextSecondaryBrush}"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="_clearButtonBorder"
+                            Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                  </Trigger>
+                  <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="_clearButtonBorder"
+                            Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                    <Setter TargetName="_clearButtonIcon"
+                            Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                  </Trigger>
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </Grid>
       </Grid>
     </Border>
   </Border>
+  <i:Interaction.Triggers>
+    <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="">
+      <i:ChangePropertyAction TargetName="_hotkeyPlaceholer" PropertyName="Visibility" Value="Visible"/>
+      <i:ChangePropertyAction TargetName="_clearButton" PropertyName="Visibility" Value="Collapsed"/>
+    </i:DataTrigger>
+    <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="" Comparison="NotEqual">
+      <i:ChangePropertyAction TargetName="_hotkeyPlaceholer" PropertyName="Visibility" Value="Hidden"/>
+      <i:ChangePropertyAction TargetName="_clearButton" PropertyName="Visibility" Value="Visible"/>
+    </i:DataTrigger>
+  </i:Interaction.Triggers>
 </UserControl>
