@@ -11,6 +11,8 @@ using Tum4ik.JustClipboardManager.ViewModels.Base;
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimpleDialogAware
 {
+  private readonly IKeyBindingRecordingService _keyBindingRecordingService;
+
   public EditHotkeyDialogViewModel(ITranslationService translationService,
                                    IKeyBindingRecordingService keyBindingRecordingService)
     : base(translationService)
@@ -27,7 +29,8 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
 
 
   [ObservableProperty] private KeyBindingDescriptor _keyBindingDescriptor = new(ModifierKeys.None, Key.None);
-  private readonly IKeyBindingRecordingService _keyBindingRecordingService;
+  [ObservableProperty, NotifyCanExecuteChangedFor(nameof(AcceptButtonPressedCommand))] private bool _canAcceptHotkey;
+
 
   public void OnDialogOpened(IDialogParameters parameters)
   {
@@ -52,7 +55,7 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   }
 
 
-  [RelayCommand]
+  [RelayCommand(CanExecute = nameof(CanAcceptHotkey))]
   private void AcceptButtonPressed()
   {
 
@@ -62,13 +65,13 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   [RelayCommand]
   private void KeyboardKeyDown(KeyEventArgs args)
   {
-    (KeyBindingDescriptor, _) = _keyBindingRecordingService.RecordKeyDown(args.Key);
+    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyDown(args.Key);
   }
 
 
   [RelayCommand]
   private void KeyboardKeyUp(KeyEventArgs args)
   {
-    (KeyBindingDescriptor, _) = _keyBindingRecordingService.RecordKeyUp(args.Key);
+    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyUp(args.Key);
   }
 }
