@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 
 namespace Tum4ik.JustClipboardManager.Views.Main.Settings;
@@ -14,40 +15,43 @@ public partial class EditHotkeyDialog
 
     Loaded += (s, e) =>
     {
-      _window = Window.GetWindow(this);
-      _window.PreviewKeyDown += WindowPreviewKeyDown;
-      _window.PreviewKeyUp += WindowPreviewKeyUp;
+      var window = Window.GetWindow(this);
+      var handle = new WindowInteropHelper(window).EnsureHandle();
+      _hwndSource = HwndSource.FromHwnd(handle);
+      _hwndSource.AddHook(HwndHook);
+      _viewModel = DataContext as EditHotkeyDialogViewModel;
     };
     Unloaded += (s, e) =>
     {
-      if (_window is not null)
-      {
-        _window.PreviewKeyDown -= WindowPreviewKeyDown;
-        _window.PreviewKeyUp -= WindowPreviewKeyUp;
-      }
+      _hwndSource?.RemoveHook(HwndHook);
     };
   }
 
 
-  private Window? _window;
+  private HwndSource? _hwndSource;
+  private EditHotkeyDialogViewModel? _viewModel;
 
 
-  private void WindowPreviewKeyDown(object sender, KeyEventArgs e)
+  private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
   {
-    e.Handled = true;
-    if (DataContext is EditHotkeyDialogViewModel viewModel)
+    switch (msg)
     {
-      viewModel.KeyboardKeyDownCommand.Execute(e);
+      case 0x0100: // WM_KEYDOWN
+      case 0x0104: // WM_SYSKEYDOWN
+      {
+        var key = KeyInterop.KeyFromVirtualKey(wParam.ToInt32());
+        _viewModel?.KeyboardKeyDownCommand.Execute(key);
+        break;
+      }
+      case 0x0101: // WM_KEYUP
+      case 0x0105: // WM_SYSKEYUP
+      {
+        var key = KeyInterop.KeyFromVirtualKey(wParam.ToInt32());
+        _viewModel?.KeyboardKeyUpCommand.Execute(key);
+        break;
+      }
     }
-  }
 
-
-  private void WindowPreviewKeyUp(object sender, KeyEventArgs e)
-  {
-    e.Handled = true;
-    if (DataContext is EditHotkeyDialogViewModel viewModel)
-    {
-      viewModel.KeyboardKeyUpCommand.Execute(e);
-    }
+    return nint.Zero;
   }
 }

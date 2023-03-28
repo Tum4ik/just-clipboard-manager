@@ -124,13 +124,4 @@ internal class PasteWindowService : IPasteWindowService
   private static extern int AccessibleObjectFromWindow(
     nint hwnd, OBJID id, ref Guid iid, [In, Out, MarshalAs(UnmanagedType.IUnknown)] ref object ppvObject
   );
-
-
- 
-
-
-  
-
-
-  
 }

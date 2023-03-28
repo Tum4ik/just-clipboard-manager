@@ -63,16 +63,16 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
 
 
   [RelayCommand]
-  private void KeyboardKeyDown(KeyEventArgs args)
+  private void KeyboardKeyDown(Key key)
   {
-    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyDown(args.Key);
+    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyDown(key);
   }
 
 
   [RelayCommand]
-  private void KeyboardKeyUp(KeyEventArgs args)
+  private void KeyboardKeyUp(Key key)
   {
-    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyUp(args.Key);
+    (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyUp(key);
   }
 
 
