@@ -148,4 +148,7 @@
   <data name="PressHotkey" xml:space="preserve">
     <value>Натисніть гарячу клавішу</value>
   </data>
+  <data name="HotkeyIsAlreadyRegistered" xml:space="preserve">
+    <value>Гаряча клавіша вже зареєстрована</value>
+  </data>
 </root>

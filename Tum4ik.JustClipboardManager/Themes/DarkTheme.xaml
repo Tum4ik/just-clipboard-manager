@@ -20,6 +20,8 @@
   <SolidColorBrush x:Key="AccentTertiaryBrush" Color="#60CDFF" Opacity="0.8"/>
   <SolidColorBrush x:Key="AccentDisabledBrush" Color="White" Opacity="0.1581"/>
 
+  <Brush x:Key="SystemCriticalBrush">#FF99A4</Brush>
+
   <SolidColorBrush x:Key="AppSurfaceBorderBrush" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="Black" Opacity="0.2"/>
   <SolidColorBrush x:Key="AppSurfaceBackgroundBrush" Color="#171717"/>

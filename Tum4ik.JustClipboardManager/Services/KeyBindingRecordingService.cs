@@ -40,6 +40,9 @@ internal class KeyBindingRecordingService : IKeyBindingRecordingService
   }
 
 
+  public bool Completed => _pressedModifiers != ModifierKeys.None && _pressedKey != Key.None;
+
+
   private void AddModifierKey(ModifierKeys modifier)
   {
     if (!_pressedModifiers.HasFlag(modifier))
@@ -62,8 +65,7 @@ internal class KeyBindingRecordingService : IKeyBindingRecordingService
                                                                       Action<ModifierKeys> modifierAction,
                                                                       Action<Key> keyAction)
   {
-    var completed = false;
-    if (_pressedModifiers == ModifierKeys.None || _pressedKey == Key.None)
+    if (!Completed)
     {
       switch (key)
       {
@@ -88,11 +90,7 @@ internal class KeyBindingRecordingService : IKeyBindingRecordingService
           break;
       }
     }
-    else
-    {
-      completed = true;
-    }
 
-    return (new(_pressedModifiers, _pressedKey), completed);
+    return (new(_pressedModifiers, _pressedKey), Completed);
   }
 }

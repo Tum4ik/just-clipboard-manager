@@ -15,8 +15,9 @@ public partial class EditHotkeyDialog
 
     Loaded += (s, e) =>
     {
-      var window = Window.GetWindow(this);
-      var handle = new WindowInteropHelper(window).EnsureHandle();
+      _window = Window.GetWindow(this);
+      _window.Deactivated += WindowDeactivated;
+      var handle = new WindowInteropHelper(_window).EnsureHandle();
       _hwndSource = HwndSource.FromHwnd(handle);
       _hwndSource.AddHook(HwndHook);
       _viewModel = DataContext as EditHotkeyDialogViewModel;
@@ -24,12 +25,23 @@ public partial class EditHotkeyDialog
     Unloaded += (s, e) =>
     {
       _hwndSource?.RemoveHook(HwndHook);
+      if (_window is not null)
+      {
+        _window.Deactivated -= WindowDeactivated;
+      }
     };
   }
 
 
+  private Window? _window;
   private HwndSource? _hwndSource;
   private EditHotkeyDialogViewModel? _viewModel;
+
+
+  private void WindowDeactivated(object? sender, EventArgs e)
+  {
+    _viewModel?.DialogDeactivated();
+  }
 
 
   private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
@@ -40,14 +52,14 @@ public partial class EditHotkeyDialog
       case 0x0104: // WM_SYSKEYDOWN
       {
         var key = KeyInterop.KeyFromVirtualKey(wParam.ToInt32());
-        _viewModel?.KeyboardKeyDownCommand.Execute(key);
+        _viewModel?.KeyboardKeyDown(key);
         break;
       }
       case 0x0101: // WM_KEYUP
       case 0x0105: // WM_SYSKEYUP
       {
         var key = KeyInterop.KeyFromVirtualKey(wParam.ToInt32());
-        _viewModel?.KeyboardKeyUpCommand.Execute(key);
+        _viewModel?.KeyboardKeyUp(key);
         break;
       }
     }

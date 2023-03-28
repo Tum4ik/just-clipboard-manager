@@ -142,6 +142,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The hotkey is already registered.
+        /// </summary>
+        internal static string HotkeyIsAlreadyRegistered {
+            get {
+                return ResourceManager.GetString("HotkeyIsAlreadyRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hotkeys.
         /// </summary>
         internal static string Hotkeys {

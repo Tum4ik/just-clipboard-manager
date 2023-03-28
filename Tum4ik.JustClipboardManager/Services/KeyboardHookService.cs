@@ -2,7 +2,6 @@ using System.Windows.Input;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -34,9 +33,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
 
-  public void RegisterShowPasteWindowHotkey(KeyBindingDescriptor descriptor)
+  public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor descriptor)
   {
-    RegisterHotKey(descriptor, HandleShowPasteWindowHotkeyAsync);
+    return RegisterHotKey(descriptor, HandleShowPasteWindowHotkeyAsync);
   }
 
 
@@ -65,7 +64,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  private void RegisterHotKey(KeyBindingDescriptor descriptor, Delegate action)
+  private bool RegisterHotKey(KeyBindingDescriptor descriptor, Delegate action)
   {
     var atom = _kernel32Dll.GlobalAddAtom(descriptor.ToString());
     var modifiers = (int) descriptor.Modifiers;
@@ -74,13 +73,11 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     {
       _registeredAtoms[descriptor] = atom;
       _registeredActionCallbacks[atom] = action;
+      return true;
     }
-    else
-    {
-      _kernel32Dll.GlobalDeleteAtom(atom);
-      // todo: notify user the hot key is already registered, suggest to choose another hot key
-      throw new HotKeyRegistrationException($"Impossible to register hot key '{descriptor}'.");
-    }
+
+    _kernel32Dll.GlobalDeleteAtom(atom);
+    return false;
   }
 
 

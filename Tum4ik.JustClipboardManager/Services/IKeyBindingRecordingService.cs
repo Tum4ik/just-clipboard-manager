@@ -32,4 +32,6 @@ internal interface IKeyBindingRecordingService
   /// The completion state is always false here.
   /// </returns>
   (KeyBindingDescriptor descriptor, bool completed) ResetRecord();
+
+  bool Completed { get; }
 }
