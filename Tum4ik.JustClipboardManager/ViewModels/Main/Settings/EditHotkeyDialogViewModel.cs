@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -10,13 +11,12 @@ using Tum4ik.JustClipboardManager.ViewModels.Base;
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimpleDialogAware
 {
-  public EditHotkeyDialogViewModel(ITranslationService translationService) : base(translationService)
+  public EditHotkeyDialogViewModel(ITranslationService translationService,
+                                   IKeyBindingRecordingService keyBindingRecordingService)
+    : base(translationService)
   {
+    _keyBindingRecordingService = keyBindingRecordingService;
   }
-
-
-  private ModifierKeys _pressedModifiers;
-  private Key _pressedKey;
 
 
   public string? Title { get; } = "EditHotkey";
@@ -27,7 +27,7 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
 
 
   [ObservableProperty] private KeyBindingDescriptor _keyBindingDescriptor = new(ModifierKeys.None, Key.None);
-
+  private readonly IKeyBindingRecordingService _keyBindingRecordingService;
 
   public void OnDialogOpened(IDialogParameters parameters)
   {
@@ -62,94 +62,13 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   [RelayCommand]
   private void KeyboardKeyDown(KeyEventArgs args)
   {
-    switch (args.Key)
-    {
-      case Key.LeftAlt:
-      case Key.RightAlt:
-        AddModifierKey(ModifierKeys.Alt);
-        break;
-      case Key.LeftCtrl:
-      case Key.RightCtrl:
-        AddModifierKey(ModifierKeys.Control);
-        break;
-      case Key.LeftShift:
-      case Key.RightShift:
-        AddModifierKey(ModifierKeys.Shift);
-        break;
-      case Key.LWin:
-      case Key.RWin:
-        AddModifierKey(ModifierKeys.Windows);
-        break;
-      default:
-        if (_pressedKey == Key.None)
-        {
-          _pressedKey = args.Key;
-        }
-        break;
-    }
-    UpdateKeyBindingDescriptor();
+    (KeyBindingDescriptor, _) = _keyBindingRecordingService.RecordKeyDown(args.Key);
   }
 
 
   [RelayCommand]
   private void KeyboardKeyUp(KeyEventArgs args)
   {
-    if (_pressedModifiers == ModifierKeys.None || _pressedKey == Key.None)
-    {
-      switch (args.Key)
-      {
-        case Key.LeftAlt:
-        case Key.RightAlt:
-          RemoveModifierKey(ModifierKeys.Alt);
-          break;
-        case Key.LeftCtrl:
-        case Key.RightCtrl:
-          RemoveModifierKey(ModifierKeys.Control);
-          break;
-        case Key.LeftShift:
-        case Key.RightShift:
-          RemoveModifierKey(ModifierKeys.Shift);
-          break;
-        case Key.LWin:
-        case Key.RWin:
-          RemoveModifierKey(ModifierKeys.Windows);
-          break;
-        default:
-          if (_pressedKey == args.Key)
-          {
-            _pressedKey = Key.None;
-          }
-          break;
-      }
-      UpdateKeyBindingDescriptor();
-    }
-    else if (_pressedKey == args.Key)
-    {
-
-    }
-  }
-
-
-  private void AddModifierKey(ModifierKeys modifier)
-  {
-    if (!_pressedModifiers.HasFlag(modifier))
-    {
-      _pressedModifiers |= modifier;
-    }
-  }
-
-
-  private void RemoveModifierKey(ModifierKeys modifier)
-  {
-    if (_pressedModifiers.HasFlag(modifier))
-    {
-      _pressedModifiers &= ~modifier;
-    }
-  }
-
-
-  private void UpdateKeyBindingDescriptor()
-  {
-    KeyBindingDescriptor = new(_pressedModifiers, _pressedKey);
+    (KeyBindingDescriptor, _) = _keyBindingRecordingService.RecordKeyUp(args.Key);
   }
 }

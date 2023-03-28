@@ -158,6 +158,7 @@ public partial class App : ISingleInstance
       .AddSingleton<ISettingsService, SettingsService>()
       .AddSingleton<ITranslationService, TranslationService>()
       .AddSingleton<IThemeService, ThemeService>()
+      .AddTransient<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .AddTransient<IClipRepository, ClipRepository>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
