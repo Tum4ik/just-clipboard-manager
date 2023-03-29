@@ -1,3 +1,6 @@
-- UI Design (WinUI 3).
-- Light and Dark themes.
-- Application Settings.
+* UI Design (WinUI 3).
+* Application Settings:
+    >- Auto-start application
+    >- English and Ukrainian languages support
+    >- Light and Dark themes
+    >- Hotkeys
