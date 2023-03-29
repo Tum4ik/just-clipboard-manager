@@ -78,6 +78,11 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.3.1
 
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
     - name: Install EF Core CLI
       run: dotnet tool install -g dotnet-ef
 
@@ -110,7 +115,7 @@ jobs:
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: Test
-      run: msbuild /t:Test
+      run: dotnet test --no-build
 
     - name: Sign code files
       run: |
