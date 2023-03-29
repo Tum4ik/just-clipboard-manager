@@ -1,6 +1,7 @@
 using System.Windows;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
@@ -194,13 +195,13 @@ public class ExtendedDialogServiceTests
     if (string.IsNullOrEmpty(dialogWindowName))
     {
       _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(IDialogWindowExtended)))
+        .Setup(ce => ce.Resolve(typeof(IDialogWindow), WindowNames.SimpleDialogWindow))
         .Returns(_dialogWindowExtendedMock.Object);
     }
     else
     {
       _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(IDialogWindowExtended), dialogWindowName))
+        .Setup(ce => ce.Resolve(typeof(IDialogWindow), dialogWindowName))
         .Returns(_dialogWindowExtendedMock.Object);
     }
     _dialogWindowExtendedMock.Setup(dw => dw.DataContext).Returns(_dialogViewModelMock.Object);
