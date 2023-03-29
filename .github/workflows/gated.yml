@@ -109,7 +109,9 @@ jobs:
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: Test
-      run: dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x64
+      run: |
+        dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x86
+        dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x64
 
     - name: Sign code files
       run: |
