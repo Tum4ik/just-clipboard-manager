@@ -3,7 +3,8 @@ param (
   [string] $Version
 )
 
-dotnet publish -c Release `
+msbuild -restore /p:Configuration=Release /p:PublishProfile=FolderProfile_$Architecture
+dotnet publish --no-build -c Release `
   /p:PublishProfile=FolderProfile_$Architecture `
   /p:Version=$Version
 
