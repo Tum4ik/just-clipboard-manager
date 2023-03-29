@@ -115,6 +115,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disallowed hotkey.
+        /// </summary>
+        internal static string DisallowedHotkey {
+            get {
+                return ResourceManager.GetString("DisallowedHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit hotkey.
         /// </summary>
         internal static string EditHotkey {
@@ -187,6 +196,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press the hotkey.
         /// </summary>
         internal static string PressHotkey {
@@ -219,6 +237,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Theme {
             get {
                 return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some hotkeys are not defined for the application. Please, go to &quot;Settings &gt; Hotkeys&quot; to solve the problem..
+        /// </summary>
+        internal static string UndefinedHotkeysDetectedDescription {
+            get {
+                return ResourceManager.GetString("UndefinedHotkeysDetectedDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undefined hotkeys detected.
+        /// </summary>
+        internal static string UndefinedHotkeysDetectedTitle {
+            get {
+                return ResourceManager.GetString("UndefinedHotkeysDetectedTitle", resourceCulture);
             }
         }
     }

@@ -1,8 +1,10 @@
 using System.Windows;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Theme;
@@ -15,6 +17,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IDialogService _dialogService;
+  private readonly ISettingsService _settingsService;
+
   public IThemeService ThemeService { get; }
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
@@ -27,9 +31,9 @@ internal partial class TrayIconViewModel : TranslationViewModel
     _keyboardHookService = keyboardHookService;
     _dialogService = dialogService;
     ThemeService = themeService;
+    _settingsService = settingsService;
 
-    // todo: hotkey may be already registered in the OS, needs to be handled such situation
-    _keyboardHookService.RegisterShowPasteWindowHotkey(settingsService.HotkeyShowPasteWindow);
+    SetupHotkeys();
   }
 
 
@@ -41,7 +45,24 @@ internal partial class TrayIconViewModel : TranslationViewModel
     = "/Resources/Icons/tray.ico";
 #endif
 
- 
+
+  private void SetupHotkeys()
+  {
+    var emptyDescriptor = new KeyBindingDescriptor(ModifierKeys.None, Key.None);
+    if (_settingsService.HotkeyShowPasteWindow == emptyDescriptor
+      || !_keyboardHookService.RegisterShowPasteWindowHotkey(_settingsService.HotkeyShowPasteWindow))
+    {
+      _settingsService.HotkeyShowPasteWindow = emptyDescriptor;
+      var parameters = new DialogParameters
+      {
+        { DialogParameterNames.ViewToShow, ViewNames.SettingsView }
+      };
+      _dialogService.ShowMainAppDialog(parameters);
+      _dialogService.Show(DialogNames.UnregisteredHotkeysDialog);
+    }
+  }
+
+
   [RelayCommand]
   private void OpenMainDialog(string viewName)
   {

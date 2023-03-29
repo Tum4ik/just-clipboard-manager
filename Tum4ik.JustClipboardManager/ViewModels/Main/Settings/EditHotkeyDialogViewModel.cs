@@ -34,12 +34,19 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
 
 
   [ObservableProperty] private KeyBindingDescriptor _keyBindingDescriptor = new(ModifierKeys.None, Key.None);
-  [ObservableProperty] private Visibility _errorMessageVisibility = Visibility.Collapsed;
+  [ObservableProperty, NotifyPropertyChangedFor(nameof(ErrorMessageVisibility))] private string? _errorMessage;
+  public Visibility ErrorMessageVisibility => string.IsNullOrEmpty(ErrorMessage) ? Visibility.Collapsed : Visibility.Visible;
   [ObservableProperty, NotifyCanExecuteChangedFor(nameof(AcceptButtonPressedCommand))] private bool _canAcceptHotkey;
 
 
   private KeyBindingDescriptor? _previousDescriptor;
   private Func<KeyBindingDescriptor, bool>? _hotkeyRegisterAction;
+  private HashSet<KeyBindingDescriptor> _disallowedHotkeys = new()
+  {
+    new(ModifierKeys.Control, Key.X),
+    new(ModifierKeys.Control, Key.C),
+    new(ModifierKeys.Control, Key.V)
+  };
 
 
   public void OnDialogOpened(IDialogParameters parameters)
@@ -80,6 +87,11 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
       return;
     }
 
+    if (_disallowedHotkeys.Contains(KeyBindingDescriptor))
+    {
+      ErrorMessage = "DisallowedHotkey";
+      return;
+    }
     if ((_hotkeyRegisterAction?.Invoke(KeyBindingDescriptor) ?? false)
       && _previousDescriptor is not null)
     {
@@ -92,20 +104,20 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
       return;
     }
 
-    ErrorMessageVisibility = Visibility.Visible;
+    ErrorMessage = "HotkeyIsAlreadyRegistered";
   }
 
 
   public void KeyboardKeyDown(Key key)
   {
-    ErrorMessageVisibility = Visibility.Collapsed;
+    ErrorMessage = null;
     (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyDown(key);
   }
 
 
   public void KeyboardKeyUp(Key key)
   {
-    ErrorMessageVisibility = Visibility.Collapsed;
+    ErrorMessage = null;
     (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.RecordKeyUp(key);
   }
 
@@ -122,7 +134,7 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   [RelayCommand]
   private void ResetHotkey()
   {
-    ErrorMessageVisibility = Visibility.Collapsed;
+    ErrorMessage = null;
     (KeyBindingDescriptor, CanAcceptHotkey) = _keyBindingRecordingService.ResetRecord();
   }
 }

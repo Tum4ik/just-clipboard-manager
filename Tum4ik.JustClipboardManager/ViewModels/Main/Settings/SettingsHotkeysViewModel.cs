@@ -20,13 +20,13 @@ internal partial class SettingsHotkeysViewModel : TranslationViewModel
   {
     _dialogService = dialogService;
 
-    Hotkeys.Add(new()
-    {
-      Description = "ShowPasteWindow",
-      KeyBindingDescriptor = settingsService.HotkeyShowPasteWindow,
-      RegisterAction = keyboardHookService.RegisterShowPasteWindowHotkey,
-      SettingsSaveAction = d => settingsService.HotkeyShowPasteWindow = d
-    });
+    Hotkeys.Add(
+      new(
+        "ShowPasteWindow",
+        settingsService.HotkeyShowPasteWindow,
+        keyboardHookService.RegisterShowPasteWindowHotkey
+      )
+    );
   }
 
 
@@ -47,7 +47,6 @@ internal partial class SettingsHotkeysViewModel : TranslationViewModel
         && r.Parameters.TryGetValue(DialogParameterNames.KeyBindingDescriptor, out KeyBindingDescriptor descriptor))
       {
         hotkey.KeyBindingDescriptor = descriptor;
-        hotkey.SettingsSaveAction?.Invoke(descriptor);
       }
     });
   }

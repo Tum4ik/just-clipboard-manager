@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons" xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:EditHotkeyDialogViewModel}">
+  <UserControl.Resources>
+    <converters:TranslateConverter x:Key="TranslateConverter"/>
+  </UserControl.Resources>
   <StackPanel>
     <Border CornerRadius="4" MinWidth="160" Height="32"
             BorderThickness="1, 1, 1, 0" BorderBrush="{DynamicResource TextBoxBorderBrush}">
@@ -68,11 +71,17 @@
       </Border>
     </Border>
     <TextBlock x:Name="_errorMessage"
-               Text="{Binding Translate[HotkeyIsAlreadyRegistered]}"
                FontSize="12"
                Foreground="{DynamicResource SystemCriticalBrush}"
                Margin="0, 12, 0, 0"
-               Visibility="{Binding ErrorMessageVisibility}"/>
+               Visibility="{Binding ErrorMessageVisibility}">
+      <TextBlock.Text>
+        <MultiBinding Converter="{StaticResource TranslateConverter}">
+          <Binding Path="Translate"/>
+          <Binding Path="ErrorMessage"/>
+        </MultiBinding>
+      </TextBlock.Text>
+    </TextBlock>
   </StackPanel>
   <i:Interaction.Triggers>
     <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="">

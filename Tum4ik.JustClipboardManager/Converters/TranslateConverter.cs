@@ -25,6 +25,10 @@ internal class TranslateConverter : IMultiValueConverter
     {
       throw new ArgumentException($"The first binding must be of {nameof(ITranslationService)} type.");
     }
+    if (value1 is null)
+    {
+      return null;
+    }
     if (value1 is not string key)
     {
       throw new ArgumentException($"The second binding must be a string.");

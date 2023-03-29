@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
              x:Name="this">
@@ -20,7 +20,7 @@
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto" SharedSizeGroup="HotkeyLabel"/>
+            <ColumnDefinition MinWidth="160" SharedSizeGroup="HotkeyLabel"/>
             <ColumnDefinition Width="Auto" SharedSizeGroup="ControlButtons"/>
           </Grid.ColumnDefinitions>
           <TextBlock Grid.Column="0"
@@ -29,7 +29,7 @@
             <TextBlock.Text>
               <MultiBinding Converter="{StaticResource TranslateConverter}">
                 <Binding Path="DataContext.Translate" ElementName="this"/>
-                <Binding Path="Description"/>
+                <Binding Path="DescriptionKey"/>
               </MultiBinding>
             </TextBlock.Text>
           </TextBlock>
@@ -38,9 +38,19 @@
                   VerticalAlignment="Center"
                   Margin="8, 0"
                   Background="{DynamicResource ItemHoverBackgroundBrush}">
-            <TextBlock Text="{Binding KeyBindingDescriptor}"
-                       TextAlignment="Center"
-                       Margin="8, 4"/>
+            <Grid>
+              <TextBlock x:Name="_keyBindingDescriptor"
+                         Text="{Binding KeyBindingDescriptor}"
+                         TextAlignment="Center"
+                         Margin="8, 4"/>
+              <Border x:Name="_errorBadge"
+                      Width="16" Height="16" CornerRadius="8" Background="{DynamicResource SystemCriticalBrush}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Visibility="Collapsed">
+                <icons:SvgIcon Icon="ChromeClose" Width="8" Height="8"
+                               Color="{DynamicResource TextOnAccentPrimaryBrush}"/>
+              </Border>
+            </Grid>
           </Border>
           <controls:WinUiButton Grid.Column="2"
                                 VerticalAlignment="Center"
@@ -48,6 +58,14 @@
                                 Command="{Binding DataContext.EditHotkeyCommand, ElementName=this}"
                                 CommandParameter="{Binding}"/>
         </Grid>
+        <DataTemplate.Triggers>
+          <Trigger SourceName="_keyBindingDescriptor" Property="Text" Value="{x:Null}">
+            <Setter TargetName="_errorBadge" Property="Visibility" Value="Visible"/>
+          </Trigger>
+          <Trigger SourceName="_keyBindingDescriptor" Property="Text" Value="">
+            <Setter TargetName="_errorBadge" Property="Visibility" Value="Visible"/>
+          </Trigger>
+        </DataTemplate.Triggers>
       </DataTemplate>
     </ItemsControl.ItemTemplate>
   </ItemsControl>

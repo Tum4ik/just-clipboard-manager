@@ -151,4 +151,16 @@
   <data name="HotkeyIsAlreadyRegistered" xml:space="preserve">
     <value>Гаряча клавіша вже зареєстрована</value>
   </data>
+  <data name="DisallowedHotkey" xml:space="preserve">
+    <value>Заборонена гаряча клавіша</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ок</value>
+  </data>
+  <data name="UndefinedHotkeysDetectedTitle" xml:space="preserve">
+    <value>Виявлено невизначені гарячі клавіші</value>
+  </data>
+  <data name="UndefinedHotkeysDetectedDescription" xml:space="preserve">
+    <value>Деякі гарячі клавіші не визначені для програми. Будь ласка, перейдіть у "Налаштування &gt; Гарячі клавіші", щоб вирішити проблему.</value>
+  </data>
 </root>

@@ -151,4 +151,16 @@
   <data name="HotkeyIsAlreadyRegistered" xml:space="preserve">
     <value>The hotkey is already registered</value>
   </data>
+  <data name="DisallowedHotkey" xml:space="preserve">
+    <value>Disallowed hotkey</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="UndefinedHotkeysDetectedTitle" xml:space="preserve">
+    <value>Undefined hotkeys detected</value>
+  </data>
+  <data name="UndefinedHotkeysDetectedDescription" xml:space="preserve">
+    <value>Some hotkeys are not defined for the application. Please, go to "Settings &gt; Hotkeys" to solve the problem.</value>
+  </data>
 </root>

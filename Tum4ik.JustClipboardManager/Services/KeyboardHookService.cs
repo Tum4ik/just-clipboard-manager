@@ -12,12 +12,14 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly IKernel32DllService _kernel32Dll;
   private readonly IPasteService _pasteService;
   private readonly IEventAggregator _eventAggregator;
+  private readonly ISettingsService _settingsService;
 
   public KeyboardHookService(IPasteWindowService pasteWindowService,
                              IUser32DllService user32Dll,
                              IKernel32DllService kernel32Dll,
                              IPasteService pasteService,
-                             IEventAggregator eventAggregator)
+                             IEventAggregator eventAggregator,
+                             ISettingsService settingsService)
   {
     _windowHandle = pasteWindowService.WindowHandle;
     _pasteWindowService = pasteWindowService;
@@ -25,6 +27,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _kernel32Dll = kernel32Dll;
     _pasteService = pasteService;
     _eventAggregator = eventAggregator;
+    _settingsService = settingsService;
   }
 
 
@@ -35,7 +38,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
 
   public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor descriptor)
   {
-    return RegisterHotKey(descriptor, HandleShowPasteWindowHotkeyAsync);
+    return RegisterHotKey(
+      descriptor, HandleShowPasteWindowHotkeyAsync, () => _settingsService.HotkeyShowPasteWindow = descriptor
+    );
   }
 
 
@@ -64,7 +69,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  private bool RegisterHotKey(KeyBindingDescriptor descriptor, Delegate action)
+  private bool RegisterHotKey(KeyBindingDescriptor descriptor, Delegate action, Action saveToSettings)
   {
     var atom = _kernel32Dll.GlobalAddAtom(descriptor.ToString());
     var modifiers = (int) descriptor.Modifiers;
@@ -73,6 +78,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     {
       _registeredAtoms[descriptor] = atom;
       _registeredActionCallbacks[atom] = action;
+      saveToSettings();
       return true;
     }
 

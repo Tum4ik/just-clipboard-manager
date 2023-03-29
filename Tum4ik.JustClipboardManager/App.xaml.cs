@@ -25,6 +25,7 @@ using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
 using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
+using Tum4ik.JustClipboardManager.ViewModels.Shared;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
 using Tum4ik.JustClipboardManager.Views.Main.Settings;
@@ -174,6 +175,7 @@ public partial class App : ISingleInstance
       .RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow)
       .RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow)
       .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
+      .RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog)
       .RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog)
       .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
       .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
