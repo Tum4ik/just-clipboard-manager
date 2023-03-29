@@ -103,18 +103,15 @@ jobs:
         $appsettings.MicrosoftAppCenterSecret = "${{ secrets.MICROSOFT_APP_CENTER_SECRET }}"
         $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
 
-    - name: .NET publish
+    - name: Publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
-    #- name: .NET test
-    #  run: dotnet test
-    - name: VS Tets
+    - name: Test
       uses: microsoft/vstest-action@v1.0.0
       with:
-        searchFolder: ./Tests/
         runInParallel: true
 
     - name: Sign code files
