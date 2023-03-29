@@ -110,9 +110,7 @@ jobs:
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: Test
-      uses: microsoft/vstest-action@v1.0.0
-      with:
-        runInParallel: true
+      run: msbuild /t:Test
 
     - name: Sign code files
       run: |
