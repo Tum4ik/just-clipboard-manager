@@ -94,6 +94,7 @@
     <Reference Include="Tum4ik.JustClipboardManager.COMImplementations">
       <HintPath Condition="'$(RuntimeIdentifier)'=='win-x86'">..\Tum4ik.JustClipboardManager.COMImplementations\bin\x86\$(Configuration)\$(TargetFramework)\Tum4ik.JustClipboardManager.COMImplementations.dll</HintPath>
       <HintPath Condition="'$(RuntimeIdentifier)'=='win-x64'">..\Tum4ik.JustClipboardManager.COMImplementations\bin\x64\$(Configuration)\$(TargetFramework)\Tum4ik.JustClipboardManager.COMImplementations.dll</HintPath>
+      <HintPath>..\Tum4ik.JustClipboardManager.COMImplementations\bin\$(Configuration)\$(TargetFramework)\Tum4ik.JustClipboardManager.COMImplementations.dll</HintPath>
     </Reference>
   </ItemGroup>
 

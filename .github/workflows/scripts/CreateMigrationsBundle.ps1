@@ -17,10 +17,17 @@ else {
   throw "Unsupported target runtime."
 }
 
-dotnet ef migrations bundle -f --self-contained --no-build `
+$comProject = Join-Path `
+  "Tum4ik.JustClipboardManager.COMImplementations" `
+  "Tum4ik.JustClipboardManager.COMImplementations.csproj"
+msbuild $comProject /t:Restore /t:Build `
+  /p:Configuration=Release `
+  /p:PublishProfile=FolderProfile_$Architecture `
+  /p:Version=$Version
+
+dotnet ef migrations bundle -f --self-contained `
   -o $outputFile `
   -r $targetRuntime `
-  --runtime $targetRuntime `
   -p $project `
   -s $project `
   --framework $framework `
