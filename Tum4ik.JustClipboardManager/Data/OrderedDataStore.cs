@@ -31,7 +31,7 @@ internal class OrderedDataStore : IDataObject
 
     var dataStoreEntry = FindDataStoreEntry(format, aspect, index);
 
-    var baseVar = GetDataFromDataStoreEntry(dataStoreEntry, format);
+    var baseVar = GetDataFromDataStoreEntry(dataStoreEntry);
 
     var original = baseVar;
 
@@ -48,7 +48,7 @@ internal class OrderedDataStore : IDataObject
           {
             var foundDataStoreEntry = FindDataStoreEntry(mappedFormats[i], aspect, index);
 
-            baseVar = GetDataFromDataStoreEntry(foundDataStoreEntry, mappedFormats[i]);
+            baseVar = GetDataFromDataStoreEntry(foundDataStoreEntry);
 
             if (baseVar != null && !(baseVar is MemoryStream))
             {
@@ -323,7 +323,7 @@ internal class OrderedDataStore : IDataObject
   }
 
 
-  private object? GetDataFromDataStoreEntry(DataStoreEntry? dataStoreEntry, string format)
+  private static object? GetDataFromDataStoreEntry(DataStoreEntry? dataStoreEntry)
   {
     if (dataStoreEntry is not null)
     {
