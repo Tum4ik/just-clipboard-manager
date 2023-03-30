@@ -9,6 +9,7 @@ $project = Join-Path `
 
 msbuild $project /t:Restore /t:Build `
   /p:Configuration=Release `
+  /p:Platform=$Architecture `
   /p:PublishProfile=FolderProfile_$Architecture `
   /p:Version=$Version
 dotnet publish -c Release `
