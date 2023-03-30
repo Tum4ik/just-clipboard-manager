@@ -26,6 +26,7 @@ msbuild $comProject /t:Restore /t:Build `
   /p:Version=$Version
 
 dotnet ef migrations bundle -f --self-contained `
+  /p:IsMigrationsBundleCreation=true `
   -o $outputFile `
   -r $targetRuntime `
   -p $project `
