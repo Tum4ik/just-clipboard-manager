@@ -102,12 +102,12 @@ jobs:
     - name: Publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
+        #${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
     - name: Test
       run: |
-        dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x86
+        #dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x86
         dotnet test --no-build -c Release /p:PublishProfile=FolderProfile_x64
 
     - name: Sign code files
@@ -126,7 +126,7 @@ jobs:
 
     - name: Create EF migrations bundle
       run: |
-        ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
+        #${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
         ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x64 -OutputDir ${{ env.PublishDir }}
 
     - name: Install Inno Setup
@@ -137,7 +137,7 @@ jobs:
    
     - name: Build installer
       run: |
-        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86
+        #${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86
         ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64
 
     - name: Upload build artifacts
