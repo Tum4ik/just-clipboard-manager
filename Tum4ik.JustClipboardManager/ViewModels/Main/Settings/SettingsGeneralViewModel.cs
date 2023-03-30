@@ -1,4 +1,4 @@
-using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 

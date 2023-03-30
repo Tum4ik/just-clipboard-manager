@@ -1,7 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -14,9 +13,11 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Regions.Behaviors;
 using SingleInstanceCore;
+using Tum4ik.JustClipboardManager.COMImplementations.Services;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
@@ -168,7 +169,7 @@ public partial class App : ISingleInstance
         var infoService = sp.GetRequiredService<IInfoService>();
         return new GitHubClient(new ProductHeaderValue(infoService.ProductName, infoService.InformationalVersion));
       })
-      .AddTransient(sp => new WshShell())
+      //.AddTransient(sp => new WshShell())
       .AddTransient<IShortcutService, ShortcutService>()
       .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
       .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)

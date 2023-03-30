@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using Microsoft.AppCenter.Crashes;
 using Octokit;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 using FileMode = System.IO.FileMode;
 
 namespace Tum4ik.JustClipboardManager.Services;

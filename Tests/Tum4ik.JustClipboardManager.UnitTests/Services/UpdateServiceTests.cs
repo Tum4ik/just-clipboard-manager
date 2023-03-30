@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Octokit;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.TestHelpers;
 

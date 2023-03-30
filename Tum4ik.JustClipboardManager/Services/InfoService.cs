@@ -1,4 +1,5 @@
 using System.Reflection;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class InfoService : IInfoService

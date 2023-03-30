@@ -1,18 +1,18 @@
-using System.IO;
 using IWshRuntimeLibrary;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 
-namespace Tum4ik.JustClipboardManager.Services;
+namespace Tum4ik.JustClipboardManager.COMImplementations.Services;
 
-internal class ShortcutService : IShortcutService
+public class ShortcutService : IShortcutService
 {
   private readonly IInfoService _infoService;
-  private readonly WshShell _wshShell;
+  private readonly WshShell _wshShell = new();
 
-  public ShortcutService(IInfoService infoService,
-                         WshShell wshShell)
+  public ShortcutService(IInfoService infoService/*,
+                         WshShell wshShell*/)
   {
     _infoService = infoService;
-    _wshShell = wshShell;
+    //_wshShell = wshShell;
   }
 
 

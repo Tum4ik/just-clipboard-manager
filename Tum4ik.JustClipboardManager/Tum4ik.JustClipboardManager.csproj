@@ -53,18 +53,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
@@ -99,6 +87,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj" />
+    <ProjectReference Include="..\Tum4ik.JustClipboardManager.Interfaces\Tum4ik.JustClipboardManager.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Tum4ik.JustClipboardManager.COMImplementations">
+      <HintPath Condition="'$(RuntimeIdentifier)'=='win-x86'">..\Tum4ik.JustClipboardManager.COMImplementations\bin\x86\$(Configuration)\$(TargetFramework)\Tum4ik.JustClipboardManager.COMImplementations.dll</HintPath>
+      <HintPath Condition="'$(RuntimeIdentifier)'=='win-x64'">..\Tum4ik.JustClipboardManager.COMImplementations\bin\x64\$(Configuration)\$(TargetFramework)\Tum4ik.JustClipboardManager.COMImplementations.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

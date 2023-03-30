@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
-using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Interfaces.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 

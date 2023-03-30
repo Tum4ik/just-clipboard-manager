@@ -1,6 +1,6 @@
-namespace Tum4ik.JustClipboardManager.Services;
+namespace Tum4ik.JustClipboardManager.Interfaces.Services;
 
-internal interface IShortcutService
+public interface IShortcutService
 {
   /// <summary>
   /// Checks the application shortcut exists in the special folder.

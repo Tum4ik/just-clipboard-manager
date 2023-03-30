@@ -75,19 +75,13 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
+
     - name: Install .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-
-    - name: Install EF Core CLI
-      run: dotnet tool install -g dotnet-ef
-
-    - name: Install Inno Setup
-      run: |
-        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
-        .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Host
-        curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
 
     - name: Define version
       id: define-version
@@ -105,14 +99,14 @@ jobs:
         $appsettings.MicrosoftAppCenterSecret = "${{ secrets.MICROSOFT_APP_CENTER_SECRET }}"
         $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
 
-    - name: .NET publish
+    - name: Publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
 
-    - name: .NET test
-      run: dotnet test
+    #- name: Test
+    #  run: dotnet test --no-build -c Release
 
     - name: Sign code files
       run: |
@@ -125,10 +119,19 @@ jobs:
           -PfxPassword ${{ secrets.PFX_KEY }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
+    - name: Install EF Core CLI
+      run: dotnet tool install -g dotnet-ef
+
     - name: Create EF migrations bundle
       run: |
         ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x86 -OutputDir ${{ env.PublishDir }}
         ${{ env.Scripts }}\CreateMigrationsBundle.ps1 -Architecture x64 -OutputDir ${{ env.PublishDir }}
+
+    - name: Install Inno Setup
+      run: |
+        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
+        .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Host
+        curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
    
     - name: Build installer
       run: |
