@@ -6,6 +6,7 @@ param (
 msbuild -restore `
   /t:Build /t:Publish `
   /p:Configuration=Release `
+  /p:Platform=$Architecture `
   /p:PublishProfile=FolderProfile_$Architecture `
   /p:Version=$Version
 

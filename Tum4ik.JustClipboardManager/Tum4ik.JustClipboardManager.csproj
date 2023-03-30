@@ -10,8 +10,8 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>JustClipboardManager</AssemblyName>
     <Platforms>x86;x64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
-    <GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
+    <!--<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>-->
   </PropertyGroup>
 
   <PropertyGroup>
