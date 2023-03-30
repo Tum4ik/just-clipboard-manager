@@ -21,7 +21,7 @@ $comProject = Join-Path `
   "Tum4ik.JustClipboardManager.COMImplementations" `
   "Tum4ik.JustClipboardManager.COMImplementations.csproj"
 msbuild $comProject /t:Restore /t:Build `
-  /p:Configuration=Release `
+  /p:Configuration=$configuration `
   /p:PublishProfile=FolderProfile_$Architecture `
   /p:Version=$Version
 

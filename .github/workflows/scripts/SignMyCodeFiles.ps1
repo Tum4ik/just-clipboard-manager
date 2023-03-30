@@ -16,7 +16,8 @@ if (!$PfxPassword) {
 
 $filesToSign = Get-ChildItem -Recurse `
   -Include `
-    JustClipboardManager.dll, JustClipboardManager.exe, Tum4ik.JustClipboardManager.Icons.dll `
+    JustClipboardManager.dll, JustClipboardManager.exe, Tum4ik.JustClipboardManager.Icons.dll, `
+    Tum4ik.JustClipboardManager.Interfaces.dll, Tum4ik.JustClipboardManager.COMImplementations.dll `
   $FilesDirectoryPath `
   | Select-Object -ExpandProperty FullName
 $signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.20348.0\x64\signtool.exe"
