@@ -18,20 +18,20 @@ internal class OrderedDataStore : IDataObject
   private readonly OrderedDictionary _data = new();
 
 
-  public object GetData(string format)
+  public object? GetData(string format)
   {
     return GetData(format, true);
   }
 
 
-  public object GetData(string format, bool autoConvert)
+  public object? GetData(string format, bool autoConvert)
   {
-    var aspect = DVASPECT.DVASPECT_CONTENT;
+    var aspect = DVASPECT.Content;
     var index = -1;
 
     var dataStoreEntry = FindDataStoreEntry(format, aspect, index);
 
-    var baseVar = GetDataFromDataStoreEntry(dataStoreEntry, format);
+    var baseVar = GetDataFromDataStoreEntry(dataStoreEntry);
 
     var original = baseVar;
 
@@ -48,7 +48,7 @@ internal class OrderedDataStore : IDataObject
           {
             var foundDataStoreEntry = FindDataStoreEntry(mappedFormats[i], aspect, index);
 
-            baseVar = GetDataFromDataStoreEntry(foundDataStoreEntry, mappedFormats[i]);
+            baseVar = GetDataFromDataStoreEntry(foundDataStoreEntry);
 
             if (baseVar != null && !(baseVar is MemoryStream))
             {
@@ -76,7 +76,7 @@ internal class OrderedDataStore : IDataObject
   }
 
 
-  public object GetData(Type format)
+  public object? GetData(Type format)
   {
     return GetData(format.FullName!);
   }
@@ -90,8 +90,7 @@ internal class OrderedDataStore : IDataObject
 
   public bool GetDataPresent(string format, bool autoConvert)
   {
-    var aspect = DVASPECT.DVASPECT_CONTENT;
-    var index = -1;
+    const DVASPECT Aspect = DVASPECT.Content;
 
     if (!autoConvert)
     {
@@ -100,7 +99,7 @@ internal class OrderedDataStore : IDataObject
         return false;
       }
 
-      var entries = (DataStoreEntry[]) _data[format];
+      var entries = (DataStoreEntry[]?) _data[format] ?? Array.Empty<DataStoreEntry>();
       DataStoreEntry? dse = null;
       DataStoreEntry? naturalDse = null;
 
@@ -108,14 +107,14 @@ internal class OrderedDataStore : IDataObject
       for (var i = 0; i < entries.Length; i++)
       {
         var entry = entries[i];
-        if (entry.Aspect == aspect && (index == -1 || entry.Index == index))
+        if (entry.Aspect == Aspect && entry.Index == 0)
+        {
+          naturalDse = entry;
+        }
+        else if (entry.Aspect == Aspect)
         {
           dse = entry;
           break;
-        }
-        if (entry.Aspect == DVASPECT.DVASPECT_CONTENT && entry.Index == 0)
-        {
-          naturalDse = entry;
         }
       }
 
@@ -127,7 +126,7 @@ internal class OrderedDataStore : IDataObject
       }
 
       // If we still didn't find data, return false.
-      return dse != null;
+      return dse is not null;
     }
     else
     {
@@ -173,7 +172,7 @@ internal class OrderedDataStore : IDataObject
 
       for (int baseFormatIndex = 0; baseFormatIndex < baseVar.Length; baseFormatIndex++)
       {
-        var entries = (DataStoreEntry[]) _data[baseVar[baseFormatIndex]];
+        var entries = (DataStoreEntry[]?) _data[baseVar[baseFormatIndex]] ?? Array.Empty<DataStoreEntry>();
         var canAutoConvert = true;
 
         for (int dataStoreIndex = 0; dataStoreIndex < entries.Length; dataStoreIndex++)
@@ -259,25 +258,25 @@ internal class OrderedDataStore : IDataObject
       format = DataFormats.Bitmap;
     }
 
-    var aspect = DVASPECT.DVASPECT_CONTENT;
+    var aspect = DVASPECT.Content;
     var index = 0;
 
     var dse = new DataStoreEntry(data, autoConvert, aspect, index);
-    var datalist = (DataStoreEntry[]) _data[format];
+    var dataList = (DataStoreEntry[]?) _data[format];
 
-    if (datalist == null)
+    if (dataList is null)
     {
-      datalist = (DataStoreEntry[]) Array.CreateInstance(typeof(DataStoreEntry), 1);
+      dataList = (DataStoreEntry[]) Array.CreateInstance(typeof(DataStoreEntry), 1);
     }
     else
     {
-      var newlist = (DataStoreEntry[]) Array.CreateInstance(typeof(DataStoreEntry), datalist.Length + 1);
-      datalist.CopyTo(newlist, 1);
-      datalist = newlist;
+      var newList = (DataStoreEntry[]) Array.CreateInstance(typeof(DataStoreEntry), dataList.Length + 1);
+      dataList.CopyTo(newList, 1);
+      dataList = newList;
     }
 
-    datalist[0] = dse;
-    _data[format] = datalist;
+    dataList[0] = dse;
+    _data[format] = dataList;
   }
 
 
@@ -305,7 +304,7 @@ internal class OrderedDataStore : IDataObject
           dataStoreEntry = entry;
           break;
         }
-        if (entry.Aspect == DVASPECT.DVASPECT_CONTENT && entry.Index == 0)
+        if (entry.Aspect == DVASPECT.Content && entry.Index == 0)
         {
           naturalDataStoreEntry = entry;
         }
@@ -323,7 +322,7 @@ internal class OrderedDataStore : IDataObject
   }
 
 
-  private object? GetDataFromDataStoreEntry(DataStoreEntry? dataStoreEntry, string format)
+  private static object? GetDataFromDataStoreEntry(DataStoreEntry? dataStoreEntry)
   {
     if (dataStoreEntry is not null)
     {
@@ -572,8 +571,8 @@ internal class OrderedDataStore : IDataObject
 [Flags]
 public enum DVASPECT
 {
-  DVASPECT_CONTENT = 1,
-  DVASPECT_THUMBNAIL = 2,
-  DVASPECT_ICON = 4,
-  DVASPECT_DOCPRINT = 8
+  Content = 1,
+  Thumbnail = 2,
+  Icon = 4,
+  DocPrint = 8
 }

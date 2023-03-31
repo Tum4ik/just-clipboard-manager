@@ -97,11 +97,16 @@ jobs:
     - name: Publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x86 -Version $version
-        ${{ env.Scripts }}\DotnetPublish.ps1 -Architecture x64 -Version $version
+        ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x86 -Version $version
+        ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x64 -Version $version
 
-    #- name: Test
-    #  run: dotnet test
+    - name: Setup VSTest.console.exe
+      uses: darenm/Setup-VSTest@v1.2
+
+    - name: Test
+      run: |
+        msbuild .\Tests\Tum4ik.Deployment.UnitTests\Tum4ik.Deployment.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
+        vstest.console.exe .\Tests\Tum4ik.Deployment.UnitTests\bin\Release\net7.0\Tum4ik.Deployment.UnitTests.dll
 
     - name: Sign code files
       run: |
