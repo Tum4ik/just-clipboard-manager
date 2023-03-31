@@ -19,7 +19,7 @@ public partial class PasteWindow
   }
 
 
-  private static readonly SemaphoreSlim s_semaphore = new(1, 1);
+  private static readonly object s_locker = new();
   private bool _isLoading;
   private ScrollViewer? _scrollViewer;
 
@@ -34,11 +34,10 @@ public partial class PasteWindow
   }
 
 
-  private async void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+  private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
   {
-    try
+    lock (s_locker)
     {
-      await s_semaphore.WaitAsync().ConfigureAwait(true);
       if (_isLoading)
       {
         return;
@@ -46,18 +45,16 @@ public partial class PasteWindow
 
       _isLoading = true;
     }
-    finally
-    {
-      s_semaphore.Release();
-    }
 
     if (e.ExtentHeight != default
         && e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight)
     {
-      await _vm.LoadNextClipsBatchAsync().ConfigureAwait(false);
+      _vm.LoadNextClipsBatchAsync().ContinueWith(t => _isLoading = false, TaskScheduler.Default).Await(e => throw e);
     }
-
-    _isLoading = false;
+    else
+    {
+      _isLoading = false;
+    }
   }
 
 
