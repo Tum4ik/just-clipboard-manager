@@ -143,7 +143,9 @@ internal class UpdateService : IUpdateService
   [ExcludeFromCodeCoverage]
   public void InstallUpdates(FileInfo exeFile)
   {
+#if !DEBUG
     Process.Start(new ProcessStartInfo(exeFile.FullName, "/SILENT") { UseShellExecute = true });
+#endif
   }
 
 

@@ -100,10 +100,8 @@ public partial class App : ISingleInstance
     ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) => _serviceProvider.GetRequiredService(type));
     ContainerLocator.SetContainerExtension(() => new ServiceContainerExtension(_serviceProvider));
 
-#if !DEBUG
     var updateService = _serviceProvider.GetRequiredService<IUpdateService>();
     updateService.SilentUpdate();
-#endif
 
     var regionAdapterMappings = _serviceProvider.GetRequiredService<RegionAdapterMappings>();
     RegisterDefaultRegionAdapterMappings(regionAdapterMappings);
@@ -171,7 +169,7 @@ public partial class App : ISingleInstance
       .AddTransient<IGitHubClient>(sp =>
       {
         var infoService = sp.GetRequiredService<IInfoService>();
-        return new GitHubClient(new ProductHeaderValue(infoService.ProductName, infoService.InformationalVersion));
+        return new GitHubClient(new ProductHeaderValue("JustClipboardManager", infoService.InformationalVersion));
       })
       .AddTransient(sp => new WshShell())
       .AddTransient<IShortcutService, ShortcutService>()

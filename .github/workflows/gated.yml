@@ -107,8 +107,6 @@ jobs:
       run: |
         msbuild /t:Restore /t:Build /p:Configuration=Release
         vstest.console.exe .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll
-        #vstest.console.exe .\Tests\Tum4ik.Deployment.UnitTests\bin\Release\net7.0\Tum4ik.Deployment.UnitTests.dll
-        #vstest.console.exe .\Tests\Tum4ik.JustClipboardManager.UnitTests\bin\Release\net7.0-windows\Tum4ik.JustClipboardManager.UnitTests.dll
 
     - name: Sign code files
       run: |
