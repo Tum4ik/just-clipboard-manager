@@ -83,10 +83,10 @@ jobs:
       run: |
         $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
         if (![System.Version]::TryParse($majorMinor, [ref]$null)) { $majorMinor = "0.0" }
-        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear)"
+        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear.ToString().PadLeft(3, '0'))"
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
-        echo "::set-output name=version::$version"
+        echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Set Microsoft AppCenter secret
       run: |

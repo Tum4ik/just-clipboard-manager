@@ -58,6 +58,7 @@ public partial class App : ISingleInstance
     app.DispatcherUnhandledException += (s, e) =>
     {
       // TODO: improve to give user a chance to decide send or not
+      // TODO: and also notify user about the problem anyway
       Crashes.TrackError(e.Exception, new Dictionary<string, string>
       {
         { "Message", "Application Dispatcher Unhandled Exception" }
