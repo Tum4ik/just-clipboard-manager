@@ -1,0 +1,35 @@
+<UserControl x:Class="Tum4ik.JustClipboardManager.Views.Main.MainDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
+             x:ClassModifier="internal"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}">
+  <DockPanel>
+    <controls:TabButtonsControl DockPanel.Dock="Top">
+      <controls:TabButtonsControl.Resources>
+        <Style TargetType="controls:TabButton" BasedOn="{StaticResource {x:Type controls:TabButton}}">
+          <Setter Property="Command" Value="{Binding NavigateCommand}"/>
+        </Style>
+      </controls:TabButtonsControl.Resources>
+      <controls:TabButton Text="{Binding Translate[Settings]}"
+                          Icon="Settings"
+                          IsChecked="{Binding IsSettingsTabChecked}"
+                          CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
+      <controls:TabButton Text="{Binding Translate[About]}"
+                          Icon="Info"
+                          IsChecked="{Binding IsAboutTabChecked}"
+                          CommandParameter="{x:Static const:ViewNames.AboutView}"/>
+    </controls:TabButtonsControl>
+    <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
+            CornerRadius="0, 0, 8, 8">
+      <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
+                      prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
+    </Border>
+  </DockPanel>
+</UserControl>

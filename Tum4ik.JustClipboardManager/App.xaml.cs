@@ -1,9 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Octokit;
@@ -13,12 +15,23 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Regions.Behaviors;
 using SingleInstanceCore;
+using Tum4ik.JustClipboardManager.Constants;
+using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.Theme;
+using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
+using Tum4ik.JustClipboardManager.ViewModels.Main;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
+using Tum4ik.JustClipboardManager.ViewModels.Shared;
 using Tum4ik.JustClipboardManager.Views;
+using Tum4ik.JustClipboardManager.Views.Main;
+using Tum4ik.JustClipboardManager.Views.Main.Settings;
+using Tum4ik.JustClipboardManager.Views.Shared;
 
 namespace Tum4ik.JustClipboardManager;
 
@@ -32,7 +45,11 @@ public partial class App : ISingleInstance
   {
     var app = new App();
 
-    var isFirstInstance = app.InitializeAsFirstInstance("JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46");
+    var instanceUniqueName = "JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46";
+#if DEBUG
+    instanceUniqueName += "_Development";
+#endif
+    var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
     if (!isFirstInstance)
     {
       return;
@@ -40,7 +57,12 @@ public partial class App : ISingleInstance
 
     app.DispatcherUnhandledException += (s, e) =>
     {
-      Crashes.TrackError(e.Exception); // TODO: improve to give user a chance to decide send or not
+      // TODO: improve to give user a chance to decide send or not
+      // TODO: and also notify user about the problem anyway
+      Crashes.TrackError(e.Exception, new Dictionary<string, string>
+      {
+        { "Message", "Application Dispatcher Unhandled Exception" }
+      });
       Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
       e.Handled = true;
       app.Shutdown();
@@ -79,10 +101,8 @@ public partial class App : ISingleInstance
     ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) => _serviceProvider.GetRequiredService(type));
     ContainerLocator.SetContainerExtension(() => new ServiceContainerExtension(_serviceProvider));
 
-#if !DEBUG
     var updateService = _serviceProvider.GetRequiredService<IUpdateService>();
     updateService.SilentUpdate();
-#endif
 
     var regionAdapterMappings = _serviceProvider.GetRequiredService<RegionAdapterMappings>();
     RegisterDefaultRegionAdapterMappings(regionAdapterMappings);
@@ -90,8 +110,11 @@ public partial class App : ISingleInstance
     var defaultRegionBehaviors = _serviceProvider.GetRequiredService<IRegionBehaviorFactory>();
     RegisterDefaultRegionBehaviors(defaultRegionBehaviors);
 
-    var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
+    //var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
     //moduleManager.Run();
+
+    using var dbContext = _serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
+    dbContext.Database.Migrate();
 
     RemoveOldClips(_serviceProvider);
     var trayIcon = _serviceProvider.GetRequiredService<TrayIcon>();
@@ -112,7 +135,7 @@ public partial class App : ISingleInstance
   private static void RemoveOldClips(ServiceProvider serviceProvider)
   {
     var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
-    _ = clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)); // TODO: befor date from settings
+    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)).Await(e => Crashes.TrackError(e)); // TODO: before date from settings
   }
 
 
@@ -123,28 +146,46 @@ public partial class App : ISingleInstance
     services
       .AddSingleton<IContainerExtension>(sp => new ServiceContainerExtension(sp))
       .AddConfiguration()
-      .AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
+      //.AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
       .AddPrismServices()
+      .AddPrismBehaviors()
       .AddRegionAdapters()
       .AddDatabase()
-      .AddTransient<IClipRepository, ClipRepository>()
+      .AddSingleton<IUser32DllService, User32DllService>()
+      .AddSingleton<ISHCoreDllService, SHCoreDllService>()
+      .AddSingleton<IKernel32DllService, Kernel32DllService>()
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()
       .AddSingleton<IPasteWindowService, PasteWindowService>()
       .AddSingleton<IPasteService, PasteService>()
       .AddSingleton<IClipboardService, ClipboardService>()
+      .AddSingleton<ISettingsService, SettingsService>()
+      .AddSingleton<ITranslationService, TranslationService>()
       .AddSingleton<IThemeService, ThemeService>()
+      .AddTransient<IKeyBindingRecordingService, KeyBindingRecordingService>()
+      .AddTransient<IClipRepository, ClipRepository>()
       .AddTransient<IInfoService, InfoService>()
       .AddTransient<IUpdateService, UpdateService>()
       .AddTransient<IGitHubClient>(sp =>
       {
-        var version = sp.GetRequiredService<IInfoService>().GetInformationalVersion();
-        var client = new GitHubClient(new ProductHeaderValue("JustClipboardManager", version));
-        return client;
+        var infoService = sp.GetRequiredService<IInfoService>();
+        return new GitHubClient(new ProductHeaderValue("JustClipboardManager", infoService.InformationalVersion));
       })
-      .RegisterView<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
-      .RegisterView<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton);
+      .AddTransient(sp => new WshShell())
+      .AddTransient<IShortcutService, ShortcutService>()
+      .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
+      .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
+      .RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow)
+      .RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow)
+      .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
+      .RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog)
+      .RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog)
+      .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
+      .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
+      .RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView)
+      .RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView)
+      .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
 
     return services.BuildServiceProvider();
   }

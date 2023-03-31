@@ -5,31 +5,104 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                 xmlns:tb="http://www.hardcodet.net/taskbar" 
                 xmlns:viewmodels="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
-                xmlns:services="clr-namespace:Tum4ik.JustClipboardManager.Services"
+                xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
+                xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+                xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
-                IconSource="/Resources/Icons/tray.ico"
-                UseLayoutRounding="True">
+                IconSource="{Binding TrayIcon}">
   <tb:TaskbarIcon.ContextMenu>
-    <ContextMenu>
-      <MenuItem Header="Clips"/>
-      <MenuItem Header="Options"/>
-      <MenuItem Header="About"/>
+    <ContextMenu Background="White" UseLayoutRounding="True">
+      <ContextMenu.Resources>
+        <converters:EqualityConverter x:Key="EqualityConverter"/>
+        <converters:TranslateConverter x:Key="TranslateConverter"/>
+      </ContextMenu.Resources>
+      <!--<MenuItem Header="Clips"/>-->
+      <MenuItem Header="{Binding Translate[Settings]}"
+                Command="{Binding OpenMainDialogCommand}"
+                CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
+      <MenuItem Header="{Binding Translate[About]}"
+                Command="{Binding OpenMainDialogCommand}"
+                CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       <Separator/>
-      <MenuItem Header="Theme">
-        <MenuItem Header="Light" IsCheckable="True"
-                  Command="{Binding ChangeThemeCommand}"
-                  CommandParameter="{x:Static services:Theme.Light}"/>
-        <MenuItem Header="Dark" IsCheckable="True" 
-                  Command="{Binding ChangeThemeCommand}"
-                  CommandParameter="{x:Static services:Theme.Dark}"/>
+      <MenuItem Header="{Binding Translate[Language]}" Background="White"
+                ItemsSource="{Binding Translate.SupportedLanguages}">
+        <MenuItem.ItemContainerStyle>
+          <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+            <Setter Property="IsCheckable" Value="True"/>
+            <Setter Property="IsChecked">
+              <Setter.Value>
+                <MultiBinding Mode="OneWay" Converter="{StaticResource EqualityConverter}">
+                  <Binding Path="DataContext.Translate.SelectedLanguage"
+                           RelativeSource="{RelativeSource AncestorType=ContextMenu}"/>
+                  <Binding Path="."/>
+                </MultiBinding>
+              </Setter.Value>
+            </Setter>
+            <Setter Property="Command"
+                    Value="{Binding DataContext.ChangeLanguageCommand,
+                    RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+            <Setter Property="CommandParameter" Value="{Binding}"/>
+          </Style>
+        </MenuItem.ItemContainerStyle>
+        <MenuItem.ItemTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Column="0" Text="{Binding Culture.NativeName}"/>
+              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}" Color="{x:Null}"
+                             Width="16" Height="16" Margin="12, 0, 0, 0"/>
+            </Grid>
+          </DataTemplate>
+        </MenuItem.ItemTemplate>
       </MenuItem>
-      <MenuItem Header="Language">
-        <MenuItem Header="English" IsCheckable="True"/>
-        <MenuItem Header="Ukrainian" IsCheckable="True"/>
+      <MenuItem Header="{Binding Translate[Theme]}" Background="White"
+                ItemsSource="{Binding ThemeService.Themes}">
+        <MenuItem.ItemContainerStyle>
+          <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+            <Setter Property="IsCheckable" Value="True"/>
+            <Setter Property="IsChecked">
+              <Setter.Value>
+                <MultiBinding Mode="OneWay" Converter="{StaticResource EqualityConverter}">
+                  <Binding Path="DataContext.ThemeService.SelectedTheme"
+                           RelativeSource="{RelativeSource AncestorType=ContextMenu}"/>
+                  <Binding Path="."/>
+                </MultiBinding>
+              </Setter.Value>
+            </Setter>
+            <Setter Property="Command"
+                    Value="{Binding DataContext.ChangeThemeCommand,
+                    RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+            <Setter Property="CommandParameter" Value="{Binding}"/>
+          </Style>
+        </MenuItem.ItemContainerStyle>
+        <MenuItem.ItemTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Column="0">
+                <TextBlock.Text>
+                  <MultiBinding Converter="{StaticResource TranslateConverter}">
+                    <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource AncestorType=ContextMenu}"/>
+                    <Binding Path="Name"/>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}"
+                             Color="{DynamicResource TextSecondaryBrush}"
+                             Width="16" Height="16" Margin="12, 0, 0, 0"/>
+            </Grid>
+          </DataTemplate>
+        </MenuItem.ItemTemplate>
       </MenuItem>
       <Separator/>
-      <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
+      <MenuItem Header="{Binding Translate[Exit]}" Command="{Binding ExitCommand}" />
     </ContextMenu>
   </tb:TaskbarIcon.ContextMenu>
 </tb:TaskbarIcon>

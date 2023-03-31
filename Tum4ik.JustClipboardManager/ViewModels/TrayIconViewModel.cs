@@ -1,92 +1,100 @@
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Prism.Events;
+using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
-using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Theme;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class TrayIconViewModel
+internal partial class TrayIconViewModel : TranslationViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
-  private readonly IPasteWindowService _pasteWindowService;
-  private readonly IPasteService _pasteService;
-  private readonly IEventAggregator _eventAggregator;
-  private readonly IThemeService _themeService;
+  private readonly IDialogService _dialogService;
+  private readonly ISettingsService _settingsService;
+
+  public IThemeService ThemeService { get; }
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
-                           IPasteWindowService pasteWindowService,
-                           IPasteService pasteService,
-                           IEventAggregator eventAggregator,
-                           IThemeService themeService)
+                           IDialogService dialogService,
+                           ITranslationService translationService,
+                           IThemeService themeService,
+                           ISettingsService settingsService)
+    : base(translationService)
   {
     _keyboardHookService = keyboardHookService;
-    _pasteWindowService = pasteWindowService;
-    _pasteService = pasteService;
-    _eventAggregator = eventAggregator;
-    _themeService = themeService;
+    _dialogService = dialogService;
+    ThemeService = themeService;
+    _settingsService = settingsService;
 
-    var ctrlShiftV = new KeybindDescriptor(ModifierKeys.Control | ModifierKeys.Shift, Key.V);
-    _keyboardHookService.RegisterHotKey(ctrlShiftV, HandleInsertHotKeyAsync);
+    SetupHotkeys();
   }
 
 
-  [RelayCommand]
-  private void ChangeTheme(Theme theme)
+  [ObservableProperty]
+  private string _trayIcon
+#if DEBUG
+    = "/Resources/Icons/tray-dev.ico";
+#else
+    = "/Resources/Icons/tray.ico";
+#endif
+
+
+  private void SetupHotkeys()
   {
-    _themeService.SetTheme(theme);
+    var emptyDescriptor = new KeyBindingDescriptor(ModifierKeys.None, Key.None);
+    if (_settingsService.HotkeyShowPasteWindow == emptyDescriptor
+      || !_keyboardHookService.RegisterShowPasteWindowHotkey(_settingsService.HotkeyShowPasteWindow))
+    {
+      _settingsService.HotkeyShowPasteWindow = emptyDescriptor;
+      var parameters = new DialogParameters
+      {
+        { DialogParameterNames.ViewToShow, ViewNames.SettingsView }
+      };
+      _dialogService.ShowMainAppDialog(parameters);
+      _dialogService.Show(DialogNames.UnregisteredHotkeysDialog);
+    }
   }
 
 
   [RelayCommand]
-  private void Exit()
+  private void OpenMainDialog(string viewName)
+  {
+    var parameters = new DialogParameters
+    {
+      { DialogParameterNames.ViewToShow, viewName }
+    };
+    _dialogService.ShowMainAppDialog(parameters);
+  }
+
+
+  [RelayCommand]
+  private void ChangeTheme(ColorTheme theme)
+  {
+    ThemeService.SelectedTheme = theme;
+    OnPropertyChanged(nameof(ThemeService));
+  }
+
+
+  [RelayCommand]
+  private void ChangeLanguage(Language language)
+  {
+    Translate.SelectedLanguage = language;
+    // Important to trigger SelectedLanguage changed to keep it checked on the UI side
+    // in case the SelectedLanguage property value is not changed.
+    OnPropertyChanged(nameof(Translate));
+  }
+
+
+  [RelayCommand]
+  private static void Exit()
   {
     Application.Current.Shutdown();
   }
-
-
-  private TaskCompletionSource<ICollection<FormattedDataObject>>? _tcs;
-
-
-  private async Task HandleInsertHotKeyAsync()
-  {
-    var targetWindowToPaste = GetForegroundWindow();
-    _tcs = new();
-    _eventAggregator
-      .GetEvent<PasteWindowResultEvent>()
-      .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
-    _pasteWindowService.ShowWindow(targetWindowToPaste);
-
-    var data = await _tcs.Task.ConfigureAwait(true);
-    _tcs = null;
-    if (data.Count > 0)
-    {
-      _pasteService.PasteData(targetWindowToPaste, data);
-    }
-
-    _pasteWindowService.HideWindow();
-  }
-
-
-  private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
-  {
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
-    _tcs?.SetResult(formattedDataObjects);
-  }
-
-
-  /// <summary>
-  /// Retrieves a handle to the foreground window (the window with which the user is currently working). The system
-  /// assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
-  /// </summary>
-  /// <returns>
-  /// C++ ( Type: Type: HWND )<br /> The return value is a handle to the foreground window. The foreground window
-  /// can be NULL in certain circumstances, such as when a window is losing activation.
-  /// </returns>
-  [DllImport("user32.dll")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern IntPtr GetForegroundWindow();
 }

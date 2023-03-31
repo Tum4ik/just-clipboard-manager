@@ -8,9 +8,6 @@ internal class AppDbContext : DbContext
 {
   public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
   {
-#if DEBUG
-    Database.EnsureCreated();
-#endif
   }
 
 
@@ -36,8 +33,14 @@ internal class AppDbContext : DbContext
       "Database"
     );
 
+
+#if DEBUG
+    const string DbName = "clips_debug.db";
+#else
+    const string DbName = "clips.db";
+#endif
     Directory.CreateDirectory(dbFileDir);
-    var dbFilePath = Path.Combine(dbFileDir, "clips.db");
+    var dbFilePath = Path.Combine(dbFileDir, DbName);
     builder.UseSqlite($"Data Source={dbFilePath}")
            .UseLazyLoadingProxies();
   }

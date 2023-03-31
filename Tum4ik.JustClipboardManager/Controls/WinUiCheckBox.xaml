@@ -1,0 +1,90 @@
+<CheckBox x:Class="Tum4ik.JustClipboardManager.Controls.WinUiCheckBox"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+          xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+          mc:Ignorable="d"
+          Cursor="Hand">
+  <CheckBox.Template>
+    <ControlTemplate TargetType="controls:WinUiCheckBox">
+      <Grid Background="Transparent" SnapsToDevicePixels="True">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Border x:Name="_border"
+                Grid.Column="0"
+                Width="20" Height="20" CornerRadius="4"
+                BorderThickness="1" BorderBrush="{DynamicResource CheckBoxBorderBrush}"
+                Background="{DynamicResource CheckBoxBackgroundBrush}">
+          <icons:SvgIcon x:Name="_check"
+                         Icon="Check" Width="11" Height="11"
+                         Color="{DynamicResource TextOnAccentPrimaryBrush}"
+                         Visibility="Hidden"/>
+        </Border>
+        <ContentPresenter Grid.Column="1" VerticalAlignment="Center"
+                          Margin="8, 0"/>
+      </Grid>
+      <ControlTemplate.Triggers>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="False"/>
+            <Condition Property="IsMouseOver" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource CheckBoxHoverBackgroundBrush}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="False"/>
+            <Condition Property="IsPressed" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource CheckBoxDisabledBorderBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="False"/>
+            <Condition Property="IsEnabled" Value="False"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource CheckBoxDisabledBorderBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="Transparent"/>
+          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        </MultiTrigger>
+        <Trigger Property="IsChecked" Value="True">
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_check" Property="Visibility" Value="Visible"/>
+        </Trigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="True"/>
+            <Condition Property="IsMouseOver" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="True"/>
+            <Condition Property="IsPressed" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentSecondaryBrush}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="IsChecked" Value="True"/>
+            <Condition Property="IsEnabled" Value="False"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDisabledBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDisabledBrush}"/>
+          <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentDisabledBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        </MultiTrigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+  </CheckBox.Template>
+</CheckBox>

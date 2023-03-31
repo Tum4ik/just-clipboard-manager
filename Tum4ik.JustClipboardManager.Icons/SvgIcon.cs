@@ -43,16 +43,29 @@ public class SvgIcon : SvgViewbox
   }
 
 
+  public static readonly DependencyProperty AttachedIconProperty = DependencyProperty.RegisterAttached(
+    "AttachedIcon", typeof(SvgIconType?), typeof(SvgIcon)
+  );
+  public static SvgIconType? GetAttachedIcon(UIElement target)
+  {
+    return (SvgIconType?) target.GetValue(AttachedIconProperty);
+  }
+  public static void SetAttachedIcon(UIElement target, SvgIconType? value)
+  {
+    target.SetValue(AttachedIconProperty, value);
+  }
+
+
   public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
       nameof(Color), typeof(Brush), typeof(SvgIcon), new((d, e) =>
       {
-        var newBrush = (Brush) e.NewValue;
+        var newBrush = (Brush?) e.NewValue;
         UpdateColor(d, newBrush);
       })
   );
-  public Brush Color
+  public Brush? Color
   {
-    get => (Brush) GetValue(ColorProperty);
+    get => (Brush?) GetValue(ColorProperty);
     set => SetValue(ColorProperty, value);
   }
 

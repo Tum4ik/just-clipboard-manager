@@ -47,7 +47,7 @@ public class UpdateServiceTests
     );
 
     _releasesClientMock.Setup(c => c.GetLatest("Tum4ik", "just-clipboard-manager")).ReturnsAsync(release);
-    _infoServiceMock.Setup(s => s.GetVersion()).Returns(currentVersion);
+    _infoServiceMock.Setup(s => s.Version).Returns(currentVersion);
 
     bool stub = default;
     Expression<Action> is64BitOperatingSystem;
@@ -96,7 +96,7 @@ public class UpdateServiceTests
     );
 
     _releasesClientMock.Setup(c => c.GetLatest("Tum4ik", "just-clipboard-manager")).ReturnsAsync(release);
-    _infoServiceMock.Setup(s => s.GetVersion()).Returns(currentVersion);
+    _infoServiceMock.Setup(s => s.Version).Returns(currentVersion);
 
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 

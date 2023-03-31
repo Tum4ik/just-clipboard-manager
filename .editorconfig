@@ -16,6 +16,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
+spelling_languages = en-us, uk-ua
 
 # Code files
 [*.cs]
@@ -38,7 +39,7 @@ indent_size = 2
 indent_size = 2
 
 # XML files
-[*.xml]
+[*.xml, *.svg]
 indent_size = 2
 
 # Powershell files
@@ -192,4 +193,10 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
+
+dotnet_diagnostic.S1186.severity = none
+dotnet_diagnostic.S4200.severity = none
+
 dotnet_diagnostic.VSTHRD100.severity = none
+
+dotnet_diagnostic.SYSLIB1054.severity = none

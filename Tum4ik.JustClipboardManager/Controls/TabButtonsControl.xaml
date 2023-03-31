@@ -1,0 +1,103 @@
+<Grid x:Class="Tum4ik.JustClipboardManager.Controls.TabButtonsControl"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+      xmlns:system="clr-namespace:System;assembly=netstandard"
+      mc:Ignorable="d"
+      x:Name="_this"
+      Loaded="Root_Loaded"
+      Height="32">
+  <Grid.Resources>
+    <system:Double x:Key="ScrollAmount">100</system:Double>
+    <Style x:Key="TabScrollButtonStyle" TargetType="Button">
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="_border"
+                    CornerRadius="4" Width="32" Height="24"
+                    Background="Transparent">
+              <icons:SvgIcon x:Name="_icon"
+                             Icon="{TemplateBinding icons:SvgIcon.AttachedIcon}"
+                             Width="8" Height="8"
+                             Color="{DynamicResource TextSecondaryBrush}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="_border"
+                        Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="_border"
+                        Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="HiddenTabHoverHiderStyle" TargetType="Border">
+      <Setter Property="Width" Value="3"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Panel.ZIndex" Value="2"/>
+    </Style>
+  </Grid.Resources>
+  <Grid.ColumnDefinitions>
+    <ColumnDefinition Width="Auto"/>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="Auto"/>
+  </Grid.ColumnDefinitions>
+  <Border Grid.ColumnSpan="3"
+          Height="1"
+          Background="{DynamicResource ContextMenuBorderBrush}"
+          VerticalAlignment="Bottom"/>
+  <Button x:Name="_scrollTabLeftButton"
+          Grid.Column="0"
+          icons:SvgIcon.AttachedIcon="ScrollLeftArrow"
+          Style="{StaticResource TabScrollButtonStyle}"
+          Margin="4, 0, 0, 0"
+          Command="{Binding ScrollLeftCommand, ElementName=_this}"
+          CommandParameter="{StaticResource ScrollAmount}"/>
+  <Border Grid.Column="0"
+          HorizontalAlignment="Right"
+          Style="{StaticResource HiddenTabHoverHiderStyle}">
+    <Border.RenderTransform>
+      <TranslateTransform X="3"/>
+    </Border.RenderTransform>
+  </Border>
+  <ScrollViewer x:Name="_scrollViewer"
+                Grid.Column="1"
+                VerticalScrollBarVisibility="Disabled"
+                HorizontalScrollBarVisibility="Hidden"
+                ScrollChanged="ScrollViewer_ScrollChanged">
+    <ItemsControl x:Name="_itemsControl" ItemsSource="{Binding Tabs, ElementName=_this}"
+                  Focusable="False">
+      <i:Interaction.Behaviors>
+        <i:FluidMoveBehavior x:Name="_fluidMoveBehavior"/>
+      </i:Interaction.Behaviors>
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+    </ItemsControl>
+  </ScrollViewer>
+  <Border Grid.Column="2"
+          HorizontalAlignment="Left"
+          Style="{StaticResource HiddenTabHoverHiderStyle}">
+    <Border.RenderTransform>
+      <TranslateTransform X="-3"/>
+    </Border.RenderTransform>
+  </Border>
+  <Button x:Name="_scrollTabRightButton"
+          Grid.Column="2"
+          icons:SvgIcon.AttachedIcon="ScrollRightArrow"
+          Style="{StaticResource TabScrollButtonStyle}"
+          Margin="0, 0, 4, 0"
+          Command="{Binding ScrollRightCommand, ElementName=_this}"
+          CommandParameter="{StaticResource ScrollAmount}"/>
+</Grid>

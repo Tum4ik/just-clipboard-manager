@@ -14,7 +14,7 @@ internal class PasteService : IPasteService
   }
 
 
-  public void PasteData(IntPtr targetWindowPtr, ICollection<FormattedDataObject> data)
+  public void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data)
   {
     if (data.Count == 0)
     {
@@ -35,10 +35,10 @@ internal class PasteService : IPasteService
 
 
   [DllImport("user32.dll")]
-  private static extern bool SetForegroundWindow(IntPtr hWnd);
+  private static extern bool SetForegroundWindow(nint hWnd);
 
   [DllImport("user32.dll")]
-  private static extern int SetFocus(IntPtr hWnd);
+  private static extern int SetFocus(nint hWnd);
 
 
   private const int KEYEVENTF_EXTENDEDKEY = 0x0001;

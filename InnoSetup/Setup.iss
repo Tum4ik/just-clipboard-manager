@@ -69,29 +69,27 @@ Name: "autostart"; \
 
 [Files]
 Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
-  Excludes: "efbundle.exe"; \
   DestDir: "{app}"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
 Source: "uninstall.ico"; DestDir: "{app}"
-Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\efbundle.exe"; DestDir: "{tmp}"
+Source: "..\Tum4ik.JustClipboardManager\Resources\Icons\tray.ico"; DestDir: "{app}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 Name: "{autodesktop}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: desktopicon; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 Name: "{autostartup}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: autostart; \
-  IconFilename: "{app}\install.ico"
+  IconFilename: "{app}\tray.ico"
 
 [Run]
-Filename: "{tmp}\efbundle.exe"; Flags: runhidden
 Filename: "{app}\{#MyAppExeName}"; \
   Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; \
   Check: ShowPostinstallLaunchOption; \

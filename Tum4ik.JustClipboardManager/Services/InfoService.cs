@@ -3,19 +3,36 @@ using System.Reflection;
 namespace Tum4ik.JustClipboardManager.Services;
 internal class InfoService : IInfoService
 {
-  public string GetInformationalVersion()
+  public string ProductName
   {
-    return Assembly.GetEntryAssembly()?
-      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-      .InformationalVersion ?? "unknown";
+    get
+    {
+      return Assembly.GetEntryAssembly()?
+        .GetCustomAttribute<AssemblyProductAttribute>()?
+        .Product ?? "unknown product";
+    }
   }
 
 
-  public Version GetVersion()
+  public string InformationalVersion
   {
-    var versionString = Assembly.GetEntryAssembly()?
-      .GetCustomAttribute<AssemblyFileVersionAttribute>()?
-      .Version;
-    return Version.TryParse(versionString, out var version) ? version : new Version();
+    get
+    {
+      return Assembly.GetEntryAssembly()?
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+        .InformationalVersion ?? "unknown version";
+    }
+  }
+
+
+  public Version Version
+  {
+    get
+    {
+      var versionString = Assembly.GetEntryAssembly()?
+        .GetCustomAttribute<AssemblyFileVersionAttribute>()?
+        .Version;
+      return Version.TryParse(versionString, out var version) ? version : new Version();
+    }
   }
 }

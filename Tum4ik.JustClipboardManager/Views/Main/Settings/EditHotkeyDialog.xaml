@@ -1,0 +1,96 @@
+<UserControl x:Class="Tum4ik.JustClipboardManager.Views.Main.Settings.EditHotkeyDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons" xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:EditHotkeyDialogViewModel}">
+  <UserControl.Resources>
+    <converters:TranslateConverter x:Key="TranslateConverter"/>
+  </UserControl.Resources>
+  <StackPanel>
+    <Border CornerRadius="4" MinWidth="160" Height="32"
+            BorderThickness="1, 1, 1, 0" BorderBrush="{DynamicResource TextBoxBorderBrush}">
+      <Border CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Border}}"
+              BorderThickness="0, 0, 0, 1" BorderBrush="{DynamicResource TextBoxBorderUnderlineBrush}"
+              Background="{DynamicResource ControlBackgroundBrush}">
+        <Grid>
+          <Grid.Resources>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Center"/>
+              <Setter Property="VerticalAlignment" Value="Center"/>
+              <Setter Property="Margin" Value="12, 0"/>
+            </Style>
+          </Grid.Resources>
+          <TextBlock x:Name="_hotkeyPlaceholer"
+                     Text="{Binding Translate[PressHotkey]}"
+                     Foreground="{DynamicResource TextSecondaryBrush}"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="_hotkeyValue"
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Text="{Binding KeyBindingDescriptor}"/>
+            <Button x:Name="_clearButton"
+                    Grid.Column="1"
+                    Cursor="Hand"
+                    Command="{Binding ResetHotkeyCommand}"
+                    Margin="3, 0">
+              <Button.Template>
+                <ControlTemplate TargetType="Button">
+                  <Border x:Name="_clearButtonBorder"
+                          Width="28" Height="24" CornerRadius="4"
+                          Background="Transparent">
+                    <icons:SvgIcon x:Name="_clearButtonIcon"
+                                   Width="12" Height="12"
+                                   Icon="ChromeClose" Color="{DynamicResource TextSecondaryBrush}"/>
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter TargetName="_clearButtonBorder"
+                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                      <Setter TargetName="_clearButtonBorder"
+                              Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                      <Setter TargetName="_clearButtonIcon"
+                              Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+          </Grid>
+        </Grid>
+      </Border>
+    </Border>
+    <TextBlock x:Name="_errorMessage"
+               FontSize="12"
+               Foreground="{DynamicResource SystemCriticalBrush}"
+               Margin="0, 12, 0, 0"
+               Visibility="{Binding ErrorMessageVisibility}">
+      <TextBlock.Text>
+        <MultiBinding Converter="{StaticResource TranslateConverter}">
+          <Binding Path="Translate"/>
+          <Binding Path="ErrorMessage"/>
+        </MultiBinding>
+      </TextBlock.Text>
+    </TextBlock>
+  </StackPanel>
+  <i:Interaction.Triggers>
+    <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="">
+      <i:ChangePropertyAction TargetName="_hotkeyPlaceholer" PropertyName="Visibility" Value="Visible"/>
+      <i:ChangePropertyAction TargetName="_clearButton" PropertyName="Visibility" Value="Collapsed"/>
+    </i:DataTrigger>
+    <i:DataTrigger Binding="{Binding Text, ElementName=_hotkeyValue}" Value="" Comparison="NotEqual">
+      <i:ChangePropertyAction TargetName="_hotkeyPlaceholer" PropertyName="Visibility" Value="Hidden"/>
+      <i:ChangePropertyAction TargetName="_clearButton" PropertyName="Visibility" Value="Visible"/>
+    </i:DataTrigger>
+  </i:Interaction.Triggers>
+</UserControl>

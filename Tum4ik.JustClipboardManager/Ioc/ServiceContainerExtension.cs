@@ -31,9 +31,15 @@ internal class ServiceContainerExtension : IContainerExtension
     throw new NotSupportedException("Resolve with parameters is not supported.");
   }
 
-  public object Resolve(Type type, string name)
+  public object? Resolve(Type type, string name)
   {
-    throw new NotSupportedException("Resolve with name is not supported.");
+    var requestedType = ServiceKeyToTypeMappings.Get(name);
+    if (requestedType is not null)
+    {
+      return Resolve(requestedType);
+    }
+
+    return null;
   }
 
   public object Resolve(Type type, string name, params (Type Type, object Instance)[] parameters)
