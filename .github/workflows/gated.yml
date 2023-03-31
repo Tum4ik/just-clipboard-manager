@@ -105,8 +105,12 @@ jobs:
 
     - name: Test
       run: |
-        msbuild .\Tests\Tum4ik.Deployment.UnitTests\Tum4ik.Deployment.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
-        vstest.console.exe .\Tests\Tum4ik.Deployment.UnitTests\bin\Release\net7.0\Tum4ik.Deployment.UnitTests.dll
+        msbuild /t:Restore /t:Build /p:Configuration=Release
+        vstest.console.exe JustClipboardManager.sln
+        #msbuild .\Tests\Tum4ik.Deployment.UnitTests\Tum4ik.Deployment.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
+        #msbuild .\Tests\Tum4ik.JustClipboardManager.UnitTests\Tum4ik.JustClipboardManager.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
+        #vstest.console.exe .\Tests\Tum4ik.Deployment.UnitTests\bin\Release\net7.0\Tum4ik.Deployment.UnitTests.dll
+        #vstest.console.exe .\Tests\Tum4ik.JustClipboardManager.UnitTests\bin\Release\net7.0-windows\Tum4ik.JustClipboardManager.UnitTests.dll
 
     - name: Sign code files
       run: |
