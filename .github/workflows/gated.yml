@@ -85,7 +85,7 @@ jobs:
         if (![System.Version]::TryParse($majorMinor, [ref]$null)) { $majorMinor = "0.0" }
         $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear.ToString().PadLeft(3, '0'))"
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
-        Whrite-Host "Defined version: $version" -ForegroundColor green
+        Write-Host "Defined version: $version" -ForegroundColor green
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
         echo "version=$version" >> $GITHUB_OUTPUT
 
