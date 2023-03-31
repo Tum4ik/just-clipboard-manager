@@ -87,7 +87,7 @@ jobs:
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
         Write-Host "Defined version: $version" -ForegroundColor green
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
-        echo "version=test" >> $GITHUB_OUTPUT
+        echo "VERSION=test" >> $GITHUB_OUTPUT
 
     - name: Set Microsoft AppCenter secret
       run: |
@@ -97,7 +97,7 @@ jobs:
 
     - name: Publish
       run: |
-        $version = "${{ steps.define-version.outputs.version }}"
+        $version = "${{ steps.define-version.outputs.VERSION }}"
         Write-Host "Build version: $version" -ForegroundColor green
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x64 -Version $version
