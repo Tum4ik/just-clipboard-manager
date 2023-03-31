@@ -87,6 +87,7 @@ jobs:
         $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
         Write-Host "Defined version: $version" -ForegroundColor green
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
+        echo "version=$version"
         echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Set Microsoft AppCenter secret
