@@ -98,7 +98,7 @@ jobs:
     - name: Publish
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        Whrite-Host "Build version: $version" -ForegroundColor green
+        Write-Host "Build version: $version" -ForegroundColor green
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x64 -Version $version
 
