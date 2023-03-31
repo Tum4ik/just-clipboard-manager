@@ -29,7 +29,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422F7E7-8F3A-4750-9A82-9C0153726062}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\scripts\BuildInstaller.ps1 = .github\workflows\scripts\BuildInstaller.ps1
-		.github\workflows\scripts\CreateMigrationsBundle.ps1 = .github\workflows\scripts\CreateMigrationsBundle.ps1
 		.github\workflows\scripts\DecodePfx.ps1 = .github\workflows\scripts\DecodePfx.ps1
 		.github\workflows\scripts\DotnetPublish.ps1 = .github\workflows\scripts\DotnetPublish.ps1
 		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1

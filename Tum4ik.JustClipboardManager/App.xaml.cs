@@ -5,6 +5,7 @@ using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Octokit;
@@ -15,6 +16,7 @@ using Prism.Regions;
 using Prism.Regions.Behaviors;
 using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Constants;
+using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc;
@@ -111,6 +113,9 @@ public partial class App : ISingleInstance
 
     //var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
     //moduleManager.Run();
+
+    using var dbContext = _serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
+    dbContext.Database.Migrate();
 
     RemoveOldClips(_serviceProvider);
     var trayIcon = _serviceProvider.GetRequiredService<TrayIcon>();
