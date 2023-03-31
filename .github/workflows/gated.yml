@@ -105,7 +105,7 @@ jobs:
 
     - name: Test
       run: |
-        msbuild /t:Restore /t:Build /p:Configuration=Release
+        #msbuild /t:Restore /t:Build /p:Configuration=Release
         vstest.console.exe JustClipboardManager.sln
         #msbuild .\Tests\Tum4ik.Deployment.UnitTests\Tum4ik.Deployment.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
         #msbuild .\Tests\Tum4ik.JustClipboardManager.UnitTests\Tum4ik.JustClipboardManager.UnitTests.csproj /t:Restore /t:Build /p:Configuration=Release
