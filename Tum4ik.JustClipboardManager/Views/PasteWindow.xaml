@@ -32,118 +32,113 @@
       <i:InvokeCommandAction Command="{Binding WindowDeactivatedCommand}"/>
     </i:EventTrigger>
   </i:Interaction.Triggers>
-  <Border Width="300"
-          MaxHeight="300"
-          CornerRadius="4"
-          BorderThickness="1"
-          BorderBrush="{DynamicResource PasteWindowBorderBrush}"
-          Background="{DynamicResource PasteWindowBackgroundBrush}"
-          Margin="16"
-          Padding="8"
-          Effect="{StaticResource DefaultDropShadowEffect}">
-    <DockPanel>
-      <Grid DockPanel.Dock="Top">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="Search" Margin="0, 0, 8, 0" VerticalAlignment="Center"/>
-        <TextBox Grid.Column="1" 
-                 Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
-                 VerticalContentAlignment="Center"
-                 Height="24"/>
-      </Grid>
-      <ListBox x:Name="_listBox" Margin="0, 8, 0, 0"
-               ItemsSource="{Binding Clips}"
-               ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
-               ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
-               ScrollViewer.CanContentScroll="False"
-               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-        <i:Interaction.Triggers>
-          <i:EventTrigger EventName="SelectionChanged">
-            <i:InvokeCommandAction Command="{Binding PasteDataCommand}" 
-                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}"/>
-          </i:EventTrigger>
-        </i:Interaction.Triggers>
-        <ListBox.Resources>
-          <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Template">
-              <Setter.Value>
-                <ControlTemplate TargetType="ListBoxItem">
-                  <Border BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          Background="Transparent">
-                    <Grid>
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                      </Grid.ColumnDefinitions>
-                      <ContentPresenter Grid.Column="0" Margin="4, 0" />
-                      <Button Grid.Column="1" Content="X"
-                              Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                              Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
-                              CommandParameter="{Binding}"/>
-                    </Grid>
-                  </Border>
-                  <ControlTemplate.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                      <Setter Property="BorderBrush" Value="#2F87D4"/>
-                    </Trigger>
-                  </ControlTemplate.Triggers>
-                </ControlTemplate>
-              </Setter.Value>
-            </Setter>
-          </Style>
+  <Window.Template>
+    <ControlTemplate TargetType="Window">
+      <Border Width="300"
+              MaxHeight="300"
+              CornerRadius="8"
+              Margin="{TemplateBinding Margin}"
+              Background="{TemplateBinding Background}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              Effect="{TemplateBinding Effect}"
+              Padding="8">
+        <ContentPresenter/>
+      </Border>
+    </ControlTemplate>
+  </Window.Template>
+  <DockPanel>
+    <controls:SearchBox DockPanel.Dock="Top" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
+    <ListBox x:Name="_listBox" Margin="0, 8, 0, 0"
+             ItemsSource="{Binding Clips}"
+             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
+             ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
+             ScrollViewer.CanContentScroll="False"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <i:Interaction.Triggers>
+        <i:EventTrigger EventName="SelectionChanged">
+          <i:InvokeCommandAction Command="{Binding PasteDataCommand}" 
+                                 CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}"/>
+        </i:EventTrigger>
+      </i:Interaction.Triggers>
+      <ListBox.Resources>
+        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+          <Setter Property="Cursor" Value="Hand"/>
+          <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+          <Setter Property="BorderThickness" Value="1"/>
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="ListBoxItem">
+                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="Transparent">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*"/>
+                      <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ContentPresenter Grid.Column="0" Margin="4, 0" />
+                    <Button Grid.Column="1" Content="X"
+                            Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                            Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
+                            CommandParameter="{Binding}"/>
+                  </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#2F87D4"/>
+                  </Trigger>
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
 
-          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
-            <TextBlock Text="????"/>
-          </DataTemplate>
-          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
-            <Border Height="24" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
-              <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
-                         Margin="0, 4"/>
-            </Border>
-          </DataTemplate>
-          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeImage}">
-            <Image Source="{Binding RepresentationData, Converter={StaticResource BytesToImageSourceConverter}}"
-                   HorizontalAlignment="Left"
-                   Height="48"
-                   Stretch="Uniform"/>
-          </DataTemplate>
-          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeSingleFile}">
-            <Grid Height="24"
-                  ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="24"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-              </Grid.ColumnDefinitions>
-              <icons:SvgIcon Grid.Column="0" Icon="File" Width="14"  />
-              <TextBlock Grid.Column="1" Text="..." Margin="4, 0, 0, 0"
-                         VerticalAlignment="Center"/>
-              <TextBlock Grid.Column="2" 
-                         Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Grid}}"
-                         HorizontalAlignment="Right"
-                         VerticalAlignment="Center"/>
-            </Grid>
-          </DataTemplate>
-          <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeFilesList}">
-            <Grid Height="24" 
-                  ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToFilesListConverter}}">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="24"/>
-                <ColumnDefinition/>
-              </Grid.ColumnDefinitions>
-              <icons:SvgIcon Grid.Column="0" Icon="Files" />
-              <TextBlock Grid.Column="1" Text="Files List" Margin="4, 0" 
-                         VerticalAlignment="Center"/>
-            </Grid>
-          </DataTemplate>
-        </ListBox.Resources>
-      </ListBox>
-    </DockPanel>
-  </Border>
+        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
+          <TextBlock Text="????"/>
+        </DataTemplate>
+        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
+          <Border Height="24" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
+            <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
+                       Margin="0, 4"/>
+          </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeImage}">
+          <Image Source="{Binding RepresentationData, Converter={StaticResource BytesToImageSourceConverter}}"
+                 HorizontalAlignment="Left"
+                 Height="48"
+                 Stretch="Uniform"/>
+        </DataTemplate>
+        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeSingleFile}">
+          <Grid Height="24"
+                ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="24"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <icons:SvgIcon Grid.Column="0" Icon="File" Width="14"  />
+            <TextBlock Grid.Column="1" Text="..." Margin="4, 0, 0, 0"
+                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Grid}}"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"/>
+          </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeFilesList}">
+          <Grid Height="24" 
+                ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToFilesListConverter}}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="24"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <icons:SvgIcon Grid.Column="0" Icon="Files" />
+            <TextBlock Grid.Column="1" Text="Files List" Margin="4, 0" 
+                       VerticalAlignment="Center"/>
+          </Grid>
+        </DataTemplate>
+      </ListBox.Resources>
+    </ListBox>
+  </DockPanel>
 </Window>

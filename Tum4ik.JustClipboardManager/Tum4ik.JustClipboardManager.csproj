@@ -30,8 +30,10 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Controls\InputFieldButton.xaml" />
     <None Remove="Controls\NavigationButton.xaml" />
     <None Remove="Controls\NavigationPanel.xaml" />
+    <None Remove="Controls\SearchBox.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
     <None Remove="Controls\WinUiButton.xaml" />

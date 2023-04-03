@@ -30,6 +30,7 @@
     <None Remove="Resources\light-mode.svg" />
     <None Remove="Resources\scroll-left-arrow.svg" />
     <None Remove="Resources\scroll-right-arrow.svg" />
+    <None Remove="Resources\search.svg" />
     <None Remove="Resources\settings.svg" />
     <None Remove="Resources\ukraine.svg" />
     <None Remove="Resources\usa.svg" />
@@ -53,6 +54,7 @@
     <Resource Include="Resources\light-mode.svg" />
     <Resource Include="Resources\scroll-left-arrow.svg" />
     <Resource Include="Resources\scroll-right-arrow.svg" />
+    <Resource Include="Resources\search.svg" />
     <Resource Include="Resources\settings.svg" />
     <Resource Include="Resources\ukraine.svg" />
     <Resource Include="Resources\usa.svg" />

@@ -1,21 +1,24 @@
 using System.Collections.ObjectModel;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class PasteWindowViewModel : ObservableObject
+internal partial class PasteWindowViewModel : TranslationViewModel
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
-                              IClipRepository clipRepository)
+                              IClipRepository clipRepository,
+                              ITranslationService translationService)
+    : base(translationService)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;

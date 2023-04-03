@@ -248,6 +248,11 @@
 
   <Style TargetType="TextBox">
     <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>
+    <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+  </Style>
+  <Style TargetType="controls:SearchBox">
+    <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>
+    <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
   </Style>
 
   <Style TargetType="icons:SvgIcon">

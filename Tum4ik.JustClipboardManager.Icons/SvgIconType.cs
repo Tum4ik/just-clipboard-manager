@@ -18,6 +18,7 @@ public enum SvgIconType
   [SvgIconResource("light-mode")] LightMode,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
+  [SvgIconResource("search")] Search,
   [SvgIconResource("settings")] Settings,
   [SvgIconResource("ukraine")] Ukraine,
   [SvgIconResource("usa")] USA

@@ -163,4 +163,7 @@
   <data name="UndefinedHotkeysDetectedDescription" xml:space="preserve">
     <value>Деякі гарячі клавіші не визначені для програми. Будь ласка, перейдіть у "Налаштування &gt; Гарячі клавіші", щоб вирішити проблему.</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Пошук</value>
+  </data>
 </root>

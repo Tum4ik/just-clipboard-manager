@@ -94,5 +94,6 @@
 
   <SolidColorBrush x:Key="TextBoxBorderBrush" Color="White" Opacity="0.08"/>
   <SolidColorBrush x:Key="TextBoxBorderUnderlineBrush" Color="White" Opacity="0.5442"/>
+  <SolidColorBrush x:Key="TextBoxInputActiveBackgroundBrush" Color="#1E1E1E" Opacity="0.7"/>
 
 </ResourceDictionary>
