@@ -20,6 +20,7 @@
     <None Remove="Resources\chrome-minimize.svg" />
     <None Remove="Resources\chrome-restore.svg" />
     <None Remove="Resources\dark-mode.svg" />
+    <None Remove="Resources\delete.svg" />
     <None Remove="Resources\display-settings.svg" />
     <None Remove="Resources\edit.svg" />
     <None Remove="Resources\expand-arrow.svg" />
@@ -44,6 +45,7 @@
     <Resource Include="Resources\chrome-minimize.svg" />
     <Resource Include="Resources\chrome-restore.svg" />
     <Resource Include="Resources\dark-mode.svg" />
+    <Resource Include="Resources\delete.svg" />
     <Resource Include="Resources\display-settings.svg" />
     <Resource Include="Resources\edit.svg" />
     <Resource Include="Resources\expand-arrow.svg" />

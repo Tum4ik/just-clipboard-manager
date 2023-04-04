@@ -109,11 +109,11 @@ internal class ClipboardService : IClipboardService
       {
         try
         {
-          if (dataObject.GetDataPresent("Scalable Vector Graphics"))
+          /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
           {
 
           }
-          else if (dataObject.GetDataPresent(DataFormats.UnicodeText))
+          else*/ if (dataObject.GetDataPresent(DataFormats.UnicodeText))
           {
             var text = (string) dataObject.GetData(DataFormats.UnicodeText);
             if (string.IsNullOrWhiteSpace(text))

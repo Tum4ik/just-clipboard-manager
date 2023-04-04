@@ -55,18 +55,18 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   public async Task LoadNextClipsBatchAsync()
   {
-    _loadedClipsCount += await LoadClips(skip: _loadedClipsCount, take: ClipsLoadBatchSize, search: _search)
+    _loadedClipsCount += await LoadClipsAsync(skip: _loadedClipsCount, take: ClipsLoadBatchSize, search: _search)
       .ConfigureAwait(false);
   }
 
 
   [RelayCommand]
-  private async Task WindowVisibilityChanged(Visibility visibility)
+  private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
     if (visibility == Visibility.Visible)
     {
       _windowDeactivationTriggeredByDataPasting = false;
-      _loadedClipsCount = await LoadClips(take: ClipsLoadInitialSize).ConfigureAwait(false);
+      _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }
     else
     {
@@ -89,7 +89,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
 
   [RelayCommand]
-  private async Task PasteData(Clip? clip)
+  private async Task PasteDataAsync(Clip? clip)
   {
     _windowDeactivationTriggeredByDataPasting = true;
     if (clip is null)
@@ -106,7 +106,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
 
   [RelayCommand]
-  private async Task DeleteClip(Clip? clip)
+  private async Task DeleteClipAsync(Clip? clip)
   {
     if (clip is not null)
     {
@@ -116,7 +116,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   }
 
 
-  private async Task<int> LoadClips(int skip = 0, int take = int.MaxValue, string? search = null)
+  private async Task<int> LoadClipsAsync(int skip = 0, int take = int.MaxValue, string? search = null)
   {
     var clips = _clipRepository.GetAsync(skip, take, search);
     var loadedCount = 0;

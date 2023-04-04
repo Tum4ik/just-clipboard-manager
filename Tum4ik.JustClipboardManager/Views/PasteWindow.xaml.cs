@@ -1,6 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.ViewModels;
 
 namespace Tum4ik.JustClipboardManager.Views;
@@ -28,7 +28,7 @@ public partial class PasteWindow
   {
     if (!(bool) e.NewValue)
     {
-      _scrollViewer ??= FindVisualChild<ScrollViewer>(_listBox);
+      _scrollViewer ??= _listBox.FindVisualChild<ScrollViewer>();
       _scrollViewer?.ScrollToHome();
     }
   }
@@ -55,28 +55,5 @@ public partial class PasteWindow
     {
       _isLoading = false;
     }
-  }
-
-
-  private static T? FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-  {
-    var childrenCount = VisualTreeHelper.GetChildrenCount(obj);
-    for (var i = 0; i < childrenCount; i++)
-    {
-      var child = VisualTreeHelper.GetChild(obj, i);
-      if (child is T)
-      {
-        return (T) child;
-      }
-      else
-      {
-        var childOfChild = FindVisualChild<T>(child);
-        if (childOfChild is not null)
-        {
-          return childOfChild;
-        }
-      }
-    }
-    return null;
   }
 }

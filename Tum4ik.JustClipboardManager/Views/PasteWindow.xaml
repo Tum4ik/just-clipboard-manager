@@ -55,40 +55,44 @@
              ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
              ScrollViewer.CanContentScroll="False"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-      <i:Interaction.Triggers>
-        <i:EventTrigger EventName="SelectionChanged">
-          <i:InvokeCommandAction Command="{Binding PasteDataCommand}" 
-                                 CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}"/>
-        </i:EventTrigger>
-      </i:Interaction.Triggers>
       <ListBox.Resources>
-        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Style TargetType="ListBoxItem">
           <Setter Property="Cursor" Value="Hand"/>
           <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-          <Setter Property="BorderThickness" Value="1"/>
           <Setter Property="Template">
             <Setter.Value>
               <ControlTemplate TargetType="ListBoxItem">
-                <Border BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        Background="Transparent">
-                  <Grid>
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*"/>
-                      <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <ContentPresenter Grid.Column="0" Margin="4, 0" />
-                    <Button Grid.Column="1" Content="X"
-                            Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
-                            Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
-                            CommandParameter="{Binding}"/>
-                  </Grid>
-                </Border>
-                <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#2F87D4"/>
-                  </Trigger>
-                </ControlTemplate.Triggers>
+                <Button Command="{Binding DataContext.PasteDataCommand, ElementName=This}" CommandParameter="{Binding}">
+                  <ContentPresenter/>
+                  <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                      <Border x:Name="_border"
+                              CornerRadius="4" MinHeight="36"
+                              Background="Transparent">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                          </Grid.ColumnDefinitions>
+                          <ContentPresenter Grid.Column="0" Margin="12, 0" />
+                          <controls:InputFieldButton Grid.Column="1" Icon="Delete" Margin="3, 0"
+                                                     Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
+                                                     CommandParameter="{Binding}"/>
+                        </Grid>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                          <Setter TargetName="_border"
+                                  Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                          <Setter TargetName="_border"
+                                  Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                        </Trigger>
+                      </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                  </Button.Template>
+                </Button>
               </ControlTemplate>
             </Setter.Value>
           </Setter>
@@ -98,7 +102,7 @@
           <TextBlock Text="????"/>
         </DataTemplate>
         <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
-          <Border Height="24" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
+          <Border Height="26" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
             <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
                        Margin="0, 4"/>
           </Border>
@@ -107,10 +111,11 @@
           <Image Source="{Binding RepresentationData, Converter={StaticResource BytesToImageSourceConverter}}"
                  HorizontalAlignment="Left"
                  Height="48"
-                 Stretch="Uniform"/>
+                 Stretch="Uniform"
+                 Margin="0, 1"/>
         </DataTemplate>
         <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeSingleFile}">
-          <Grid Height="24"
+          <Grid Height="26"
                 ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="24"/>
@@ -127,7 +132,7 @@
           </Grid>
         </DataTemplate>
         <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeFilesList}">
-          <Grid Height="24" 
+          <Grid Height="26" 
                 ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToFilesListConverter}}">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="24"/>
@@ -139,6 +144,17 @@
           </Grid>
         </DataTemplate>
       </ListBox.Resources>
+      <ListBox.Template>
+        <ControlTemplate TargetType="ListBox">
+          <Border CornerRadius="4"
+                  BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
+                  Background="{DynamicResource ControlBackgroundBrush}">
+            <ScrollViewer>
+              <ItemsPresenter/>
+            </ScrollViewer>
+          </Border>
+        </ControlTemplate>
+      </ListBox.Template>
     </ListBox>
   </DockPanel>
 </Window>

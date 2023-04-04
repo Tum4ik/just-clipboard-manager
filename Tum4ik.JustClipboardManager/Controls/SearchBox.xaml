@@ -6,7 +6,8 @@
          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
          xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
          mc:Ignorable="d"
-         Validation.ErrorTemplate="{x:Null}">
+         Validation.ErrorTemplate="{x:Null}"
+         Cursor="IBeam">
   <TextBox.Template>
     <ControlTemplate TargetType="controls:SearchBox">
       <Grid>

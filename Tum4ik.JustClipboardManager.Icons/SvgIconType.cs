@@ -8,6 +8,7 @@ public enum SvgIconType
   [SvgIconResource("chrome-minimize")] ChromeMinimize,
   [SvgIconResource("chrome-restore")] ChromeRestore,
   [SvgIconResource("dark-mode")] DarkMode,
+  [SvgIconResource("delete")] Delete,
   [SvgIconResource("display-settings")] DisplaySettings,
   [SvgIconResource("edit")] Edit,
   [SvgIconResource("expand-arrow")] ExpandArrow,
