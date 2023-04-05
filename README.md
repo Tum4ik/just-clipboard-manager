@@ -11,12 +11,5 @@
 
 [![Gated build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml)
 
-##### Problems:
-- Delete individual clip -> then press Esc key -> some clip will be pasted.
-
 ##### Unknown formats:
 - CF_VSREFPROJECTITEMS
-
-##### TODO:
-- Validate dependencies https://www.youtube.com/watch?v=8JkHgymp2R4
-- 
