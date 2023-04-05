@@ -55,6 +55,7 @@
           Height="1"
           Background="{DynamicResource ContextMenuBorderBrush}"
           VerticalAlignment="Bottom"/>
+  <!-- todo: replace by RepeateButton -->
   <Button x:Name="_scrollTabLeftButton"
           Grid.Column="0"
           icons:SvgIcon.AttachedIcon="ScrollLeftArrow"
@@ -93,6 +94,7 @@
       <TranslateTransform X="-3"/>
     </Border.RenderTransform>
   </Border>
+  <!-- todo: replace by RepeateButton -->
   <Button x:Name="_scrollTabRightButton"
           Grid.Column="2"
           icons:SvgIcon.AttachedIcon="ScrollRightArrow"

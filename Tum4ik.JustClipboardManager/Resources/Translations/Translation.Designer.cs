@@ -142,6 +142,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        internal static string Files {
+            get {
+                return ResourceManager.GetString("Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         internal static string General {
@@ -210,6 +219,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string PressHotkey {
             get {
                 return ResourceManager.GetString("PressHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
             }
         }
         

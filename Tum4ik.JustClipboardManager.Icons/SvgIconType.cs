@@ -1,6 +1,10 @@
 namespace Tum4ik.JustClipboardManager.Icons;
 public enum SvgIconType
 {
+  [SvgIconResource("caret-down")] CaretDown,
+  [SvgIconResource("caret-left")] CaretLeft,
+  [SvgIconResource("caret-right")] CaretRight,
+  [SvgIconResource("caret-up")] CaretUp,
   [SvgIconResource("check")] Check,
   [SvgIconResource("chevron")] Chevron,
   [SvgIconResource("chrome-close")] ChromeClose,
@@ -8,6 +12,7 @@ public enum SvgIconType
   [SvgIconResource("chrome-minimize")] ChromeMinimize,
   [SvgIconResource("chrome-restore")] ChromeRestore,
   [SvgIconResource("dark-mode")] DarkMode,
+  [SvgIconResource("delete")] Delete,
   [SvgIconResource("display-settings")] DisplaySettings,
   [SvgIconResource("edit")] Edit,
   [SvgIconResource("expand-arrow")] ExpandArrow,
@@ -18,6 +23,7 @@ public enum SvgIconType
   [SvgIconResource("light-mode")] LightMode,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
+  [SvgIconResource("search")] Search,
   [SvgIconResource("settings")] Settings,
   [SvgIconResource("ukraine")] Ukraine,
   [SvgIconResource("usa")] USA

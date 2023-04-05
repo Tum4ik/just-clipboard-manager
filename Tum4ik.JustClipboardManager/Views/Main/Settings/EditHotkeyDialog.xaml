@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons" xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:EditHotkeyDialogViewModel}">
   <UserControl.Resources>
@@ -37,35 +38,11 @@
                        Grid.Column="0"
                        VerticalAlignment="Center"
                        Text="{Binding KeyBindingDescriptor}"/>
-            <Button x:Name="_clearButton"
-                    Grid.Column="1"
-                    Cursor="Hand"
-                    Command="{Binding ResetHotkeyCommand}"
-                    Margin="3, 0">
-              <Button.Template>
-                <ControlTemplate TargetType="Button">
-                  <Border x:Name="_clearButtonBorder"
-                          Width="28" Height="24" CornerRadius="4"
-                          Background="Transparent">
-                    <icons:SvgIcon x:Name="_clearButtonIcon"
-                                   Width="12" Height="12"
-                                   Icon="ChromeClose" Color="{DynamicResource TextSecondaryBrush}"/>
-                  </Border>
-                  <ControlTemplate.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                      <Setter TargetName="_clearButtonBorder"
-                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
-                    </Trigger>
-                    <Trigger Property="IsPressed" Value="True">
-                      <Setter TargetName="_clearButtonBorder"
-                              Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
-                      <Setter TargetName="_clearButtonIcon"
-                              Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
-                    </Trigger>
-                  </ControlTemplate.Triggers>
-                </ControlTemplate>
-              </Button.Template>
-            </Button>
+            <controls:InputFieldButton x:Name="_clearButton"
+                                       Grid.Column="1"
+                                       Icon="ChromeClose"
+                                       Command="{Binding ResetHotkeyCommand}"
+                                       Margin="3, 0"/>
           </Grid>
         </Grid>
       </Border>

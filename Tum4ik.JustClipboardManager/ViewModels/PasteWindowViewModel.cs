@@ -1,21 +1,24 @@
 using System.Collections.ObjectModel;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Services.Translation;
+using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class PasteWindowViewModel : ObservableObject
+internal partial class PasteWindowViewModel : TranslationViewModel
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
-                              IClipRepository clipRepository)
+                              IClipRepository clipRepository,
+                              ITranslationService translationService)
+    : base(translationService)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
@@ -52,18 +55,18 @@ internal partial class PasteWindowViewModel : ObservableObject
 
   public async Task LoadNextClipsBatchAsync()
   {
-    _loadedClipsCount += await LoadClips(skip: _loadedClipsCount, take: ClipsLoadBatchSize, search: _search)
+    _loadedClipsCount += await LoadClipsAsync(skip: _loadedClipsCount, take: ClipsLoadBatchSize, search: _search)
       .ConfigureAwait(false);
   }
 
 
   [RelayCommand]
-  private async Task WindowVisibilityChanged(Visibility visibility)
+  private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
     if (visibility == Visibility.Visible)
     {
       _windowDeactivationTriggeredByDataPasting = false;
-      _loadedClipsCount = await LoadClips(take: ClipsLoadInitialSize).ConfigureAwait(false);
+      _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }
     else
     {
@@ -86,7 +89,7 @@ internal partial class PasteWindowViewModel : ObservableObject
 
 
   [RelayCommand]
-  private async Task PasteData(Clip? clip)
+  private async Task PasteDataAsync(Clip? clip)
   {
     _windowDeactivationTriggeredByDataPasting = true;
     if (clip is null)
@@ -103,7 +106,7 @@ internal partial class PasteWindowViewModel : ObservableObject
 
 
   [RelayCommand]
-  private async Task DeleteClip(Clip? clip)
+  private async Task DeleteClipAsync(Clip? clip)
   {
     if (clip is not null)
     {
@@ -113,7 +116,7 @@ internal partial class PasteWindowViewModel : ObservableObject
   }
 
 
-  private async Task<int> LoadClips(int skip = 0, int take = int.MaxValue, string? search = null)
+  private async Task<int> LoadClipsAsync(int skip = 0, int take = int.MaxValue, string? search = null)
   {
     var clips = _clipRepository.GetAsync(skip, take, search);
     var loadedCount = 0;

@@ -163,4 +163,10 @@
   <data name="UndefinedHotkeysDetectedDescription" xml:space="preserve">
     <value>Some hotkeys are not defined for the application. Please, go to "Settings &gt; Hotkeys" to solve the problem.</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
 </root>

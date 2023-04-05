@@ -117,30 +117,38 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  private TaskCompletionSource<ICollection<FormattedDataObject>>? _showPasteWindowTcs;
+  private TaskCompletionSource<ICollection<FormattedDataObject>> _showPasteWindowTcs = new();
+  private bool _isWaitingPasteWindowResult;
 
   private async Task HandleShowPasteWindowHotkeyAsync()
   {
+    if (_isWaitingPasteWindowResult)
+    {
+      return;
+    }
+    _isWaitingPasteWindowResult = true;
+
     var targetWindowToPaste = _user32Dll.GetForegroundWindow();
-    _showPasteWindowTcs = new();
     _eventAggregator
       .GetEvent<PasteWindowResultEvent>()
       .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
     _pasteWindowService.ShowWindow(targetWindowToPaste);
 
     var data = await _showPasteWindowTcs.Task.ConfigureAwait(true);
-    _showPasteWindowTcs = null;
     if (data.Count > 0)
     {
       _pasteService.PasteData(targetWindowToPaste, data);
     }
 
     _pasteWindowService.HideWindow();
+    // prepare task completion source for the next usage
+    _showPasteWindowTcs = new();
+    _isWaitingPasteWindowResult = false;
   }
 
   private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
   {
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
-    _showPasteWindowTcs?.SetResult(formattedDataObjects);
+    _showPasteWindowTcs.SetResult(formattedDataObjects);
   }
 }

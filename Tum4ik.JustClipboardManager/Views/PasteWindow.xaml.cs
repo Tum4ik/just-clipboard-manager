@@ -1,6 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.ViewModels;
 
 namespace Tum4ik.JustClipboardManager.Views;
@@ -19,7 +19,7 @@ public partial class PasteWindow
   }
 
 
-  private static readonly SemaphoreSlim s_semaphore = new(1, 1);
+  private static readonly object s_locker = new();
   private bool _isLoading;
   private ScrollViewer? _scrollViewer;
 
@@ -28,17 +28,16 @@ public partial class PasteWindow
   {
     if (!(bool) e.NewValue)
     {
-      _scrollViewer ??= FindVisualChild<ScrollViewer>(_listBox);
+      _scrollViewer ??= _listBox.FindVisualChild<ScrollViewer>();
       _scrollViewer?.ScrollToHome();
     }
   }
 
 
-  private async void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+  private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
   {
-    try
+    lock (s_locker)
     {
-      await s_semaphore.WaitAsync().ConfigureAwait(true);
       if (_isLoading)
       {
         return;
@@ -46,40 +45,15 @@ public partial class PasteWindow
 
       _isLoading = true;
     }
-    finally
-    {
-      s_semaphore.Release();
-    }
 
     if (e.ExtentHeight != default
         && e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight)
     {
-      await _vm.LoadNextClipsBatchAsync().ConfigureAwait(false);
+      _vm.LoadNextClipsBatchAsync().ContinueWith(t => _isLoading = false, TaskScheduler.Default).Await(e => throw e);
     }
-
-    _isLoading = false;
-  }
-
-
-  private static T? FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-  {
-    var childrenCount = VisualTreeHelper.GetChildrenCount(obj);
-    for (var i = 0; i < childrenCount; i++)
+    else
     {
-      var child = VisualTreeHelper.GetChild(obj, i);
-      if (child is T)
-      {
-        return (T) child;
-      }
-      else
-      {
-        var childOfChild = FindVisualChild<T>(child);
-        if (childOfChild is not null)
-        {
-          return childOfChild;
-        }
-      }
+      _isLoading = false;
     }
-    return null;
   }
 }
