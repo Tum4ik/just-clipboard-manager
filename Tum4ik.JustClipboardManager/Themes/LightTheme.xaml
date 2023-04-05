@@ -95,4 +95,6 @@
   <SolidColorBrush x:Key="TextBoxBorderUnderlineBrush" Color="Black" Opacity="0.4458"/>
   <SolidColorBrush x:Key="TextBoxInputActiveBackgroundBrush" Color="White"/>
 
+  <SolidColorBrush x:Key="ScrollBarForegroundBrush" Color="Black" Opacity="0.4458"/>
+
 </ResourceDictionary>

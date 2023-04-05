@@ -1,6 +1,10 @@
 namespace Tum4ik.JustClipboardManager.Icons;
 public enum SvgIconType
 {
+  [SvgIconResource("caret-down")] CaretDown,
+  [SvgIconResource("caret-left")] CaretLeft,
+  [SvgIconResource("caret-right")] CaretRight,
+  [SvgIconResource("caret-up")] CaretUp,
   [SvgIconResource("check")] Check,
   [SvgIconResource("chevron")] Chevron,
   [SvgIconResource("chrome-close")] ChromeClose,

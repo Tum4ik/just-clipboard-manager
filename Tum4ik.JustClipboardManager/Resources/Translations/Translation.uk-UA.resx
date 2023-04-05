@@ -166,4 +166,7 @@
   <data name="Search" xml:space="preserve">
     <value>Пошук</value>
   </data>
+  <data name="Files" xml:space="preserve">
+    <value>Файли</value>
+  </data>
 </root>

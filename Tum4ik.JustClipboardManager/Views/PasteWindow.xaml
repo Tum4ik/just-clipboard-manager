@@ -139,7 +139,7 @@
               <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <icons:SvgIcon Grid.Column="0" Icon="Files" />
-            <TextBlock Grid.Column="1" Text="Files List" Margin="4, 0" 
+            <TextBlock Grid.Column="1" Text="{Binding DataContext.Translate[Files], ElementName=This}" Margin="4, 0" 
                        VerticalAlignment="Center"/>
           </Grid>
         </DataTemplate>
@@ -149,7 +149,7 @@
           <Border CornerRadius="4"
                   BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
                   Background="{DynamicResource ControlBackgroundBrush}">
-            <ScrollViewer>
+            <ScrollViewer Padding="1">
               <ItemsPresenter/>
             </ScrollViewer>
           </Border>
