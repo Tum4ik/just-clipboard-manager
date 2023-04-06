@@ -79,7 +79,7 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ask question.
+        ///   Looks up a localized string similar to Ask a question.
         /// </summary>
         internal static string AskQuestion {
             get {
@@ -120,6 +120,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Contacts {
             get {
                 return ResourceManager.GetString("Contacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy email to clipboard.
+        /// </summary>
+        internal static string CopyEmailToClipboard {
+            get {
+                return ResourceManager.GetString("CopyEmailToClipboard", resourceCulture);
             }
         }
         
@@ -232,7 +241,7 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Leave feedback.
+        ///   Looks up a localized string similar to Leave a feedback.
         /// </summary>
         internal static string LeaveFeedback {
             get {
@@ -264,6 +273,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string PressHotkey {
             get {
                 return ResourceManager.GetString("PressHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report a problem.
+        /// </summary>
+        internal static string ReportProblem {
+            get {
+                return ResourceManager.GetString("ReportProblem", resourceCulture);
             }
         }
         
@@ -304,7 +322,7 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Suggest idea.
+        ///   Looks up a localized string similar to Suggest an idea.
         /// </summary>
         internal static string SuggestIdea {
             get {

@@ -179,18 +179,24 @@
     <value>Contacts</value>
   </data>
   <data name="LeaveFeedback" xml:space="preserve">
-    <value>Leave feedback</value>
+    <value>Leave a feedback</value>
   </data>
   <data name="SuggestIdea" xml:space="preserve">
-    <value>Suggest idea</value>
+    <value>Suggest an idea</value>
   </data>
   <data name="AskQuestion" xml:space="preserve">
-    <value>Ask question</value>
+    <value>Ask a question</value>
   </data>
   <data name="ContactMeDirectly" xml:space="preserve">
     <value>Contact me directly</value>
   </data>
   <data name="SourceCode" xml:space="preserve">
     <value>Source code</value>
+  </data>
+  <data name="ReportProblem" xml:space="preserve">
+    <value>Report a problem</value>
+  </data>
+  <data name="CopyEmailToClipboard" xml:space="preserve">
+    <value>Copy email to clipboard</value>
   </data>
 </root>

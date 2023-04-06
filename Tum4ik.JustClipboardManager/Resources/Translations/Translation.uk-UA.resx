@@ -193,4 +193,10 @@
   <data name="SourceCode" xml:space="preserve">
     <value>Вихідний код</value>
   </data>
+  <data name="ReportProblem" xml:space="preserve">
+    <value>Повідомити про проблему</value>
+  </data>
+  <data name="CopyEmailToClipboard" xml:space="preserve">
+    <value>Скопіювати електронну пошту в буфер обміну</value>
+  </data>
 </root>

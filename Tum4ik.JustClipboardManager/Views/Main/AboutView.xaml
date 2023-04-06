@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main" xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+             xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
              Padding="8">
@@ -15,6 +17,7 @@
                  FontSize="16" FontWeight="SemiBold" Margin="8, 4"/>
       <Grid>
         <Grid.RowDefinitions>
+          <RowDefinition/>
           <RowDefinition/>
           <RowDefinition/>
           <RowDefinition/>
@@ -35,36 +38,50 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
           </Style>
         </Grid.Resources>
-        
+
+        <!-- TODO: Optimize duplications below -->
         <icons:SvgIcon Grid.Row="0" Grid.Column="0" Icon="Feedback"/>
         <TextBlock Grid.Row="0" Grid.Column="1">
-          <Hyperlink>
+          <Hyperlink Command="{Binding OpenLinkCommand}"
+                     CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=feedbacks">
             <TextBlock Text="{Binding Translate[LeaveFeedback]}"/>
           </Hyperlink>
         </TextBlock>
 
         <icons:SvgIcon Grid.Row="1" Grid.Column="0" Icon="Lightbulb"/>
         <TextBlock Grid.Row="1" Grid.Column="1">
-          <Hyperlink>
+          <Hyperlink Command="{Binding OpenLinkCommand}"
+                     CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=ideas">
             <TextBlock Text="{Binding Translate[SuggestIdea]}"/>
           </Hyperlink>
         </TextBlock>
 
         <icons:SvgIcon Grid.Row="2" Grid.Column="0" Icon="LiveHelp"/>
         <TextBlock Grid.Row="2" Grid.Column="1">
-          <Hyperlink>
+          <Hyperlink Command="{Binding OpenLinkCommand}"
+                     CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=q-a">
             <TextBlock Text="{Binding Translate[AskQuestion]}"/>
           </Hyperlink>
         </TextBlock>
 
-        <icons:SvgIcon Grid.Row="3" Grid.Column="0" Icon="EmailAlternate"/>
-        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+        <icons:SvgIcon Grid.Row="3" Grid.Column="0" Icon="BugReport"/>
+        <TextBlock Grid.Row="3" Grid.Column="1">
+          <Hyperlink Command="{Binding OpenLinkCommand}"
+                     CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/issues/new">
+            <TextBlock Text="{Binding Translate[ReportProblem]}"/>
+          </Hyperlink>
+        </TextBlock>
+
+        <icons:SvgIcon Grid.Row="4" Grid.Column="0" Icon="EmailAlternate"/>
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
           <TextBlock Text="{Binding Translate[ContactMeDirectly]}"
                      VerticalAlignment="Center"/>
           <TextBlock Text=":" VerticalAlignment="Center"/>
-          <TextBlock Text="timchishinevgeniy@gmail.com" Margin="8, 0" FontWeight="SemiBold"
+          <TextBlock Text="{Binding Email}" Margin="8, 0" FontWeight="SemiBold"
                      VerticalAlignment="Center"/>
-          <controls:InputFieldButton Icon="CopyContent" VerticalAlignment="Center"/>
+          <controls:InputFieldButton Icon="CopyContent" VerticalAlignment="Center"
+                                     Command="{Binding CopyEmailToClipboardCommand}"
+                                     ToolTip="{Binding Translate[CopyEmailToClipboard]}"/>
         </StackPanel>
         
       </Grid>
@@ -78,7 +95,8 @@
       <StackPanel Orientation="Horizontal">
         <icons:SvgIcon Icon="Code" Width="16" Height="16" Margin="8, 4" Color="{DynamicResource TextTertiaryBrush}"/>
         <TextBlock VerticalAlignment="Center">
-          <Hyperlink>
+          <Hyperlink Command="{Binding OpenLinkCommand}"
+                     CommandParameter="https://github.com/Tum4ik/just-clipboard-manager">
             <TextBlock Text="{Binding Translate[SourceCode]}"/>
           </Hyperlink>
         </TextBlock>

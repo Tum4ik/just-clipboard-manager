@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\bug-report.svg" />
     <None Remove="Resources\caret-down.svg" />
     <None Remove="Resources\caret-left.svg" />
     <None Remove="Resources\caret-right.svg" />
@@ -48,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\bug-report.svg" />
     <Resource Include="Resources\caret-down.svg" />
     <Resource Include="Resources\caret-left.svg" />
     <Resource Include="Resources\caret-right.svg" />
