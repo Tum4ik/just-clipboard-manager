@@ -74,7 +74,6 @@ Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
 Source: "uninstall.ico"; DestDir: "{app}"
-Source: "..\Tum4ik.JustClipboardManager\Resources\Icons\tray.ico"; DestDir: "{app}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \

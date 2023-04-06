@@ -162,13 +162,17 @@
     </None>
   </ItemGroup>
 
-  <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
-    <ItemGroup>
-      <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
-      <FilesToCopy Include="Resources\Icons\tray.ico" />
-    </ItemGroup>
+  <ItemGroup>
+    <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
+    <FilesToCopy Include="Resources\Icons\tray.ico" />
+  </ItemGroup>
+  <Target Name="CopyFilesAfteBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)Resources\Icons\" />
+  </Target>
+  <Target Name="CopyFilesAfterPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)Resources\Icons\" />
   </Target>
 
 </Project>
