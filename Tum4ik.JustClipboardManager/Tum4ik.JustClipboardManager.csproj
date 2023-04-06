@@ -68,10 +68,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icons\tray.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
@@ -168,11 +164,9 @@
   </ItemGroup>
   <Target Name="CopyFilesAfteBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)Resources\Icons\" />
   </Target>
   <Target Name="CopyFilesAfterPublish" AfterTargets="Publish">
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)Resources\Icons\" />
   </Target>
 
 </Project>
