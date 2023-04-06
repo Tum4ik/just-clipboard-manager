@@ -26,6 +26,7 @@
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <UserSecretsId>df7c7b3f-aaa4-4f20-b2a2-38a7dc7e3d07</UserSecretsId>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\Icons\tray.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -64,6 +65,10 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Icons\tray.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -160,9 +165,10 @@
   <Target Name="CopyFiles" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
-      <FilesToCopy Condition="'$(Configuration)'=='Release'" Include="Resources\Icons\tray.ico" />
+      <FilesToCopy Include="Resources\Icons\tray.ico" />
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)Resources\Icons\" />
   </Target>
 
 </Project>

@@ -13,6 +13,12 @@
   <SolidColorBrush x:Key="TextOnAccentSecondaryBrush" Color="Black" Opacity="0.5"/>
   <SolidColorBrush x:Key="TextOnAccentDisabledBrush" Color="White" Opacity="0.5302"/>
 
+  <Color x:Key="AccentTextTertiaryColor">#60CDFF</Color>
+  <Brush x:Key="AccentTextPrimaryBrush">#99EBFF</Brush>
+  <Brush x:Key="AccentTextSecondaryBrush">#99EBFF</Brush>
+  <SolidColorBrush x:Key="AccentTextTertiaryBrush" Color="{StaticResource AccentTextTertiaryColor}"/>
+  <SolidColorBrush x:Key="AccentTextDisabledBrush" Color="White" Opacity="0.3628"/>
+
   <system:Double x:Key="ShadowOpacity">0.26</system:Double>
 
   <SolidColorBrush x:Key="AccentDefaultBrush" Color="#60CDFF"/>
@@ -97,5 +103,10 @@
   <SolidColorBrush x:Key="TextBoxInputActiveBackgroundBrush" Color="#1E1E1E" Opacity="0.7"/>
 
   <SolidColorBrush x:Key="ScrollBarForegroundBrush" Color="White" Opacity="0.5442"/>
+
+  <Storyboard x:Key="HyperlinkPressedForegroundStoryboard">
+    <ColorAnimation Storyboard.TargetProperty="(Hyperlink.Foreground).(SolidColorBrush.Color)"
+                    To="{StaticResource AccentTextTertiaryColor}" Duration="0"/>
+  </Storyboard>
 
 </ResourceDictionary>
