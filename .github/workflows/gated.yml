@@ -48,6 +48,7 @@ on:
       - 'main'
       - 'release/**'
     paths-ignore:
+      - '.attachments/**'
       - '.editorconfig'
       - '.gitignore'
       - 'README.md'

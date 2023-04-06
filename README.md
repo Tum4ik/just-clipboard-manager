@@ -2,7 +2,8 @@
   Just Clipboard Manager
 </h1>
 <h1 align="center">
-  <img src=".attachments/paste-window.png" alt="Paste Window" align="center" />
+  <img src=".attachments/paste-window-light.png" alt="Paste Window" align="center" />
+  <img src=".attachments/paste-window-dark.png" alt="Paste Window" align="center" />
 </h1>
 
 [![License](https://img.shields.io/github/license/Tum4ik/just-clipboard-manager)](LICENSE)
