@@ -79,6 +79,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ask question.
+        /// </summary>
+        internal static string AskQuestion {
+            get {
+                return ResourceManager.GetString("AskQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-start application.
         /// </summary>
         internal static string AutoStartApplication {
@@ -93,6 +102,33 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact me directly.
+        /// </summary>
+        internal static string ContactMeDirectly {
+            get {
+                return ResourceManager.GetString("ContactMeDirectly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacts.
+        /// </summary>
+        internal static string Contacts {
+            get {
+                return ResourceManager.GetString("Contacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to © 2022-2023 Yevheniy Tymchishin. All rights reserved..
+        /// </summary>
+        internal static string Copyright {
+            get {
+                return ResourceManager.GetString("Copyright", resourceCulture);
             }
         }
         
@@ -196,6 +232,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leave feedback.
+        /// </summary>
+        internal static string LeaveFeedback {
+            get {
+                return ResourceManager.GetString("LeaveFeedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Light.
         /// </summary>
         internal static string Light {
@@ -250,6 +295,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source code.
+        /// </summary>
+        internal static string SourceCode {
+            get {
+                return ResourceManager.GetString("SourceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suggest idea.
+        /// </summary>
+        internal static string SuggestIdea {
+            get {
+                return ResourceManager.GetString("SuggestIdea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Theme.
         /// </summary>
         internal static string Theme {
@@ -273,6 +336,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string UndefinedHotkeysDetectedTitle {
             get {
                 return ResourceManager.GetString("UndefinedHotkeysDetectedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

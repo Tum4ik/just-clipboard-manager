@@ -169,4 +169,28 @@
   <data name="Files" xml:space="preserve">
     <value>Файли</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Версія</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>© 2022-2023 Євгеній Тимчишин. Всі права захищені.</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Контакти</value>
+  </data>
+  <data name="LeaveFeedback" xml:space="preserve">
+    <value>Залишити відгук</value>
+  </data>
+  <data name="AskQuestion" xml:space="preserve">
+    <value>Задати питання</value>
+  </data>
+  <data name="ContactMeDirectly" xml:space="preserve">
+    <value>Зв'язатися зі мною напряму</value>
+  </data>
+  <data name="SuggestIdea" xml:space="preserve">
+    <value>Запропонувати ідею</value>
+  </data>
+  <data name="SourceCode" xml:space="preserve">
+    <value>Вихідний код</value>
+  </data>
 </root>
