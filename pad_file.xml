@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>3.11</MASTER_PAD_VERSION>
+		<MASTER_PAD_EDITOR>PADGen 3.1.1.50 http://www.padgen.org</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://pad.asp-software.org</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+	<Company_Info>
+		<Company_Name>YT</Company_Name>
+		<Address_1 />
+		<Address_2 />
+		<City_Town />
+		<State_Province />
+		<Zip_Postal_Code />
+		<Country>Ukraine</Country>
+		<Company_WebSite_URL>https://github.com/Tum4ik</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>Yevheniy</Author_First_Name>
+			<Author_Last_Name>Tymchishin</Author_Last_Name>
+			<Author_Email>timchishinevgeniy@gmail.com</Author_Email>
+			<Contact_First_Name />
+			<Contact_Last_Name />
+			<Contact_Email />
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email />
+			<Support_Email />
+			<General_Email />
+			<Sales_Phone />
+			<Support_Phone />
+			<General_Phone />
+			<Fax_Phone />
+		</Support_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>Just Clipboard Manager</Program_Name>
+		<Program_Version>1.0.23096.3</Program_Version>
+		<Program_Release_Month>04</Program_Release_Month>
+		<Program_Release_Day>06</Program_Release_Day>
+		<Program_Release_Year>2023</Program_Release_Year>
+		<Program_Cost_Dollars />
+		<Program_Cost_Other_Code />
+		<Program_Cost_Other />
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>New Release</Program_Release_Status>
+		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
+		<Program_OS_Support>Win7 x32,Win7 x64,WinOther</Program_OS_Support>
+		<Program_Language>English,Ukrainian</Program_Language>
+		<Program_Change_Info>UI Design (WinUI 3).</Program_Change_Info>
+		<Program_Specific_Category>Utilities</Program_Specific_Category>
+		<Program_Category_Class>System Utilities::Clipboard Tools</Program_Category_Class>
+		<Program_System_Requirements />
+		<File_Info>
+			<File_Size_Bytes>54074077</File_Size_Bytes>
+			<File_Size_K>52806</File_Size_K>
+			<File_Size_MB>51.57</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count />
+			<Expire_Based_On>Days</Expire_Based_On>
+			<Expire_Other_Info />
+			<Expire_Month />
+			<Expire_Day />
+			<Expire_Year />
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>clipboard, clipboard-manager, just-clipboard-manager, windows-desktop</Keywords>
+			<Char_Desc_45>Yet another clipboard manager for Windows.</Char_Desc_45>
+			<Char_Desc_80>Yet another clipboard manager for Windows.</Char_Desc_80>
+			<Char_Desc_250>Yet another clipboard manager for Windows.</Char_Desc_250>
+			<Char_Desc_450>Yet another clipboard manager for Windows.</Char_Desc_450>
+			<Char_Desc_2000>Yet another clipboard manager for Windows.</Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>https://github.com/Tum4ik/just-clipboard-manager#readme</Application_Info_URL>
+			<Application_Order_URL />
+			<Application_Screenshot_URL>https://raw.githubusercontent.com/Tum4ik/just-clipboard-manager/main/.attachments/paste-window-light.png</Application_Screenshot_URL>
+			<Application_Icon_URL />
+			<Application_XML_File_URL />
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>https://github.com/Tum4ik/just-clipboard-manager/releases/download/1.0.23096.3/JustClipboardManager-1.0.23096.3-x64.exe</Primary_Download_URL>
+			<Secondary_Download_URL>https://github.com/Tum4ik/just-clipboard-manager/releases/download/1.0.23096.3/JustClipboardManager-1.0.23096.3-x86.exe</Secondary_Download_URL>
+			<Additional_Download_URL_1 />
+			<Additional_Download_URL_2 />
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions />
+		<EULA />
+	</Permissions>
+</XML_DIZ_INFO>
