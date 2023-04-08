@@ -20,7 +20,7 @@
 			<Author_Email>timchishinevgeniy@gmail.com</Author_Email>
 			<Contact_First_Name />
 			<Contact_Last_Name />
-			<Contact_Email />
+			<Contact_Email>timchishinevgeniy@gmail.com</Contact_Email>
 		</Contact_Info>
 		<Support_Info>
 			<Sales_Email />
@@ -80,7 +80,7 @@
 			<Application_Info_URL>https://github.com/Tum4ik/just-clipboard-manager#readme</Application_Info_URL>
 			<Application_Order_URL />
 			<Application_Screenshot_URL>https://raw.githubusercontent.com/Tum4ik/just-clipboard-manager/main/.attachments/paste-window-light.png</Application_Screenshot_URL>
-			<Application_Icon_URL />
+			<Application_Icon_URL>https://raw.githubusercontent.com/Tum4ik/just-clipboard-manager/main/Tum4ik.JustClipboardManager/Resources/Icons/tray.ico</Application_Icon_URL>
 			<Application_XML_File_URL />
 		</Application_URLs>
 		<Download_URLs>
