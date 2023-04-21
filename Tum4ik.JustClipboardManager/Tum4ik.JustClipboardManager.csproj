@@ -18,8 +18,6 @@
     <Company>YTSoft</Company>
     <Product>Just Clipboard Manager</Product>
     <Copyright>© 2022-2023 Yevheniy Tymchishin. All rights reserved.</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
