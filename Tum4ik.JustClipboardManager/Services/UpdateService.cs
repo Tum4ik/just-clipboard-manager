@@ -147,7 +147,10 @@ internal class UpdateService : IUpdateService
   public void InstallUpdates(FileInfo exeFile)
   {
 #if !DEBUG
-    Process.Start(new ProcessStartInfo(exeFile.FullName, "/SILENT") { UseShellExecute = true });
+    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exeFile.FullName, "/SILENT")
+    {
+      UseShellExecute = true
+    });
 #endif
   }
 
