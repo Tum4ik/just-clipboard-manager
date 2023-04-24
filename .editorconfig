@@ -23,7 +23,7 @@ spelling_languages = en-us, uk-ua
 indent_size = 2
 
 # XML project files
-[*.{csproj,projitems,shproj,wixproj}]
+[*.{csproj,projitems,shproj,wixproj,runsettings}]
 indent_size = 2
 
 # XML config files
