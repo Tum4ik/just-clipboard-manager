@@ -11,6 +11,7 @@ using Prism.Regions.Behaviors;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Ioc;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Views.Main;
 
@@ -164,5 +165,14 @@ internal static class ServiceCollectionExtensions
   public static IServiceCollection AddDatabase(this IServiceCollection services)
   {
     return services.AddPooledDbContextFactory<AppDbContext>((sp, o) => AppDbContext.Configure(o), 2);
+  }
+
+
+  public static IServiceCollection AddGeneratedWrappers(this IServiceCollection services)
+  {
+    return services
+      .AddTransient<IProcess, ProcessWrapper>()
+      .AddTransient<IEnvironment, EnvironmentWrapper>()
+      .AddSingleton<IClipboard, ClipboardWrapper>();
   }
 }

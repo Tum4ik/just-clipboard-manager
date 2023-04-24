@@ -96,6 +96,7 @@
     <PackageReference Include="Octokit" Version="5.0.2" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
+    <PackageReference Include="YT.IIGen" Version="0.0.23114.5" />
   </ItemGroup>
 
   <ItemGroup>
