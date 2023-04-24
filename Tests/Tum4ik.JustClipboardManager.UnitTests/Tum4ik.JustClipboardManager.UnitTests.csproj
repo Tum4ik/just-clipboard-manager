@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Tum4ik.JustClipboardManager\Tum4ik.JustClipboardManager.csproj" />
-    <ProjectReference Include="..\Tum4ik.TestHelpers\Tum4ik.TestHelpers.csproj" />
   </ItemGroup>
 
 </Project>
