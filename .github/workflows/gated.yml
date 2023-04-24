@@ -111,7 +111,7 @@ jobs:
         msbuild /t:Restore /t:Build /p:Configuration=Release
         vstest.console.exe .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
           /Parallel `
-
+          /Enablecodecoverage
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
