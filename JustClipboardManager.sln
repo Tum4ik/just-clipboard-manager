@@ -30,8 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\scripts\BuildInstaller.ps1 = .github\workflows\scripts\BuildInstaller.ps1
 		.github\workflows\scripts\DecodePfx.ps1 = .github\workflows\scripts\DecodePfx.ps1
-		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1
 		.github\workflows\scripts\MSBuildPublish.ps1 = .github\workflows\scripts\MSBuildPublish.ps1
+		.github\workflows\scripts\SignMyCodeFiles.ps1 = .github\workflows\scripts\SignMyCodeFiles.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InnoSetup", "InnoSetup", "{4DA667C9-7864-45B1-9CF6-535A1DEE8859}"
