@@ -1,9 +1,9 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using Microsoft.AppCenter.Crashes;
 using Octokit;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using FileMode = System.IO.FileMode;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -11,12 +11,15 @@ internal class UpdateService : IUpdateService
 {
   private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
+  private readonly IEnvironment _environment;
 
   public UpdateService(IInfoService infoService,
-                       IGitHubClient gitHubClient)
+                       IGitHubClient gitHubClient,
+                       IEnvironment environment)
   {
     _infoService = infoService;
     _gitHubClient = gitHubClient;
+    _environment = environment;
   }
 
 
@@ -32,7 +35,7 @@ internal class UpdateService : IUpdateService
       {
         if (latestReleaseVersion > _infoService.Version)
         {
-          var osArchitecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+          var osArchitecture = _environment.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets
             .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
                       && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))
@@ -144,7 +147,10 @@ internal class UpdateService : IUpdateService
   public void InstallUpdates(FileInfo exeFile)
   {
 #if !DEBUG
-    Process.Start(new ProcessStartInfo(exeFile.FullName, "/SILENT") { UseShellExecute = true });
+    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exeFile.FullName, "/SILENT")
+    {
+      UseShellExecute = true
+    });
 #endif
   }
 

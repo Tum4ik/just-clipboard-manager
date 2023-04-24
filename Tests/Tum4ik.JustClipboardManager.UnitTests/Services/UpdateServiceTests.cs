@@ -1,13 +1,13 @@
-using System.Linq.Expressions;
 using Octokit;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services;
-using Tum4ik.TestHelpers;
 
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class UpdateServiceTests
 {
   private readonly Mock<IInfoService> _infoServiceMock = new();
   private readonly Mock<IReleasesClient> _releasesClientMock = new();
+  private readonly Mock<IEnvironment> _environmentMock = new();
   private readonly UpdateService _testeeService;
 
   public UpdateServiceTests()
@@ -16,17 +16,13 @@ public class UpdateServiceTests
     var repositoriesClient = new Mock<IRepositoriesClient>();
     gitHubClientMock.SetupGet(c => c.Repository).Returns(repositoriesClient.Object);
     repositoriesClient.SetupGet(c => c.Release).Returns(_releasesClientMock.Object);
-    _testeeService = new(_infoServiceMock.Object, gitHubClientMock.Object);
+    _testeeService = new(_infoServiceMock.Object, gitHubClientMock.Object, _environmentMock.Object);
   }
-
-
-  private static void BoolPropertyResultFalse(ref bool __result) => __result = false;
-  private static void BoolPropertyResultTrue(ref bool __result) => __result = true;
 
 
   private const string X86 = "x86";
   private const string X64 = "x64";
-  [Theory(Skip = "Until Harmony supports .NET 7")]
+  [Theory]
   [InlineData(X86)]
   [InlineData(X64)]
   public async Task CheckForUpdates_LatestVersionIsGreaterThanCurrent_UpdateAvailable(string cpuArch)
@@ -49,37 +45,20 @@ public class UpdateServiceTests
     _releasesClientMock.Setup(c => c.GetLatest("Tum4ik", "just-clipboard-manager")).ReturnsAsync(release);
     _infoServiceMock.Setup(s => s.Version).Returns(currentVersion);
 
-    bool stub = default;
-    Expression<Action> is64BitOperatingSystem;
-    if (cpuArch == X86)
-    {
-      is64BitOperatingSystem = () => BoolPropertyResultFalse(ref stub);
-    }
-    else if (cpuArch == X64)
-    {
-      is64BitOperatingSystem = () => BoolPropertyResultTrue(ref stub);
-    }
-    else
-    {
-      throw new NotSupportedException("Unsupported cpu architecture.");
-    }
-
-    StaticMemberMock.PropertyGetter(
-      typeof(Environment), nameof(Environment.Is64BitOperatingSystem), is64BitOperatingSystem
-    );
+    _environmentMock.Setup(e => e.Is64BitOperatingSystem).Returns(cpuArch == X64);
 
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 
-    Assert.True(checkUpdatesResult.NewVersionIsAvailable);
-    Assert.Equal(new Version(TagName), checkUpdatesResult.LatestVersion);
-    Assert.Equal(body, checkUpdatesResult.ReleaseNotes);
+    checkUpdatesResult.NewVersionIsAvailable.Should().BeTrue();
+    checkUpdatesResult.LatestVersion.Should().BeEquivalentTo(new Version(TagName));
+    checkUpdatesResult.ReleaseNotes.Should().BeEquivalentTo(body);
     if (cpuArch == X86)
     {
-      Assert.Equal(DownloadLink_x86, checkUpdatesResult.DownloadLink?.ToString());
+      checkUpdatesResult.DownloadLink?.ToString().Should().BeEquivalentTo(DownloadLink_x86);
     }
     else if (cpuArch == X64)
     {
-      Assert.Equal(DownloadLink_x64, checkUpdatesResult.DownloadLink?.ToString());
+      checkUpdatesResult.DownloadLink?.ToString().Should().BeEquivalentTo(DownloadLink_x64);
     }
   }
 

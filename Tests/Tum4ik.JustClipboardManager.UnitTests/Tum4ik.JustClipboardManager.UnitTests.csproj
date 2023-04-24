@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.10.0" />
+    <PackageReference Include="FluentAssertions" Version="6.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="xunit" Version="2.4.2" />
@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Tum4ik.JustClipboardManager\Tum4ik.JustClipboardManager.csproj" />
-    <ProjectReference Include="..\Tum4ik.TestHelpers\Tum4ik.TestHelpers.csproj" />
   </ItemGroup>
 
 </Project>
