@@ -146,6 +146,7 @@ public partial class App : ISingleInstance
     services
       .AddSingleton<IContainerExtension>(sp => new ServiceContainerExtension(sp))
       .AddConfiguration()
+      .AddGeneratedWrappers()
       //.AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
       .AddPrismServices()
       .AddPrismBehaviors()
