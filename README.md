@@ -11,6 +11,7 @@
 [![Latest release](https://img.shields.io/github/v/release/Tum4ik/just-clipboard-manager)](https://github.com/Tum4ik/just-clipboard-manager/releases)
 
 [![Gated build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml)
+[![codecov](https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graph/badge.svg?token=ISPY8ADZZ8)](https://codecov.io/gh/Tum4ik/just-clipboard-manager)
 
 ##### Unknown formats:
 - CF_VSREFPROJECTITEMS
