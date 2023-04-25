@@ -13,7 +13,6 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Ioc;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
-using Tum4ik.JustClipboardManager.Views.Main;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
 internal static class ServiceCollectionExtensions
@@ -172,7 +171,9 @@ internal static class ServiceCollectionExtensions
   {
     return services
       .AddTransient<IProcess, ProcessWrapper>()
-      .AddTransient<IEnvironment, EnvironmentWrapper>()
+      .AddSingleton<IEnvironment, EnvironmentWrapper>()
+      .AddSingleton<IFile, FileWrapper>()
+      .AddSingleton<IPath, PathWrapper>()
       .AddSingleton<IClipboard, ClipboardWrapper>();
   }
 }
