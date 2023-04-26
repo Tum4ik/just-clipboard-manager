@@ -51,6 +51,7 @@ on:
       - '.attachments/**'
       - '.editorconfig'
       - '.gitignore'
+      - 'LICENSE'
       - 'README.md'
 
 jobs:
