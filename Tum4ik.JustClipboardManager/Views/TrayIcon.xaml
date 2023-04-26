@@ -60,14 +60,14 @@
         </MenuItem.ItemTemplate>
       </MenuItem>
       <MenuItem Header="{Binding Translate[Theme]}" Background="White"
-                ItemsSource="{Binding ThemeService.Themes}">
+                ItemsSource="{Binding Themes}">
         <MenuItem.ItemContainerStyle>
           <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
             <Setter Property="IsCheckable" Value="True"/>
             <Setter Property="IsChecked">
               <Setter.Value>
                 <MultiBinding Mode="OneWay" Converter="{StaticResource EqualityConverter}">
-                  <Binding Path="DataContext.ThemeService.SelectedTheme"
+                  <Binding Path="DataContext.SelectedTheme"
                            RelativeSource="{RelativeSource AncestorType=ContextMenu}"/>
                   <Binding Path="."/>
                 </MultiBinding>
