@@ -50,15 +50,15 @@ public class UpdateServiceTests
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 
     checkUpdatesResult.NewVersionIsAvailable.Should().BeTrue();
-    checkUpdatesResult.LatestVersion.Should().BeEquivalentTo(new Version(TagName));
-    checkUpdatesResult.ReleaseNotes.Should().BeEquivalentTo(body);
+    checkUpdatesResult.LatestVersion.Should().Be(new Version(TagName));
+    checkUpdatesResult.ReleaseNotes.Should().Be(body);
     if (cpuArch == X86)
     {
-      checkUpdatesResult.DownloadLink?.ToString().Should().BeEquivalentTo(DownloadLink_x86);
+      checkUpdatesResult.DownloadLink?.ToString().Should().Be(DownloadLink_x86);
     }
     else if (cpuArch == X64)
     {
-      checkUpdatesResult.DownloadLink?.ToString().Should().BeEquivalentTo(DownloadLink_x64);
+      checkUpdatesResult.DownloadLink?.ToString().Should().Be(DownloadLink_x64);
     }
   }
 

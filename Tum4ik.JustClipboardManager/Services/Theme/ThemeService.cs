@@ -14,12 +14,13 @@ internal class ThemeService : IThemeService
   private readonly IEventAggregator _eventAggregator;
 
   public ThemeService(ISettingsService settingsService,
-                      IEventAggregator eventAggregator)
+                      IEventAggregator eventAggregator,
+                      IAppResourcesService appResourcesService)
   {
     _settingsService = settingsService;
     _eventAggregator = eventAggregator;
 
-    Application.Current.Resources.MergedDictionaries.Add(_themeDictionary);
+    appResourcesService.Resources.MergedDictionaries.Add(_themeDictionary);
     SetTheme(SelectedTheme);
   }
 

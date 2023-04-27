@@ -35,7 +35,7 @@ public class AboutViewModelTests
     _environmentMock.Setup(e => e.Is64BitProcess).Returns(is64BitProcess);
     var actualVersion = _testeeVm.Version;
     var arch = is64BitProcess ? "64" : "32";
-    actualVersion.Should().BeEquivalentTo($"{versionStr} ({arch}-bit)");
+    actualVersion.Should().Be($"{versionStr} ({arch}-bit)");
   }
 
 

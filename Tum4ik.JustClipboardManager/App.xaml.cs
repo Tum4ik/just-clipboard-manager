@@ -139,7 +139,7 @@ public partial class App : ISingleInstance
   }
 
 
-  private static ServiceProvider ConfigureServices()
+  private ServiceProvider ConfigureServices()
   {
     var services = new ServiceCollection();
 
@@ -155,6 +155,7 @@ public partial class App : ISingleInstance
       .AddSingleton<IUser32DllService, User32DllService>()
       .AddSingleton<ISHCoreDllService, SHCoreDllService>()
       .AddSingleton<IKernel32DllService, Kernel32DllService>()
+      .AddSingleton<IAppResourcesService>(new AppResourcesService(this.Resources))
       .AddSingleton<GeneralHookService>()
       .AddSingleton<IKeyboardHookService, KeyboardHookService>()
       .AddSingleton<IClipboardHookService, ClipboardHookService>()
