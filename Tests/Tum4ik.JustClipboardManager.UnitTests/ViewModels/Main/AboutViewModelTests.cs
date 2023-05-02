@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Prism.Events;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -15,8 +17,11 @@ public class AboutViewModelTests
 
   public AboutViewModelTests()
   {
+    var eventAggregatorMock = new Mock<IEventAggregator>();
+    eventAggregatorMock.Setup(ea => ea.GetEvent<LanguageChangedEvent>()).Returns(Mock.Of<LanguageChangedEvent>());
     _testeeVm = new(
       Mock.Of<ITranslationService>(),
+      eventAggregatorMock.Object,
       _infoServiceMock.Object,
       _environmentMock.Object,
       _processMock.Object,

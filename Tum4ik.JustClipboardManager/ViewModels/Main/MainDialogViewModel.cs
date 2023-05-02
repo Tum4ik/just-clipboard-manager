@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
@@ -15,8 +16,9 @@ internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
 
   public MainDialogViewModel(IInfoService infoService,
                              IRegionManager regionManager,
-                             ITranslationService translationService)
-    : base(translationService)
+                             ITranslationService translationService,
+                             IEventAggregator eventAggregator)
+    : base(translationService, eventAggregator)
   {
     _regionManager = regionManager;
 

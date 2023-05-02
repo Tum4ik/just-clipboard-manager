@@ -1,22 +1,22 @@
+using System.Collections.Immutable;
 using System.Resources;
-using CommunityToolkit.Mvvm.ComponentModel;
+using Prism.Events;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Icons;
 
 namespace Tum4ik.JustClipboardManager.Services.Translation;
 
-[INotifyPropertyChanged]
-internal partial class TranslationService : ResourceManager, ITranslationService
+internal class TranslationService : ResourceManager, ITranslationService
 {
   private readonly ISettingsService _settingsService;
+  private readonly IEventAggregator _eventAggregator;
 
-  public TranslationService(ISettingsService settingsService)
+  public TranslationService(ISettingsService settingsService,
+                            IEventAggregator eventAggregator)
     : base(typeof(Resources.Translations.Translation))
   {
     _settingsService = settingsService;
-
-    _selectedLanguage
-      = SupportedLanguages.SingleOrDefault(l => l.Culture.Equals(settingsService.Language))
-      ?? SupportedLanguages.First();
+    _eventAggregator = eventAggregator;
   }
 
 
@@ -29,20 +29,32 @@ internal partial class TranslationService : ResourceManager, ITranslationService
   }
 
 
-  public IEnumerable<Language> SupportedLanguages { get; } = new[]
+  public ImmutableArray<Language> SupportedLanguages { get; } = new[]
   {
     new Language(new("en-US"), SvgIconType.USA),
     new Language(new("uk-UA"), SvgIconType.Ukraine)
-  };
+  }.ToImmutableArray();
 
 
-  [ObservableProperty] private Language _selectedLanguage;
-  partial void OnSelectedLanguageChanged(Language value)
+  private Language? _selectedLanguage;
+  public Language SelectedLanguage
   {
-    _settingsService.Language = value.Culture;
-    LanguageChanged?.Invoke();
+    get => _selectedLanguage ??= GetSelectedLanguage();
+    set
+    {
+      if (_selectedLanguage != value)
+      {
+        _selectedLanguage = value;
+        _settingsService.Language = value.Culture;
+        _eventAggregator.GetEvent<LanguageChangedEvent>().Publish();
+      }
+    }
   }
 
 
-  public event Action? LanguageChanged;
+  private Language GetSelectedLanguage()
+  {
+    return SupportedLanguages.SingleOrDefault(l => l.Culture.Equals(_settingsService.Language))
+      ?? SupportedLanguages.First();
+  }
 }

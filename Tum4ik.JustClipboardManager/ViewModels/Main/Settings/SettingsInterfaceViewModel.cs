@@ -13,7 +13,7 @@ internal partial class SettingsInterfaceViewModel : TranslationViewModel
   public SettingsInterfaceViewModel(ITranslationService translationService,
                                     IThemeService themeService,
                                     IEventAggregator eventAggregator)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _themeService = themeService;
 

@@ -1,3 +1,4 @@
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -8,8 +9,9 @@ internal class SettingsGeneralViewModel : TranslationViewModel
   private readonly IShortcutService _shortcutService;
 
   public SettingsGeneralViewModel(ITranslationService translationService,
+                                  IEventAggregator eventAggregator,
                                   IShortcutService shortcutService)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _shortcutService = shortcutService;
   }

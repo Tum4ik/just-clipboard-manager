@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -13,10 +14,11 @@ internal partial class SettingsHotkeysViewModel : TranslationViewModel
   private readonly IDialogService _dialogService;
 
   public SettingsHotkeysViewModel(ITranslationService translationService,
+                                  IEventAggregator eventAggregator,
                                   ISettingsService settingsService,
                                   IDialogService dialogService,
                                   IKeyboardHookService keyboardHookService)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _dialogService = dialogService;
 

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -14,11 +15,12 @@ internal partial class AboutViewModel : TranslationViewModel
   private readonly IClipboard _clipboard;
 
   public AboutViewModel(ITranslationService translationService,
+                        IEventAggregator eventAggregator,
                         IInfoService infoService,
                         IEnvironment environment,
                         IProcess process,
                         IClipboard clipboard)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _infoService = infoService;
     _environment = environment;

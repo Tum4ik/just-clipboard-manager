@@ -29,7 +29,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
                            IThemeService themeService,
                            ISettingsService settingsService,
                            IEventAggregator eventAggregator)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
     _dialogService = dialogService;
@@ -99,9 +99,6 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private void ChangeLanguage(Language language)
   {
     Translate.SelectedLanguage = language;
-    // Important to trigger SelectedLanguage changed to keep it checked on the UI side
-    // in case the SelectedLanguage property value is not changed.
-    OnPropertyChanged(nameof(Translate));
   }
 
 

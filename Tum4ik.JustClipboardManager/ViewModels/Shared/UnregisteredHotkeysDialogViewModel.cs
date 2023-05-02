@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -7,8 +8,9 @@ using Tum4ik.JustClipboardManager.ViewModels.Base;
 namespace Tum4ik.JustClipboardManager.ViewModels.Shared;
 internal partial class UnregisteredHotkeysDialogViewModel : TranslationViewModel, ISimpleDialogAware
 {
-  public UnregisteredHotkeysDialogViewModel(ITranslationService translationService)
-    : base(translationService)
+  public UnregisteredHotkeysDialogViewModel(ITranslationService translationService,
+                                            IEventAggregator eventAggregator)
+    : base(translationService, eventAggregator)
   {
   }
 
