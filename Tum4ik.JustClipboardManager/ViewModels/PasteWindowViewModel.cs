@@ -18,7 +18,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
                               ITranslationService translationService)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;

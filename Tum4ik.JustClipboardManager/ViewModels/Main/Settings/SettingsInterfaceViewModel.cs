@@ -1,3 +1,6 @@
+using System.Collections.Immutable;
+using Prism.Events;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -5,12 +8,25 @@ using Tum4ik.JustClipboardManager.ViewModels.Base;
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 internal partial class SettingsInterfaceViewModel : TranslationViewModel
 {
-  public IThemeService ThemeService { get; }
+  private readonly IThemeService _themeService;
 
   public SettingsInterfaceViewModel(ITranslationService translationService,
-                                    IThemeService themeService)
-    : base(translationService)
+                                    IThemeService themeService,
+                                    IEventAggregator eventAggregator)
+    : base(translationService, eventAggregator)
   {
-    ThemeService = themeService;
+    _themeService = themeService;
+
+    eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
+  }
+
+
+  public ImmutableArray<ColorTheme> Themes => _themeService.Themes;
+
+
+  public ColorTheme SelectedTheme
+  {
+    get => _themeService.SelectedTheme;
+    set => _themeService.SelectedTheme = value;
   }
 }

@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -17,9 +18,10 @@ internal partial class EditHotkeyDialogViewModel : TranslationViewModel, ISimple
   private readonly IKeyboardHookService _keyboardHookService;
 
   public EditHotkeyDialogViewModel(ITranslationService translationService,
+                                   IEventAggregator eventAggregator,
                                    IKeyBindingRecordingService keyBindingRecordingService,
                                    IKeyboardHookService keyboardHookService)
-    : base(translationService)
+    : base(translationService, eventAggregator)
   {
     _keyBindingRecordingService = keyBindingRecordingService;
     _keyboardHookService = keyboardHookService;

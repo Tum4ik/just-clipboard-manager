@@ -1,10 +1,13 @@
+using System.Collections.Immutable;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Theme;
@@ -17,23 +20,24 @@ internal partial class TrayIconViewModel : TranslationViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
   private readonly IDialogService _dialogService;
+  private readonly IThemeService _themeService;
   private readonly ISettingsService _settingsService;
-
-  public IThemeService ThemeService { get; }
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
-                           ISettingsService settingsService)
-    : base(translationService)
+                           ISettingsService settingsService,
+                           IEventAggregator eventAggregator)
+    : base(translationService, eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
     _dialogService = dialogService;
-    ThemeService = themeService;
+    _themeService = themeService;
     _settingsService = settingsService;
 
     SetupHotkeys();
+    eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
 
 
@@ -44,6 +48,16 @@ internal partial class TrayIconViewModel : TranslationViewModel
 #else
     = "/Resources/Icons/tray.ico";
 #endif
+
+
+  public ImmutableArray<ColorTheme> Themes => _themeService.Themes;
+
+
+  public ColorTheme SelectedTheme
+  {
+    get => _themeService.SelectedTheme;
+    set => _themeService.SelectedTheme = value;
+  }
 
 
   private void SetupHotkeys()
@@ -77,8 +91,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
   [RelayCommand]
   private void ChangeTheme(ColorTheme theme)
   {
-    ThemeService.SelectedTheme = theme;
-    OnPropertyChanged(nameof(ThemeService));
+    SelectedTheme = theme;
   }
 
 
@@ -86,9 +99,6 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private void ChangeLanguage(Language language)
   {
     Translate.SelectedLanguage = language;
-    // Important to trigger SelectedLanguage changed to keep it checked on the UI side
-    // in case the SelectedLanguage property value is not changed.
-    OnPropertyChanged(nameof(Translate));
   }
 
 

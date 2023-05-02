@@ -1,36 +1,49 @@
+using System.Collections.Immutable;
 using System.Reflection;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
+using Prism.Events;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Icons;
 
 namespace Tum4ik.JustClipboardManager.Services.Theme;
 
-internal partial class ThemeService : ObservableObject, IThemeService
+internal class ThemeService : IThemeService
 {
   private readonly ResourceDictionary _themeDictionary = new();
   private readonly ISettingsService _settingsService;
+  private readonly IEventAggregator _eventAggregator;
 
-  public ThemeService(ISettingsService settingsService)
+  public ThemeService(ISettingsService settingsService,
+                      IEventAggregator eventAggregator,
+                      IAppResourcesService appResourcesService)
   {
     _settingsService = settingsService;
+    _eventAggregator = eventAggregator;
 
-    Application.Current.Resources.MergedDictionaries.Add(_themeDictionary);
-    _selectedTheme = Themes.SingleOrDefault(t => t.Name == settingsService.Theme) ?? Themes.First();
-    SetTheme(_selectedTheme);
+    appResourcesService.Resources.MergedDictionaries.Add(_themeDictionary);
+    SetTheme(SelectedTheme);
   }
 
 
-  public IEnumerable<ColorTheme> Themes { get; } = new[]
+  public ImmutableArray<ColorTheme> Themes { get; } = new[]
   {
     new ColorTheme("Light", SvgIconType.LightMode, "LightTheme.xaml"),
     new ColorTheme("Dark", SvgIconType.DarkMode, "DarkTheme.xaml")
-  };
+  }.ToImmutableArray();
 
 
-  [ObservableProperty] private ColorTheme _selectedTheme;
-  partial void OnSelectedThemeChanged(ColorTheme value)
+  private ColorTheme? _selectedTheme;
+  public ColorTheme SelectedTheme
   {
-    SetTheme(value);
+    get => _selectedTheme ??= Themes.SingleOrDefault(t => t.Name == _settingsService.Theme) ?? Themes.First();
+    set
+    {
+      if (_selectedTheme != value)
+      {
+        _selectedTheme = value;
+        SetTheme(value);
+      }
+    }
   }
 
 
@@ -38,6 +51,7 @@ internal partial class ThemeService : ObservableObject, IThemeService
   {
     _themeDictionary.Source = GetSourceForTheme(theme.XamlFileName);
     _settingsService.Theme = theme.Name;
+    _eventAggregator.GetEvent<ThemeChangedEvent>().Publish();
   }
 
 

@@ -96,8 +96,8 @@
                               ItemTemplate="{StaticResource LanguageItemTemplate}"
                               Width="250"/>
       <TextBlock Text="{Binding Translate[Theme]}"/>
-      <controls:WinUiComboBox ItemsSource="{Binding ThemeService.Themes}"
-                              SelectedItem="{Binding ThemeService.SelectedTheme}"
+      <controls:WinUiComboBox ItemsSource="{Binding Themes}"
+                              SelectedItem="{Binding SelectedTheme}"
                               SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
                               ItemTemplate="{StaticResource ThemeItemTemplate}"
                               Width="250"/>
