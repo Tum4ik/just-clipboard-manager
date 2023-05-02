@@ -16,6 +16,7 @@
 
 <h1 align="center">
 
+  [![Coverage update status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/codecov-update.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/codecov-update.yml)
   [![codecov](https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graph/badge.svg?token=ISPY8ADZZ8)](https://codecov.io/gh/Tum4ik/just-clipboard-manager)
   <br/>
   <img src="https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graphs/sunburst.svg?token=ISPY8ADZZ8" />
