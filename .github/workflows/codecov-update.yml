@@ -11,6 +11,7 @@ on:
       - '.gitignore'
       - 'LICENSE'
       - 'README.md'
+      - 'ReleaseNotes.md'
 
 jobs:
   update-coverage:
