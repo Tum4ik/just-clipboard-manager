@@ -1,26 +1,24 @@
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
+using DryIoc;
 using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Octokit;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Regions.Behaviors;
+using Prism.Services.Dialogs;
 using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
-using Tum4ik.JustClipboardManager.Ioc;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -88,128 +86,98 @@ public partial class App : ISingleInstance
   }
 
 
-  private ServiceProvider? _serviceProvider;
-
-
   protected override void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
 
-    _serviceProvider = ConfigureServices();
-    var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
+    var configuration = Container.Resolve<IConfiguration>();
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
-    ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) => _serviceProvider.GetRequiredService(type));
-    ContainerLocator.SetContainerExtension(() => new ServiceContainerExtension(_serviceProvider));
 
-    var updateService = _serviceProvider.GetRequiredService<IUpdateService>();
+    var updateService = Container.Resolve<IUpdateService>();
     updateService.SilentUpdate();
 
-    var regionAdapterMappings = _serviceProvider.GetRequiredService<RegionAdapterMappings>();
-    RegisterDefaultRegionAdapterMappings(regionAdapterMappings);
-
-    var defaultRegionBehaviors = _serviceProvider.GetRequiredService<IRegionBehaviorFactory>();
-    RegisterDefaultRegionBehaviors(defaultRegionBehaviors);
-
-    //var moduleManager = _serviceProvider.GetRequiredService<IModuleManager>();
-    //moduleManager.Run();
-
-    using var dbContext = _serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
+    using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
     dbContext.Database.Migrate();
 
-    RemoveOldClips(_serviceProvider);
-    var trayIcon = _serviceProvider.GetRequiredService<TrayIcon>();
-    var hookService = _serviceProvider.GetRequiredService<GeneralHookService>();
-    var clipboardService = _serviceProvider.GetRequiredService<IClipboardService>();
+    RemoveOldClips();
+    var trayIcon = Container.Resolve<TrayIcon>();
+    var hookService = Container.Resolve<GeneralHookService>();
+    var clipboardService = Container.Resolve<IClipboardService>();
   }
 
 
   protected override void OnExit(ExitEventArgs e)
   {
-    _serviceProvider?.Dispose();
+    Container.GetContainer().Dispose();
     SingleInstance.Cleanup();
 
     base.OnExit(e);
   }
 
 
-  private static void RemoveOldClips(ServiceProvider serviceProvider)
+  private void RemoveOldClips()
   {
-    var clipRepository = serviceProvider.GetRequiredService<IClipRepository>();
+    var clipRepository = Container.Resolve<IClipRepository>();
     clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)).Await(e => Crashes.TrackError(e)); // TODO: before date from settings
   }
 
 
-  private ServiceProvider ConfigureServices()
+  protected override void RegisterTypes(IContainerRegistry containerRegistry)
   {
-    var services = new ServiceCollection();
-
-    services
-      .AddSingleton<IContainerExtension>(sp => new ServiceContainerExtension(sp))
-      .AddConfiguration()
-      .AddGeneratedWrappers()
-      //.AddSingleton<IModuleCatalog>(new DirectoryModuleCatalog { ModulePath = "Modules" })
-      .AddPrismServices()
-      .AddPrismBehaviors()
-      .AddRegionAdapters()
-      .AddDatabase()
-      .AddSingleton<IUser32DllService, User32DllService>()
-      .AddSingleton<ISHCoreDllService, SHCoreDllService>()
-      .AddSingleton<IKernel32DllService, Kernel32DllService>()
-      .AddSingleton<IAppResourcesService>(new AppResourcesService(this.Resources))
-      .AddSingleton<GeneralHookService>()
-      .AddSingleton<IKeyboardHookService, KeyboardHookService>()
-      .AddSingleton<IClipboardHookService, ClipboardHookService>()
-      .AddSingleton<IPasteWindowService, PasteWindowService>()
-      .AddSingleton<IPasteService, PasteService>()
-      .AddSingleton<IClipboardService, ClipboardService>()
-      .AddSingleton<ISettingsService, SettingsService>()
-      .AddSingleton<ITranslationService, TranslationService>()
-      .AddSingleton<IThemeService, ThemeService>()
-      .AddTransient<IKeyBindingRecordingService, KeyBindingRecordingService>()
-      .AddTransient<IClipRepository, ClipRepository>()
-      .AddTransient<IInfoService, InfoService>()
-      .AddTransient<IUpdateService, UpdateService>()
-      .AddTransient<IGitHubClient>(sp =>
+    containerRegistry
+      .RegisterConfiguration()
+      .RegisterGeneratedWrappers()
+      .RegisterDatabase()
+      .RegisterSingleton<IDialogService, ExtendedDialogService>()
+      .RegisterSingleton<IUser32DllService, User32DllService>()
+      .RegisterSingleton<ISHCoreDllService, SHCoreDllService>()
+      .RegisterSingleton<IKernel32DllService, Kernel32DllService>()
+      .RegisterInstance<IAppResourcesService>(new AppResourcesService(Resources))
+      .RegisterSingleton<GeneralHookService>()
+      .RegisterSingleton<IKeyboardHookService, KeyboardHookService>()
+      .RegisterSingleton<IClipboardHookService, ClipboardHookService>()
+      .RegisterSingleton<IPasteWindowService, PasteWindowService>()
+      .RegisterSingleton<IPasteService, PasteService>()
+      .RegisterSingleton<IClipboardService, ClipboardService>()
+      .RegisterSingleton<ISettingsService, SettingsService>()
+      .RegisterSingleton<ITranslationService, TranslationService>()
+      .RegisterSingleton<IThemeService, ThemeService>()
+      .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
+      .Register<IClipRepository, ClipRepository>()
+      .Register<IInfoService, InfoService>()
+      .Register<IUpdateService, UpdateService>()
+      .Register<IGitHubClient>(cp =>
       {
-        var infoService = sp.GetRequiredService<IInfoService>();
+        var infoService = cp.Resolve<IInfoService>();
         return new GitHubClient(new ProductHeaderValue("JustClipboardManager", infoService.InformationalVersion));
       })
-      .AddTransient(sp => new WshShell())
-      .AddTransient<IShortcutService, ShortcutService>()
-      .RegisterShell<TrayIcon, TrayIconViewModel>(ServiceLifetime.Singleton)
-      .RegisterShell<PasteWindow, PasteWindowViewModel>(ServiceLifetime.Singleton)
-      .RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow)
-      .RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow)
-      .RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog)
-      .RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog)
-      .RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog)
-      .RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView)
-      .RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView)
-      .RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView)
-      .RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView)
-      .RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
+      .Register<WshShell, WshShellWrapper>()
+      .Register<IShortcutService, ShortcutService>()
+      .RegisterShell<TrayIcon, TrayIconViewModel>()
+      .RegisterShell<PasteWindow, PasteWindowViewModel>();
 
-    return services.BuildServiceProvider();
+    containerRegistry.RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow);
+    containerRegistry.RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow);
+    containerRegistry.RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog);
+    containerRegistry.RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog);
+    containerRegistry.RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog);
+
+    containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView);
+    containerRegistry.RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView);
+    containerRegistry.RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView);
+    containerRegistry.RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView);
+    containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
   }
 
 
-  private static void RegisterDefaultRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+  protected override Window? CreateShell()
   {
-    regionAdapterMappings.RegisterMapping<Selector, SelectorRegionAdapter>();
-    regionAdapterMappings.RegisterMapping<ItemsControl, ItemsControlRegionAdapter>();
-    regionAdapterMappings.RegisterMapping<ContentControl, ContentControlRegionAdapter>();
+    return null;
   }
 
 
-  private static void RegisterDefaultRegionBehaviors(IRegionBehaviorFactory regionBehaviors)
-  {
-    regionBehaviors.AddIfMissing<BindRegionContextToDependencyObjectBehavior>(BindRegionContextToDependencyObjectBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<RegionActiveAwareBehavior>(RegionActiveAwareBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<SyncRegionContextWithHostBehavior>(SyncRegionContextWithHostBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<RegionManagerRegistrationBehavior>(RegionManagerRegistrationBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<RegionMemberLifetimeBehavior>(RegionMemberLifetimeBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<ClearChildViewsRegionBehavior>(ClearChildViewsRegionBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<AutoPopulateRegionBehavior>(AutoPopulateRegionBehavior.BehaviorKey);
-    regionBehaviors.AddIfMissing<DestructibleRegionBehavior>(DestructibleRegionBehavior.BehaviorKey);
-  }
+  //protected override IModuleCatalog CreateModuleCatalog()
+  //{
+  //  return new DirectoryModuleCatalog { ModulePath = "Modules" };
+  //}
 }

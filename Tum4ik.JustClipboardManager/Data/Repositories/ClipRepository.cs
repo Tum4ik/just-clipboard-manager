@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Tum4ik.JustClipboardManager.Data.Models;
 
