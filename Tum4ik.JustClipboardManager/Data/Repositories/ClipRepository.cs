@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Tum4ik.JustClipboardManager.Data.Models;
 
@@ -53,11 +55,18 @@ internal class ClipRepository : IClipRepository
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clipIdsToRemove = dbContext.Clips
       .Where(c => c.ClippedAt < date)
-      .Select(c => c.Id);
-    var clipIdsCommaSeparated = string.Join(",", clipIdsToRemove);
-    await dbContext.Database
-      .ExecuteSqlRawAsync($"DELETE FROM Clips WHERE Id IN ({clipIdsCommaSeparated})")
-      .ConfigureAwait(false);
+      .Select(c => c.Id)
+      .ToImmutableArray();
+    var parameterNames = new string[clipIdsToRemove.Length];
+    var sqlParameters = new SqliteParameter[clipIdsToRemove.Length];
+    for (var i = 0; i < clipIdsToRemove.Length; i++)
+    {
+      var parameterName = $"@p{i}";
+      parameterNames[i] = parameterName;
+      sqlParameters[i] = new SqliteParameter(parameterName, clipIdsToRemove[i]);
+    }
+    var sql = $"DELETE FROM Clips WHERE Id IN ({string.Join(",", parameterNames)})";
+    await dbContext.Database.ExecuteSqlRawAsync(sql, sqlParameters).ConfigureAwait(false);
   }
 
 
