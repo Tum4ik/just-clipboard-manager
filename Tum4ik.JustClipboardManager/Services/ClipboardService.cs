@@ -52,137 +52,150 @@ internal class ClipboardService : IClipboardService
 
   private void OnClipboardChanged()
   {
-    SaveClipAsync().Await(e => throw e);
+    SaveClipAsync().Await();
   }
 
 
   private async Task SaveClipAsync()
   {
-    var dataObject = Clipboard.GetDataObject();
-    var formats = dataObject.GetFormats(false);
-    if (formats.Length == 0 || formats.Contains(ChangeMarker))
+    try
     {
-      return;
-    }
+      var dataObject = Clipboard.GetDataObject();
+      var formats = dataObject.GetFormats(false);
+      if (formats.Length == 0 || formats.Contains(ChangeMarker))
+      {
+        return;
+      }
 
-    var formattedDataObjects = new List<FormattedDataObject>();
-    var clipType = ClipType.Unrecognized;
-    string? searchLabel = null;
-    var representationData = Array.Empty<byte>();
-    var eventProps = new Dictionary<string, string>();
-    for (var i = 0; i < formats.Length; i++)
-    {
-      var format = formats[i];
-      if (new[] {
+      var formattedDataObjects = new List<FormattedDataObject>();
+      var clipType = ClipType.Unrecognized;
+      string? searchLabel = null;
+      var representationData = Array.Empty<byte>();
+      var eventProps = new Dictionary<string, string>();
+      for (var i = 0; i < formats.Length; i++)
+      {
+        var format = formats[i];
+        if (new[] {
             DataFormats.EnhancedMetafile, DataFormats.MetafilePicture, "FileContents"
           }.Contains(format))
-      {
-        // ignore unsupported formats
-        continue;
-      }
-
-      object data;
-      try
-      {
-        data = dataObject.GetData(format);
-      }
-      catch (COMException e)
-      {
-        Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
         {
-          { "Data Format / Message", $"{format} / {e.Message}" }
-        });
-        continue;
-      }
+          // ignore unsupported formats
+          continue;
+        }
 
-      var dataType = data.GetType();
-      if (dataType == typeof(Metafile))
-      {
-        // ignore unsupported types
-        continue;
-      }
-
-      var dataDotnetType = dataType.ToString();
-      eventProps[format] = dataDotnetType;
-
-      if (clipType == ClipType.Unrecognized)
-      {
+        object data;
         try
         {
-          /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
-          {
-
-          }
-          else*/ if (dataObject.GetDataPresent(DataFormats.UnicodeText))
-          {
-            var text = (string) dataObject.GetData(DataFormats.UnicodeText);
-            if (string.IsNullOrWhiteSpace(text))
-            {
-              return;
-            }
-            clipType = ClipType.Text;
-            text = text.Trim();
-            searchLabel = text;
-            representationData = GetStringBytes(text);
-          }
-          else if (dataObject.GetDataPresent(typeof(Bitmap)))
-          {
-            clipType = ClipType.Image;
-            var representationDataObject = dataObject.GetData(typeof(Bitmap));
-            representationData = GetBitmapBytes((Bitmap) representationDataObject);
-          }
-          else if (dataObject.GetDataPresent(DataFormats.FileDrop))
-          {
-            var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
-            if (filePaths.Length == 1)
-            {
-              clipType = ClipType.SingleFile;
-              searchLabel = filePaths[0];
-              representationData = GetStringBytes(filePaths[0]);
-            }
-            else
-            {
-              clipType = ClipType.FilesList;
-              searchLabel = string.Join(";", filePaths);
-              representationData = GetStringArrayBytes(filePaths);
-            }
-          }
+          data = dataObject.GetData(format);
         }
         catch (COMException e)
         {
-          Crashes.TrackError(e);
+          Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
+          {
+            { "Data Format / Message", $"{format} / {e.Message}" }
+          });
           continue;
+        }
+
+        var dataType = data.GetType();
+        if (dataType == typeof(Metafile))
+        {
+          // ignore unsupported types
+          continue;
+        }
+
+        var dataDotnetType = dataType.ToString();
+        eventProps[format] = dataDotnetType;
+
+        if (clipType == ClipType.Unrecognized)
+        {
+          try
+          {
+            /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
+            {
+
+            }
+            else*/
+            if (dataObject.GetDataPresent(DataFormats.UnicodeText))
+            {
+              var text = (string) dataObject.GetData(DataFormats.UnicodeText);
+              if (string.IsNullOrWhiteSpace(text))
+              {
+                return;
+              }
+              clipType = ClipType.Text;
+              text = text.Trim();
+              searchLabel = text;
+              representationData = GetStringBytes(text);
+            }
+            else if (dataObject.GetDataPresent(typeof(Bitmap)))
+            {
+              clipType = ClipType.Image;
+              var representationDataObject = dataObject.GetData(typeof(Bitmap));
+              representationData = GetBitmapBytes((Bitmap) representationDataObject);
+            }
+            else if (dataObject.GetDataPresent(DataFormats.FileDrop))
+            {
+              var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
+              if (filePaths.Length == 1)
+              {
+                clipType = ClipType.SingleFile;
+                searchLabel = filePaths[0];
+                representationData = GetStringBytes(filePaths[0]);
+              }
+              else
+              {
+                clipType = ClipType.FilesList;
+                searchLabel = string.Join(";", filePaths);
+                representationData = GetStringArrayBytes(filePaths);
+              }
+            }
+          }
+          catch (COMException e)
+          {
+            Crashes.TrackError(e, new Dictionary<string, string>
+            {
+              { "Message", "GetData for specific clip type" },
+              { "ClipType", $"{clipType}" }
+            });
+            continue;
+          }
+        }
+
+        var dataBytes = GetDataBytes(data);
+        if (dataBytes.Length > 0)
+        {
+          var formattedDataObject = new FormattedDataObject
+          {
+            Data = dataBytes,
+            DataDotnetType = dataDotnetType,
+            Format = format,
+            FormatOrder = i
+          };
+          formattedDataObjects.Add(formattedDataObject);
         }
       }
 
-      var dataBytes = GetDataBytes(data);
-      if (dataBytes.Length > 0)
+
+      if (clipType == ClipType.Unrecognized)
       {
-        var formattedDataObject = new FormattedDataObject
-        {
-          Data = dataBytes,
-          DataDotnetType = dataDotnetType,
-          Format = format,
-          FormatOrder = i
-        };
-        formattedDataObjects.Add(formattedDataObject);
+        Analytics.TrackEvent("Unrecognized Clip Type", eventProps);
       }
+
+      var clip = new Clip
+      {
+        ClipType = clipType,
+        FormattedDataObjects = formattedDataObjects,
+        RepresentationData = representationData,
+        SearchLabel = searchLabel
+      };
+
+      await _clipRepository.AddAsync(clip).ConfigureAwait(false);
     }
-
-    if (clipType == ClipType.Unrecognized)
+    catch (COMException e)
     {
-      Analytics.TrackEvent("Unrecognized Clip Type", eventProps);
+      Crashes.TrackError(e);
     }
-
-    var clip = new Clip
-    {
-      ClipType = clipType,
-      FormattedDataObjects = formattedDataObjects,
-      RepresentationData = representationData,
-      SearchLabel = searchLabel
-    };
-
-    await _clipRepository.AddAsync(clip).ConfigureAwait(false);
   }
 
   private static byte[] GetDataBytes(object data)
