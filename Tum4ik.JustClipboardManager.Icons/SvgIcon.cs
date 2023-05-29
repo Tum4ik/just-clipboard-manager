@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 using SharpVectors.Converters;
 
 namespace Tum4ik.JustClipboardManager.Icons;
@@ -23,15 +24,15 @@ public class SvgIcon : SvgViewbox
     {
       var thisIcon = (SvgIcon) d;
       var iconType = (SvgIconType?) e.NewValue;
-      Uri? source = null;
-      if (iconType.HasValue)
+      if (!iconType.HasValue)
       {
-        source = GetSvgSource(iconType.Value);
+        return;
       }
 
-      thisIcon.Source = source;
+      var source = GetSvgSource(iconType.Value);
       if (source is not null)
       {
+        thisIcon.Source = source;
         UpdateColor(d, thisIcon.Color);
       }
     })
