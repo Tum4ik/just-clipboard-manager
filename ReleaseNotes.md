@@ -1,1 +1,1 @@
-* Hotfix: Prevent crash when clipboard error occurs (CLIPBRD_E_CANT_OPEN)
+* Hotfix: Prevent crash when many clips are loaded into the paste window
