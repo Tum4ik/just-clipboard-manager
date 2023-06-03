@@ -17,6 +17,7 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
+using Tum4ik.JustClipboardManager.Properties;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
@@ -65,18 +66,33 @@ public partial class App : ISingleInstance
       e.Handled = true;
       app.Shutdown();
     };
+    UpgradeSettings();
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
   }
 
 
-  internal void OverrideDefaultProperties()
+  private void OverrideDefaultProperties()
   {
     FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
     {
       DefaultValue = FindResource(typeof(Window))
     });
+  }
+
+
+  private static void UpgradeSettings()
+  {
+    if (InternalSettings.Default.IsSettingsUpgradeRequired)
+    {
+      InternalSettings.Default.Upgrade();
+      SettingsGeneral.Default.Upgrade();
+      SettingsHotkeys.Default.Upgrade();
+      SettingsInterface.Default.Upgrade();
+      InternalSettings.Default.IsSettingsUpgradeRequired = false;
+      InternalSettings.Default.Save();
+    }
   }
 
 
