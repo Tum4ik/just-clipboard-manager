@@ -12,7 +12,7 @@ namespace Tum4ik.JustClipboardManager.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class InternalSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static InternalSettings defaultInstance = ((InternalSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new InternalSettings())));
@@ -20,6 +20,18 @@ namespace Tum4ik.JustClipboardManager.Properties {
         public static InternalSettings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsSettingsUpgradeRequired {
+            get {
+                return ((bool)(this["IsSettingsUpgradeRequired"]));
+            }
+            set {
+                this["IsSettingsUpgradeRequired"] = value;
             }
         }
     }
