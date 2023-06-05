@@ -24,7 +24,8 @@
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <UserSecretsId>df7c7b3f-aaa4-4f20-b2a2-38a7dc7e3d07</UserSecretsId>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Resources\Icons\tray.ico</ApplicationIcon>
+    <ApplicationIcon Condition="'$(Configuration)'=='Debug'">Resources\Icons\tray-dev.ico</ApplicationIcon>
+    <ApplicationIcon Condition="'$(Configuration)'=='Release'">Resources\Icons\tray.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
