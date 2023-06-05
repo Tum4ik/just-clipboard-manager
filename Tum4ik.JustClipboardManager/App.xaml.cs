@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Threading;
 using DryIoc;
 using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
@@ -39,6 +41,11 @@ namespace Tum4ik.JustClipboardManager;
 /// </summary>
 public partial class App : ISingleInstance
 {
+  private const string RestartAfterCrashArg = "--restart-after-crash";
+  private const string RestartAfterCrashDelimiter = ":";
+  private static int RestartAfterCrashCount;
+
+
   [STAThread]
   public static void Main(string[] args)
   {
@@ -48,28 +55,49 @@ public partial class App : ISingleInstance
 #if DEBUG
     instanceUniqueName += "_Development";
 #endif
+    var restartAfterCrashArg = args.FirstOrDefault(a => a.StartsWith(RestartAfterCrashArg, StringComparison.Ordinal));
     var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
-    if (!isFirstInstance)
+    if (restartAfterCrashArg is null && !isFirstInstance)
     {
       return;
     }
-
-    app.DispatcherUnhandledException += (s, e) =>
+    if (restartAfterCrashArg is not null
+        && int.TryParse(restartAfterCrashArg.Split(RestartAfterCrashDelimiter)[1], out var count))
     {
-      // TODO: improve to give user a chance to decide send or not
-      // TODO: and also notify user about the problem anyway
-      Crashes.TrackError(e.Exception, new Dictionary<string, string>
-      {
-        { "Message", "Application Dispatcher Unhandled Exception" }
-      });
-      Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
-      e.Handled = true;
-      app.Shutdown();
-    };
+      RestartAfterCrashCount = count;
+    }
+
+    app.DispatcherUnhandledException += OnUnhandledException;
     UpgradeSettings();
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
+  }
+
+
+  private async static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
+  {
+    // TODO: improve to give user a chance to decide send or not
+    // TODO: and also notify user about the problem anyway
+    Crashes.TrackError(e.Exception, new Dictionary<string, string>
+    {
+      { "Message", "Unhandled Exception" },
+      { "OS Architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86" },
+      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" }
+    });
+    await Task.Delay(10000).ConfigureAwait(false); // Give Crashes some time to be able to record exception properly
+    e.Handled = true;
+    var processPath = Environment.ProcessPath;
+    if (processPath is not null && RestartAfterCrashCount < 5)
+    {
+      Process.Start(new ProcessStartInfo(processPath)
+      {
+        Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
+        UseShellExecute = true
+      });
+    }
+
+    Current.Shutdown();
   }
 
 
