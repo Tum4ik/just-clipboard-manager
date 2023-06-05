@@ -75,7 +75,7 @@ public partial class App : ISingleInstance
   }
 
 
-  private async static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
+  private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
     // TODO: improve to give user a chance to decide send or not
     // TODO: and also notify user about the problem anyway
@@ -85,7 +85,7 @@ public partial class App : ISingleInstance
       { "OS Architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86" },
       { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" }
     });
-    await Task.Delay(10000).ConfigureAwait(false); // Give Crashes some time to be able to record exception properly
+    Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
     e.Handled = true;
     var processPath = Environment.ProcessPath;
     if (processPath is not null && RestartAfterCrashCount < 5)
@@ -133,6 +133,11 @@ public partial class App : ISingleInstance
   protected override void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
+
+    if (RestartAfterCrashCount < 3)
+    {
+      throw new Exception("test test");
+    }
 
     var configuration = Container.Resolve<IConfiguration>();
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
