@@ -83,6 +83,12 @@ internal interface IUser32DllService
   bool RegisterHotKey(nint hWnd, int id, int modifiers, int vKey);
 
   bool UnregisterHotKey(nint hWnd, int id);
+
+  nint SetClipboardViewer(nint hWndNewViewer);
+
+  bool ChangeClipboardChain(nint hWndRemove, nint hWndNewNext);
+
+  int SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
 }
 
 
@@ -146,6 +152,24 @@ internal class User32DllService : IUser32DllService
   }
 
 
+  public nint SetClipboardViewer(nint hWndNewViewer)
+  {
+    return _SetClipboardViewer(hWndNewViewer);
+  }
+
+
+  public bool ChangeClipboardChain(nint hWndRemove, nint hWndNewNext)
+  {
+    return _ChangeClipboardChain(hWndRemove, hWndNewNext);
+  }
+
+
+  public int SendMessage(nint hWnd, int msg, nint wParam, nint lParam)
+  {
+    return _SendMessage(hWnd, msg, wParam, lParam);
+  }
+
+
   [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
@@ -197,4 +221,20 @@ internal class User32DllService : IUser32DllService
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
   private static extern bool _UnregisterHotKey(nint hWnd, int id);
+
+
+  [DllImport("user32.dll", EntryPoint = "SetClipboardViewer")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern nint _SetClipboardViewer(nint hWndNewViewer);
+
+
+  [DllImport("user32.dll", EntryPoint = "ChangeClipboardChain")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  [return: MarshalAs(UnmanagedType.Bool)]
+  private static extern bool _ChangeClipboardChain(nint hWndRemove, nint hWndNewNext);
+
+
+  [DllImport("user32.dll", EntryPoint = "SendMessage")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern int _SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
 }

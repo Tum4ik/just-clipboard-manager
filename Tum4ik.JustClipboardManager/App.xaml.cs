@@ -134,11 +134,6 @@ public partial class App : ISingleInstance
   {
     base.OnStartup(e);
 
-    if (RestartAfterCrashCount < 3)
-    {
-      throw new Exception("test test");
-    }
-
     var configuration = Container.Resolve<IConfiguration>();
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
 
