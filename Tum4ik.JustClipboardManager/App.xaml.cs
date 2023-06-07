@@ -146,7 +146,6 @@ public partial class App : ISingleInstance
     RemoveOldClips();
     var trayIcon = Container.Resolve<TrayIcon>();
     var hookService = Container.Resolve<GeneralHookService>();
-    var clipboardService = Container.Resolve<IClipboardService>();
   }
 
 
