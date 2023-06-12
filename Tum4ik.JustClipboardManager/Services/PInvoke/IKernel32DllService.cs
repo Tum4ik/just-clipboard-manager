@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Tum4ik.JustClipboardManager.Services.PInvoke;
@@ -9,6 +10,7 @@ internal interface IKernel32DllService
 }
 
 
+[ExcludeFromCodeCoverage]
 internal class Kernel32DllService : IKernel32DllService
 {
   public int GlobalAddAtom(string name)

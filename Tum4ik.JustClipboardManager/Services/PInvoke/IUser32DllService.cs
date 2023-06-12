@@ -89,6 +89,28 @@ internal interface IUser32DllService
   bool ChangeClipboardChain(nint hWndRemove, nint hWndNewNext);
 
   int SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
+
+  /// <summary>
+  /// Synthesizes keystrokes, mouse motions, and button clicks.
+  /// </summary>
+  /// <param name="cInputs">The number of structures in the pInputs array.</param>
+  /// <param name="pInputs">
+  /// An array of <see cref="INPUT"/> structures.
+  /// Each structure represents an event to be inserted into the keyboard or mouse input stream.
+  /// </param>
+  /// <param name="cbSize">
+  /// The size, in bytes, of an <see cref="INPUT"/> structure.
+  /// If cbSize is not the size of an <see cref="INPUT"/> structure, the function fails.
+  /// </param>
+  /// <returns>
+  /// The function returns the number of events that it successfully inserted into the keyboard or mouse input stream.
+  /// If the function returns zero, the input was already blocked by another thread.
+  /// </returns>
+  uint SendInput(uint cInputs, INPUT[] pInputs, int cbSize);
+
+  bool SetForegroundWindow(nint hWnd);
+
+  int SetFocus(nint hWnd);
 }
 
 
@@ -170,6 +192,24 @@ internal class User32DllService : IUser32DllService
   }
 
 
+  public uint SendInput(uint cInputs, INPUT[] pInputs, int cbSize)
+  {
+    return _SendInput(cInputs, pInputs, cbSize);
+  }
+
+
+  public bool SetForegroundWindow(nint hWnd)
+  {
+    return _SetForegroundWindow(hWnd);
+  }
+
+
+  public int SetFocus(nint hWnd)
+  {
+    return _SetFocus(hWnd);
+  }
+
+
   [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   [return: MarshalAs(UnmanagedType.Bool)]
@@ -237,4 +277,19 @@ internal class User32DllService : IUser32DllService
   [DllImport("user32.dll", EntryPoint = "SendMessage")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   private static extern int _SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
+
+
+  [DllImport("user32.dll", EntryPoint = "SendInput")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern uint _SendInput(uint cInputs, INPUT[] pInputs, int cbSize);
+
+
+  [DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern bool _SetForegroundWindow(nint hWnd);
+
+
+  [DllImport("user32.dll", EntryPoint = "SetFocus")]
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  private static extern int _SetFocus(nint hWnd);
 }

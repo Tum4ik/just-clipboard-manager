@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
@@ -23,6 +24,7 @@ internal interface ISHCoreDllService
 }
 
 
+[ExcludeFromCodeCoverage]
 internal class SHCoreDllService : ISHCoreDllService
 {
   public bool GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY)
