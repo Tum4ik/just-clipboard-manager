@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
@@ -20,14 +19,7 @@ internal interface ISHCoreDllService
   /// even when the screen is rotated.
   /// </param>
   /// <returns>True if operation succeeds, otherwise - false.</returns>
-  bool GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY);
-}
-
-
-[ExcludeFromCodeCoverage]
-internal class SHCoreDllService : ISHCoreDllService
-{
-  public bool GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY)
+  bool GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY)
   {
     var result = _GetDpiForMonitor(hwnd, dpiType, out dpiX, out dpiY);
     return result == 0;
@@ -38,3 +30,6 @@ internal class SHCoreDllService : ISHCoreDllService
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   private static extern uint _GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY);
 }
+
+
+internal class SHCoreDllService : ISHCoreDllService { }
