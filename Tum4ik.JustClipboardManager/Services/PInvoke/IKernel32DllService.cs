@@ -3,19 +3,19 @@ using System.Runtime.InteropServices;
 namespace Tum4ik.JustClipboardManager.Services.PInvoke;
 internal interface IKernel32DllService
 {
-  int GlobalAddAtom(string name) => Native_GlobalAddAtom(name);
+  int GlobalAddAtom(string name) => _GlobalAddAtom(name);
 
-  int GlobalDeleteAtom(int nAtom) => Native_GlobalDeleteAtom(nAtom);
+  int GlobalDeleteAtom(int nAtom) => _GlobalDeleteAtom(nAtom);
 
 
   [DllImport("kernel32.dll", EntryPoint = "GlobalAddAtom", CharSet = CharSet.Unicode)]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern int Native_GlobalAddAtom(string name);
+  private static extern int _GlobalAddAtom(string name);
 
 
   [DllImport("kernel32.dll", EntryPoint = "GlobalDeleteAtom")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern int Native_GlobalDeleteAtom(int nAtom);
+  private static extern int _GlobalDeleteAtom(int nAtom);
 }
 
 
