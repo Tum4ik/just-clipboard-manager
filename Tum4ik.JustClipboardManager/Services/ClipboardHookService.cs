@@ -1,19 +1,22 @@
-using System.Runtime.InteropServices;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Services.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 {
   private readonly IEventAggregator _eventAggregator;
+  private readonly IUser32DllService _user32Dll;
 
   public ClipboardHookService(IPasteWindowService pasteWindowService,
-                              IEventAggregator eventAggregator)
+                              IEventAggregator eventAggregator,
+                              IUser32DllService user32Dll)
   {
     _eventAggregator = eventAggregator;
+    _user32Dll = user32Dll;
 
     _windowHandle = pasteWindowService.WindowHandle;
-    _nextClipboardViewerHandle = SetClipboardViewer(_windowHandle);
+    _nextClipboardViewerHandle = user32Dll.SetClipboardViewer(_windowHandle);
 
     _timer.Elapsed += (s, e) => OnClipboardChanged();
   }
@@ -44,7 +47,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
             _timer.Enabled = true;
           }
         }
-        SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
+        _user32Dll.SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
         break;
       case 0x030D: // WM_CHANGECBCHAIN
         if (wParam == _nextClipboardViewerHandle)
@@ -53,7 +56,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
         }
         else
         {
-          SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
+          _user32Dll.SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
         }
         break;
     }
@@ -70,16 +73,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 
   public void Dispose()
   {
-    ChangeClipboardChain(_windowHandle, _nextClipboardViewerHandle);
+    _timer.Close();
+    _user32Dll.ChangeClipboardChain(_windowHandle, _nextClipboardViewerHandle);
   }
-
-
-  [DllImport("user32.dll")]
-  private static extern nint SetClipboardViewer(nint hWndNewViewer);
-
-  [DllImport("user32.dll")]
-  private static extern bool ChangeClipboardChain(nint hWndRemove, nint hWndNewNext);
-
-  [DllImport("user32.dll")]
-  private static extern int SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
 }
