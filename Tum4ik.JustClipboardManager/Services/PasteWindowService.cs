@@ -27,14 +27,14 @@ internal class PasteWindowService : IPasteWindowService
   public nint WindowHandle { get; }
 
 
-  private Win32Point _windowPosition;
+  private POINT _windowPosition;
   private const bool IsSnapToMousePosition = true;
 
   public void ShowWindow(nint targetWindowToPasteHandle)
   {
     if (IsSnapToMousePosition)
     {
-      _user32Dll.GetCursorPos(ref _windowPosition);
+      _user32Dll.GetCursorPos(out _windowPosition);
     }
     else
     {
@@ -49,13 +49,13 @@ internal class PasteWindowService : IPasteWindowService
       if (accessible is not null)
       {
         accessible.accLocation(out var left, out var top, out _, out _, 0);
-        _windowPosition.X = left;
-        _windowPosition.Y = top;
+        _windowPosition.x = left;
+        _windowPosition.y = top;
       }
     }
 
     _user32Dll.SetWindowPos(
-      WindowHandle, nint.Zero, _windowPosition.X, _windowPosition.Y, 0, 0,
+      WindowHandle, nint.Zero, _windowPosition.x, _windowPosition.y, 0, 0,
       SizingAndPositioning.SWP_NOSIZE | SizingAndPositioning.SWP_NOACTIVATE | SizingAndPositioning.SWP_NOZORDER
     );
     _pasteWindow.SizeChanged += PasteWindow_SizeChanged;
@@ -81,8 +81,8 @@ internal class PasteWindowService : IPasteWindowService
 
     _user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo);
 
-    var winLeft = _windowPosition.X;
-    var winTop = _windowPosition.Y;
+    var winLeft = _windowPosition.x;
+    var winTop = _windowPosition.y;
     if (winLeft + windowPixelWidth > monitorInfo.WorkArea.Right)
     {
       winLeft = monitorInfo.WorkArea.Right - (int) windowPixelWidth;
@@ -92,7 +92,7 @@ internal class PasteWindowService : IPasteWindowService
       winTop = Math.Min(monitorInfo.WorkArea.Bottom - (int) windowPixelHeight, winTop - (int) windowPixelHeight);
     }
 
-    if (winLeft != _windowPosition.X || winTop != _windowPosition.Y)
+    if (winLeft != _windowPosition.x || winTop != _windowPosition.y)
     {
       SetWindowPosition(winLeft, winTop);
     }
