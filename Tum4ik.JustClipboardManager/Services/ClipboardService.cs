@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -12,18 +13,26 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
 {
   private readonly IClipRepository _clipRepository;
+  private readonly IPluginsService _pluginsService;
 
   public ClipboardService(IEventAggregator eventAggregator,
-                          IClipRepository clipRepository)
+                          IClipRepository clipRepository,
+                          IPluginsService pluginsService)
   {
     _clipRepository = clipRepository;
+    _pluginsService = pluginsService;
+
+    OnPluginsChainUpdated();
 
     eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.UIThread);
+    eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Subscribe(OnPluginsChainUpdated);
   }
 
 
@@ -35,14 +44,33 @@ internal class ClipboardService : IClipboardService
   /// </summary>
   private const string ChangeMarker = "JCM_change_{AD3D5E08-A1FA-4602-AF24-94C4ADDBCA78}";
 
+  private IReadOnlyCollection<IPlugin> _plugins;
+  private ImmutableList<string> _pluginFormats;
+
 
   public void Paste(ICollection<FormattedDataObject> formattedDataObjects)
   {
     var dataObject = new DataObject(new OrderedDataStore());
+    var restoredByPlugin = false;
     foreach (var formattedDataObject in formattedDataObjects)
     {
-      var data = GetDataFromBytes(formattedDataObject);
-      dataObject.SetData(formattedDataObject.Format, data);
+      object? data;
+      
+      if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
+      {
+        var plugin = _plugins.First(p => p.Format == formattedDataObject.Format);
+        data = plugin.RestoreData(formattedDataObject.Data);
+        restoredByPlugin = true;
+      }
+      else
+      {
+        data = GetDataFromBytes(formattedDataObject);
+      }
+
+      if (data is not null)
+      {
+        dataObject.SetData(formattedDataObject.Format, data);
+      }
     }
 
     dataObject.SetData(ChangeMarker, new());
@@ -56,22 +84,34 @@ internal class ClipboardService : IClipboardService
   }
 
 
+  private void OnPluginsChainUpdated()
+  {
+    _plugins = _pluginsService.Plugins();
+    _pluginFormats = _plugins.Select(p => p.Format).ToImmutableList();
+  }
+
+
   private async Task SaveClipAsync()
   {
     try
     {
       var dataObject = Clipboard.GetDataObject();
       var formats = dataObject.GetFormats(false);
-      if (formats.Length == 0 || formats.Contains(ChangeMarker))
+      var pluginFormat = formats.Intersect(_pluginFormats).FirstOrDefault();
+      if (formats.Length == 0 || formats.Contains(ChangeMarker) || pluginFormat is null)
+      {
+        return;
+      }
+
+      var plugin = _plugins.First(p => p.Format == pluginFormat);
+      if (!plugin.Id.HasValue)
       {
         return;
       }
 
       var formattedDataObjects = new List<FormattedDataObject>();
-      var clipType = ClipType.Unrecognized;
       string? searchLabel = null;
       var representationData = Array.Empty<byte>();
-      var eventProps = new Dictionary<string, string>();
       for (var i = 0; i < formats.Length; i++)
       {
         var format = formats[i];
@@ -92,7 +132,8 @@ internal class ClipboardService : IClipboardService
         {
           Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
           {
-            { "Data Format / Message", $"{format} / {e.Message}" }
+            { "DataFormat", format },
+            { "Message", e.Message }
           });
           continue;
         }
@@ -104,33 +145,33 @@ internal class ClipboardService : IClipboardService
           continue;
         }
 
-        var dataDotnetType = dataType.ToString();
-        eventProps[format] = dataDotnetType;
-
-        if (clipType == ClipType.Unrecognized)
+        byte[] dataBytes;
+        if (format == pluginFormat)
         {
-          try
+          var clipData = plugin.ProcessData(data);
+          if (clipData is null)
           {
+            return;
+          }
+          dataBytes = clipData.Data;
+          representationData = clipData.RepresentationData;
+          searchLabel = clipData.SearchLabel;
+        }
+        else
+        {
+          dataBytes = GetDataBytes(data);
+        }
+
+        
+       
             /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
             {
 
             }
-            else*/
-            if (dataObject.GetDataPresent(DataFormats.UnicodeText))
-            {
-              var text = (string) dataObject.GetData(DataFormats.UnicodeText);
-              if (string.IsNullOrWhiteSpace(text))
-              {
-                return;
-              }
-              clipType = ClipType.Text;
-              text = text.Trim();
-              searchLabel = text;
-              representationData = GetStringBytes(text);
-            }
+            else*//*
+            
             else if (dataObject.GetDataPresent(typeof(Bitmap)))
             {
-              clipType = ClipType.Image;
               var representationDataObject = dataObject.GetData(typeof(Bitmap));
               representationData = GetBitmapBytes((Bitmap) representationDataObject);
             }
@@ -139,36 +180,25 @@ internal class ClipboardService : IClipboardService
               var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
               if (filePaths.Length == 1)
               {
-                clipType = ClipType.SingleFile;
                 searchLabel = filePaths[0];
                 representationData = GetStringBytes(filePaths[0]);
               }
               else
               {
-                clipType = ClipType.FilesList;
                 searchLabel = string.Join(";", filePaths);
                 representationData = GetStringArrayBytes(filePaths);
               }
             }
-          }
-          catch (COMException e)
-          {
-            Crashes.TrackError(e, new Dictionary<string, string>
-            {
-              { "Message", "GetData for specific clip type" },
-              { "ClipType", $"{clipType}" }
-            });
-            continue;
-          }
-        }
+          
+        }*/
 
-        var dataBytes = GetDataBytes(data);
+        
         if (dataBytes.Length > 0)
         {
           var formattedDataObject = new FormattedDataObject
           {
             Data = dataBytes,
-            DataDotnetType = dataDotnetType,
+            DataDotnetType = dataType.ToString(),
             Format = format,
             FormatOrder = i
           };
@@ -176,15 +206,9 @@ internal class ClipboardService : IClipboardService
         }
       }
 
-
-      if (clipType == ClipType.Unrecognized)
-      {
-        Analytics.TrackEvent("Unrecognized Clip Type", eventProps);
-      }
-
       var clip = new Clip
       {
-        ClipType = clipType,
+        PluginId = plugin.Id.Value,
         FormattedDataObjects = formattedDataObjects,
         RepresentationData = representationData,
         SearchLabel = searchLabel
@@ -324,33 +348,3 @@ internal class ClipboardService : IClipboardService
     return null;
   }
 }
-
-//+-------------------------------------------------------------+
-//|             Clipboard data formats to C# types              |
-//+---------------------+---------------------------------------+
-//|     Data Format     |                C# type                |
-//+---------------------+---------------------------------------+
-//| Text                | System.String                         |
-//| UnicodeText         | System.String                         |
-//| Rtf                 | System.String                         |
-//| Html                | System.String                         |
-//| Xaml                |                                       |
-//| XamlPackage         |                                       |
-//| OemText             | System.String                         |
-//| StringFormat        | System.String                         |
-//| CommaSeparatedValue | System.IO.MemoryStream                |
-//| SymbolicLink        | System.String                         |
-//| Bitmap              | System.Windows.Interop.InteropBitmap  |
-//| Tiff                | System.Windows.Interop.InteropBitmap  |
-//| Riff                | System.IO.MemoryStream                |
-//| MetafilePicture     | System.IO.MemoryStream                |
-//| WaveAudio           | System.IO.MemoryStream                |
-//| Serializable        |                                       |
-//| Palette             | System.IO.MemoryStream                |
-//| Locale              | System.IO.MemoryStream                |
-//| FileDrop            | System.String[] (Array of file paths) |
-//| EnhancedMetafile    | System.Drawing.Imaging.Metafile       |
-//| Dif                 | System.String                         |
-//| Dib                 | System.IO.MemoryStream                |
-//| PenData             | System.IO.MemoryStream                |
-//+---------------------+---------------------------------------+

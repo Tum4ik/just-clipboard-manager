@@ -1,0 +1,18 @@
+using System.Windows;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
+
+namespace Tum4ik.JustClipboardManager.PluginDevKit;
+public interface IPlugin
+{
+  Guid? Id { get; }
+
+  string Format { get; }
+
+  DataTemplate RepresentationDataDataTemplate { get; }
+
+  ClipData? ProcessData(object data);
+
+  object RestoreData(byte[] bytes);
+
+  object RestoreRepresentationData(byte[] bytes);
+}

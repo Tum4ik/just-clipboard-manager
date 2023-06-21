@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
@@ -19,6 +18,7 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
@@ -87,17 +87,24 @@ public partial class App : ISingleInstance
     });
     Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
     e.Handled = true;
+    RestartApp();
+    Current.Shutdown();
+  }
+
+
+  private static void RestartApp()
+  {
     var processPath = Environment.ProcessPath;
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
+#if !DEBUG
       Process.Start(new ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
       });
+#endif
     }
-
-    Current.Shutdown();
   }
 
 
@@ -185,6 +192,7 @@ public partial class App : ISingleInstance
       .RegisterSingleton<ISettingsService, SettingsService>()
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
+      .RegisterSingleton<IPluginsService, PluginsService>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()
@@ -219,8 +227,8 @@ public partial class App : ISingleInstance
   }
 
 
-  //protected override IModuleCatalog CreateModuleCatalog()
-  //{
-  //  return new DirectoryModuleCatalog { ModulePath = "Modules" };
-  //}
+  protected override IModuleCatalog CreateModuleCatalog()
+  {
+    return new DirectoryModuleCatalog { ModulePath = "Plugins" };
+  }
 }

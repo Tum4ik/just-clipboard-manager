@@ -80,15 +80,15 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
-    <PackageReference Include="MathConverter" Version="2.1.0" />
+    <PackageReference Include="MathConverter" Version="2.2.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.6.40">
       <PrivateAssets>all</PrivateAssets>
@@ -101,6 +101,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj" />
   </ItemGroup>
 

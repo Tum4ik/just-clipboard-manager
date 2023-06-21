@@ -98,7 +98,7 @@
           </Setter>
         </Style>
 
-        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
+        <!--<DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
           <TextBlock Text="????"/>
         </DataTemplate>
         <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
@@ -142,7 +142,7 @@
             <TextBlock Grid.Column="1" Text="{Binding DataContext.Translate[Files], ElementName=This}" Margin="4, 0" 
                        VerticalAlignment="Center"/>
           </Grid>
-        </DataTemplate>
+        </DataTemplate>-->
       </ListBox.Resources>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
