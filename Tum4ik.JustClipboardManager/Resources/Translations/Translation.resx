@@ -199,4 +199,7 @@
   <data name="CopyEmailToClipboard" xml:space="preserve">
     <value>Copy email to clipboard</value>
   </data>
+  <data name="Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
 </root>

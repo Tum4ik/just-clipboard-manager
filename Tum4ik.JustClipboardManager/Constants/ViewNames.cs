@@ -7,5 +7,7 @@ internal static class ViewNames
   public const string SettingsInterfaceView = "SettingsInterfaceView";
   public const string SettingsHotkeysView = "SettingsHotkeysView";
 
+  public const string PluginsView = "PluginsView";
+
   public const string AboutView = "AboutView";
 }

@@ -21,6 +21,10 @@
                           Icon="Settings"
                           IsChecked="{Binding IsSettingsTabChecked}"
                           CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
+      <controls:TabButton Text="{Binding Translate[Plugins]}"
+                          Icon="Extension"
+                          IsChecked="{Binding IsPluginsTabChecked}"
+                          CommandParameter="{x:Static const:ViewNames.PluginsView}"/>
       <controls:TabButton Text="{Binding Translate[About]}"
                           Icon="Info"
                           IsChecked="{Binding IsAboutTabChecked}"
