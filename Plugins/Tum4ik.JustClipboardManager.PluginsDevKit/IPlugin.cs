@@ -4,7 +4,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 namespace Tum4ik.JustClipboardManager.PluginDevKit;
 public interface IPlugin
 {
-  Guid? Id { get; }
+  string? Id { get; }
 
   string Format { get; }
 

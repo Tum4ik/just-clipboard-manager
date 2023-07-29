@@ -104,7 +104,7 @@ internal class ClipboardService : IClipboardService
       }
 
       var plugin = _plugins.First(p => p.Format == pluginFormat);
-      if (!plugin.Id.HasValue)
+      if (string.IsNullOrEmpty(plugin.Id))
       {
         return;
       }
@@ -208,7 +208,7 @@ internal class ClipboardService : IClipboardService
 
       var clip = new Clip
       {
-        PluginId = plugin.Id.Value,
+        PluginId = plugin.Id,
         FormattedDataObjects = formattedDataObjects,
         RepresentationData = representationData,
         SearchLabel = searchLabel

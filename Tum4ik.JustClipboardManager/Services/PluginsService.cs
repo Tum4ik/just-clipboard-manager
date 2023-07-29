@@ -19,10 +19,10 @@ internal class PluginsService : IPluginsService
   }
 
 
-  private readonly Dictionary<Guid, IPlugin> _plugins = new();
+  private readonly Dictionary<string, IPlugin> _plugins = new();
 
 
-  public void Register(Guid id)
+  public void Register(string id)
   {
     var plugin = _containerProvider.ResolvePlugin(id);
     _plugins[id]=plugin;
@@ -30,7 +30,7 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public void Unregister(Guid id)
+  public void Unregister(string id)
   {
     _plugins.Remove(id);
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
@@ -43,7 +43,7 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public IPlugin? GetPlugin(Guid id)
+  public IPlugin? GetPlugin(string id)
   {
     if (_plugins.TryGetValue(id, out var plugin))
     {

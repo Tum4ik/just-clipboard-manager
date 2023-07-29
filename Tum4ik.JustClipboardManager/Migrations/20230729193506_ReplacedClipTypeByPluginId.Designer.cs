@@ -11,7 +11,7 @@ using Tum4ik.JustClipboardManager.Data;
 namespace Tum4ik.JustClipboardManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230621143125_ReplacedClipTypeByPluginId")]
+    [Migration("20230729193506_ReplacedClipTypeByPluginId")]
     partial class ReplacedClipTypeByPluginId
     {
         /// <inheritdoc />
@@ -19,7 +19,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
@@ -35,7 +35,8 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("datetime('now', 'localtime')");
 
-                    b.Property<Guid>("PluginId")
+                    b.Property<string>("PluginId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("RepresentationData")

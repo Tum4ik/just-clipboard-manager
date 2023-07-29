@@ -7,8 +7,8 @@ namespace Tum4ik.JustClipboardManager.PluginDevKit;
 public abstract class Plugin<T> : IPlugin
   where T : FrameworkElement
 {
-  private Guid? _id;
-  public Guid? Id => _id ??= GetId(GetType());
+  private string? _id;
+  public string? Id => _id ??= GetId(GetType());
 
   public abstract string Format { get; }
   public DataTemplate RepresentationDataDataTemplate { get; } = new() { VisualTree = new(typeof(T)) };
@@ -17,7 +17,7 @@ public abstract class Plugin<T> : IPlugin
   public abstract object RestoreRepresentationData(byte[] bytes);
 
 
-  internal static Guid? GetId(Type pluginType)
+  internal static string? GetId(Type pluginType)
   {
     return pluginType.GetCustomAttribute<PluginAttribute>(true)?.Id;
   }

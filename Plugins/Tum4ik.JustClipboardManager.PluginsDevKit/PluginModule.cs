@@ -14,12 +14,12 @@ public abstract class PluginModule<T> : IModule
   }
 
 
-  private readonly Guid? _pluginId;
+  private readonly string? _pluginId;
 
 
   public void RegisterTypes(IContainerRegistry containerRegistry)
   {
-    if (!_pluginId.HasValue)
+    if (string.IsNullOrEmpty(_pluginId))
     {
       return;
     }
@@ -30,12 +30,12 @@ public abstract class PluginModule<T> : IModule
 
   public void OnInitialized(IContainerProvider containerProvider)
   {
-    if (!_pluginId.HasValue)
+    if (string.IsNullOrEmpty(_pluginId))
     {
       return;
     }
 
     var pluginsService = containerProvider.Resolve<IPluginsService>();
-    pluginsService.Register(_pluginId.Value);
+    pluginsService.Register(_pluginId);
   }
 }

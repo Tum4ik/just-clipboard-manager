@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -25,12 +24,12 @@ namespace Tum4ik.JustClipboardManager.Migrations
                 oldType: "BLOB",
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<Guid>(
+            migrationBuilder.AddColumn<string>(
                 name: "PluginId",
                 table: "Clips",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                defaultValue: "");
         }
 
         /// <inheritdoc />
