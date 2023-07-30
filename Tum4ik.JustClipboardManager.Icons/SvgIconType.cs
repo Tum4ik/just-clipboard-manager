@@ -20,6 +20,7 @@ public enum SvgIconType
   [SvgIconResource("edit")] Edit,
   [SvgIconResource("email-alternate")] EmailAlternate,
   [SvgIconResource("expand-arrow")] ExpandArrow,
+  [SvgIconResource("extension")] Extension,
   [SvgIconResource("feedback")] Feedback,
   [SvgIconResource("file")] File,
   [SvgIconResource("files")] Files,

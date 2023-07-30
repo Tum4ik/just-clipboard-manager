@@ -13,12 +13,6 @@
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update=".manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <PropertyGroup>
     <PluginId>D930D2CD-3FD9-4012-A363-120676E22AFA</PluginId>
     <BuildDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\x86\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x86>
@@ -29,7 +23,6 @@
     <ItemGroup>
       <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
       <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
-      <FilesToCopy Include="$(TargetDir).manifest" />
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />

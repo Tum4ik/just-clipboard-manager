@@ -6,7 +6,14 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
 namespace Tum4ik.JustClipboardManager.TextPlugin;
 
-[Plugin("D930D2CD-3FD9-4012-A363-120676E22AFA")]
+[Plugin(
+  Id = "D930D2CD-3FD9-4012-A363-120676E22AFA",
+  Name = "Default Text Plugin",
+  Version = "2.0.0",
+  Author = "Yevheniy Tymchishin",
+  AuthorEmail = "timchishinevgeniy@gmail.com",
+  Description = "A simple plugin to deal with the text data"
+)]
 public sealed class Text : Plugin<TextVisualTree>
 {
   public override string Format { get; } = DataFormats.UnicodeText;
