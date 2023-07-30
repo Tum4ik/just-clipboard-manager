@@ -1,4 +1,4 @@
-namespace Tum4ik.JustClipboardManager.Views.Main;
+namespace Tum4ik.JustClipboardManager.Views.Main.Plugins;
 /// <summary>
 /// Interaction logic for PluginsView.xaml
 /// </summary>

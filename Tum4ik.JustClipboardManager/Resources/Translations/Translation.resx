@@ -202,4 +202,10 @@
   <data name="Plugins" xml:space="preserve">
     <value>Plugins</value>
   </data>
+  <data name="Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Sequence</value>
+  </data>
 </root>

@@ -46,7 +46,10 @@
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
-    <None Remove="Views\Main\PluginsView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsInstalledView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsSearchView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsSequenceView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsView.xaml" />
     <None Remove="Views\Main\Settings\EditHotkeyDialog.xaml" />
     <None Remove="Views\Main\Settings\SettingsGeneralView.xaml" />
     <None Remove="Views\Main\Settings\SettingsHotkeysView.xaml" />

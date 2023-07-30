@@ -27,10 +27,12 @@ using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 using Tum4ik.JustClipboardManager.ViewModels.Shared;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
+using Tum4ik.JustClipboardManager.Views.Main.Plugins;
 using Tum4ik.JustClipboardManager.Views.Main.Settings;
 using Tum4ik.JustClipboardManager.Views.Shared;
 
@@ -217,7 +219,12 @@ public partial class App : ISingleInstance
     containerRegistry.RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView);
     containerRegistry.RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView);
     containerRegistry.RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView);
+
     containerRegistry.RegisterForNavigation<PluginsView, PluginsViewModel>(ViewNames.PluginsView);
+    containerRegistry.RegisterForNavigation<PluginsInstalledView, PluginsInstalledViewModel>(ViewNames.PluginsInstalledView);
+    containerRegistry.RegisterForNavigation<PluginsSearchView, PluginsSearchViewModel>(ViewNames.PluginsSearchView);
+    containerRegistry.RegisterForNavigation<PluginsSequenceView, PluginsSequenceViewModel>(ViewNames.PluginsSequenceView);
+
     containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
   }
 
