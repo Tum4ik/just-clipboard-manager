@@ -7,19 +7,19 @@ using Tum4ik.JustClipboardManager.Services.PInvoke;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class ClipboardHookServiceTests
 {
-  private readonly Mock<IPasteWindowService> _pasteWindowServiceMock = new();
-  private readonly Mock<IEventAggregator> _eventAggregatorMock = new();
-  private readonly Mock<IUser32DllService> _user32DllMock = new();
+  private readonly IPasteWindowService _pasteWindowService = Substitute.For<IPasteWindowService>();
+  private readonly IEventAggregator _eventAggregator = Substitute.For<IEventAggregator>();
+  private readonly IUser32DllService _user32Dll = Substitute.For<IUser32DllService>();
 
 
   [Fact]
   internal void Constructor_AddClipboardListenerFailed_ThrowsException()
   {
-    _user32DllMock
-      .Setup(u32 => u32.AddClipboardFormatListener(It.IsAny<nint>()))
+    _user32Dll
+      .AddClipboardFormatListener(Arg.Any<nint>())
       .Returns(false);
     var constructorCall = ()
-      => new ClipboardHookService(_pasteWindowServiceMock.Object, _eventAggregatorMock.Object, _user32DllMock.Object);
+      => new ClipboardHookService(_pasteWindowService, _eventAggregator, _user32Dll);
     constructorCall.Should().Throw<Win32Exception>();
   }
 
@@ -28,21 +28,19 @@ public class ClipboardHookServiceTests
   internal async Task HwndHook_ClipboardUpdateMsg_PublishesClipboardChangedEvent()
   {
     const nint WinHandle = 33;
-    var clipboardChangedEventMock = new Mock<ClipboardChangedEvent>();
-    _pasteWindowServiceMock.Setup(pws => pws.WindowHandle).Returns(WinHandle);
-    _user32DllMock
-      .Setup(u32 => u32.AddClipboardFormatListener(WinHandle))
+    var clipboardChangedEvent = Substitute.For<ClipboardChangedEvent>();
+    _pasteWindowService.WindowHandle.Returns(WinHandle);
+    _user32Dll
+      .AddClipboardFormatListener(WinHandle)
       .Returns(true);
-    _eventAggregatorMock.Setup(ea => ea.GetEvent<ClipboardChangedEvent>()).Returns(clipboardChangedEventMock.Object);
-    var testeeService = new ClipboardHookService(
-      _pasteWindowServiceMock.Object, _eventAggregatorMock.Object, _user32DllMock.Object
-    );
+    _eventAggregator.GetEvent<ClipboardChangedEvent>().Returns(clipboardChangedEvent);
+    var testeeService = new ClipboardHookService(_pasteWindowService, _eventAggregator, _user32Dll);
 
     var handled = false;
     testeeService.HwndHook(WinHandle, 0x031D, default, default, ref handled);
-    await Task.Delay(501);
+    await Task.Delay(505);
 
-    clipboardChangedEventMock.Verify(cce => cce.Publish(), Times.Once());
+    clipboardChangedEvent.Received(1).Publish();
   }
 
 
@@ -50,42 +48,38 @@ public class ClipboardHookServiceTests
   internal async Task HwndHook_ManySequentialClipboardUpdateMsgs_PublishesClipboardChangedEventOnlyForFirst()
   {
     const nint WinHandle = 33;
-    var clipboardChangedEventMock = new Mock<ClipboardChangedEvent>();
-    _pasteWindowServiceMock.Setup(pws => pws.WindowHandle).Returns(WinHandle);
-    _user32DllMock
-      .Setup(u32 => u32.AddClipboardFormatListener(WinHandle))
+    var clipboardChangedEvent = Substitute.For<ClipboardChangedEvent>();
+    _pasteWindowService.WindowHandle.Returns(WinHandle);
+    _user32Dll
+      .AddClipboardFormatListener(WinHandle)
       .Returns(true);
-    _eventAggregatorMock.Setup(ea => ea.GetEvent<ClipboardChangedEvent>()).Returns(clipboardChangedEventMock.Object);
-    var testeeService = new ClipboardHookService(
-      _pasteWindowServiceMock.Object, _eventAggregatorMock.Object, _user32DllMock.Object
-    );
+    _eventAggregator.GetEvent<ClipboardChangedEvent>().Returns(clipboardChangedEvent);
+    var testeeService = new ClipboardHookService(_pasteWindowService, _eventAggregator, _user32Dll);
 
     var handled = false;
     for (var i = 0; i < 10; i++)
     {
       testeeService.HwndHook(WinHandle, 0x031D, default, default, ref handled);
     }
-    await Task.Delay(501);
+    await Task.Delay(505);
 
-    clipboardChangedEventMock.Verify(cce => cce.Publish(), Times.Once());
+    clipboardChangedEvent.Received(1).Publish();
   }
 
 
   [Fact]
-  internal async Task HwndHook_DestroyMsg_RemovesClipboardListener()
+  internal void HwndHook_DestroyMsg_RemovesClipboardListener()
   {
     const nint WinHandle = 33;
-    _pasteWindowServiceMock.Setup(pws => pws.WindowHandle).Returns(WinHandle);
-    _user32DllMock
-      .Setup(u32 => u32.AddClipboardFormatListener(WinHandle))
+    _pasteWindowService.WindowHandle.Returns(WinHandle);
+    _user32Dll
+      .AddClipboardFormatListener(WinHandle)
       .Returns(true);
-    var testeeService = new ClipboardHookService(
-      _pasteWindowServiceMock.Object, _eventAggregatorMock.Object, _user32DllMock.Object
-    );
+    var testeeService = new ClipboardHookService(_pasteWindowService, _eventAggregator, _user32Dll);
 
     var handled = false;
     testeeService.HwndHook(WinHandle, 0x0002, default, default, ref handled);
 
-    _user32DllMock.Verify(u32 => u32.RemoveClipboardFormatListener(WinHandle), Times.Once());
+    _user32Dll.Received(1).RemoveClipboardFormatListener(WinHandle);
   }
 }

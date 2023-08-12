@@ -9,21 +9,21 @@ namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 [Collection(TestCollections.ApplicationInstanceRequired)]
 public class ThemeServiceTests
 {
-  private readonly Mock<ISettingsService> _settingsServiceMock = new();
-  private readonly Mock<IEventAggregator> _eventAggregatorMock = new();
-  private readonly Mock<IAppResourcesService> _appResourcesServiceMock = new();
+  private readonly ISettingsService _settingsService = Substitute.For<ISettingsService>();
+  private readonly IEventAggregator _eventAggregator = Substitute.For<IEventAggregator>();
+  private readonly IAppResourcesService _appResourcesService = Substitute.For<IAppResourcesService>();
   private readonly ResourceDictionary _appResources = new();
-  private readonly Mock<ThemeChangedEvent> _themeChangedEventMock = new();
+  private readonly ThemeChangedEvent _themeChangedEvent = Substitute.For<ThemeChangedEvent>();
 
 
   private ThemeService CreateTesteeService()
   {
-    _appResourcesServiceMock.Setup(r => r.Resources).Returns(_appResources);
-    _eventAggregatorMock.Setup(ea => ea.GetEvent<ThemeChangedEvent>()).Returns(_themeChangedEventMock.Object);
+    _appResourcesService.Resources.Returns(_appResources);
+    _eventAggregator.GetEvent<ThemeChangedEvent>().Returns(_themeChangedEvent);
     return new(
-      _settingsServiceMock.Object,
-      _eventAggregatorMock.Object,
-      _appResourcesServiceMock.Object
+      _settingsService,
+      _eventAggregator,
+      _appResourcesService
     );
   }
 
@@ -32,7 +32,7 @@ public class ThemeServiceTests
   internal void SetThemeOnInitializationTest()
   {
     _ = CreateTesteeService();
-    _themeChangedEventMock.Verify(e => e.Publish(), Times.Once);
+    _themeChangedEvent.Received(1).Publish();
   }
 
 
@@ -47,7 +47,7 @@ public class ThemeServiceTests
   [Fact]
   internal void GetSelectedTheme_NoThemeInSettings_ReturnsFirstThemeFromList()
   {
-    _settingsServiceMock.Setup(ss => ss.Theme).Returns(string.Empty);
+    _settingsService.Theme.Returns(string.Empty);
     var testeeService = CreateTesteeService();
     var selectedTheme = testeeService.SelectedTheme;
     selectedTheme.Should().Be(testeeService.Themes.First());
@@ -59,7 +59,7 @@ public class ThemeServiceTests
   [InlineData("Dark")]
   internal void GetSelectedTheme_ThemeIsInSettings_ReturnsCorrespondingTheme(string themeName)
   {
-    _settingsServiceMock.Setup(ss => ss.Theme).Returns(themeName);
+    _settingsService.Theme.Returns(themeName);
     var testeeService = CreateTesteeService();
     var selectedTheme = testeeService.SelectedTheme;
     selectedTheme.Name.Should().Be(themeName);
@@ -71,15 +71,15 @@ public class ThemeServiceTests
   [InlineData("Dark")]
   internal void SetSelectedTheme_SelectedThemeEqualsToAssigningValue_NoThemeChangeAction(string themeName)
   {
-    _settingsServiceMock.Setup(ss => ss.Theme).Returns(themeName);
+    _settingsService.Theme.Returns(themeName);
     var testeeService = CreateTesteeService();
-    _settingsServiceMock.VerifySet(ss => ss.Theme = themeName, Times.Once);
-    _themeChangedEventMock.Verify(e => e.Publish(), Times.Once);
-    _settingsServiceMock.Reset();
-    _themeChangedEventMock.Reset();
+    _settingsService.Received(1).Theme = themeName;
+    _themeChangedEvent.Received(1).Publish();
+    _settingsService.ClearReceivedCalls();
+    _themeChangedEvent.ClearReceivedCalls();
     testeeService.SelectedTheme = testeeService.Themes.First(ct => ct.Name == themeName);
-    _settingsServiceMock.VerifyNoOtherCalls();
-    _themeChangedEventMock.VerifyNoOtherCalls();
+    _settingsService.ReceivedCalls().Any().Should().BeFalse();
+    _themeChangedEvent.ReceivedCalls().Any().Should().BeFalse();
     testeeService.SelectedTheme.Name.Should().Be(themeName);
   }
 
@@ -89,15 +89,15 @@ public class ThemeServiceTests
   [InlineData("Dark")]
   internal void SetSelectedTheme_SelectedThemeIsNotEqualToAssigningValue_ThemeIsChanged(string themeName)
   {
-    _settingsServiceMock.Setup(ss => ss.Theme).Returns(themeName);
+    _settingsService.Theme.Returns(themeName);
     var testeeService = CreateTesteeService();
-    _settingsServiceMock.Reset();
-    _themeChangedEventMock.Reset();
+    _settingsService.ClearReceivedCalls();
+    _themeChangedEvent.ClearReceivedCalls();
     var newTheme = testeeService.Themes.First(ct => ct.Name != themeName);
     testeeService.SelectedTheme = newTheme;
     _appResources.MergedDictionaries.Should().Contain(rd => rd.Source.ToString().EndsWith(newTheme.XamlFileName));
-    _settingsServiceMock.VerifySet(ss => ss.Theme = newTheme.Name, Times.Once);
-    _themeChangedEventMock.Verify(e => e.Publish(), Times.Once);
+    _settingsService.Received(1).Theme = newTheme.Name;
+    _themeChangedEvent.Received(1).Publish();
     testeeService.SelectedTheme.Should().Be(newTheme);
   }
 }

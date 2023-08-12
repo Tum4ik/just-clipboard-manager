@@ -5,18 +5,18 @@ using Tum4ik.JustClipboardManager.Services;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class UpdateServiceTests
 {
-  private readonly Mock<IInfoService> _infoServiceMock = new();
-  private readonly Mock<IReleasesClient> _releasesClientMock = new();
-  private readonly Mock<IEnvironment> _environmentMock = new();
+  private readonly IInfoService _infoService = Substitute.For<IInfoService>();
+  private readonly IReleasesClient _releasesClient = Substitute.For<IReleasesClient>();
+  private readonly IEnvironment _environment = Substitute.For<IEnvironment>();
   private readonly UpdateService _testeeService;
 
   public UpdateServiceTests()
   {
-    var gitHubClientMock = new Mock<IGitHubClient>();
-    var repositoriesClient = new Mock<IRepositoriesClient>();
-    gitHubClientMock.SetupGet(c => c.Repository).Returns(repositoriesClient.Object);
-    repositoriesClient.SetupGet(c => c.Release).Returns(_releasesClientMock.Object);
-    _testeeService = new(_infoServiceMock.Object, gitHubClientMock.Object, _environmentMock.Object);
+    var gitHubClient = Substitute.For<IGitHubClient>();
+    var repositoriesClient = Substitute.For<IRepositoriesClient>();
+    gitHubClient.Repository.Returns(repositoriesClient);
+    repositoriesClient.Release.Returns(_releasesClient);
+    _testeeService = new(_infoService, gitHubClient, _environment);
   }
 
 
@@ -42,10 +42,10 @@ public class UpdateServiceTests
       "", "", "", "", 0, "", TagName, "", "", body, false, false, default, default, null, "", "", assets
     );
 
-    _releasesClientMock.Setup(c => c.GetLatest("Tum4ik", "just-clipboard-manager")).ReturnsAsync(release);
-    _infoServiceMock.Setup(s => s.Version).Returns(currentVersion);
+    _releasesClient.GetLatest("Tum4ik", "just-clipboard-manager").Returns(release);
+    _infoService.Version.Returns(currentVersion);
 
-    _environmentMock.Setup(e => e.Is64BitOperatingSystem).Returns(cpuArch == X64);
+    _environment.Is64BitOperatingSystem.Returns(cpuArch == X64);
 
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 
@@ -74,8 +74,8 @@ public class UpdateServiceTests
       "", "", "", "", 0, "", latestVersion, "", "", null, false, false, default, default, null, "", "", null
     );
 
-    _releasesClientMock.Setup(c => c.GetLatest("Tum4ik", "just-clipboard-manager")).ReturnsAsync(release);
-    _infoServiceMock.Setup(s => s.Version).Returns(currentVersion);
+    _releasesClient.GetLatest("Tum4ik", "just-clipboard-manager").Returns(release);
+    _infoService.Version.Returns(currentVersion);
 
     var checkUpdatesResult = await _testeeService.CheckForUpdatesAsync();
 

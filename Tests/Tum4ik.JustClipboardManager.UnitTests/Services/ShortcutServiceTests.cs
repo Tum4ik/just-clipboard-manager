@@ -7,21 +7,21 @@ using IFile = Tum4ik.JustClipboardManager.Ioc.Wrappers.IFile;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class ShortcutServiceTests
 {
-  private readonly Mock<IInfoService> _infoServiceMock = new();
-  private readonly Mock<WshShell> _wshShellMock = new();
-  private readonly Mock<IFile> _fileMock = new();
-  private readonly Mock<IPath> _pathMock = new();
-  private readonly Mock<IEnvironment> _environmentMock = new();
+  private readonly IInfoService _infoService = Substitute.For<IInfoService>();
+  private readonly WshShell _wshShell = Substitute.For<WshShell>();
+  private readonly IFile _file = Substitute.For<IFile>();
+  private readonly IPath _path = Substitute.For<IPath>();
+  private readonly IEnvironment _environment = Substitute.For<IEnvironment>();
   private readonly ShortcutService _testeeService;
 
   public ShortcutServiceTests()
   {
     _testeeService = new(
-      _infoServiceMock.Object,
-      _wshShellMock.Object,
-      _fileMock.Object,
-      _pathMock.Object,
-      _environmentMock.Object
+      _infoService,
+      _wshShell,
+      _file,
+      _path,
+      _environment
     );
   }
 
@@ -54,9 +54,9 @@ public class ShortcutServiceTests
     var start = Path.Combine(FolderPath, ProductName);
     const string End = ".lnk";
     Expression<Func<string, bool>> shortcutPathMatch = s => s.StartsWith(start) && s.EndsWith(End);
-    _infoServiceMock.Setup(i => i.ProductName).Returns(ProductName);
-    _environmentMock.Setup(e => e.GetFolderPath(specialFolder)).Returns(FolderPath);
-    _fileMock.Setup(f => f.Exists(It.Is(shortcutPathMatch))).Returns(shortcutExists);
+    _infoService.ProductName.Returns(ProductName);
+    _environment.GetFolderPath(specialFolder).Returns(FolderPath);
+    _file.Exists(Arg.Is<string>(s => shortcutPathMatch.Compile()(s))).Returns(shortcutExists);
     var exists = _testeeService.Exists(specialFolder, out var shortcutPath);
     exists.Should().Be(shortcutExists);
     shortcutPath.Should().Match(shortcutPathMatch);
@@ -68,11 +68,11 @@ public class ShortcutServiceTests
   {
     const string ProductName = "Just Clipboard Manager";
     const string FolderPath = @"X:\SpecialFolder\Path";
-    _infoServiceMock.Setup(i => i.ProductName).Returns(ProductName);
-    _environmentMock.Setup(e => e.GetFolderPath(specialFolder)).Returns(FolderPath);
-    _fileMock.Setup(f => f.Exists(It.IsAny<string>())).Returns(true);
+    _infoService.ProductName.Returns(ProductName);
+    _environment.GetFolderPath(specialFolder).Returns(FolderPath);
+    _file.Exists(Arg.Any<string>()).Returns(true);
     _testeeService.Create(specialFolder);
-    _wshShellMock.VerifyNoOtherCalls();
+    _wshShell.ReceivedCalls().Any().Should().BeFalse();
   }
 
 
@@ -83,22 +83,19 @@ public class ShortcutServiceTests
     const string FolderPath = @"X:\SpecialFolder\Path";
     const string ProcessPath = @"C:\Users\AppData\JCM.exe";
     var processDirectory = Path.GetDirectoryName(ProcessPath)!;
-    _infoServiceMock.Setup(i => i.ProductName).Returns(ProductName);
-    _environmentMock.Setup(e => e.GetFolderPath(specialFolder)).Returns(FolderPath);
-    _fileMock.Setup(f => f.Exists(It.IsAny<string>())).Returns(false);
-    var shortcutMock = new Mock<IWshShortcut>();
-    _wshShellMock.Setup(shell => shell.CreateShortcut(It.IsAny<string>())).Returns(shortcutMock.Object);
-    _environmentMock.Setup(e => e.ProcessPath).Returns(ProcessPath);
-    _pathMock.Setup(p => p.GetDirectoryName(ProcessPath)).Returns(processDirectory);
+    _infoService.ProductName.Returns(ProductName);
+    _environment.GetFolderPath(specialFolder).Returns(FolderPath);
+    _file.Exists(Arg.Any<string>()).Returns(false);
+    var shortcut = Substitute.For<IWshShortcut>();
+    _wshShell.CreateShortcut(Arg.Any<string>()).Returns(shortcut); // <-- Microsoft.CSharp.RuntimeBinder.RuntimeBinderException : Cannot perform runtime binding on a null reference
+    _environment.ProcessPath.Returns(ProcessPath);
+    _path.GetDirectoryName(ProcessPath).Returns(processDirectory);
     _testeeService.Create(specialFolder);
-    shortcutMock.VerifySet(sh => sh.TargetPath = ProcessPath, Times.Once);
-    shortcutMock.VerifySet(sh => sh.WorkingDirectory = processDirectory, Times.Once);
-    shortcutMock.VerifySet(
-      sh => sh.IconLocation = It.Is<string>(s => s.StartsWith(Path.Combine(processDirectory, "tray"))
-                                              && s.EndsWith(".ico")),
-      Times.Once
-    );
-    shortcutMock.Verify(sh => sh.Save(), Times.Once);
+    shortcut.Received(1).TargetPath = ProcessPath;
+    shortcut.Received(1).WorkingDirectory = processDirectory;
+    shortcut.Received(1).IconLocation = Arg.Is<string>(s => s.StartsWith(Path.Combine(processDirectory, "tray"))
+                                                            && s.EndsWith(".ico"));
+    shortcut.Received(1).Save();
   }
 
 
@@ -107,11 +104,11 @@ public class ShortcutServiceTests
   {
     const string ProductName = "Just Clipboard Manager";
     const string FolderPath = @"X:\SpecialFolder\Path";
-    _infoServiceMock.Setup(i => i.ProductName).Returns(ProductName);
-    _environmentMock.Setup(e => e.GetFolderPath(specialFolder)).Returns(FolderPath);
-    _fileMock.Setup(f => f.Exists(It.IsAny<string>())).Returns(false);
+    _infoService.ProductName.Returns(ProductName);
+    _environment.GetFolderPath(specialFolder).Returns(FolderPath);
+    _file.Exists(Arg.Any<string>()).Returns(false);
     _testeeService.Delete(specialFolder);
-    _fileMock.Verify(f => f.Delete(It.IsAny<string>()), Times.Never);
+    _file.DidNotReceiveWithAnyArgs().Delete(default!);
   }
 
 
@@ -120,14 +117,11 @@ public class ShortcutServiceTests
   {
     const string ProductName = "Just Clipboard Manager";
     const string FolderPath = @"X:\SpecialFolder\Path";
-    _infoServiceMock.Setup(i => i.ProductName).Returns(ProductName);
-    _environmentMock.Setup(e => e.GetFolderPath(specialFolder)).Returns(FolderPath);
-    _fileMock.Setup(f => f.Exists(It.IsAny<string>())).Returns(true);
+    _infoService.ProductName.Returns(ProductName);
+    _environment.GetFolderPath(specialFolder).Returns(FolderPath);
+    _file.Exists(Arg.Any<string>()).Returns(true);
     _testeeService.Delete(specialFolder);
-    _fileMock.Verify(
-      f => f.Delete(It.Is<string>(s => s.StartsWith(Path.Combine(FolderPath, ProductName))
-                                    && s.EndsWith(".lnk"))),
-      Times.Once
-    );
+    _file.Received(1).Delete(Arg.Is<string>(s => s.StartsWith(Path.Combine(FolderPath, ProductName))
+                                                 && s.EndsWith(".lnk")));
   }
 }

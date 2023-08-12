@@ -7,13 +7,13 @@ using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class PasteServiceTests
 {
-  private readonly Mock<IClipboardService> _clipboardServiceMock = new();
-  private readonly Mock<IUser32DllService> _user32DllMock = new();
+  private readonly IClipboardService _clipboardService = Substitute.For<IClipboardService>();
+  private readonly IUser32DllService _user32Dll = Substitute.For<IUser32DllService>();
   private readonly PasteService _testeeService;
 
   public PasteServiceTests()
   {
-    _testeeService = new(_clipboardServiceMock.Object, _user32DllMock.Object);
+    _testeeService = new(_clipboardService, _user32Dll);
   }
 
 
@@ -21,8 +21,8 @@ public class PasteServiceTests
   internal void PasteData_DataIsEmpty_NothingToDo()
   {
     _testeeService.PasteData(nint.Zero, new List<FormattedDataObject>());
-    _clipboardServiceMock.VerifyNoOtherCalls();
-    _user32DllMock.VerifyNoOtherCalls();
+    _clipboardService.ReceivedCalls().Any().Should().BeFalse();
+    _user32Dll.ReceivedCalls().Any().Should().BeFalse();
   }
 
 
@@ -43,36 +43,38 @@ public class PasteServiceTests
 
     _testeeService.PasteData(TargetWindowPtr, data);
 
-    _clipboardServiceMock.Verify(cs => cs.Paste(data), Times.Once);
-    _user32DllMock.Verify(u32 => u32.SetForegroundWindow(TargetWindowPtr), Times.Once);
-    _user32DllMock.Verify(u32 => u32.SetFocus(TargetWindowPtr), Times.Once);
-    _user32DllMock.Verify(u32 => u32.SendInput(4, IsCtrlVInput(), InputStructSize()), Times.Once);
+    _clipboardService.Received(1).Paste(data);
+    _user32Dll.Received(1).SetForegroundWindow(TargetWindowPtr);
+    _user32Dll.Received(1).SetFocus(TargetWindowPtr);
+    _user32Dll.Received(1).SendInput(4, Arg.Is<INPUT[]>(i => true), InputStructSize());
   }
 
 
-  private static INPUT[] IsCtrlVInput()
+  private static ref INPUT[] IsCtrlVInput()
   {
-    return Match.Create<INPUT[]>(inputs =>
-    {
-      var lengthCondition = inputs.Length == 4;
-      var input0Condition = inputs[0].type == INPUTTYPE.INPUT_KEYBOARD
+    return ref Arg.Is<INPUT[]>(inputs =>
+      inputs.Length == 4
+      &&
+      inputs[0].type == INPUTTYPE.INPUT_KEYBOARD
         && inputs[0].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.LeftCtrl)
-        && inputs[0].data.ki.dwFlags == default;
-      var input1Condition = inputs[1].type == INPUTTYPE.INPUT_KEYBOARD
+        && inputs[0].data.ki.dwFlags == default
+      &&
+      inputs[1].type == INPUTTYPE.INPUT_KEYBOARD
         && inputs[1].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.V)
-        && inputs[1].data.ki.dwFlags == default;
-      var input2Condition = inputs[2].type == INPUTTYPE.INPUT_KEYBOARD
+        && inputs[1].data.ki.dwFlags == default
+      &&
+      inputs[2].type == INPUTTYPE.INPUT_KEYBOARD
         && inputs[2].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.V)
-        && inputs[2].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP;
-      var input3Condition = inputs[3].type == INPUTTYPE.INPUT_KEYBOARD
+        && inputs[2].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP
+      &&
+      inputs[3].type == INPUTTYPE.INPUT_KEYBOARD
         && inputs[3].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.LeftCtrl)
-        && inputs[3].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP;
-      return lengthCondition && input0Condition && input1Condition && input2Condition && input3Condition;
-    });
+        && inputs[3].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP);
   }
 
-  private static unsafe int InputStructSize()
+  private static unsafe ref int InputStructSize()
   {
-    return Match.Create<int>(size => size == sizeof(INPUT));
+    var requiredSize = sizeof(INPUT);
+    return ref Arg.Is<int>(size => size == requiredSize);
   }
 }
