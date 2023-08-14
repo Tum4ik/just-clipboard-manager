@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Linq.Expressions;
 using IWshRuntimeLibrary;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
@@ -87,7 +88,7 @@ public class ShortcutServiceTests
     _environment.GetFolderPath(specialFolder).Returns(FolderPath);
     _file.Exists(Arg.Any<string>()).Returns(false);
     var shortcut = Substitute.For<IWshShortcut>();
-    _wshShell.CreateShortcut(Arg.Any<string>()).Returns(shortcut); // <-- Microsoft.CSharp.RuntimeBinder.RuntimeBinderException : Cannot perform runtime binding on a null reference
+    SubstituteExtensions.Returns((IWshShortcut) _wshShell.CreateShortcut(Arg.Any<string>()), shortcut);
     _environment.ProcessPath.Returns(ProcessPath);
     _path.GetDirectoryName(ProcessPath).Returns(processDirectory);
     _testeeService.Create(specialFolder);
