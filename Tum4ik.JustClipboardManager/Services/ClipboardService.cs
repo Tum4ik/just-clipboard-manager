@@ -182,6 +182,11 @@ internal class ClipboardService : IClipboardService
         Analytics.TrackEvent("Unrecognized Clip Type", eventProps);
       }
 
+      if (representationData.Length <= 0)
+      {
+        return;
+      }
+
       var clip = new Clip
       {
         ClipType = clipType,

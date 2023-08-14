@@ -6,10 +6,16 @@ using System.Windows.Media.Imaging;
 namespace Tum4ik.JustClipboardManager.Converters;
 internal class BytesToImageSourceConverter : IValueConverter
 {
-  public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+  public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    using var memoryStream = new MemoryStream((byte[]) value);
-    return BitmapFrame.Create(memoryStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+    var bytes = (byte[]) value;
+    if (bytes.Length > 0)
+    {
+      using var memoryStream = new MemoryStream((byte[]) value);
+      return BitmapFrame.Create(memoryStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+    }
+
+    return null;
   }
 
 
