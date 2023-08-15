@@ -206,6 +206,11 @@ internal class ClipboardService : IClipboardService
         }
       }
 
+      if (representationData.Length <= 0)
+      {
+        return;
+      }
+
       var clip = new Clip
       {
         PluginId = plugin.Id,
