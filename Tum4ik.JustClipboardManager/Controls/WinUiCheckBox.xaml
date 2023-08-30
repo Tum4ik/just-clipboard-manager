@@ -53,7 +53,7 @@
           <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
         </MultiTrigger>
         <Trigger Property="IsChecked" Value="True">
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDefaultBrush}"/>
           <Setter TargetName="_check" Property="Visibility" Value="Visible"/>
         </Trigger>
@@ -62,7 +62,7 @@
             <Condition Property="IsChecked" Value="True"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
         </MultiTrigger>
         <MultiTrigger>
@@ -70,7 +70,7 @@
             <Condition Property="IsChecked" Value="True"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentTertiaryBrush}"/>
           <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentSecondaryBrush}"/>
         </MultiTrigger>
@@ -79,7 +79,7 @@
             <Condition Property="IsChecked" Value="True"/>
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDisabledBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDisabledBrush}"/>
           <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentDisabledBrush}"/>
           <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>

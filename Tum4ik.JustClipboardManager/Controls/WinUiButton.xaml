@@ -6,7 +6,8 @@
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
         mc:Ignorable="d"
-        Cursor="Hand">
+        Cursor="Hand"
+        FocusVisualStyle="{x:Null}">
   <Button.Template>
     <ControlTemplate TargetType="controls:WinUiButton">
       <Border x:Name="_focusBorder"
@@ -62,7 +63,7 @@
         </Trigger>
 
         <Trigger Property="IsAccent" Value="True">
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDefaultBrush}"/>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Visible"/>
           <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextOnAccentPrimaryBrush}"/>
@@ -81,7 +82,7 @@
             <Condition Property="IsAccent" Value="True"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
         </MultiTrigger>
         <MultiTrigger>
@@ -98,7 +99,7 @@
             <Condition Property="IsAccent" Value="True"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentTertiaryBrush}"/>
           <Setter TargetName="_accentBorder" Property="Stroke">
             <Setter.Value>
@@ -124,7 +125,7 @@
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Collapsed"/>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource AccentDisabledBrush}"/>
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDisabledBrush}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
