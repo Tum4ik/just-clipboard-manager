@@ -86,7 +86,7 @@ internal class ClipboardService : IClipboardService
 
   private void OnPluginsChainUpdated()
   {
-    _plugins = _pluginsService.Plugins();
+    _plugins = _pluginsService.Plugins;
     _pluginFormats = _plugins.Select(p => p.Format).ToImmutableList();
   }
 
@@ -103,8 +103,12 @@ internal class ClipboardService : IClipboardService
         return;
       }
 
-      var plugin = _plugins.First(p => p.Format == pluginFormat);
-      if (string.IsNullOrEmpty(plugin.Id))
+      var plugin = _plugins.FirstOrDefault(
+        p => p.Id is not null
+             && _pluginsService.IsPluginEnabled(p.Id)
+             && p.Format == pluginFormat
+      );
+      if (plugin is null || string.IsNullOrEmpty(plugin.Id))
       {
         return;
       }

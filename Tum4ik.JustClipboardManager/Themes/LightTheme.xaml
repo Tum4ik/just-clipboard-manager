@@ -91,6 +91,11 @@
     <GradientStop Color="#66000000" Offset="1"/>
   </LinearGradientBrush>
 
+  <LinearGradientBrush x:Key="ThumbBorderBrush" StartPoint="0, 0" EndPoint="0, 1">
+    <GradientStop Color="#0F000000" Offset="0.5"/>
+    <GradientStop Color="#29000000" Offset="0.96"/>
+  </LinearGradientBrush>
+
   <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="Black" Opacity="0.6063"/>
   <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="Black" Opacity="0.0241"/>
   <SolidColorBrush x:Key="CheckBoxHoverBackgroundBrush" Color="Black" Opacity="0.0578"/>
@@ -102,6 +107,17 @@
   <SolidColorBrush x:Key="TextBoxInputActiveBackgroundBrush" Color="White"/>
 
   <SolidColorBrush x:Key="ScrollBarForegroundBrush" Color="Black" Opacity="0.4458"/>
+
+  <SolidColorBrush x:Key="CardBorderBrush" Color="Black" Opacity="0.0578"/>
+  <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FDFDFD"/>
+  <SolidColorBrush x:Key="CardDisabledBackgroundBrush" Color="#FAFAFA"/>
+  <DropShadowEffect x:Key="CardShadow"
+                    Color="Black"
+                    Direction="270"
+                    ShadowDepth="2"
+                    BlurRadius="4"
+                    RenderingBias="Quality"
+                    Opacity="0.04"/>
 
   <Storyboard x:Key="HyperlinkPressedForegroundStoryboard">
     <ColorAnimation Storyboard.TargetProperty="(Hyperlink.Foreground).(SolidColorBrush.Color)"

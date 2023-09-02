@@ -1,9 +1,11 @@
 using Prism.Events;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.PluginDevKit.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PluginsService : IPluginsService
@@ -20,26 +22,24 @@ internal class PluginsService : IPluginsService
 
 
   private readonly Dictionary<string, IPlugin> _plugins = new();
+  private readonly Dictionary<string, bool> _enabledPlugins = new();
 
 
-  public void Register(string id)
+  public IReadOnlyCollection<IPlugin> Plugins => _plugins.Values;
+
+
+  public void RegisterPlugin(string id)
   {
-    var plugin = _containerProvider.ResolvePlugin(id);
-    _plugins[id]=plugin;
+    _plugins[id] = _containerProvider.ResolvePlugin(id);
+    _enabledPlugins[id] = PluginSettings.Default.Get(id, true);
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }
 
 
-  public void Unregister(string id)
+  public void UnregisterPlugin(string id)
   {
     _plugins.Remove(id);
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
-  }
-
-
-  public IReadOnlyCollection<IPlugin> Plugins()
-  {
-    return _plugins.Values;
   }
 
 
@@ -50,5 +50,35 @@ internal class PluginsService : IPluginsService
       return plugin;
     }
     return null;
+  }
+
+
+  public void EnablePlugin(string id)
+  {
+    if (_enabledPlugins.TryGetValue(id, out var enabled) && !enabled)
+    {
+      _enabledPlugins[id] = true;
+      PluginSettings.Default.Save(id, true);
+    }
+  }
+
+
+  public void DisablePlugin(string id)
+  {
+    if (_enabledPlugins.TryGetValue(id, out var enabled) && enabled)
+    {
+      _enabledPlugins[id] = false;
+      PluginSettings.Default.Save(id, false);
+    }
+  }
+
+
+  public bool IsPluginEnabled(string id)
+  {
+    if (_enabledPlugins.TryGetValue(id, out var enabled))
+    {
+      return enabled;
+    }
+    return false;
   }
 }

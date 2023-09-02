@@ -1,6 +1,4 @@
-using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using Prism.Events;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Events;
@@ -96,5 +94,12 @@ public partial class PluginCard
   }
 
 
-  public Collection<Button> Buttons { get; } = new();
+  public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(
+    nameof(Footer), typeof(FrameworkElement), typeof(PluginCard)
+  );
+  public FrameworkElement? Footer
+  {
+    get => (FrameworkElement) GetValue(FooterProperty);
+    set => SetValue(FooterProperty, value);
+  }
 }

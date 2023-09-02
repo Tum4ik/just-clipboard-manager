@@ -60,14 +60,6 @@
                FontSize="12"
                TextWrapping="Wrap"
                Margin="0, 8, 0, 0"/>
-    <ItemsControl Grid.Row="3"
-                  HorizontalAlignment="Right"
-                  ItemsSource="{Binding Buttons, ElementName=this}">
-      <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-          <UniformGrid Rows="1"/>
-        </ItemsPanelTemplate>
-      </ItemsControl.ItemsPanel>
-    </ItemsControl>
+    <ContentControl Grid.Row="3" Content="{Binding Footer, ElementName=this}"/>
   </Grid>
 </Border>

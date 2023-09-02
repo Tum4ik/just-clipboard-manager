@@ -208,4 +208,19 @@
   <data name="Sequence" xml:space="preserve">
     <value>Черговість</value>
   </data>
+  <data name="by" xml:space="preserve">
+    <value>від</value>
+  </data>
+  <data name="Install" xml:space="preserve">
+    <value>Встановити</value>
+  </data>
+  <data name="Uninstall" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Увімкнено</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Вимкнено</value>
+  </data>
 </root>

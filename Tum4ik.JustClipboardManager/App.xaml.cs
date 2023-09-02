@@ -69,7 +69,9 @@ public partial class App : ISingleInstance
       RestartAfterCrashCount = count;
     }
 
+#if !DEBUG
     app.DispatcherUnhandledException += OnUnhandledException;
+#endif
     UpgradeSettings();
     app.InitializeComponent();
     app.OverrideDefaultProperties();
@@ -124,9 +126,11 @@ public partial class App : ISingleInstance
     if (InternalSettings.Default.IsSettingsUpgradeRequired)
     {
       InternalSettings.Default.Upgrade();
+      PluginSettings.Default.Upgrade();
       SettingsGeneral.Default.Upgrade();
       SettingsHotkeys.Default.Upgrade();
       SettingsInterface.Default.Upgrade();
+      
       InternalSettings.Default.IsSettingsUpgradeRequired = false;
       InternalSettings.Default.Save();
     }
@@ -144,7 +148,10 @@ public partial class App : ISingleInstance
     base.OnStartup(e);
 
     var configuration = Container.Resolve<IConfiguration>();
+    // todo: wrap AppCenter by service
+#if !DEBUG
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
+#endif
 
     var updateService = Container.Resolve<IUpdateService>();
     updateService.SilentUpdate();

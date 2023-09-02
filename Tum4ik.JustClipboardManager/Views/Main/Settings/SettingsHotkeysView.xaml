@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
              x:Name="this">

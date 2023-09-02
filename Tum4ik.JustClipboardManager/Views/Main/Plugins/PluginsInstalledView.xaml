@@ -2,11 +2,67 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Plugins"
-           d:DataContext="{d:DesignInstance Type=vm:PluginsInstalledViewModel}">
-    <Grid>
-            
-    </Grid>
+             xmlns:dto="clr-namespace:Tum4ik.JustClipboardManager.Data.Dto"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             d:DataContext="{d:DesignInstance Type=vm:PluginsInstalledViewModel}">
+  <ScrollViewer Margin="-8" Padding="0, 8">
+    <ItemsControl ItemsSource="{Binding Plugins}" HorizontalAlignment="Center">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="dto:InstalledPluginInfoDto">
+          <controls:PluginCard PluginName="{Binding Name}"
+                               Version="{Binding Version}"
+                               Author="{Binding Author}"
+                               Description="{Binding Description}"
+                               IsPluginEnabled="{Binding IsEnabled}">
+            <controls:PluginCard.Footer>
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel.Resources>
+                  <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="12"/>
+                  </Style>
+                </StackPanel.Resources>
+                <controls:WinUiButton Text="{Binding DataContext.Translate[Uninstall], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      CommandParameter="{Binding}" />
+                <controls:ToggleSwitch IsChecked="{Binding IsEnabled, Mode=OneWay}"
+                                       Command="{Binding DataContext.EnableDisablePluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                       CommandParameter="{Binding}"
+                                       Margin="8, 0"/>
+                <TextBlock Text="{Binding DataContext.Translate[Enabled], RelativeSource={RelativeSource AncestorType=UserControl}}">
+                  <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                  </i:Interaction.Triggers>
+                </TextBlock>
+                <TextBlock Text="{Binding DataContext.Translate[Disabled], RelativeSource={RelativeSource AncestorType=UserControl}}">
+                  <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </i:DataTrigger>
+                  </i:Interaction.Triggers>
+                </TextBlock>
+              </StackPanel>
+            </controls:PluginCard.Footer>
+          </controls:PluginCard>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
 </UserControl>

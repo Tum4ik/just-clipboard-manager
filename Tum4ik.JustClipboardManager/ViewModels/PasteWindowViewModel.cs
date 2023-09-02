@@ -108,7 +108,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     var dataObjects = clip.FormattedDataObjects;
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(dataObjects);
     var now = DateTime.Now;
-    clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+    clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
     await _clipRepository.UpdateAsync(clip).ConfigureAwait(false);
   }
 
@@ -132,7 +132,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     await foreach (var clip in clips)
     {
       var plugin = _pluginsService.GetPlugin(clip.PluginId);
-      if (plugin is null)
+      if (plugin?.Id is null || !_pluginsService.IsPluginEnabled(plugin.Id))
       {
         continue;
       }

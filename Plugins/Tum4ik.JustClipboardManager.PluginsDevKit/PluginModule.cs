@@ -24,7 +24,7 @@ public abstract class PluginModule<T> : IModule
       return;
     }
 
-    containerRegistry.RegisterSingleton<IPlugin, T>(_pluginId.ToString());
+    containerRegistry.RegisterSingleton<IPlugin, T>(_pluginId);
   }
 
 
@@ -36,6 +36,6 @@ public abstract class PluginModule<T> : IModule
     }
 
     var pluginsService = containerProvider.Resolve<IPluginsService>();
-    pluginsService.Register(_pluginId);
+    pluginsService.RegisterPlugin(_pluginId);
   }
 }
