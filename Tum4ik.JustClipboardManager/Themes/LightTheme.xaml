@@ -26,7 +26,11 @@
   <SolidColorBrush x:Key="AccentTertiaryBrush" Color="#005FB8" Opacity="0.8"/>
   <SolidColorBrush x:Key="AccentDisabledBrush" Color="Black" Opacity="0.2169"/>
 
+  <Brush x:Key="SystemAttentionBrush">#0070CB</Brush>
+  <Brush x:Key="SystemSuccessBrush">#0F7B0F</Brush>
+  <Brush x:Key="SystemCautionBrush">#9D5D00</Brush>
   <Brush x:Key="SystemCriticalBrush">#C42B1C</Brush>
+  <Brush x:Key="SystemNeutralBrush">#8A8A8A</Brush>
 
   <SolidColorBrush x:Key="AppSurfaceBorderBrush" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="Black" Opacity="0.0578"/>

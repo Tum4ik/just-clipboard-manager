@@ -24,21 +24,21 @@
                                Description="{Binding Description}"
                                IsPluginEnabled="{Binding IsEnabled}">
             <controls:PluginCard.Footer>
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <StackPanel.Resources>
+              <DockPanel LastChildFill="False">
+                <DockPanel.Resources>
                   <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="FontSize" Value="12"/>
                   </Style>
-                </StackPanel.Resources>
-                <controls:WinUiButton Text="{Binding DataContext.Translate[Uninstall], RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                      Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                      CommandParameter="{Binding}" />
-                <controls:ToggleSwitch IsChecked="{Binding IsEnabled, Mode=OneWay}"
+                </DockPanel.Resources>
+                <controls:ToggleSwitch DockPanel.Dock="Left"
+                                       IsChecked="{Binding IsEnabled, Mode=OneWay}"
                                        Command="{Binding DataContext.EnableDisablePluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                        CommandParameter="{Binding}"
-                                       Margin="8, 0"/>
-                <TextBlock Text="{Binding DataContext.Translate[Enabled], RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                       Margin="0, 0, 8, 0"/>
+                <TextBlock DockPanel.Dock="Left"
+                           Text="{Binding DataContext.Translate[Enabled], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           Foreground="{DynamicResource SystemSuccessBrush}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
@@ -48,7 +48,9 @@
                     </i:DataTrigger>
                   </i:Interaction.Triggers>
                 </TextBlock>
-                <TextBlock Text="{Binding DataContext.Translate[Disabled], RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <TextBlock DockPanel.Dock="Left"
+                           Text="{Binding DataContext.Translate[Disabled], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           Foreground="{DynamicResource SystemCriticalBrush}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
@@ -58,7 +60,11 @@
                     </i:DataTrigger>
                   </i:Interaction.Triggers>
                 </TextBlock>
-              </StackPanel>
+                <controls:WinUiButton DockPanel.Dock="Right"
+                                      Text="{Binding DataContext.Translate[Uninstall], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                      Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                      CommandParameter="{Binding}" />
+              </DockPanel>
             </controls:PluginCard.Footer>
           </controls:PluginCard>
         </DataTemplate>

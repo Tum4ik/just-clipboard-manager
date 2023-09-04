@@ -86,7 +86,7 @@ internal class ClipboardService : IClipboardService
 
   private void OnPluginsChainUpdated()
   {
-    _plugins = _pluginsService.Plugins;
+    _plugins = _pluginsService.InstalledPlugins;
     _pluginFormats = _plugins.Select(p => p.Format).ToImmutableList();
   }
 

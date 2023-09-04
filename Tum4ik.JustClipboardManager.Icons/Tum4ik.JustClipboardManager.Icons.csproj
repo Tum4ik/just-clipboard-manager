@@ -20,6 +20,7 @@
     <None Remove="Resources\caret-left.svg" />
     <None Remove="Resources\caret-right.svg" />
     <None Remove="Resources\caret-up.svg" />
+    <None Remove="Resources\check-circle.svg" />
     <None Remove="Resources\check.svg" />
     <None Remove="Resources\chevron.svg" />
     <None Remove="Resources\chrome-close.svg" />
@@ -60,6 +61,7 @@
     <Resource Include="Resources\caret-left.svg" />
     <Resource Include="Resources\caret-right.svg" />
     <Resource Include="Resources\caret-up.svg" />
+    <Resource Include="Resources\check-circle.svg" />
     <Resource Include="Resources\check.svg" />
     <Resource Include="Resources\chevron.svg" />
     <Resource Include="Resources\chrome-close.svg" />

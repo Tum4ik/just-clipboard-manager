@@ -7,6 +7,7 @@ public enum SvgIconType
   [SvgIconResource("caret-right")] CaretRight,
   [SvgIconResource("caret-up")] CaretUp,
   [SvgIconResource("check")] Check,
+  [SvgIconResource("check-circle")] CheckCircle,
   [SvgIconResource("chevron")] Chevron,
   [SvgIconResource("chrome-close")] ChromeClose,
   [SvgIconResource("chrome-maximize")] ChromeMaximize,

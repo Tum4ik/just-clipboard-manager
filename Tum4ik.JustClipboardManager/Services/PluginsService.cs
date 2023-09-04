@@ -25,7 +25,7 @@ internal class PluginsService : IPluginsService
   private readonly Dictionary<string, bool> _enabledPlugins = new();
 
 
-  public IReadOnlyCollection<IPlugin> Plugins => _plugins.Values;
+  public IReadOnlyCollection<IPlugin> InstalledPlugins => _plugins.Values;
 
 
   public void RegisterPlugin(string id)
@@ -70,6 +70,12 @@ internal class PluginsService : IPluginsService
       _enabledPlugins[id] = false;
       PluginSettings.Default.Save(id, false);
     }
+  }
+
+
+  public bool IsPluginInstalled(string id)
+  {
+    return _plugins.ContainsKey(id);
   }
 
 

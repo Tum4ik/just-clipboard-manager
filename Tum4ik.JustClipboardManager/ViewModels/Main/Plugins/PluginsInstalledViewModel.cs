@@ -29,7 +29,7 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   public async void OnNavigatedTo(NavigationContext navigationContext)
   {
     Plugins.Clear();
-    await foreach(var installedPluginDto in CreatePluginsDtoAsync(_pluginsService.Plugins))
+    await foreach (var installedPluginDto in CreatePluginsDtoAsync(_pluginsService.InstalledPlugins))
     {
       Plugins.Add(installedPluginDto);
     }
@@ -78,11 +78,26 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
           return null;
         }
 
+        Version version;
+        try
+        {
+          version = Version.Parse(pluginAttribute.Version);
+        }
+        catch (Exception e)
+        when (e is ArgumentNullException
+           || e is ArgumentException
+           || e is ArgumentOutOfRangeException
+           || e is FormatException
+           || e is OverflowException)
+        {
+          return null;
+        }
+
         return new InstalledPluginInfoDto
         {
           Id = pluginAttribute.Id,
           Name = pluginAttribute.Name,
-          Version = Version.Parse(pluginAttribute.Version),
+          Version = version,
           Author = pluginAttribute.Author,
           Description = pluginAttribute.Description,
           IsEnabled = _pluginsService.IsPluginEnabled(pluginAttribute.Id)
