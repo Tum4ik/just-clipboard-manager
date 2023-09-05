@@ -7,13 +7,13 @@ using Tum4ik.JustClipboardManager.Services.Translation;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services.Translation;
 public class TranslationServiceTests
 {
-  private readonly Mock<ISettingsService> _settingsServiceMock = new();
-  private readonly Mock<IEventAggregator> _eventAggregatorMock = new();
+  private readonly ISettingsService _settingsService = Substitute.For<ISettingsService>();
+  private readonly IEventAggregator _eventAggregator = Substitute.For<IEventAggregator>();
 
   [Fact]
   internal void SupportedLanguages_HasAtLeastALanguage()
   {
-    var testee = new TranslationService(_settingsServiceMock.Object, _eventAggregatorMock.Object);
+    var testee = new TranslationService(_settingsService, _eventAggregator);
     testee.SupportedLanguages.Should().NotBeEmpty();
   }
 
@@ -21,8 +21,8 @@ public class TranslationServiceTests
   [Fact]
   internal void GetSelectedLanguage_UnsupportedLanguageInSettings_ReturnsFirstLanguageFromList()
   {
-    var testee = new TranslationService(_settingsServiceMock.Object, _eventAggregatorMock.Object);
-    _settingsServiceMock.Setup(ss => ss.Language).Returns(CultureInfo.GetCultureInfo("ru-RU"));
+    var testee = new TranslationService(_settingsService, _eventAggregator);
+    _settingsService.Language.Returns(CultureInfo.GetCultureInfo("ru-RU"));
     var selectedLanguage = testee.SelectedLanguage;
     selectedLanguage.Should().Be(testee.SupportedLanguages.First());
   }
@@ -30,7 +30,7 @@ public class TranslationServiceTests
 
   public static IEnumerable<object[]> SupportedLanguagesData()
   {
-    var service = new TranslationService(Mock.Of<ISettingsService>(), Mock.Of<IEventAggregator>());
+    var service = new TranslationService(Substitute.For<ISettingsService>(), Substitute.For<IEventAggregator>());
     return service.SupportedLanguages.Select(l => new object[] { l });
   }
 
@@ -38,8 +38,8 @@ public class TranslationServiceTests
   [Theory, MemberData(nameof(SupportedLanguagesData))]
   internal void GetSelectedLanguage_SupportedLanguageInSettings_ReturnsCorrespondingLanguage(Language language)
   {
-    var testee = new TranslationService(_settingsServiceMock.Object, _eventAggregatorMock.Object);
-    _settingsServiceMock.Setup(ss => ss.Language).Returns(language.Culture);
+    var testee = new TranslationService(_settingsService, _eventAggregator);
+    _settingsService.Language.Returns(language.Culture);
     var selectedLanguage = testee.SelectedLanguage;
     selectedLanguage.Culture.Should().Be(language.Culture);
   }
@@ -48,26 +48,26 @@ public class TranslationServiceTests
   [Theory, MemberData(nameof(SupportedLanguagesData))]
   internal void SetSelectedLanguage_SelectedLanguageEqualsToAssigningValue_NoLanguageChangeAction(Language language)
   {
-    var testee = new TranslationService(_settingsServiceMock.Object, _eventAggregatorMock.Object);
-    var languageChangedEventMock = new Mock<LanguageChangedEvent>();
-    _settingsServiceMock.Setup(ss => ss.Language).Returns(language.Culture);
-    _eventAggregatorMock.Setup(ea => ea.GetEvent<LanguageChangedEvent>()).Returns(languageChangedEventMock.Object);
+    var testee = new TranslationService(_settingsService, _eventAggregator);
+    var languageChangedEvent = Substitute.For<LanguageChangedEvent>();
+    _settingsService.Language.Returns(language.Culture);
+    _eventAggregator.GetEvent<LanguageChangedEvent>().Returns(languageChangedEvent);
     _ = testee.SelectedLanguage;
     testee.SelectedLanguage = language;
-    _settingsServiceMock.VerifySet(ss => ss.Language = It.IsAny<CultureInfo>(), Times.Never);
-    languageChangedEventMock.VerifyNoOtherCalls();
+    _settingsService.DidNotReceiveWithAnyArgs().Language = default!;
+    languageChangedEvent.ReceivedCalls().Any().Should().BeFalse();
   }
 
 
   [Theory, MemberData(nameof(SupportedLanguagesData))]
   internal void SetSelectedLanguage_SelectedLanguageIsNotEqualToAssigningValue_LanguageIsChanged(Language language)
   {
-    var testee = new TranslationService(_settingsServiceMock.Object, _eventAggregatorMock.Object);
-    var languageChangedEventMock = new Mock<LanguageChangedEvent>();
-    _eventAggregatorMock.Setup(ea => ea.GetEvent<LanguageChangedEvent>()).Returns(languageChangedEventMock.Object);
+    var testee = new TranslationService(_settingsService, _eventAggregator);
+    var languageChangedEvent = Substitute.For<LanguageChangedEvent>();
+    _eventAggregator.GetEvent<LanguageChangedEvent>().Returns(languageChangedEvent);
     testee.SelectedLanguage = language;
-    _settingsServiceMock.VerifySet(ss => ss.Language = language.Culture, Times.Once);
-    languageChangedEventMock.Verify(e => e.Publish(), Times.Once);
+    _settingsService.Received(1).Language = language.Culture;
+    languageChangedEvent.Received(1).Publish();
     testee.SelectedLanguage.Culture.Should().Be(language.Culture);
   }
 
@@ -78,7 +78,7 @@ public class TranslationServiceTests
     const string ExpectedKey = "ExcellentTranslation";
     var expectedCulture = CultureInfo.GetCultureInfo("uk-UA");
     const string ExpectedTranslation = "My excellent translation";
-    var testee = new TranslationServiceTestee(_settingsServiceMock.Object, _eventAggregatorMock.Object,
+    var testee = new TranslationServiceTestee(_settingsService, _eventAggregator,
       (key, culture) =>
       {
         key.Should().Be(ExpectedKey);
@@ -86,7 +86,7 @@ public class TranslationServiceTests
         return ExpectedTranslation;
       }
     );
-    _settingsServiceMock.Setup(ss => ss.Language).Returns(expectedCulture);
+    _settingsService.Language.Returns(expectedCulture);
 
     var actualTranslation = testee[ExpectedKey];
 
@@ -99,7 +99,7 @@ public class TranslationServiceTests
   {
     const string Key = "ExcellentTranslation";
     var testee = new TranslationServiceTestee(
-      _settingsServiceMock.Object, _eventAggregatorMock.Object, (name, culture) => null
+      _settingsService, _eventAggregator, (name, culture) => null
     );
 
     var actualTranslation = testee[Key];

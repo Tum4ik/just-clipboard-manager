@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AnalysisMode>All</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PluginId>D930D2CD-3FD9-4012-A363-120676E22AFA</PluginId>
+    <BuildDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\x86\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x86>
+    <BuildDestinationFolder_x64>..\..\Tum4ik.JustClipboardManager\bin\x64\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x64>
+  </PropertyGroup>
+
+  <Target Name="CopyPluginToMainOutput" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
+      <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
+  </Target>
+
+</Project>

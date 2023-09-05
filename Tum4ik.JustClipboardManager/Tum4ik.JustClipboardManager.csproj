@@ -15,11 +15,9 @@
 
   <PropertyGroup>
     <Version>0.0.0.0-dev</Version>
-    <Authors>Yevheniy Tymchishin</Authors>
-    <Company>YTSoft</Company>
-    <Product>Just Clipboard Manager</Product>
-    <Copyright>© 2022-2023 Yevheniy Tymchishin. All rights reserved.</Copyright>
+    <SolutionPropertiesLocation>..\SolutionProperties</SolutionPropertiesLocation>
   </PropertyGroup>
+  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets"/>
 
   <PropertyGroup>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
@@ -34,9 +32,11 @@
     <None Remove="Controls\InputFieldButton.xaml" />
     <None Remove="Controls\NavigationButton.xaml" />
     <None Remove="Controls\NavigationPanel.xaml" />
+    <None Remove="Controls\PluginCard.xaml" />
     <None Remove="Controls\SearchBox.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
+    <None Remove="Controls\ToggleSwitch.xaml" />
     <None Remove="Controls\WinUiButton.xaml" />
     <None Remove="Controls\WinUiCheckBox.xaml" />
     <None Remove="Controls\WinUiComboBox.xaml" />
@@ -46,6 +46,10 @@
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsInstalledView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsSearchView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsSequenceView.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsView.xaml" />
     <None Remove="Views\Main\Settings\EditHotkeyDialog.xaml" />
     <None Remove="Views\Main\Settings\SettingsGeneralView.xaml" />
     <None Remove="Views\Main\Settings\SettingsHotkeysView.xaml" />
@@ -78,29 +82,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
-    <PackageReference Include="MathConverter" Version="2.1.0" />
+    <PackageReference Include="MathConverter" Version="2.2.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.2" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.6.40">
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Octokit" Version="6.0.0" />
+    <PackageReference Include="Octokit" Version="7.1.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
     <PackageReference Include="YT.IIGen" Version="0.0.23115.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.Icons\Tum4ik.JustClipboardManager.Icons.csproj" />
   </ItemGroup>
 
@@ -109,6 +114,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>InternalSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\PluginSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PluginSettings.settings</DependentUpon>
     </Compile>
     <Compile Update="Properties\SettingsGeneral.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -143,6 +153,10 @@
     <None Update="Properties\InternalSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>InternalSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\PluginSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PluginSettings.Designer.cs</LastGenOutput>
     </None>
     <None Update="Properties\SettingsGeneral.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

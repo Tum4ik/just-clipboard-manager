@@ -1,0 +1,65 @@
+<Border x:Class="Tum4ik.JustClipboardManager.Controls.PluginCard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        BorderBrush="{DynamicResource CardBorderBrush}"
+        BorderThickness="1"
+        CornerRadius="8"
+        Background="{DynamicResource CardBackgroundBrush}"
+        Effect="{DynamicResource CardShadow}"
+        Padding="16, 8"
+        Margin="8"
+        Width="496" Height="132"
+        x:Name="this"
+        Loaded="This_Loaded">
+  <Border.Resources>
+    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding IsPluginEnabled, ElementName=this}" Value="False">
+          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </Border.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" Text="{Binding PluginName, ElementName=this}" FontWeight="SemiBold"/>
+      <TextBlock Grid.Column="1" Text="{Binding Version, ElementName=this}" />
+    </Grid>
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <i:Interaction.Triggers>
+        <i:DataTrigger Binding="{Binding Author}" Comparison="Equal" Value="{x:Null}">
+          <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+        </i:DataTrigger>
+      </i:Interaction.Triggers>
+      <StackPanel.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+          <Setter Property="FontSize" Value="10"/>
+          <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        </Style>
+      </StackPanel.Resources>
+      <TextBlock x:Name="_by"/>
+      <TextBlock Text=" "/>
+      <TextBlock Text="{Binding Author, ElementName=this}"/>
+    </StackPanel>
+    <TextBlock Grid.Row="2"
+               Text="{Binding Description, ElementName=this}"
+               FontSize="12"
+               TextWrapping="Wrap"
+               Margin="0, 8, 0, 0"/>
+    <ContentControl Grid.Row="3" Content="{Binding Footer, ElementName=this}"/>
+  </Grid>
+</Border>

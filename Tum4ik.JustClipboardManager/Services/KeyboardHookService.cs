@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
@@ -32,7 +31,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
 
 
   private readonly nint _windowHandle;
-  private readonly Dictionary<KeyBindingDescriptor, int> _registeredAtoms = new();
+  private readonly Dictionary<KeyBindingDescriptor, ushort> _registeredAtoms = new();
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
 
@@ -72,9 +71,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private bool RegisterHotKey(KeyBindingDescriptor descriptor, Delegate action, Action saveToSettings)
   {
     var atom = _kernel32Dll.GlobalAddAtom(descriptor.ToString());
-    var modifiers = (int) descriptor.Modifiers;
-    var vKey = KeyInterop.VirtualKeyFromKey(descriptor.Key);
-    if (_user32Dll.RegisterHotKey(_windowHandle, atom, modifiers, vKey))
+    if (_user32Dll.RegisterHotKey(_windowHandle, atom, descriptor.Modifiers, descriptor.Key))
     {
       _registeredAtoms[descriptor] = atom;
       _registeredActionCallbacks[atom] = action;

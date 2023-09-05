@@ -9,15 +9,15 @@ using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 namespace Tum4ik.JustClipboardManager.UnitTests.Services.Dialogs;
 public class ExtendedDialogServiceTests
 {
-  private readonly Mock<IContainerExtension> _containerExtensionMock = new();
-  private readonly Mock<IUser32DllService> _user32DllMock = new();
-  private readonly Mock<IDialogWindowExtended> _dialogWindowExtendedMock = new();
-  private readonly Mock<IDialogAware> _dialogViewModelMock = new();
+  private readonly IContainerExtension _containerExtension = Substitute.For<IContainerExtension>();
+  private readonly IUser32DllService _user32Dll = Substitute.For<IUser32DllService>();
+  private readonly IDialogWindowExtended _dialogWindowExtended = Substitute.For<IDialogWindowExtended>();
+  private readonly IDialogAware _dialogViewModel = Substitute.For<IDialogAware>();
   private readonly ExtendedDialogService _testeeService;
 
   public ExtendedDialogServiceTests()
   {
-    _testeeService = new(_containerExtensionMock.Object, _user32DllMock.Object);
+    _testeeService = new(_containerExtension, _user32Dll);
   }
 
 
@@ -61,10 +61,10 @@ public class ExtendedDialogServiceTests
     {
       var dialogContent = new FrameworkElement
       {
-        DataContext = _dialogViewModelMock.Object
+        DataContext = _dialogViewModel
       };
-      _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(object), dialogName))
+      _containerExtension
+        .Resolve(typeof(object), dialogName)
         .Returns(dialogContent);
       show(_testeeService, dialogName, new DialogParameters(), r => callbackCalled = true, dialogWindowName);
     });
@@ -72,12 +72,12 @@ public class ExtendedDialogServiceTests
     thread.Start();
     thread.Join();
 
-    _dialogWindowExtendedMock.Raise(dw => dw.Closed += null, EventArgs.Empty);
+    _dialogWindowExtended.Closed += Raise.Event();
 
     callbackCalled.Should().BeTrue();
-    _dialogViewModelMock.Verify(vm => vm.OnDialogOpened(It.IsAny<IDialogParameters>()), Times.Once);
-    _dialogWindowExtendedMock.Verify(dw => dw.Activate(), Times.Never);
-    _user32DllMock.Verify(u => u.ShowWindow(It.IsAny<nint>(), It.IsAny<ShowWindowCommand>()), Times.Never);
+    _dialogViewModel.ReceivedWithAnyArgs(1).OnDialogOpened(default);
+    _dialogWindowExtended.DidNotReceive().Activate();
+    _user32Dll.DidNotReceiveWithAnyArgs().ShowWindow(default, default);
   }
 
 
@@ -98,10 +98,10 @@ public class ExtendedDialogServiceTests
     {
       var dialogContent = new FrameworkElement
       {
-        DataContext = _dialogViewModelMock.Object
+        DataContext = _dialogViewModel
       };
-      _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(object), dialogName))
+      _containerExtension
+        .Resolve(typeof(object), dialogName)
         .Returns(dialogContent);
       show(_testeeService, dialogName, new DialogParameters(), r => callbackCalled = true, dialogWindowName);
     });
@@ -109,12 +109,12 @@ public class ExtendedDialogServiceTests
     thread.Start();
     thread.Join();
 
-    _dialogWindowExtendedMock.Raise(dw => dw.Closed += null, EventArgs.Empty);
+    _dialogWindowExtended.Closed += Raise.Event();
 
     callbackCalled.Should().BeTrue();
-    _dialogViewModelMock.Verify(vm => vm.OnDialogOpened(It.IsAny<IDialogParameters>()), Times.Once);
-    _dialogWindowExtendedMock.Verify(dw => dw.Activate(), Times.Never);
-    _user32DllMock.Verify(u => u.ShowWindow(It.IsAny<nint>(), It.IsAny<ShowWindowCommand>()), Times.Never);
+    _dialogViewModel.ReceivedWithAnyArgs(1).OnDialogOpened(default);
+    _dialogWindowExtended.DidNotReceive().Activate();
+    _user32Dll.DidNotReceiveWithAnyArgs().ShowWindow(default, default);
   }
 
 
@@ -134,16 +134,16 @@ public class ExtendedDialogServiceTests
     var firstCallDialogParameters = new DialogParameters();
     var secondCallDialogParameters = new DialogParameters();
     var dialogWindowHandle = (nint) 5;
-    _dialogWindowExtendedMock.Setup(dw => dw.Handle).Returns(dialogWindowHandle);
+    _dialogWindowExtended.Handle.Returns(dialogWindowHandle);
 
     var thread = new Thread(() =>
     {
       var dialogContent = new FrameworkElement
       {
-        DataContext = _dialogViewModelMock.Object
+        DataContext = _dialogViewModel
       };
-      _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(object), dialogName))
+      _containerExtension
+        .Resolve(typeof(object), dialogName)
         .Returns(dialogContent);
       show(_testeeService, dialogName, firstCallDialogParameters, r => firstCallbackCalled = true, dialogWindowName);
       show(_testeeService, dialogName, secondCallDialogParameters, r => secondCallbackCalled = true, dialogWindowName);
@@ -152,32 +152,26 @@ public class ExtendedDialogServiceTests
     thread.Start();
     thread.Join();
 
-    _dialogWindowExtendedMock.Raise(dw => dw.Closed += null, EventArgs.Empty);
+    _dialogWindowExtended.Closed += Raise.Event();
 
     firstCallbackCalled.Should().BeTrue();
     secondCallbackCalled.Should().BeFalse();
-    _dialogViewModelMock.Verify(
-      vm => vm.OnDialogOpened(It.Is<IDialogParameters>(dp => dp == firstCallDialogParameters)),
-      Times.Once
-    );
-    _dialogViewModelMock.Verify(
-      vm => vm.OnDialogOpened(It.Is<IDialogParameters>(dp => dp == secondCallDialogParameters)),
-      Times.Once
-    );
+    _dialogViewModel.Received(1).OnDialogOpened(firstCallDialogParameters);
+    _dialogViewModel.Received(1).OnDialogOpened(secondCallDialogParameters);
     if (windowState == WindowState.Minimized)
     {
-      _user32DllMock.Verify(u => u.ShowWindow(dialogWindowHandle, ShowWindowCommand.SW_RESTORE), Times.Once);
-      _dialogWindowExtendedMock.Verify(dw => dw.Activate(), Times.Never);
+      _user32Dll.Received(1).ShowWindow(dialogWindowHandle, ShowWindowCommand.SW_RESTORE);
+      _dialogWindowExtended.DidNotReceive().Activate();
     }
     else if (!windowIsActive)
     {
-      _user32DllMock.VerifyNoOtherCalls();
-      _dialogWindowExtendedMock.Verify(dw => dw.Activate(), Times.Once);
+      _user32Dll.ReceivedCalls().Any().Should().BeFalse();
+      _dialogWindowExtended.Received(1).Activate();
     }
     else
     {
-      _user32DllMock.VerifyNoOtherCalls();
-      _dialogWindowExtendedMock.Verify(dw => dw.Activate(), Times.Never);
+      _user32Dll.ReceivedCalls().Any().Should().BeFalse();
+      _dialogWindowExtended.DidNotReceive().Activate();
     }
   }
 
@@ -194,19 +188,19 @@ public class ExtendedDialogServiceTests
     }
     if (string.IsNullOrEmpty(dialogWindowName))
     {
-      _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(IDialogWindow), WindowNames.SimpleDialogWindow))
-        .Returns(_dialogWindowExtendedMock.Object);
+      _containerExtension
+        .Resolve(typeof(IDialogWindow), WindowNames.SimpleDialogWindow)
+        .Returns(_dialogWindowExtended);
     }
     else
     {
-      _containerExtensionMock
-        .Setup(ce => ce.Resolve(typeof(IDialogWindow), dialogWindowName))
-        .Returns(_dialogWindowExtendedMock.Object);
+      _containerExtension
+        .Resolve(typeof(IDialogWindow), dialogWindowName)
+        .Returns(_dialogWindowExtended);
     }
-    _dialogWindowExtendedMock.Setup(dw => dw.DataContext).Returns(_dialogViewModelMock.Object);
-    _dialogWindowExtendedMock.Setup(dw => dw.WindowState).Returns(windowState);
-    _dialogWindowExtendedMock.Setup(dw => dw.IsActive).Returns(windowIsActive);
+    _dialogWindowExtended.DataContext.Returns(_dialogViewModel);
+    _dialogWindowExtended.WindowState.Returns(windowState);
+    _dialogWindowExtended.IsActive.Returns(windowIsActive);
 
     return dialogName;
   }

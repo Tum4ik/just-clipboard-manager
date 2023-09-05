@@ -9,23 +9,23 @@ using Tum4ik.JustClipboardManager.ViewModels.Main;
 namespace Tum4ik.JustClipboardManager.UnitTests.ViewModels.Main;
 public class AboutViewModelTests
 {
-  private readonly Mock<IInfoService> _infoServiceMock = new();
-  private readonly Mock<IEnvironment> _environmentMock = new();
-  private readonly Mock<IProcess> _processMock = new();
-  private readonly Mock<IClipboard> _clipboardMock = new();
+  private readonly IInfoService _infoService = Substitute.For<IInfoService>();
+  private readonly IEnvironment _environment = Substitute.For<IEnvironment>();
+  private readonly IProcess _process = Substitute.For<IProcess>();
+  private readonly IClipboard _clipboard = Substitute.For<IClipboard>();
   private readonly AboutViewModel _testeeVm;
 
   public AboutViewModelTests()
   {
-    var eventAggregatorMock = new Mock<IEventAggregator>();
-    eventAggregatorMock.Setup(ea => ea.GetEvent<LanguageChangedEvent>()).Returns(Mock.Of<LanguageChangedEvent>());
+    var eventAggregator = Substitute.For<IEventAggregator>();
+    eventAggregator.GetEvent<LanguageChangedEvent>().Returns(Substitute.For<LanguageChangedEvent>());
     _testeeVm = new(
-      Mock.Of<ITranslationService>(),
-      eventAggregatorMock.Object,
-      _infoServiceMock.Object,
-      _environmentMock.Object,
-      _processMock.Object,
-      _clipboardMock.Object
+      Substitute.For<ITranslationService>(),
+      eventAggregator,
+      _infoService,
+      _environment,
+      _process,
+      _clipboard
     );
   }
 
@@ -36,8 +36,8 @@ public class AboutViewModelTests
   internal void VersionTest(string versionStr, bool is64BitProcess)
   {
     var version = new Version(versionStr);
-    _infoServiceMock.Setup(i => i.Version).Returns(version);
-    _environmentMock.Setup(e => e.Is64BitProcess).Returns(is64BitProcess);
+    _infoService.Version.Returns(version);
+    _environment.Is64BitProcess.Returns(is64BitProcess);
     var actualVersion = _testeeVm.Version;
     var arch = is64BitProcess ? "64" : "32";
     actualVersion.Should().Be($"{versionStr} ({arch}-bit)");
@@ -51,7 +51,7 @@ public class AboutViewModelTests
   internal void OpenLink_LinkIsNullOrWhitespace_NoAction(string? link)
   {
     _testeeVm.OpenLinkCommand.Execute(link);
-    _processMock.VerifyNoOtherCalls();
+    _process.ReceivedCalls().Any().Should().BeFalse();
   }
 
 
@@ -60,10 +60,7 @@ public class AboutViewModelTests
   {
     var link = "https://github.com";
     _testeeVm.OpenLinkCommand.Execute(link);
-    _processMock.Verify(
-      p => p.Start(It.Is<ProcessStartInfo>(psi => psi.FileName == link && psi.UseShellExecute)),
-      Times.Once
-    );
+    _process.Received(1).Start(Arg.Is<ProcessStartInfo>(psi => psi.FileName == link && psi.UseShellExecute));
   }
 
 
@@ -71,6 +68,6 @@ public class AboutViewModelTests
   internal void CopyEmailToClipboardTest()
   {
     _testeeVm.CopyEmailToClipboardCommand.Execute(null);
-    _clipboardMock.Verify(c => c.SetText(_testeeVm.Email), Times.Once);
+    _clipboard.Received(1).SetText(_testeeVm.Email);
   }
 }

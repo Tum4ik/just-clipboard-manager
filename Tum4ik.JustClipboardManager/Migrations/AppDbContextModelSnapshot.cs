@@ -15,7 +15,11 @@ namespace Tum4ik.JustClipboardManager.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.7")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true);
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.Clip", b =>
                 {
@@ -23,15 +27,17 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClipType")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("ClippedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("datetime('now', 'localtime')");
 
+                    b.Property<string>("PluginId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("RepresentationData")
+                        .IsRequired()
                         .HasColumnType("BLOB");
 
                     b.Property<string>("SearchLabel")

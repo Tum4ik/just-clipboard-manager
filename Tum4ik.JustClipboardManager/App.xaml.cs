@@ -19,6 +19,7 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
@@ -27,10 +28,12 @@ using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 using Tum4ik.JustClipboardManager.ViewModels.Shared;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
+using Tum4ik.JustClipboardManager.Views.Main.Plugins;
 using Tum4ik.JustClipboardManager.Views.Main.Settings;
 using Tum4ik.JustClipboardManager.Views.Shared;
 
@@ -67,7 +70,9 @@ public partial class App : ISingleInstance
       RestartAfterCrashCount = count;
     }
 
+#if !DEBUG
     app.DispatcherUnhandledException += OnUnhandledException;
+#endif
     UpgradeSettings();
     app.InitializeComponent();
     app.OverrideDefaultProperties();
@@ -87,17 +92,24 @@ public partial class App : ISingleInstance
     });
     Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
     e.Handled = true;
+    RestartApp();
+    Current.Shutdown();
+  }
+
+
+  private static void RestartApp()
+  {
     var processPath = Environment.ProcessPath;
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
+#if !DEBUG
       Process.Start(new ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
       });
+#endif
     }
-
-    Current.Shutdown();
   }
 
 
@@ -115,9 +127,11 @@ public partial class App : ISingleInstance
     if (InternalSettings.Default.IsSettingsUpgradeRequired)
     {
       InternalSettings.Default.Upgrade();
+      PluginSettings.Default.Upgrade();
       SettingsGeneral.Default.Upgrade();
       SettingsHotkeys.Default.Upgrade();
       SettingsInterface.Default.Upgrade();
+      
       InternalSettings.Default.IsSettingsUpgradeRequired = false;
       InternalSettings.Default.Save();
     }
@@ -135,7 +149,10 @@ public partial class App : ISingleInstance
     base.OnStartup(e);
 
     var configuration = Container.Resolve<IConfiguration>();
+    // todo: wrap AppCenter by service
+#if !DEBUG
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
+#endif
 
     var updateService = Container.Resolve<IUpdateService>();
     updateService.SilentUpdate();
@@ -185,6 +202,7 @@ public partial class App : ISingleInstance
       .RegisterSingleton<ISettingsService, SettingsService>()
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
+      .RegisterSingleton<IPluginsService, PluginsService>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()
@@ -209,6 +227,12 @@ public partial class App : ISingleInstance
     containerRegistry.RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView);
     containerRegistry.RegisterForNavigation<SettingsInterfaceView, SettingsInterfaceViewModel>(ViewNames.SettingsInterfaceView);
     containerRegistry.RegisterForNavigation<SettingsHotkeysView, SettingsHotkeysViewModel>(ViewNames.SettingsHotkeysView);
+
+    containerRegistry.RegisterForNavigation<PluginsView, PluginsViewModel>(ViewNames.PluginsView);
+    containerRegistry.RegisterForNavigation<PluginsInstalledView, PluginsInstalledViewModel>(ViewNames.PluginsInstalledView);
+    containerRegistry.RegisterForNavigation<PluginsSearchView, PluginsSearchViewModel>(ViewNames.PluginsSearchView);
+    containerRegistry.RegisterForNavigation<PluginsSequenceView, PluginsSequenceViewModel>(ViewNames.PluginsSequenceView);
+
     containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>(ViewNames.AboutView);
   }
 
@@ -219,8 +243,8 @@ public partial class App : ISingleInstance
   }
 
 
-  //protected override IModuleCatalog CreateModuleCatalog()
-  //{
-  //  return new DirectoryModuleCatalog { ModulePath = "Modules" };
-  //}
+  protected override IModuleCatalog CreateModuleCatalog()
+  {
+    return new DirectoryModuleCatalog { ModulePath = "Plugins" };
+  }
 }

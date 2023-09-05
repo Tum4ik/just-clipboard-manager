@@ -9,7 +9,7 @@ internal struct MonitorInfo
   /// The size, in bytes, of the structure. Set this member to sizeof(MONITORINFOEX) (72) before calling the GetMonitorInfo function.
   /// Doing so lets the function determine the type of structure you are passing to it.
   /// </summary>
-  public int Size { get; set; }
+  public uint Size { get; set; }
 
   /// <summary>
   /// A RECT structure that specifies the display monitor rectangle, expressed in virtual-screen coordinates.

@@ -2,9 +2,11 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
+using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
@@ -14,14 +16,17 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
+  private readonly IPluginsService _pluginsService;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
-                              ITranslationService translationService)
+                              ITranslationService translationService,
+                              IPluginsService pluginsService)
     : base(translationService, eventAggregator)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
+    _pluginsService = pluginsService;
   }
 
 
@@ -31,7 +36,8 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   private bool _windowDeactivationTriggeredByDataPasting;
 
-  public ObservableCollection<Clip> Clips { get; } = new();
+  private readonly Dictionary<int, Clip> _dbClips = new();
+  public ObservableCollection<ClipDto> Clips { get; } = new();
 
   
   private string? _search;
@@ -43,6 +49,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       if (SetProperty(ref _search, value))
       {
         SearchStarted?.Invoke();
+        _dbClips.Clear();
         Clips.Clear();
         _loadedClipsCount = 0;
         LoadNextClipsBatchAsync().Await(e => throw e);
@@ -71,6 +78,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     else
     {
       Search = null;
+      _dbClips.Clear();
       Clips.Clear();
     }
   }
@@ -89,10 +97,10 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
 
   [RelayCommand]
-  private async Task PasteDataAsync(Clip? clip)
+  private async Task PasteDataAsync(ClipDto? clipDto)
   {
     _windowDeactivationTriggeredByDataPasting = true;
-    if (clip is null)
+    if (clipDto is null || !_dbClips.TryGetValue(clipDto.Id, out var clip))
     {
       return;
     }
@@ -100,17 +108,18 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     var dataObjects = clip.FormattedDataObjects;
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(dataObjects);
     var now = DateTime.Now;
-    clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+    clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
     await _clipRepository.UpdateAsync(clip).ConfigureAwait(false);
   }
 
 
   [RelayCommand]
-  private async Task DeleteClipAsync(Clip? clip)
+  private async Task DeleteClipAsync(ClipDto? clipDto)
   {
-    if (clip is not null)
+    if (clipDto is not null && _dbClips.TryGetValue(clipDto.Id, out var clip))
     {
-      Clips.Remove(clip);
+      _dbClips.Remove(clipDto.Id);
+      Clips.Remove(clipDto);
       await _clipRepository.DeleteAsync(clip).ConfigureAwait(false);
     }
   }
@@ -122,7 +131,20 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     var loadedCount = 0;
     await foreach (var clip in clips)
     {
-      Clips.Add(clip);
+      var plugin = _pluginsService.GetPlugin(clip.PluginId);
+      if (plugin?.Id is null || !_pluginsService.IsPluginEnabled(plugin.Id))
+      {
+        continue;
+      }
+
+      _dbClips[clip.Id] = clip;
+      Clips.Add(new()
+      {
+        Id = clip.Id,
+        PluginId = clip.PluginId,
+        RepresentationData = plugin.RestoreRepresentationData(clip.RepresentationData),
+        SearchLabel = clip.SearchLabel
+      });
       loadedCount++;
     }
     return loadedCount;

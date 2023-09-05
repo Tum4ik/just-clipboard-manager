@@ -241,7 +241,7 @@ begin
     usPostUninstall: begin
       DialogResult := MsgBox(CustomMessage('DoYouWantRemoveAppSettingsAndClips'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
       if DialogResult = IDYES then begin
-        PublisherDir := ExpandConstant('{localappdata}\YTSoft\');
+        PublisherDir := ExpandConstant('{localappdata}\Tum4ik\');
         if FindFirst(PublisherDir + 'JustClipboardManager*', FoundRecord) then begin
           try
             repeat

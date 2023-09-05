@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AnalysisMode>All</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Tum4ik.JustClipboardManager.PluginDevKit</PackageId>
+    <PackageVersion>0.0.0.0-dev</PackageVersion>
+    <Version>0.0.0.0-dev</Version>
+    <Title>Just Clipboard Manager - Plugin Development Kit</Title>
+    <Description>Plugin development kit for Just Clipboard Manager</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
+    <PackageTags>clipboard;clipboard-manager;just-clipboard-manager</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release: possibility to develop plugins for Just Clipboard Manager.</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
+    <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>
+  </PropertyGroup>
+  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
+  </ItemGroup>
+
+</Project>

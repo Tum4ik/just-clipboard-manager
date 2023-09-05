@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="FillProjectProperties" BeforeTargets="BeforeBuild;GenerateNuspec">
+    <ReadLinesFromFile File="$(SolutionPropertiesLocation)\Authors.txt">
+      <Output TaskParameter="Lines" ItemName="AuthorsLines"/>
+    </ReadLinesFromFile>
+    <ReadLinesFromFile File="$(SolutionPropertiesLocation)\Company.txt">
+      <Output TaskParameter="Lines" ItemName="CompanyLines"/>
+    </ReadLinesFromFile>
+    <ReadLinesFromFile File="$(SolutionPropertiesLocation)\Copyright.txt">
+      <Output TaskParameter="Lines" ItemName="CopyrightLines"/>
+    </ReadLinesFromFile>
+    <ReadLinesFromFile File="$(SolutionPropertiesLocation)\Product.txt">
+      <Output TaskParameter="Lines" ItemName="ProductLines"/>
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <Authors>@(AuthorsLines)</Authors>
+      <Company>@(CompanyLines)</Company>
+      <Copyright>@(CopyrightLines)</Copyright>
+      <Product>@(ProductLines)</Product>
+    </PropertyGroup>
+  </Target>
+</Project>

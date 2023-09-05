@@ -26,7 +26,11 @@
   <SolidColorBrush x:Key="AccentTertiaryBrush" Color="#005FB8" Opacity="0.8"/>
   <SolidColorBrush x:Key="AccentDisabledBrush" Color="Black" Opacity="0.2169"/>
 
+  <Brush x:Key="SystemAttentionBrush">#0070CB</Brush>
+  <Brush x:Key="SystemSuccessBrush">#0F7B0F</Brush>
+  <Brush x:Key="SystemCautionBrush">#9D5D00</Brush>
   <Brush x:Key="SystemCriticalBrush">#C42B1C</Brush>
+  <Brush x:Key="SystemNeutralBrush">#8A8A8A</Brush>
 
   <SolidColorBrush x:Key="AppSurfaceBorderBrush" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="Black" Opacity="0.0578"/>
@@ -91,6 +95,11 @@
     <GradientStop Color="#66000000" Offset="1"/>
   </LinearGradientBrush>
 
+  <LinearGradientBrush x:Key="ThumbBorderBrush" StartPoint="0, 0" EndPoint="0, 1">
+    <GradientStop Color="#0F000000" Offset="0.5"/>
+    <GradientStop Color="#29000000" Offset="0.96"/>
+  </LinearGradientBrush>
+
   <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="Black" Opacity="0.6063"/>
   <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="Black" Opacity="0.0241"/>
   <SolidColorBrush x:Key="CheckBoxHoverBackgroundBrush" Color="Black" Opacity="0.0578"/>
@@ -102,6 +111,17 @@
   <SolidColorBrush x:Key="TextBoxInputActiveBackgroundBrush" Color="White"/>
 
   <SolidColorBrush x:Key="ScrollBarForegroundBrush" Color="Black" Opacity="0.4458"/>
+
+  <SolidColorBrush x:Key="CardBorderBrush" Color="Black" Opacity="0.0578"/>
+  <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FDFDFD"/>
+  <SolidColorBrush x:Key="CardDisabledBackgroundBrush" Color="#FAFAFA"/>
+  <DropShadowEffect x:Key="CardShadow"
+                    Color="Black"
+                    Direction="270"
+                    ShadowDepth="2"
+                    BlurRadius="4"
+                    RenderingBias="Quality"
+                    Opacity="0.04"/>
 
   <Storyboard x:Key="HyperlinkPressedForegroundStoryboard">
     <ColorAnimation Storyboard.TargetProperty="(Hyperlink.Foreground).(SolidColorBrush.Color)"

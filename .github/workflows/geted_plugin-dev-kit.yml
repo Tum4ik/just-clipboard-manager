@@ -1,0 +1,111 @@
+name: Gated (Plugin Dev Kit)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'release/**'
+    paths:
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
+
+
+jobs:
+
+
+  build:
+    
+    name: Gated build
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.define-version.outputs.version }}
+    env:
+      Scripts: .\.github\workflows\scripts
+      TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
+      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\net7.0-windows
+      PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\pack
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.0.0
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3.2.0
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Define version
+      id: define-version
+      run: |
+        $majorMinor = "${{ github.ref_name }}".Split("/")[-1]
+        if (![System.Version]::TryParse($majorMinor, [ref]$null)) { $majorMinor = "0.0" }
+        $buildNumber = "$(Get-Date -Format 'yy')$((Get-Date).DayOfYear.ToString().PadLeft(3, '0'))"
+        $version = "$majorMinor.$buildNumber.${{ github.run_number }}"
+        Write-Host "Defined version: $version" -ForegroundColor green
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Build
+      run: |
+        $version = "${{ steps.define-version.outputs.version }}"
+        dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+          -c Release `
+          --nologo `
+          /p:PackageVersion=$version `
+          /p:Version=$version `
+          /p:GeneratePackageOnBuild=false `
+          /p:ContinuousIntegrationBuild=true
+
+    - name: Sign code files
+      run: |
+        ${{ env.Scripts }}\DecodePfx.ps1 `
+          -Base64Pfx "${{ secrets.BASE64_ENCODED_PFX }}" `
+          -OutputPath ${{ env.TemporaryPfxFilePath }}
+        ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
+          -FilesDirectoryPath ${{ env.BuildOutputPath }} `
+          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
+          -PfxPassword ${{ secrets.PFX_KEY }} `
+          -FileNamesToInclude Tum4ik.JustClipboardManager.PluginDevKit.dll
+        Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
+
+    - name: Pack
+      run: |
+        $version = "${{ steps.define-version.outputs.version }}"
+        dotnet pack ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+          -c Release `
+          --nologo `
+          --no-build `
+          -o ${{ env.PackOutputPath }} `
+          /p:PackageVersion=$version `
+          /p:Version=$version `
+          /p:IncludeSymbols=true `
+          /p:SymbolPackageFormat=snupkg
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        if-no-files-found: error
+        name: Package
+        path: ${{ env.PackOutputPath }}
+
+
+  nuget-release:
+
+    if: github.event_name != 'pull_request' && contains(github.ref_name, 'release')
+    needs: build
+    name: Release ${{ needs.build.outputs.version }}
+    runs-on: windows-latest
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3.0.2
+
+    - name: NuGet push
+      run: |
+        dotnet nuget push "**/*.nupkg" `
+          -s https://api.nuget.org/v3/index.json `
+          -k ${{ secrets.NUGET_API_KEY }}

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
@@ -16,17 +18,25 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
     _user32Dll = user32Dll;
 
     _windowHandle = pasteWindowService.WindowHandle;
-    _nextClipboardViewerHandle = user32Dll.SetClipboardViewer(_windowHandle);
+    var isClipboardListenerAdded = user32Dll.AddClipboardFormatListener(_windowHandle);
+    if (!isClipboardListenerAdded)
+    {
+      var ex = new Win32Exception();
+      Crashes.TrackError(ex, new Dictionary<string, string>
+      {
+        { "Description", "AddClipboardFormatListener operation failed" }
+      });
+      throw ex;
+    }
 
     _timer.Elapsed += (s, e) => OnClipboardChanged();
   }
 
 
-  private static readonly object _locker = new();
+  private static readonly object s_locker = new();
   private readonly nint _windowHandle;
-  private nint _nextClipboardViewerHandle;
 
-  private readonly System.Timers.Timer _timer = new System.Timers.Timer(500)
+  private readonly System.Timers.Timer _timer = new(500)
   {
     AutoReset = false,
     Enabled = false
@@ -37,26 +47,25 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
   {
     switch (msg)
     {
-      case 0x0308: // WM_DRAWCLIPBOARD
+      case 0x031D: // WM_CLIPBOARDUPDATE
         // Very often the event raises several times in a raw, however it is the same clipboard change.
         // To prevent that multiple raising of the same event the timer is used.
-        lock (_locker)
+        lock (s_locker)
         {
           if (!_timer.Enabled)
           {
             _timer.Enabled = true;
           }
         }
-        _user32Dll.SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
         break;
-      case 0x030D: // WM_CHANGECBCHAIN
-        if (wParam == _nextClipboardViewerHandle)
+      case 0x0002: // WM_DESTROY
+        var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_windowHandle);
+        if (!isClipboardListenerRemoved)
         {
-          _nextClipboardViewerHandle = lParam;
-        }
-        else
-        {
-          _user32Dll.SendMessage(_nextClipboardViewerHandle, msg, wParam, lParam);
+          Crashes.TrackError(new Win32Exception(), new Dictionary<string, string>
+          {
+            { "Description", "RemoveClipboardFormatListener operation failed" }
+          });
         }
         break;
     }
@@ -74,6 +83,5 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
   public void Dispose()
   {
     _timer.Close();
-    _user32Dll.ChangeClipboardChain(_windowHandle, _nextClipboardViewerHandle);
   }
 }

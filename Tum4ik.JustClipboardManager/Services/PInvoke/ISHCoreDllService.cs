@@ -8,7 +8,7 @@ internal interface ISHCoreDllService
   /// <summary>
   /// Queries the dots per inch (dpi) of a display.
   /// </summary>
-  /// <param name="hwnd">Handle of the monitor being queried.</param>
+  /// <param name="hmonitor">Handle of the monitor being queried.</param>
   /// <param name="dpiType">The type of DPI being queried.</param>
   /// <param name="dpiX">
   /// The value of the DPI along the X axis. This value always refers to the horizontal edge,
@@ -19,16 +19,16 @@ internal interface ISHCoreDllService
   /// even when the screen is rotated.
   /// </param>
   /// <returns>True if operation succeeds, otherwise - false.</returns>
-  bool GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY)
+  bool GetDpiForMonitor(nint hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY)
   {
-    var result = _GetDpiForMonitor(hwnd, dpiType, out dpiX, out dpiY);
+    var result = _GetDpiForMonitor(hmonitor, dpiType, out dpiX, out dpiY);
     return result == 0;
   }
 
 
   [DllImport("SHCore.dll", EntryPoint = "GetDpiForMonitor")]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern uint _GetDpiForMonitor(nint hwnd, MonitorDpiType dpiType, out int dpiX, out int dpiY);
+  private static extern int _GetDpiForMonitor(nint hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
 }
 
 

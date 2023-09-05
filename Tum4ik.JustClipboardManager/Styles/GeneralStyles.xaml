@@ -38,6 +38,10 @@
     <Setter Property="Focusable" Value="False"/>
   </Style>
 
+  <Style TargetType="ItemsControl">
+    <Setter Property="Focusable" Value="False"/>
+  </Style>
+
   <Style x:Key="FocusRectStyle" TargetType="Rectangle">
     <Setter Property="StrokeThickness" Value="2"/>
     <Setter Property="Stroke" Value="{DynamicResource TextPrimaryBrush}"/>
