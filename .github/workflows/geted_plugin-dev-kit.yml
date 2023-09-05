@@ -55,11 +55,10 @@ jobs:
         dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
-          /p:IncludeSymbols=true `
-          /p:GeneratePackageOnBuild=false `
-          /p:ContinuousIntegrationBuild=true `
           /p:PackageVersion=$version `
-          /p:Version=$version
+          /p:Version=$version `
+          /p:GeneratePackageOnBuild=false `
+          /p:ContinuousIntegrationBuild=true
 
     - name: Sign code files
       run: |
@@ -82,7 +81,9 @@ jobs:
           --no-build `
           -o ${{ env.PackOutputPath }} `
           /p:PackageVersion=$version `
-          /p:Version=$version
+          /p:Version=$version `
+          /p:IncludeSymbols=true `
+          /p:SymbolPackageFormat=snupkg
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.2
