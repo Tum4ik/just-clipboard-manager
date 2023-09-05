@@ -81,7 +81,9 @@ jobs:
           --no-build `
           -o ${{ env.PackOutputPath }} `
           /p:PackageVersion=$version `
-          /p:Version=$version
+          /p:Version=$version `
+          /p:IncludeSymbols=true `
+          /p:SymbolPackageFormat=snupkg
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.2
@@ -107,3 +109,4 @@ jobs:
         dotnet nuget push "**/*.nupkg" `
           -k ${{ secrets.NUGET_API_KEY }} `
           -s https://api.nuget.org/v3/index.json
+          
