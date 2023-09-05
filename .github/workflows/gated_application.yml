@@ -126,7 +126,8 @@ jobs:
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
-          -PfxPassword ${{ secrets.PFX_KEY }}
+          -PfxPassword ${{ secrets.PFX_KEY }} `
+          -FileNamesToInclude JustClipboardManager.dll, JustClipboardManager.exe, Tum4ik.JustClipboardManager.Icons.dll
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Install Inno Setup

@@ -8,6 +8,7 @@
     <AnalysisMode>All</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,7 +26,7 @@
     <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
     <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>
   </PropertyGroup>
-  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets"/>
+  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets" />
 
   <ItemGroup>
     <PackageReference Include="Prism.Core" Version="8.1.97" />

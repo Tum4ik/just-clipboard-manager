@@ -55,6 +55,7 @@ jobs:
         dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
+          /p:IncludeSymbols=true `
           /p:GeneratePackageOnBuild=false `
           /p:ContinuousIntegrationBuild=true `
           /p:PackageVersion=$version `
@@ -68,7 +69,8 @@ jobs:
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
           -FilesDirectoryPath ${{ env.BuildOutputPath }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
-          -PfxPassword ${{ secrets.PFX_KEY }}
+          -PfxPassword ${{ secrets.PFX_KEY }} `
+          -FileNamesToInclude Tum4ik.JustClipboardManager.PluginDevKit.dll
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Pack
