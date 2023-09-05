@@ -15,11 +15,9 @@
 
   <PropertyGroup>
     <Version>0.0.0.0-dev</Version>
-    <Authors>Yevheniy Tymchishin</Authors>
-    <Company>YTSoft</Company>
-    <Product>Just Clipboard Manager</Product>
-    <Copyright>© 2022-2023 Yevheniy Tymchishin. All rights reserved.</Copyright>
+    <SolutionPropertiesLocation>..\SolutionProperties</SolutionPropertiesLocation>
   </PropertyGroup>
+  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets"/>
 
   <PropertyGroup>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>

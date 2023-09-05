@@ -24,7 +24,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{EFB58FFF-AFD1-4788-AA48-0652BD800A3A}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\codecov-update.yml = .github\workflows\codecov-update.yml
-		.github\workflows\gated.yml = .github\workflows\gated.yml
+		.github\workflows\gated_application.yml = .github\workflows\gated_application.yml
+		.github\workflows\geted_plugin-dev-kit.yml = .github\workflows\geted_plugin-dev-kit.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422F7E7-8F3A-4750-9A82-9C0153726062}"
@@ -53,6 +54,15 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.TextPlugin", "Plugins\Tum4ik.JustClipboardManager.TextPlugin\Tum4ik.JustClipboardManager.TextPlugin.csproj", "{6DA0F318-A17F-4518-A324-423E5236ECB9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Properties", "Solution Properties", "{12059B79-3D95-42EF-B3CD-E7EEF124F380}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionProperties\Authors.txt = SolutionProperties\Authors.txt
+		SolutionProperties\Company.txt = SolutionProperties\Company.txt
+		SolutionProperties\Copyright.txt = SolutionProperties\Copyright.txt
+		SolutionProperties\Product.txt = SolutionProperties\Product.txt
+		SolutionProperties\SolutionProperties.targets = SolutionProperties\SolutionProperties.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
