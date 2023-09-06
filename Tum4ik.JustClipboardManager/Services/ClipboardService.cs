@@ -55,11 +55,11 @@ internal class ClipboardService : IClipboardService
     foreach (var formattedDataObject in formattedDataObjects)
     {
       object? data;
-      
+
       if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
       {
         var plugin = _plugins.First(p => p.Format == formattedDataObject.Format);
-        data = plugin.RestoreData(formattedDataObject.Data);
+        data = plugin.RestoreData(formattedDataObject.Data, formattedDataObject.DataDotnetType);
         restoredByPlugin = true;
       }
       else
@@ -116,6 +116,7 @@ internal class ClipboardService : IClipboardService
       var formattedDataObjects = new List<FormattedDataObject>();
       string? searchLabel = null;
       var representationData = Array.Empty<byte>();
+      string? representationDataDotnetType = null;
       for (var i = 0; i < formats.Length; i++)
       {
         var format = formats[i];
@@ -159,6 +160,7 @@ internal class ClipboardService : IClipboardService
           }
           dataBytes = clipData.Data;
           representationData = clipData.RepresentationData;
+          representationDataDotnetType = dataType.ToString();
           searchLabel = clipData.SearchLabel;
         }
         else
@@ -166,37 +168,37 @@ internal class ClipboardService : IClipboardService
           dataBytes = GetDataBytes(data);
         }
 
-        
-       
-            /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
-            {
 
-            }
-            else*//*
-            
-            else if (dataObject.GetDataPresent(typeof(Bitmap)))
-            {
-              var representationDataObject = dataObject.GetData(typeof(Bitmap));
-              representationData = GetBitmapBytes((Bitmap) representationDataObject);
-            }
-            else if (dataObject.GetDataPresent(DataFormats.FileDrop))
-            {
-              var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
-              if (filePaths.Length == 1)
-              {
-                searchLabel = filePaths[0];
-                representationData = GetStringBytes(filePaths[0]);
-              }
-              else
-              {
-                searchLabel = string.Join(";", filePaths);
-                representationData = GetStringArrayBytes(filePaths);
-              }
-            }
-          
-        }*/
 
-        
+        /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
+        {
+
+        }
+        else*//*
+
+        else if (dataObject.GetDataPresent(typeof(Bitmap)))
+        {
+          var representationDataObject = dataObject.GetData(typeof(Bitmap));
+          representationData = GetBitmapBytes((Bitmap) representationDataObject);
+        }
+        else if (dataObject.GetDataPresent(DataFormats.FileDrop))
+        {
+          var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
+          if (filePaths.Length == 1)
+          {
+            searchLabel = filePaths[0];
+            representationData = GetStringBytes(filePaths[0]);
+          }
+          else
+          {
+            searchLabel = string.Join(";", filePaths);
+            representationData = GetStringArrayBytes(filePaths);
+          }
+        }
+
+    }*/
+
+
         if (dataBytes.Length > 0)
         {
           var formattedDataObject = new FormattedDataObject
@@ -210,7 +212,7 @@ internal class ClipboardService : IClipboardService
         }
       }
 
-      if (representationData.Length <= 0)
+      if (representationData.Length <= 0 || representationDataDotnetType is null)
       {
         return;
       }
@@ -220,6 +222,7 @@ internal class ClipboardService : IClipboardService
         PluginId = plugin.Id,
         FormattedDataObjects = formattedDataObjects,
         RepresentationData = representationData,
+        RepresentationDataDotnetType = representationDataDotnetType,
         SearchLabel = searchLabel
       };
 
