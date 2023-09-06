@@ -21,7 +21,7 @@
     <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
     <PackageTags>clipboard;clipboard-manager;just-clipboard-manager</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>First release: possibility to develop plugins for Just Clipboard Manager.</PackageReleaseNotes>
+    <PackageReleaseNotes>Improved restore data methods.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
     <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>
