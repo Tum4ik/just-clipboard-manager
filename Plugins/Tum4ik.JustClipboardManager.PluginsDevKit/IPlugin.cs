@@ -12,7 +12,7 @@ public interface IPlugin
 
   ClipData? ProcessData(object data);
 
-  object RestoreData(byte[] bytes);
+  object RestoreData(byte[] bytes, string dataDotnetType);
 
-  object RestoreRepresentationData(byte[] bytes);
+  object RestoreRepresentationData(byte[] bytes, string dataDotnetType);
 }

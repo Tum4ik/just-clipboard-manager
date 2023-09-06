@@ -36,13 +36,13 @@ public sealed class Text : Plugin<TextVisualTree>
   }
 
 
-  public override object RestoreData(byte[] bytes)
+  public override object RestoreData(byte[] bytes, string dataDotnetType)
   {
     return Encoding.UTF8.GetString(bytes);
   }
 
 
-  public override object RestoreRepresentationData(byte[] bytes)
+  public override object RestoreRepresentationData(byte[] bytes, string dataDotnetType)
   {
     return Encoding.UTF8.GetString(bytes);
   }
