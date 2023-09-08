@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
              Padding="8">
@@ -28,7 +27,7 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.Resources>
-          <Style TargetType="icons:SvgIcon" BasedOn="{StaticResource {x:Type icons:SvgIcon}}">
+          <Style TargetType="controls:SvgIcon" BasedOn="{StaticResource {x:Type controls:SvgIcon}}">
             <Setter Property="Width" Value="16"/>
             <Setter Property="Height" Value="16"/>
             <Setter Property="Margin" Value="8, 4"/>
@@ -40,7 +39,7 @@
         </Grid.Resources>
 
         <!-- TODO: Optimize duplications below -->
-        <icons:SvgIcon Grid.Row="0" Grid.Column="0" Icon="Feedback"/>
+        <controls:SvgIcon Grid.Row="0" Grid.Column="0" Icon="Feedback"/>
         <TextBlock Grid.Row="0" Grid.Column="1">
           <Hyperlink Command="{Binding OpenLinkCommand}"
                      CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=feedbacks">
@@ -48,7 +47,7 @@
           </Hyperlink>
         </TextBlock>
 
-        <icons:SvgIcon Grid.Row="1" Grid.Column="0" Icon="Lightbulb"/>
+        <controls:SvgIcon Grid.Row="1" Grid.Column="0" Icon="Lightbulb"/>
         <TextBlock Grid.Row="1" Grid.Column="1">
           <Hyperlink Command="{Binding OpenLinkCommand}"
                      CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=ideas">
@@ -56,7 +55,7 @@
           </Hyperlink>
         </TextBlock>
 
-        <icons:SvgIcon Grid.Row="2" Grid.Column="0" Icon="LiveHelp"/>
+        <controls:SvgIcon Grid.Row="2" Grid.Column="0" Icon="LiveHelp"/>
         <TextBlock Grid.Row="2" Grid.Column="1">
           <Hyperlink Command="{Binding OpenLinkCommand}"
                      CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=q-a">
@@ -64,7 +63,7 @@
           </Hyperlink>
         </TextBlock>
 
-        <icons:SvgIcon Grid.Row="3" Grid.Column="0" Icon="BugReport"/>
+        <controls:SvgIcon Grid.Row="3" Grid.Column="0" Icon="BugReport"/>
         <TextBlock Grid.Row="3" Grid.Column="1">
           <Hyperlink Command="{Binding OpenLinkCommand}"
                      CommandParameter="https://github.com/Tum4ik/just-clipboard-manager/issues/new">
@@ -72,7 +71,7 @@
           </Hyperlink>
         </TextBlock>
 
-        <icons:SvgIcon Grid.Row="4" Grid.Column="0" Icon="EmailAlternate"/>
+        <controls:SvgIcon Grid.Row="4" Grid.Column="0" Icon="EmailAlternate"/>
         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
           <TextBlock Text="{Binding Translate[ContactMeDirectly]}"
                      VerticalAlignment="Center"/>
@@ -93,7 +92,7 @@
         <TextBlock Text="{Binding Version}" Margin="8, 0" FontWeight="SemiBold"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal">
-        <icons:SvgIcon Icon="Code" Width="16" Height="16" Margin="8, 4" Color="{DynamicResource TextTertiaryBrush}"/>
+        <controls:SvgIcon Icon="Code" Width="16" Height="16" Margin="8, 4" Color="{DynamicResource TextTertiaryBrush}"/>
         <TextBlock VerticalAlignment="Center">
           <Hyperlink Command="{Binding OpenLinkCommand}"
                      CommandParameter="https://github.com/Tum4ik/just-clipboard-manager">
