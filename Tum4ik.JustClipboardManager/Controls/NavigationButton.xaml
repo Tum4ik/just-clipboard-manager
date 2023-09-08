@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
              Cursor="Hand">
   <RadioButton.Template>
@@ -18,12 +17,12 @@
                      Fill="{DynamicResource AccentDefaultBrush}"
                      VerticalAlignment="Center"
                      Visibility="Hidden"/>
-          <icons:SvgIcon x:Name="_icon"
-                         Icon="{TemplateBinding Icon}"
-                         Color="{DynamicResource TextPrimaryBrush}"
-                         Width="16" Height="16"
-                         VerticalAlignment="Center"
-                         Margin="9, 0, 16, 0"/>
+          <controls:SvgIcon x:Name="_icon"
+                            Icon="{TemplateBinding Icon}"
+                            Color="{DynamicResource TextPrimaryBrush}"
+                            Width="16" Height="16"
+                            VerticalAlignment="Center"
+                            Margin="9, 0, 16, 0"/>
           <TextBlock x:Name="_text"
                      Text="{TemplateBinding Text}"
                      VerticalAlignment="Center"/>

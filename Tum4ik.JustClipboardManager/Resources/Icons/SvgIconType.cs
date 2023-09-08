@@ -1,4 +1,6 @@
-namespace Tum4ik.JustClipboardManager.Icons;
+using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
+
+namespace Tum4ik.JustClipboardManager.Resources.Icons;
 public enum SvgIconType
 {
   [SvgIconResource("bug-report")] BugReport,

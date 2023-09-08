@@ -2,7 +2,6 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:system="clr-namespace:System;assembly=netstandard" 
-                    xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
                     xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
                     xmlns:math="http://hexinnovation.com/math">
 
@@ -80,10 +79,10 @@
                   Width="46" Height="32"
                   Background="Transparent"
                   CornerRadius="{TemplateBinding CornerRadius}">
-            <icons:SvgIcon x:Name="_icon"
-                           Icon="{TemplateBinding Icon}"
-                           Width="10" Height="10"
-                           Color="{TemplateBinding IconColor}"/>
+            <controls:SvgIcon x:Name="_icon"
+                              Icon="{TemplateBinding Icon}"
+                              Width="10" Height="10"
+                              Color="{TemplateBinding IconColor}"/>
           </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsKeyboardNavigatedFocus" Value="True">
@@ -162,13 +161,13 @@
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <icons:SvgIcon Grid.Column="0" 
-                       x:Name="_checkIcon"
-                       Visibility="Collapsed"
-                       Icon="Check" Color="{DynamicResource TextPrimaryBrush}"
-                       Width="11" Height="11"
-                       VerticalAlignment="Center"
-                       Margin="15, 0, 3, 0"/>
+        <controls:SvgIcon Grid.Column="0" 
+                          x:Name="_checkIcon"
+                          Visibility="Collapsed"
+                          Icon="Check" Color="{DynamicResource TextPrimaryBrush}"
+                          Width="11" Height="11"
+                          VerticalAlignment="Center"
+                          Margin="15, 0, 3, 0"/>
         <ContentPresenter Grid.Column="1" ContentSource="Header"
                           VerticalAlignment="Center"
                           Margin="12, 0"/>
@@ -209,12 +208,12 @@
         <ContentPresenter Grid.Column="0" ContentSource="Header"
                           VerticalAlignment="Center"
                           Margin="12, 0"/>
-        <icons:SvgIcon x:Name="_icon"
-                       Grid.Column="1"
-                       Icon="Chevron" Color="{DynamicResource TextSecondaryBrush}"
-                       Width="8" Height="8"
-                       VerticalAlignment="Center"
-                       Margin="0, 0, 16, 0"/>
+        <controls:SvgIcon x:Name="_icon"
+                          Grid.Column="1"
+                          Icon="Chevron" Color="{DynamicResource TextSecondaryBrush}"
+                          Width="8" Height="8"
+                          VerticalAlignment="Center"
+                          Margin="0, 0, 16, 0"/>
         <Popup x:Name="Popup"
                Placement="Right"
                IsOpen="{TemplateBinding IsSubmenuOpen}"
@@ -263,7 +262,7 @@
     <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
   </Style>
 
-  <Style TargetType="icons:SvgIcon">
+  <Style TargetType="controls:SvgIcon">
     <Setter Property="Color" Value="{DynamicResource TextPrimaryBrush}"/>
   </Style>
 
@@ -290,7 +289,7 @@
           </Setter.Value>
         </Setter>
       </Style>
-      <Style TargetType="icons:SvgIcon">
+      <Style TargetType="controls:SvgIcon">
         <Setter Property="Width" Value="8"/>
         <Setter Property="Height" Value="8"/>
         <Setter Property="Color" Value="{DynamicResource ScrollBarForegroundBrush}"/>
@@ -308,7 +307,7 @@
           </Grid.RowDefinitions>
           <RepeatButton x:Name="_scrollUpButton"
                         Grid.Row="0" Command="ScrollBar.LineUpCommand" Style="{StaticResource ScrollBarLineButtonStyle}">
-            <icons:SvgIcon Icon="CaretUp"/>
+            <controls:SvgIcon Icon="CaretUp"/>
           </RepeatButton>
           <Track x:Name="PART_Track"
                  Grid.Row="1"
@@ -344,7 +343,7 @@
           </Track>
           <RepeatButton x:Name="_scrollDownButton"
                         Grid.Row="2" Command="ScrollBar.LineDownCommand" Style="{StaticResource ScrollBarLineButtonStyle}">
-            <icons:SvgIcon Icon="CaretDown"/>
+            <controls:SvgIcon Icon="CaretDown"/>
           </RepeatButton>
         </Grid>
       </Border>

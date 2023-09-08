@@ -4,8 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-      xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
       xmlns:system="clr-namespace:System;assembly=netstandard"
+      xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
       mc:Ignorable="d"
       x:Name="_this"
       Loaded="Root_Loaded"
@@ -20,10 +20,10 @@
             <Border x:Name="_border"
                     CornerRadius="4" Width="32" Height="24"
                     Background="Transparent">
-              <icons:SvgIcon x:Name="_icon"
-                             Icon="{TemplateBinding icons:SvgIcon.AttachedIcon}"
-                             Width="8" Height="8"
-                             Color="{DynamicResource TextSecondaryBrush}"/>
+              <controls:SvgIcon x:Name="_icon"
+                                Icon="{TemplateBinding controls:SvgIcon.AttachedIcon}"
+                                Width="8" Height="8"
+                                Color="{DynamicResource TextSecondaryBrush}"/>
             </Border>
             <ControlTemplate.Triggers>
               <Trigger Property="IsMouseOver" Value="True">
@@ -58,7 +58,7 @@
   <!-- todo: replace by RepeateButton -->
   <Button x:Name="_scrollTabLeftButton"
           Grid.Column="0"
-          icons:SvgIcon.AttachedIcon="ScrollLeftArrow"
+          controls:SvgIcon.AttachedIcon="ScrollLeftArrow"
           Style="{StaticResource TabScrollButtonStyle}"
           Margin="4, 0, 0, 0"
           Command="{Binding ScrollLeftCommand, ElementName=_this}"
@@ -97,7 +97,7 @@
   <!-- todo: replace by RepeateButton -->
   <Button x:Name="_scrollTabRightButton"
           Grid.Column="2"
-          icons:SvgIcon.AttachedIcon="ScrollRightArrow"
+          controls:SvgIcon.AttachedIcon="ScrollRightArrow"
           Style="{StaticResource TabScrollButtonStyle}"
           Margin="0, 0, 4, 0"
           Command="{Binding ScrollRightCommand, ElementName=_this}"

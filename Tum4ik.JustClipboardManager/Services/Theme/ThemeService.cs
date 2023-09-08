@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.Icons;
+using Tum4ik.JustClipboardManager.Resources.Icons;
 
 namespace Tum4ik.JustClipboardManager.Services.Theme;
 

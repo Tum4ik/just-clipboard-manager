@@ -8,7 +8,6 @@
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" 
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" 
         xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants" 
-        xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         IsVisibleChanged="This_IsVisibleChanged"

@@ -6,8 +6,8 @@
                 xmlns:tb="http://www.hardcodet.net/taskbar" 
                 xmlns:viewmodels="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
                 xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
-                xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
                 xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+                xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="{Binding TrayIcon}">
@@ -53,8 +53,8 @@
                 <ColumnDefinition Width="Auto"/>
               </Grid.ColumnDefinitions>
               <TextBlock Grid.Column="0" Text="{Binding Culture.NativeName}"/>
-              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}" Color="{x:Null}"
-                             Width="16" Height="16" Margin="12, 0, 0, 0"/>
+              <controls:SvgIcon Grid.Column="1" Icon="{Binding Icon}" Color="{x:Null}"
+                                Width="16" Height="16" Margin="12, 0, 0, 0"/>
             </Grid>
           </DataTemplate>
         </MenuItem.ItemTemplate>
@@ -94,9 +94,9 @@
                   </MultiBinding>
                 </TextBlock.Text>
               </TextBlock>
-              <icons:SvgIcon Grid.Column="1" Icon="{Binding Icon}"
-                             Color="{DynamicResource TextSecondaryBrush}"
-                             Width="16" Height="16" Margin="12, 0, 0, 0"/>
+              <controls:SvgIcon Grid.Column="1" Icon="{Binding Icon}"
+                                Color="{DynamicResource TextSecondaryBrush}"
+                                Width="16" Height="16" Margin="12, 0, 0, 0"/>
             </Grid>
           </DataTemplate>
         </MenuItem.ItemTemplate>

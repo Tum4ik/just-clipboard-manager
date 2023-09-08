@@ -21,7 +21,7 @@
     <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
     <PackageTags>clipboard;clipboard-manager;just-clipboard-manager</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>First release: possibility to develop plugins for Just Clipboard Manager.</PackageReleaseNotes>
+    <PackageReleaseNotes>SVG icons support.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
     <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>
@@ -34,6 +34,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Prism.Core" Version="8.1.97" />
+    <PackageReference Include="SharpVectors.Wpf" Version="1.8.1" />
   </ItemGroup>
 
 </Project>

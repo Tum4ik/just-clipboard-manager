@@ -1,5 +1,5 @@
 using System.Windows;
-using Tum4ik.JustClipboardManager.Icons;
+using Tum4ik.JustClipboardManager.Resources.Icons;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 /// <summary>
