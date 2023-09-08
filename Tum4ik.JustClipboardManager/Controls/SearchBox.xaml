@@ -4,7 +4,6 @@
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-         xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
          mc:Ignorable="d"
          Validation.ErrorTemplate="{x:Null}"
          Cursor="IBeam">
@@ -21,11 +20,11 @@
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <icons:SvgIcon x:Name="_icon"
-                           Grid.Column="0"
-                           Icon="Search"
-                           Width="14" Height="14"
-                           Margin="16, 0, 0, 0"/>
+            <controls:SvgIcon x:Name="_icon"
+                              Grid.Column="0"
+                              Icon="Search"
+                              Width="14" Height="14"
+                              Margin="16, 0, 0, 0"/>
             <TextBlock x:Name="_placeholder"
                        Grid.Column="1"
                        Visibility="Hidden"

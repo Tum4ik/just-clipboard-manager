@@ -6,7 +6,6 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
              x:Name="this">
@@ -48,8 +47,8 @@
                       Width="16" Height="16" CornerRadius="8" Background="{DynamicResource SystemCriticalBrush}"
                       HorizontalAlignment="Center" VerticalAlignment="Center"
                       Visibility="Collapsed">
-                <icons:SvgIcon Icon="ChromeClose" Width="8" Height="8"
-                               Color="{DynamicResource TextOnAccentPrimaryBrush}"/>
+                <controls:SvgIcon Icon="ChromeClose" Width="8" Height="8"
+                                  Color="{DynamicResource TextOnAccentPrimaryBrush}"/>
               </Border>
             </Grid>
           </Border>

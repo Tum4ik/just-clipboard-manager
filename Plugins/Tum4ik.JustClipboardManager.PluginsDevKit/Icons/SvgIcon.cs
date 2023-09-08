@@ -1,35 +1,39 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
 using SharpVectors.Converters;
+using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 
-namespace Tum4ik.JustClipboardManager.Icons;
-public class SvgIcon : SvgViewbox
+namespace Tum4ik.JustClipboardManager.PluginDevKit.Icons;
+public abstract class SvgIcon<TSvgIcon> : SvgViewbox
+  where TSvgIcon : struct, IConvertible
 {
   static SvgIcon()
   {
     static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      var thisIcon = (SvgIcon) d;
+      var thisIcon = (SvgIcon<TSvgIcon>) d;
       UpdateColor(d, thisIcon.Color);
     }
-    SourceProperty.OverrideMetadata(typeof(SvgIcon), new FrameworkPropertyMetadata(PropertyChangedCallback));
-    UriSourceProperty.OverrideMetadata(typeof(SvgIcon), new FrameworkPropertyMetadata(PropertyChangedCallback));
+    SourceProperty.OverrideMetadata(typeof(SvgIcon<TSvgIcon>), new FrameworkPropertyMetadata(PropertyChangedCallback));
+    UriSourceProperty.OverrideMetadata(typeof(SvgIcon<TSvgIcon>), new FrameworkPropertyMetadata(PropertyChangedCallback));
   }
 
 
+  protected abstract string IconsFolder { get; }
+
+
   public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-    nameof(Icon), typeof(SvgIconType?), typeof(SvgIcon), new((d, e) =>
+    nameof(Icon), typeof(TSvgIcon?), typeof(SvgIcon<TSvgIcon>), new((d, e) =>
     {
-      var thisIcon = (SvgIcon) d;
-      var iconType = (SvgIconType?) e.NewValue;
+      var thisIcon = (SvgIcon<TSvgIcon>) d;
+      var iconType = (TSvgIcon?) e.NewValue;
       if (!iconType.HasValue)
       {
         return;
       }
 
-      var source = GetSvgSource(iconType.Value);
+      var source = GetSvgSource(iconType.Value, thisIcon.IconsFolder);
       if (source is not null)
       {
         thisIcon.Source = source;
@@ -37,32 +41,32 @@ public class SvgIcon : SvgViewbox
       }
     })
   );
-  public SvgIconType? Icon
+  public TSvgIcon? Icon
   {
-    get => (SvgIconType?) GetValue(IconProperty);
+    get => (TSvgIcon?) GetValue(IconProperty);
     set => SetValue(IconProperty, value);
   }
 
 
   public static readonly DependencyProperty AttachedIconProperty = DependencyProperty.RegisterAttached(
-    "AttachedIcon", typeof(SvgIconType?), typeof(SvgIcon)
+    "AttachedIcon", typeof(TSvgIcon?), typeof(SvgIcon<TSvgIcon>)
   );
-  public static SvgIconType? GetAttachedIcon(UIElement target)
+  public static TSvgIcon? GetAttachedIcon(UIElement target)
   {
-    return (SvgIconType?) target.GetValue(AttachedIconProperty);
+    return (TSvgIcon?) target.GetValue(AttachedIconProperty);
   }
-  public static void SetAttachedIcon(UIElement target, SvgIconType? value)
+  public static void SetAttachedIcon(UIElement target, TSvgIcon? value)
   {
     target.SetValue(AttachedIconProperty, value);
   }
 
 
   public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
-      nameof(Color), typeof(Brush), typeof(SvgIcon), new((d, e) =>
-      {
-        var newBrush = (Brush?) e.NewValue;
-        UpdateColor(d, newBrush);
-      })
+    nameof(Color), typeof(Brush), typeof(SvgIcon<TSvgIcon>), new((d, e) =>
+    {
+      var newBrush = (Brush?) e.NewValue;
+      UpdateColor(d, newBrush);
+    })
   );
   public Brush? Color
   {
@@ -71,12 +75,12 @@ public class SvgIcon : SvgViewbox
   }
 
 
-  private static Uri? GetSvgSource(SvgIconType iconType)
+  private static Uri? GetSvgSource(TSvgIcon iconType, string iconsFolder)
   {
     var type = iconType.GetType();
     var assembly = type.Assembly;
     var fileName = type
-      .GetField(iconType.ToString())?
+      .GetField(iconType.ToString()!)?
       .GetCustomAttribute<SvgIconResourceAttribute>()?
       .SvgIconResourceName;
     if (fileName is null)
@@ -84,7 +88,7 @@ public class SvgIcon : SvgViewbox
       return null;
     }
 
-    return new($"pack://application:,,,/{assembly};component/Resources/{fileName}.svg");
+    return new($"pack://application:,,,/{assembly};component/{iconsFolder}/{fileName}.svg");
   }
 
 
