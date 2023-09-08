@@ -11,7 +11,7 @@
   [![Platform: Windows](https://img.shields.io/badge/platform-windows-%23373737)]()
   [![Latest release](https://img.shields.io/github/v/release/Tum4ik/just-clipboard-manager)](https://github.com/Tum4ik/just-clipboard-manager/releases)
 
-  [![Gated build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated.yml)
+  [![Gated build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
 </h1>
 
 <h1 align="center">
