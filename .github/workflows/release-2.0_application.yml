@@ -127,7 +127,11 @@ jobs:
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.PFX_KEY }} `
-          -FileNamesToInclude JustClipboardManager.dll, JustClipboardManager.exe, Tum4ik.JustClipboardManager.Icons.dll
+          -FileNamesToInclude `
+            JustClipboardManager.dll, `
+            JustClipboardManager.exe, `
+            Tum4ik.JustClipboardManager.PluginDevKit.dll `
+            Tum4ik.JustClipboardManager.TextPluginD930D2CD-3FD9-4012-A363-120676E22AFA.dll
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Install Inno Setup

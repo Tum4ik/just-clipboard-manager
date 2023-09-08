@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:math="http://hexinnovation.com/math"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-             xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
              mc:Ignorable="d"
              Cursor="Hand"
              PreviewMouseLeftButtonDown="RadioButton_PreviewMouseLeftButtonDown"
@@ -76,12 +75,12 @@
                 <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
               </MultiBinding>
             </Canvas.Top>
-            <icons:SvgIcon x:Name="_icon"
-                           Icon="{TemplateBinding Icon}"
-                           Color="{DynamicResource TextPrimaryBrush}"
-                           Width="16" Height="16"
-                           VerticalAlignment="Center"
-                           Margin="8, 0"/>
+            <controls:SvgIcon x:Name="_icon"
+                              Icon="{TemplateBinding Icon}"
+                              Color="{DynamicResource TextPrimaryBrush}"
+                              Width="16" Height="16"
+                              VerticalAlignment="Center"
+                              Margin="8, 0"/>
             <TextBlock x:Name="_text"
                        Text="{TemplateBinding Text}"
                        FontWeight="SemiBold"

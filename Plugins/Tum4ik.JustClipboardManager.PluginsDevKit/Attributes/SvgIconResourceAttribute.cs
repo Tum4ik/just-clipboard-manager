@@ -1,7 +1,7 @@
-namespace Tum4ik.JustClipboardManager.Icons;
+namespace Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class SvgIconResourceAttribute : Attribute
+public sealed class SvgIconResourceAttribute : Attribute
 {
   public string SvgIconResourceName { get; }
 

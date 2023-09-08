@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Plugins"
              xmlns:dto="clr-namespace:Tum4ik.JustClipboardManager.Data.Dto"
-             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
+             xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              d:DataContext="{d:DesignInstance Type=vm:PluginsSearchViewModel}">
   <ScrollViewer Margin="-8" Padding="0, 8">
     <ItemsControl ItemsSource="{Binding Plugins}" HorizontalAlignment="Center">
@@ -54,9 +54,9 @@
                              FontSize="12"
                              Foreground="{DynamicResource SystemSuccessBrush}"
                              Margin="8, 0"/>
-                  <icons:SvgIcon Grid.Column="1"
-                                 Icon="CheckCircle" Width="12" Height="12" Color="{DynamicResource SystemSuccessBrush}"
-                                 VerticalAlignment="Center"/>
+                  <controls:SvgIcon Grid.Column="1"
+                                    Icon="CheckCircle" Width="12" Height="12" Color="{DynamicResource SystemSuccessBrush}"
+                                    VerticalAlignment="Center"/>
                 </Grid>
               </Grid>
             </controls:PluginCard.Footer>

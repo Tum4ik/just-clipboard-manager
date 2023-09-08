@@ -4,7 +4,6 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-          xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
           mc:Ignorable="d"
           Cursor="Hand">
   <CheckBox.Template>
@@ -19,10 +18,10 @@
                 Width="20" Height="20" CornerRadius="4"
                 BorderThickness="1" BorderBrush="{DynamicResource CheckBoxBorderBrush}"
                 Background="{DynamicResource CheckBoxBackgroundBrush}">
-          <icons:SvgIcon x:Name="_check"
-                         Icon="Check" Width="11" Height="11"
-                         Color="{DynamicResource TextOnAccentPrimaryBrush}"
-                         Visibility="Hidden"/>
+          <controls:SvgIcon x:Name="_check"
+                            Icon="Check" Width="11" Height="11"
+                            Color="{DynamicResource TextOnAccentPrimaryBrush}"
+                            Visibility="Hidden"/>
         </Border>
         <ContentPresenter Grid.Column="1" VerticalAlignment="Center"
                           Margin="8, 0"/>

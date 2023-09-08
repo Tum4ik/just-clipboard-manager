@@ -4,7 +4,6 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-          xmlns:icons="clr-namespace:Tum4ik.JustClipboardManager.Icons;assembly=Tum4ik.JustClipboardManager.Icons"
           mc:Ignorable="d"
           x:Name="this"
           Height="32"
@@ -30,12 +29,12 @@
                                   Grid.Column="0"
                                   Content="{Binding SelectedItem, ElementName=this}"
                                   ContentTemplate="{Binding SelectedItemTemplate, ElementName=this}"/>
-                  <icons:SvgIcon x:Name="_expandArrowIcon"
-                                 Grid.Column="1"
-                                 Icon="ExpandArrow"
-                                 Width="8" Height="6"
-                                 Color="{DynamicResource TextSecondaryBrush}"
-                                 Margin="15, 1, 15, 0"/>
+                  <controls:SvgIcon x:Name="_expandArrowIcon"
+                                    Grid.Column="1"
+                                    Icon="ExpandArrow"
+                                    Width="8" Height="6"
+                                    Color="{DynamicResource TextSecondaryBrush}"
+                                    Margin="15, 1, 15, 0"/>
                 </Grid>
               </Border>
               <ControlTemplate.Triggers>
