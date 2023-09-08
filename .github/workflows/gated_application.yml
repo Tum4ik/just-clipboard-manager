@@ -131,7 +131,7 @@ jobs:
             JustClipboardManager.dll, `
             JustClipboardManager.exe, `
             Tum4ik.JustClipboardManager.PluginDevKit.dll `
-            Tum4ik.JustClipboardManager.TextPlugin.dll
+            Tum4ik.JustClipboardManager.TextPluginD930D2CD-3FD9-4012-A363-120676E22AFA.dll
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Install Inno Setup
