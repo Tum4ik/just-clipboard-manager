@@ -245,6 +245,6 @@ public partial class App : ISingleInstance
 
   protected override IModuleCatalog CreateModuleCatalog()
   {
-    return new DirectoryModuleCatalog { ModulePath = "Plugins" };
+    return new DirectoryModuleCatalog { ModulePath = "./" };
   }
 }
