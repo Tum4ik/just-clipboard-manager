@@ -212,7 +212,7 @@ internal class ClipboardService : IClipboardService
         }
       }
 
-      if (representationData.Length <= 0 || representationDataDotnetType is null)
+      if (representationData.Length <= 0)
       {
         return;
       }
