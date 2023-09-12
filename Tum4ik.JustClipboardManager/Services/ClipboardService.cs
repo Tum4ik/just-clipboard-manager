@@ -116,7 +116,7 @@ internal class ClipboardService : IClipboardService
       var formattedDataObjects = new List<FormattedDataObject>();
       string? searchLabel = null;
       var representationData = Array.Empty<byte>();
-      string? representationDataDotnetType = null;
+      string? additionalInfo = null;
       for (var i = 0; i < formats.Length; i++)
       {
         var format = formats[i];
@@ -160,7 +160,7 @@ internal class ClipboardService : IClipboardService
           }
           dataBytes = clipData.Data;
           representationData = clipData.RepresentationData;
-          representationDataDotnetType = dataType.ToString();
+          additionalInfo = clipData.AdditionalInfo;
           searchLabel = clipData.SearchLabel;
         }
         else
@@ -222,7 +222,7 @@ internal class ClipboardService : IClipboardService
         PluginId = plugin.Id,
         FormattedDataObjects = formattedDataObjects,
         RepresentationData = representationData,
-        RepresentationDataDotnetType = representationDataDotnetType,
+        AdditionalInfo = additionalInfo,
         SearchLabel = searchLabel
       };
 

@@ -138,8 +138,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
 
       _dbClips[clip.Id] = clip;
-      var representationDataDotnetType = clip.RepresentationDataDotnetType;
-      var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, representationDataDotnetType);
+      var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
       Clips.Add(new()
       {
         Id = clip.Id,

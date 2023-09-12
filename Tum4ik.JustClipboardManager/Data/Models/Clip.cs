@@ -9,7 +9,7 @@ internal class Clip
 
   public required string PluginId { get; set; }
   public required byte[] RepresentationData { get; set; }
-  public required string RepresentationDataDotnetType { get; set; }
+  public string? AdditionalInfo { get; set; }
   public string? SearchLabel { get; set; }
   public DateTime ClippedAt { get; set; }
 
