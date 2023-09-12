@@ -12,7 +12,7 @@ public interface IPlugin
 
   ClipData? ProcessData(object data);
 
-  object RestoreData(byte[] bytes, string? additionalInfo);
+  object? RestoreData(byte[] bytes, string? additionalInfo);
 
-  object RestoreRepresentationData(byte[] bytes, string? additionalInfo);
+  object? RestoreRepresentationData(byte[] bytes, string? additionalInfo);
 }
