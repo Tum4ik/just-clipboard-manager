@@ -152,7 +152,6 @@ jobs:
         if-no-files-found: error
         name: BuildFiles
         path: |
-          ${{ env.PublishDir }}
           ${{ env.InstallerDir }}
           ReleaseNotes.md
 
