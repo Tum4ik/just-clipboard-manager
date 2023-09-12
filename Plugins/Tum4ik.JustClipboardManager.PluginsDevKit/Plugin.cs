@@ -13,8 +13,8 @@ public abstract class Plugin<T> : IPlugin
   public abstract string Format { get; }
   public DataTemplate RepresentationDataDataTemplate { get; } = new() { VisualTree = new(typeof(T)) };
   public abstract ClipData? ProcessData(object data);
-  public abstract object RestoreData(byte[] bytes, string dataDotnetType);
-  public abstract object RestoreRepresentationData(byte[] bytes, string dataDotnetType);
+  public abstract object RestoreData(byte[] bytes, string? additionalInfo);
+  public abstract object RestoreRepresentationData(byte[] bytes, string? additionalInfo);
 
 
   internal static string? GetId(Type pluginType)
