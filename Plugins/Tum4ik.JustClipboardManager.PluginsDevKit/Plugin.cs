@@ -10,11 +10,11 @@ public abstract class Plugin<T> : IPlugin
   private string? _id;
   public string? Id => _id ??= GetId(GetType());
 
-  public abstract string Format { get; }
+  public abstract IReadOnlyCollection<string> Formats { get; }
   public DataTemplate RepresentationDataDataTemplate { get; } = new() { VisualTree = new(typeof(T)) };
-  public abstract ClipData? ProcessData(object data);
-  public abstract object RestoreData(byte[] bytes, string? additionalInfo);
-  public abstract object RestoreRepresentationData(byte[] bytes, string? additionalInfo);
+  public abstract ClipData? ProcessData(IDataObject dataObject);
+  public abstract object? RestoreData(byte[] bytes, string? additionalInfo);
+  public abstract object? RestoreRepresentationData(byte[] bytes, string? additionalInfo);
 
 
   internal static string? GetId(Type pluginType)

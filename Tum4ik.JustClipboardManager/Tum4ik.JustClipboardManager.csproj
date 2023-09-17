@@ -151,8 +151,8 @@
     <Resource Include="Resources\Icons\scroll-right-arrow.svg" />
     <Resource Include="Resources\Icons\search.svg" />
     <Resource Include="Resources\Icons\settings.svg" />
-    <Resource Include="Resources\Icons\tray-dev.ico" />
     <Resource Include="Resources\Icons\tray.ico" />
+    <Resource Include="Resources\Icons\tray-dev.ico" />
     <Resource Include="Resources\Icons\ukraine.svg" />
     <Resource Include="Resources\Icons\usa.svg" />
   </ItemGroup>
@@ -245,11 +245,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsInterface.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
-    <FilesToCopy Include="Resources\Icons\tray.ico" />
   </ItemGroup>
   <Target Name="CopyFilesAfteBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />

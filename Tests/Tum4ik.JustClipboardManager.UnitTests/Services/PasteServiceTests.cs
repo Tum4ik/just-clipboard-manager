@@ -20,7 +20,7 @@ public class PasteServiceTests
   [Fact]
   internal void PasteData_DataIsEmpty_NothingToDo()
   {
-    _testeeService.PasteData(nint.Zero, new List<FormattedDataObject>());
+    _testeeService.PasteData(nint.Zero, new List<FormattedDataObject>(), null);
     _clipboardService.ReceivedCalls().Any().Should().BeFalse();
     _user32Dll.ReceivedCalls().Any().Should().BeFalse();
   }
@@ -40,13 +40,14 @@ public class PasteServiceTests
         FormatOrder = 0
       }
     };
+    var additionalInfo = "info";
 
-    _testeeService.PasteData(TargetWindowPtr, data);
+    _testeeService.PasteData(TargetWindowPtr, data, additionalInfo);
 
-    _clipboardService.Received(1).Paste(data);
+    _clipboardService.Received(1).Paste(data, additionalInfo);
     _user32Dll.Received(1).SetForegroundWindow(TargetWindowPtr);
     _user32Dll.Received(1).SetFocus(TargetWindowPtr);
-    _user32Dll.Received(1).SendInput(4, Arg.Is<INPUT[]>(i => true), InputStructSize());
+    _user32Dll.Received(1).SendInput(4, IsCtrlVInput(), InputStructSize());
   }
 
 
