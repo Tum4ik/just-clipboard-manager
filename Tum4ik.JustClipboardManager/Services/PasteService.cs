@@ -20,14 +20,14 @@ internal class PasteService : IPasteService
   private static readonly unsafe int InputStructSize = sizeof(INPUT);
 
 
-  public void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data)
+  public void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data, string? additionalInfo)
   {
     if (data.Count == 0)
     {
       return;
     }
 
-    _clipboardService.Paste(data);
+    _clipboardService.Paste(data, additionalInfo);
     _user32Dll.SetForegroundWindow(targetWindowPtr);
     _user32Dll.SetFocus(targetWindowPtr);
 

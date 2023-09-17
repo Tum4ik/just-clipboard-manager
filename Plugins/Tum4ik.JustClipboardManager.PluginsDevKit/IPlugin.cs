@@ -6,11 +6,11 @@ public interface IPlugin
 {
   string? Id { get; }
 
-  string Format { get; }
+  IReadOnlyCollection<string> Formats { get; }
 
   DataTemplate RepresentationDataDataTemplate { get; }
 
-  ClipData? ProcessData(object data);
+  ClipData? ProcessData(IDataObject dataObject);
 
   object RestoreData(byte[] bytes, string? additionalInfo);
 
