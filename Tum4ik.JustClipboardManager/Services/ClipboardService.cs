@@ -48,7 +48,7 @@ internal class ClipboardService : IClipboardService
   private ImmutableList<string> _pluginFormats;
 
 
-  public void Paste(ICollection<FormattedDataObject> formattedDataObjects)
+  public void Paste(ICollection<FormattedDataObject> formattedDataObjects, string? additionalInfo)
   {
     var dataObject = new DataObject(new OrderedDataStore());
     var restoredByPlugin = false;
@@ -58,8 +58,8 @@ internal class ClipboardService : IClipboardService
 
       if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
       {
-        var plugin = _plugins.First(p => p.Format == formattedDataObject.Format);
-        data = plugin.RestoreData(formattedDataObject.Data, formattedDataObject.DataDotnetType);
+        var plugin = _plugins.First(p => p.Formats.Contains(formattedDataObject.Format));
+        data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
         restoredByPlugin = true;
       }
       else
@@ -87,7 +87,7 @@ internal class ClipboardService : IClipboardService
   private void OnPluginsChainUpdated()
   {
     _plugins = _pluginsService.InstalledPlugins;
-    _pluginFormats = _plugins.Select(p => p.Format).ToImmutableList();
+    _pluginFormats = _plugins.SelectMany(p => p.Formats).ToImmutableList();
   }
 
 
@@ -106,7 +106,7 @@ internal class ClipboardService : IClipboardService
       var plugin = _plugins.FirstOrDefault(
         p => p.Id is not null
              && _pluginsService.IsPluginEnabled(p.Id)
-             && p.Format == pluginFormat
+             && p.Formats.Contains(pluginFormat)
       );
       if (plugin is null || string.IsNullOrEmpty(plugin.Id))
       {
@@ -153,7 +153,7 @@ internal class ClipboardService : IClipboardService
         byte[] dataBytes;
         if (format == pluginFormat)
         {
-          var clipData = plugin.ProcessData(data);
+          var clipData = plugin.ProcessData(dataObject);
           if (clipData is null)
           {
             return;

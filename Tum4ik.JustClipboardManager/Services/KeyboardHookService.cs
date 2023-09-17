@@ -114,7 +114,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   }
 
 
-  private TaskCompletionSource<ICollection<FormattedDataObject>> _showPasteWindowTcs = new();
+  private TaskCompletionSource<PasteWindowResultPayload?> _showPasteWindowTcs = new();
   private bool _isWaitingPasteWindowResult;
 
   private async Task HandleShowPasteWindowHotkeyAsync()
@@ -132,9 +132,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _pasteWindowService.ShowWindow(targetWindowToPaste);
 
     var data = await _showPasteWindowTcs.Task.ConfigureAwait(true);
-    if (data.Count > 0)
+    if (data is not null && data.FormattedDataObjects.Count > 0)
     {
-      _pasteService.PasteData(targetWindowToPaste, data);
+      _pasteService.PasteData(targetWindowToPaste, data.FormattedDataObjects, data.AdditionalInfo);
     }
 
     _pasteWindowService.HideWindow();
@@ -143,9 +143,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _isWaitingPasteWindowResult = false;
   }
 
-  private void HandlePasteWindowResult(ICollection<FormattedDataObject> formattedDataObjects)
+  private void HandlePasteWindowResult(PasteWindowResultPayload? payload)
   {
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
-    _showPasteWindowTcs.SetResult(formattedDataObjects);
+    _showPasteWindowTcs.SetResult(payload);
   }
 }

@@ -16,12 +16,12 @@ namespace Tum4ik.JustClipboardManager.TextPlugin;
 )]
 public sealed class Text : Plugin<TextVisualTree>
 {
-  public override string Format { get; } = DataFormats.UnicodeText;
+  public override IReadOnlyCollection<string> Formats { get; } = new[] { DataFormats.UnicodeText, DataFormats.Text };
 
 
-  public override ClipData? ProcessData(object data)
+  public override ClipData? ProcessData(IDataObject dataObject)
   {
-    var text = data as string;
+    var text = dataObject?.GetData(DataFormats.UnicodeText) as string;
     if (string.IsNullOrWhiteSpace(text))
     {
       return null;

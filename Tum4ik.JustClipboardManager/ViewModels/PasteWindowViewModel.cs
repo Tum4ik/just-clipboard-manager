@@ -39,7 +39,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private readonly Dictionary<int, Clip> _dbClips = new();
   public ObservableCollection<ClipDto> Clips { get; } = new();
 
-  
+
   private string? _search;
   public string? Search
   {
@@ -57,7 +57,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
   }
 
-  public event Action? SearchStarted; 
+  public event Action? SearchStarted;
 
 
   public async Task LoadNextClipsBatchAsync()
@@ -92,7 +92,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       return;
     }
 
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(Array.Empty<FormattedDataObject>());
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(null);
   }
 
 
@@ -106,7 +106,11 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
 
     var dataObjects = clip.FormattedDataObjects;
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(dataObjects);
+    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(new()
+    {
+      FormattedDataObjects = dataObjects,
+      AdditionalInfo = clip.AdditionalInfo
+    });
     var now = DateTime.Now;
     clip.ClippedAt = new(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
     await _clipRepository.UpdateAsync(clip).ConfigureAwait(false);
