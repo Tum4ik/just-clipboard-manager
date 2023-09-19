@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="Tum4ik.JustClipboardManager/Resources/Icons/tray.ico" alt="Just Clipboard Manager" />
+  <img src="Tum4ik.JustClipboardManager/Resources/Icons/tray.ico" alt="Just Clipboard Manager" style="width:128px;" />
   <br/>
   Just Clipboard Manager
 </h1>
