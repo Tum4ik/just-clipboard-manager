@@ -6,6 +6,7 @@
            xmlns:prism="http://prismlibrary.com/"
            xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
            xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+           xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
            xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
            mc:Ignorable="d"
            d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
@@ -26,8 +27,8 @@
   </controls:NavigationPanel>
   <Border CornerRadius="8, 0, 8, 0"
           BorderThickness="1, 1, 0, 0"
-          BorderBrush="{DynamicResource ContextMenuBorderBrush}"
-          Background="{DynamicResource ViewContentAreaBackgroundBrush}"
+          BorderBrush="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
+          Background="{DynamicResource {x:Static theming:AppColors.ViewContentAreaBackgroundBrush}}"
           Margin="0, 32, 0, 0"
           Padding="8">
     <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogSettingsViewContent}"/>

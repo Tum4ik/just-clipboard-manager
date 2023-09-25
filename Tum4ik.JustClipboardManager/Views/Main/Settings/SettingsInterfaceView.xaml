@@ -9,6 +9,7 @@
              xmlns:translation="clr-namespace:Tum4ik.JustClipboardManager.Services.Translation"
              xmlns:theme="clr-namespace:Tum4ik.JustClipboardManager.Services.Theme"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SettingsInterfaceViewModel}"
              Focusable="False"
@@ -60,7 +61,7 @@
         </TextBlock>
         <controls:SvgIcon Grid.Column="1"
                           Icon="{Binding Icon}"
-                          Color="{DynamicResource TextSecondaryBrush}"
+                          Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                           Width="16" Height="16"
                           Margin="12, 0"/>
         <i:Interaction.Triggers>

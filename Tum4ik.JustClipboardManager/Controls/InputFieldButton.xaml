@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         mc:Ignorable="d"
         Cursor="Hand">
   <Button.Template>
@@ -14,18 +15,18 @@
         <controls:SvgIcon x:Name="_icon"
                           Width="12" Height="12"
                           Icon="{TemplateBinding Icon}"
-                          Color="{DynamicResource TextSecondaryBrush}"/>
+                          Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="True">
           <Setter TargetName="_border"
-                  Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
         </Trigger>
         <Trigger Property="IsPressed" Value="True">
           <Setter TargetName="_border"
-                  Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
           <Setter TargetName="_icon"
-                  Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                  Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextTertiaryBrush}}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

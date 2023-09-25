@@ -4,6 +4,7 @@
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
          mc:Ignorable="d"
          Validation.ErrorTemplate="{x:Null}"
          Cursor="IBeam">
@@ -12,8 +13,8 @@
       <Grid>
         <Border x:Name="_border"
                 CornerRadius="4" Height="32" MinWidth="120"
-                BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
-                Background="{DynamicResource ControlBackgroundBrush}">
+                BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto"/>
@@ -29,7 +30,7 @@
                        Grid.Column="1"
                        Visibility="Hidden"
                        Text="{Binding Translate[Search]}"
-                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       Foreground="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                        VerticalAlignment="Center"
                        Margin="12, 0"/>
             <ScrollViewer x:Name="PART_ContentHost"
@@ -43,33 +44,33 @@
         <Border x:Name="_focusUnderline"
                 Visibility="Hidden"
                 Height="2" VerticalAlignment="Bottom" CornerRadius="0, 0, 4, 4"
-                Background="{DynamicResource AccentDefaultBrush}"/>
+                Background="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"/>
       </Grid>
       <ControlTemplate.Triggers>
         <Trigger Property="Text" Value="">
           <Setter TargetName="_clearButton" Property="Visibility" Value="Hidden"/>
           <Setter TargetName="_placeholder" Property="Visibility" Value="Visible"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
         </Trigger>
         <Trigger Property="Text" Value="{x:Null}">
           <Setter TargetName="_clearButton" Property="Visibility" Value="Hidden"/>
           <Setter TargetName="_placeholder" Property="Visibility" Value="Visible"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
         </Trigger>
 
         <Trigger Property="IsMouseOver" Value="True">
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ControlHoverBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
         </Trigger>
         <Trigger Property="IsFocused" Value="True">
           <Setter TargetName="_border"
-                  Property="Background" Value="{DynamicResource TextBoxInputActiveBackgroundBrush}"/>
+                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.TextBoxInputActiveBackgroundBrush}}"/>
           <Setter TargetName="_focusUnderline" Property="Visibility" Value="Visible"/>
         </Trigger>
         <Trigger Property="IsEnabled" Value="False">
-          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_placeholder" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ControlDisabledBackgroundBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_placeholder" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBackgroundBrush}}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

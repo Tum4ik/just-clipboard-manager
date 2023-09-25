@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              x:ClassModifier="internal"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}">
@@ -30,7 +31,7 @@
                           IsChecked="{Binding IsAboutTabChecked}"
                           CommandParameter="{x:Static const:ViewNames.AboutView}"/>
     </controls:TabButtonsControl>
-    <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"
+    <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}"
             CornerRadius="0, 0, 8, 8">
       <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
                       prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>

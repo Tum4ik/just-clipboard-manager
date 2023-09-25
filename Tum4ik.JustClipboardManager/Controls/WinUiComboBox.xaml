@@ -4,6 +4,7 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+          xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
           mc:Ignorable="d"
           x:Name="this"
           Height="32"
@@ -18,8 +19,8 @@
             <ControlTemplate TargetType="ToggleButton">
               <Border x:Name="_border"
                       CornerRadius="4"
-                      BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
-                      Background="{DynamicResource ControlBackgroundBrush}">
+                      BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                      Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
                 <Grid>
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -33,30 +34,30 @@
                                     Grid.Column="1"
                                     Icon="ExpandArrow"
                                     Width="8" Height="6"
-                                    Color="{DynamicResource TextSecondaryBrush}"
+                                    Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                                     Margin="15, 1, 15, 0"/>
                 </Grid>
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                   <Setter TargetName="_border"
-                          Property="Background" Value="{DynamicResource ControlHoverBackgroundBrush}"/>
+                          Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                   <Setter TargetName="_border"
-                          Property="Background" Value="{DynamicResource ControlPressedBackgroundBrush}"/>
+                          Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlPressedBackgroundBrush}}"/>
                   <Setter TargetName="_border"
-                          Property="BorderBrush" Value="{DynamicResource ControlPressedBorderBrush}"/>
-                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
-                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                          Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.ControlPressedBorderBrush}}"/>
+                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextTertiaryBrush}}"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
                   <Setter TargetName="_border"
-                          Property="Background" Value="{DynamicResource ControlDisabledBackgroundBrush}"/>
+                          Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBackgroundBrush}}"/>
                   <Setter TargetName="_border"
-                          Property="BorderBrush" Value="{DynamicResource ControlDisabledBorderBrush}"/>
-                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
-                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
+                          Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBorderBrush}}"/>
+                  <Setter TargetName="_selectedItemContent" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+                  <Setter TargetName="_expandArrowIcon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -107,7 +108,7 @@
                     <Grid>
                       <Rectangle x:Name="_selectionPointer"
                                  Width="3" Height="16" RadiusX="1.5" RadiusY="1.5"
-                                 Fill="{DynamicResource AccentDefaultBrush}"
+                                 Fill="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"
                                  HorizontalAlignment="Left"
                                  VerticalAlignment="Center"
                                  Visibility="Hidden"/>
@@ -118,19 +119,19 @@
                   <ControlTemplate.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                       <Setter TargetName="_border"
-                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                              Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
                       <Setter TargetName="_selectionPointer"
-                              Property="Fill" Value="{DynamicResource AccentSecondaryBrush}"/>
+                              Property="Fill" Value="{DynamicResource {x:Static theming:AppColors.AccentSecondaryBrush}}"/>
                     </Trigger>
                     <Trigger Property="IsPressed" Value="True">
                       <Setter TargetName="_itemContent"
-                              Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                              Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
                       <Setter TargetName="_selectionPointer"
-                              Property="Fill" Value="{DynamicResource AccentTertiaryBrush}"/>
+                              Property="Fill" Value="{DynamicResource {x:Static theming:AppColors.AccentTertiaryBrush}}"/>
                     </Trigger>
                     <Trigger Property="IsChecked" Value="True">
                       <Setter TargetName="_border"
-                              Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                              Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
                       <Setter TargetName="_selectionPointer" Property="Visibility" Value="Visible"/>
                     </Trigger>
                     <MultiTrigger>
@@ -139,11 +140,11 @@
                         <Condition Property="IsChecked" Value="False"/>
                       </MultiTrigger.Conditions>
                       <Setter TargetName="_border"
-                              Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                              Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
                     </MultiTrigger>
                     <Trigger Property="IsEnabled" Value="False">
                       <Setter TargetName="_itemContent"
-                              Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+                              Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
                     </Trigger>
                   </ControlTemplate.Triggers>
                 </ControlTemplate>

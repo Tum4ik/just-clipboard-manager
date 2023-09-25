@@ -2,6 +2,7 @@ using System.Windows;
 using Prism.Events;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit.Theming;
 using Tum4ik.JustClipboardManager.Services.Translation;
 
 namespace Tum4ik.JustClipboardManager.Controls;
@@ -79,11 +80,11 @@ public partial class PluginCard
       var thisCard = (PluginCard) d;
       if (e.NewValue is true)
       {
-        thisCard.SetResourceReference(BackgroundProperty, "CardBackgroundBrush");
+        thisCard.SetResourceReference(BackgroundProperty, AppColors.CardBackgroundBrush);
       }
       else
       {
-        thisCard.SetResourceReference(BackgroundProperty, "CardDisabledBackgroundBrush");
+        thisCard.SetResourceReference(BackgroundProperty, AppColors.CardDisabledBackgroundBrush);
       }
     })
   );
