@@ -1,12 +1,12 @@
 using System.ComponentModel;
-using System.Windows;
+using System.Windows.Controls;
 using Prism.Events;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.PluginDevKit.Events;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
 namespace Tum4ik.JustClipboardManager.PluginDevKit;
-public abstract class LocalizableVisualTree : FrameworkElement, INotifyPropertyChanged
+public abstract class LocalizableVisualTree : Decorator, INotifyPropertyChanged
 {
   private static IPluginTranslationService s_translate = ContainerLocator.Container.Resolve<IPluginTranslationService>();
   private static IEventAggregator s_eventAggregator = ContainerLocator.Container.Resolve<IEventAggregator>();
