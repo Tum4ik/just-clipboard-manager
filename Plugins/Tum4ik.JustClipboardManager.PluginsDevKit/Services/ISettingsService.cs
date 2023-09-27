@@ -1,9 +1,9 @@
 using System.Globalization;
-using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
-namespace Tum4ik.JustClipboardManager.Services;
+namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
-internal interface ISettingsService
+public interface ISettingsService
 {
   CultureInfo Language { get; set; }
   string Theme { get; set; }

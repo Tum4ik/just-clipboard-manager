@@ -8,6 +8,7 @@
                 xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
                 xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
                 xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+                xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="{Binding TrayIcon}">
@@ -95,7 +96,7 @@
                 </TextBlock.Text>
               </TextBlock>
               <controls:SvgIcon Grid.Column="1" Icon="{Binding Icon}"
-                                Color="{DynamicResource TextSecondaryBrush}"
+                                Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                                 Width="16" Height="16" Margin="12, 0, 0, 0"/>
             </Grid>
           </DataTemplate>

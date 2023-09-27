@@ -8,6 +8,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Plugins"
              xmlns:dto="clr-namespace:Tum4ik.JustClipboardManager.Data.Dto"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              d:DataContext="{d:DesignInstance Type=vm:PluginsSearchViewModel}">
   <ScrollViewer Margin="-8" Padding="0, 8">
     <ItemsControl ItemsSource="{Binding Plugins}" HorizontalAlignment="Center">
@@ -52,10 +53,10 @@
                              Text="{Binding DataContext.Translate[Installed], RelativeSource={RelativeSource AncestorType=UserControl}}"
                              VerticalAlignment="Center"
                              FontSize="12"
-                             Foreground="{DynamicResource SystemSuccessBrush}"
+                             Foreground="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}"
                              Margin="8, 0"/>
                   <controls:SvgIcon Grid.Column="1"
-                                    Icon="CheckCircle" Width="12" Height="12" Color="{DynamicResource SystemSuccessBrush}"
+                                    Icon="CheckCircle" Width="12" Height="12" Color="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}"
                                     VerticalAlignment="Center"/>
                 </Grid>
               </Grid>

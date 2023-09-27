@@ -4,11 +4,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         mc:Ignorable="d"
-        BorderBrush="{DynamicResource CardBorderBrush}"
+        BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
         BorderThickness="1"
         CornerRadius="8"
-        Background="{DynamicResource CardBackgroundBrush}"
+        Background="{DynamicResource {x:Static theming:AppColors.CardBackgroundBrush}}"
         Effect="{DynamicResource CardShadow}"
         Padding="16, 8"
         Margin="8"
@@ -19,7 +20,7 @@
     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
       <Style.Triggers>
         <DataTrigger Binding="{Binding IsPluginEnabled, ElementName=this}" Value="False">
-          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </DataTrigger>
       </Style.Triggers>
     </Style>
@@ -48,7 +49,7 @@
       <StackPanel.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
           <Setter Property="FontSize" Value="10"/>
-          <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
         </Style>
       </StackPanel.Resources>
       <TextBlock x:Name="_by"/>

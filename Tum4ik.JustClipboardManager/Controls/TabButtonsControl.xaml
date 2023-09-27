@@ -6,6 +6,7 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:system="clr-namespace:System;assembly=netstandard"
       xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+      xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
       mc:Ignorable="d"
       x:Name="_this"
       Loaded="Root_Loaded"
@@ -23,17 +24,17 @@
               <controls:SvgIcon x:Name="_icon"
                                 Icon="{TemplateBinding controls:SvgIcon.AttachedIcon}"
                                 Width="8" Height="8"
-                                Color="{DynamicResource TextSecondaryBrush}"/>
+                                Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
             </Border>
             <ControlTemplate.Triggers>
               <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="_border"
-                        Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                        Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
               </Trigger>
               <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="_border"
-                        Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
-                <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextTertiaryBrush}"/>
+                        Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
+                <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextTertiaryBrush}}"/>
               </Trigger>
             </ControlTemplate.Triggers>
           </ControlTemplate>
@@ -53,7 +54,7 @@
   </Grid.ColumnDefinitions>
   <Border Grid.ColumnSpan="3"
           Height="1"
-          Background="{DynamicResource ContextMenuBorderBrush}"
+          Background="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
           VerticalAlignment="Bottom"/>
   <!-- todo: replace by RepeateButton -->
   <Button x:Name="_scrollTabLeftButton"

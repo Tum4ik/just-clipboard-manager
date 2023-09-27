@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d"
              Cursor="Hand">
   <RadioButton.Template>
@@ -14,12 +15,12 @@
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
           <Rectangle x:Name="_selectionPointer"
                      Width="3" Height="16" RadiusX="1.5" RadiusY="1.5"
-                     Fill="{DynamicResource AccentDefaultBrush}"
+                     Fill="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"
                      VerticalAlignment="Center"
                      Visibility="Hidden"/>
           <controls:SvgIcon x:Name="_icon"
                             Icon="{TemplateBinding Icon}"
-                            Color="{DynamicResource TextPrimaryBrush}"
+                            Color="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"
                             Width="16" Height="16"
                             VerticalAlignment="Center"
                             Margin="9, 0, 16, 0"/>
@@ -30,16 +31,16 @@
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="True">
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
-          <Setter TargetName="_selectionPointer" Property="Fill" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
+          <Setter TargetName="_selectionPointer" Property="Fill" Value="{DynamicResource {x:Static theming:AppColors.AccentSecondaryBrush}}"/>
         </Trigger>
         <Trigger Property="IsPressed" Value="True">
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
-          <Setter TargetName="_selectionPointer" Property="Fill" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+          <Setter TargetName="_selectionPointer" Property="Fill" Value="{DynamicResource {x:Static theming:AppColors.AccentTertiaryBrush}}"/>
         </Trigger>
         <Trigger Property="IsChecked" Value="True">
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
           <Setter TargetName="_selectionPointer" Property="Visibility" Value="Visible"/>
         </Trigger>
         <MultiTrigger>
@@ -47,11 +48,11 @@
             <Condition Property="IsPressed" Value="True"/>
             <Condition Property="IsChecked" Value="False"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
         </MultiTrigger>
         <Trigger Property="IsEnabled" Value="False">
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

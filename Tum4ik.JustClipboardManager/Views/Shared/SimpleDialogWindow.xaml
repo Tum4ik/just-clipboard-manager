@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
@@ -18,7 +19,7 @@
       <Border>
         <Border CornerRadius="8"
                 Margin="{TemplateBinding Margin}"
-                Background="{DynamicResource SimpleDialogBackgroundBrush}"
+                Background="{DynamicResource {x:Static theming:AppColors.SimpleDialogBackgroundBrush}}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 Effect="{TemplateBinding Effect}"
@@ -52,8 +53,8 @@
                 </controls:WinUiButton.Text>
               </controls:WinUiButton>
             </UniformGrid>
-            <Border CornerRadius="8, 8, 0, 0" Background="{DynamicResource SimpleDialogContentBackgroundBrush}"
-                    BorderThickness="0, 0, 0, 1" BorderBrush="{DynamicResource ContextMenuBorderBrush}"
+            <Border CornerRadius="8, 8, 0, 0" Background="{DynamicResource {x:Static theming:AppColors.SimpleDialogContentBackgroundBrush}}"
+                    BorderThickness="0, 0, 0, 1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
                     Padding="24">
               <DockPanel>
                 <TextBlock DockPanel.Dock="Top"

@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
 namespace Tum4ik.JustClipboardManager.Services;
 

@@ -8,6 +8,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Plugins"
              xmlns:dto="clr-namespace:Tum4ik.JustClipboardManager.Data.Dto"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              d:DataContext="{d:DesignInstance Type=vm:PluginsInstalledViewModel}">
   <ScrollViewer Margin="-8" Padding="0, 8">
     <ItemsControl ItemsSource="{Binding Plugins}" HorizontalAlignment="Center">
@@ -38,7 +39,7 @@
                                        Margin="0, 0, 8, 0"/>
                 <TextBlock DockPanel.Dock="Left"
                            Text="{Binding DataContext.Translate[Enabled], RelativeSource={RelativeSource AncestorType=UserControl}}"
-                           Foreground="{DynamicResource SystemSuccessBrush}">
+                           Foreground="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
@@ -50,7 +51,7 @@
                 </TextBlock>
                 <TextBlock DockPanel.Dock="Left"
                            Text="{Binding DataContext.Translate[Disabled], RelativeSource={RelativeSource AncestorType=UserControl}}"
-                           Foreground="{DynamicResource SystemCriticalBrush}">
+                           Foreground="{DynamicResource {x:Static theming:AppColors.SystemCriticalBrush}}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding IsEnabled}" Value="True">
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>

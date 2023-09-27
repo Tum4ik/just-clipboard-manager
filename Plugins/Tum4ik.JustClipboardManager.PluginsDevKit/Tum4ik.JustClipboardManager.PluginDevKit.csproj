@@ -21,7 +21,7 @@
     <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
     <PackageTags>clipboard;clipboard-manager;just-clipboard-manager</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Possibility to save additional info.</PackageReleaseNotes>
+    <PackageReleaseNotes>Colors and translations.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
     <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>

@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:EditHotkeyDialogViewModel}">
   <UserControl.Resources>
@@ -14,10 +15,10 @@
   </UserControl.Resources>
   <StackPanel>
     <Border CornerRadius="4" MinWidth="160" Height="32"
-            BorderThickness="1, 1, 1, 0" BorderBrush="{DynamicResource TextBoxBorderBrush}">
+            BorderThickness="1, 1, 1, 0" BorderBrush="{DynamicResource {x:Static theming:AppColors.TextBoxBorderBrush}}">
       <Border CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorLevel=1, AncestorType=Border}}"
-              BorderThickness="0, 0, 0, 1" BorderBrush="{DynamicResource TextBoxBorderUnderlineBrush}"
-              Background="{DynamicResource ControlBackgroundBrush}">
+              BorderThickness="0, 0, 0, 1" BorderBrush="{DynamicResource {x:Static theming:AppColors.TextBoxBorderUnderlineBrush}}"
+              Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
         <Grid>
           <Grid.Resources>
             <Style TargetType="TextBlock">
@@ -28,7 +29,7 @@
           </Grid.Resources>
           <TextBlock x:Name="_hotkeyPlaceholer"
                      Text="{Binding Translate[PressHotkey]}"
-                     Foreground="{DynamicResource TextSecondaryBrush}"/>
+                     Foreground="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
@@ -49,7 +50,7 @@
     </Border>
     <TextBlock x:Name="_errorMessage"
                FontSize="12"
-               Foreground="{DynamicResource SystemCriticalBrush}"
+               Foreground="{DynamicResource {x:Static theming:AppColors.SystemCriticalBrush}}"
                Margin="0, 12, 0, 0"
                Visibility="{Binding ErrorMessageVisibility}">
       <TextBlock.Text>

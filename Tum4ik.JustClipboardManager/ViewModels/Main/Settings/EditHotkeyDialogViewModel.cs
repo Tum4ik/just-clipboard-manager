@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
-using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.Translation;

@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         mc:Ignorable="d"
         Cursor="Hand"
         FocusVisualStyle="{x:Null}">
@@ -14,10 +15,10 @@
               CornerRadius="6">
         <Grid>
           <Border x:Name="_border"
-                  BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
+                  BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
                   Height="32" MinWidth="120" CornerRadius="4"
                   Margin="1"
-                  Background="{DynamicResource ControlBackgroundBrush}">
+                  Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
             <Grid HorizontalAlignment="Center"
                   Margin="3, 0">
               <Grid.ColumnDefinitions>
@@ -37,13 +38,13 @@
           <Rectangle x:Name="_accentBorder"
                      StrokeThickness="1"
                      RadiusX="4" RadiusY="4" Margin="1"
-                     Stroke="{DynamicResource ControlAccentBorderBrush}"
+                     Stroke="{DynamicResource {x:Static theming:AppColors.ControlAccentBorderBrush}}"
                      Visibility="Collapsed"/>
         </Grid>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsKeyboardNavigatedFocus" Value="True">
-          <Setter TargetName="_focusBorder" Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+          <Setter TargetName="_focusBorder" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>
         </Trigger>
         <Trigger Property="IconPosition" Value="After">
           <Setter TargetName="_icon" Property="Grid.Column" Value="1"/>
@@ -63,10 +64,10 @@
 
         <Trigger Property="IsAccent" Value="True">
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"/>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Visible"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextOnAccentPrimaryBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextOnAccentPrimaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"/>
         </Trigger>
 
         <MultiTrigger>
@@ -74,7 +75,7 @@
             <Condition Property="IsAccent" Value="False"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ControlHoverBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -82,16 +83,16 @@
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentSecondaryBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="IsAccent" Value="False"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ControlHoverBackgroundBrush}"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -99,24 +100,24 @@
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentTertiaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentTertiaryBrush}}"/>
           <Setter TargetName="_accentBorder" Property="Stroke">
             <Setter.Value>
               <SolidColorBrush Color="White" Opacity="0.08"/>
             </Setter.Value>
           </Setter>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextOnAccentSecondaryBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextOnAccentSecondaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentSecondaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentSecondaryBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="IsAccent" Value="False"/>
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource ControlDisabledBorderBrush}"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ControlDisabledBackgroundBrush}"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBorderBrush}}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -125,7 +126,7 @@
           </MultiTrigger.Conditions>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Collapsed"/>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDisabledBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDisabledBrush}}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>
