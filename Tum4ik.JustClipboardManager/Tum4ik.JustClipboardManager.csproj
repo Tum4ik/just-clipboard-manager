@@ -246,11 +246,5 @@
       <LastGenOutput>SettingsInterface.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <Target Name="CopyFilesAfteBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
-  </Target>
-  <Target Name="CopyFilesAfterPublish" AfterTargets="Publish">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
-  </Target>
-
+  
 </Project>

@@ -158,9 +158,9 @@ jobs:
 
   github-release:
 
+    name: Release ${{ needs.build.outputs.version }}
     if: github.event_name != 'pull_request' && contains(github.ref_name, 'release')
     needs: build
-    name: Release ${{ needs.build.outputs.version }}
     runs-on: windows-latest
     
     steps:
@@ -168,7 +168,7 @@ jobs:
       uses: actions/download-artifact@v3.0.2
 
     - name: GitHub release
-      uses: softprops/action-gh-release@v0.1.14
+      uses: softprops/action-gh-release@v0.1.15
       with:
         tag_name: ${{ needs.build.outputs.version }}
         draft: true
