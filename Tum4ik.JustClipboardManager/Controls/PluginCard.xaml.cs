@@ -1,7 +1,7 @@
 using System.Windows;
 using Prism.Events;
 using Prism.Ioc;
-using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit.Events;
 using Tum4ik.JustClipboardManager.PluginDevKit.Theming;
 using Tum4ik.JustClipboardManager.Services.Translation;
 

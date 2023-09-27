@@ -1,7 +1,8 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Windows.Input;
-using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;

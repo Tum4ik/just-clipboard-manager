@@ -1,3 +1,4 @@
+using System.Resources;
 using System.Windows;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -24,6 +25,13 @@ public abstract class PluginModule<T> : IModule
       return;
     }
 
+    var resourceManager = CreateResourceManager();
+    if (resourceManager is not null)
+    {
+      containerRegistry.RegisterInstance(resourceManager);
+      containerRegistry.RegisterSingleton<IPluginTranslationService, PluginTranslationService>();
+    }
+
     containerRegistry.RegisterSingleton<IPlugin, T>(_pluginId);
   }
 
@@ -38,4 +46,7 @@ public abstract class PluginModule<T> : IModule
     var pluginsService = containerProvider.Resolve<IPluginsService>();
     pluginsService.RegisterPlugin(_pluginId);
   }
+
+
+  public virtual ResourceManager? CreateResourceManager() => null;
 }
