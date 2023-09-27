@@ -15,7 +15,6 @@ public abstract class LocalizableVisualTree : Decorator, INotifyPropertyChanged
 
   protected LocalizableVisualTree()
   {
-    DataContext = this;
     Loaded += (s, e) => s_eventAggregator.GetEvent<LanguageChangedEvent>().Subscribe(LanguageChanged);
     Unloaded += (s, e) => s_eventAggregator.GetEvent<LanguageChangedEvent>().Unsubscribe(LanguageChanged);
   }
