@@ -4,6 +4,7 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+          xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
           mc:Ignorable="d"
           Cursor="Hand">
   <CheckBox.Template>
@@ -16,11 +17,11 @@
         <Border x:Name="_border"
                 Grid.Column="0"
                 Width="20" Height="20" CornerRadius="4"
-                BorderThickness="1" BorderBrush="{DynamicResource CheckBoxBorderBrush}"
-                Background="{DynamicResource CheckBoxBackgroundBrush}">
+                BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.CheckBoxBorderBrush}}"
+                Background="{DynamicResource {x:Static theming:AppColors.CheckBoxBackgroundBrush}}">
           <controls:SvgIcon x:Name="_check"
                             Icon="Check" Width="11" Height="11"
-                            Color="{DynamicResource TextOnAccentPrimaryBrush}"
+                            Color="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"
                             Visibility="Hidden"/>
         </Border>
         <ContentPresenter Grid.Column="1" VerticalAlignment="Center"
@@ -32,28 +33,28 @@
             <Condition Property="IsChecked" Value="False"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource CheckBoxHoverBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.CheckBoxHoverBackgroundBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="IsChecked" Value="False"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource CheckBoxDisabledBorderBrush}"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource CheckBoxPressedBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.CheckBoxDisabledBorderBrush}}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.CheckBoxPressedBackgroundBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="IsChecked" Value="False"/>
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource CheckBoxDisabledBorderBrush}"/>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.CheckBoxDisabledBorderBrush}}"/>
           <Setter TargetName="_border" Property="Background" Value="Transparent"/>
-          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
         <Trigger Property="IsChecked" Value="True">
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDefaultBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"/>
           <Setter TargetName="_check" Property="Visibility" Value="Visible"/>
         </Trigger>
         <MultiTrigger>
@@ -62,7 +63,7 @@
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentSecondaryBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -70,8 +71,8 @@
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentTertiaryBrush}"/>
-          <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentSecondaryBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentTertiaryBrush}}"/>
+          <Setter TargetName="_check" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentSecondaryBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -79,9 +80,9 @@
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource AccentDisabledBrush}"/>
-          <Setter TargetName="_check" Property="Color" Value="{DynamicResource TextOnAccentDisabledBrush}"/>
-          <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDisabledBrush}}"/>
+          <Setter TargetName="_check" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentDisabledBrush}}"/>
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

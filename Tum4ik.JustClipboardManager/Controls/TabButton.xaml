@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:math="http://hexinnovation.com/math"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d"
              Cursor="Hand"
              PreviewMouseLeftButtonDown="RadioButton_PreviewMouseLeftButtonDown"
@@ -15,8 +16,8 @@
     <math:MathConverter x:Key="MathConverter"/>
     <VisualBrush x:Key="CheckedBackgroundBrush" TileMode="None" Stretch="Fill">
       <VisualBrush.Visual>
-        <Grid Width="1" Height="1" Background="{DynamicResource AppSurfaceBackgroundBrush}">
-          <Border Background="{DynamicResource AppContentAreaBackgroundBrush}"/>
+        <Grid Width="1" Height="1" Background="{DynamicResource {x:Static theming:AppColors.AppSurfaceBackgroundBrush}}">
+          <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}"/>
         </Grid>
       </VisualBrush.Visual>
     </VisualBrush>
@@ -44,7 +45,7 @@
                     StrokeThickness="1"
                     VerticalAlignment="Bottom"
                     Width="3.5"/>
-              <Path Stroke="{DynamicResource ContextMenuBorderBrush}" StrokeThickness="1">
+              <Path Stroke="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}" StrokeThickness="1">
                 <Path.Data>
                   <PathGeometry>
                     <PathFigure StartPoint="0.5, 0">
@@ -65,7 +66,7 @@
                       Value="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent},
                       Converter={StaticResource MathConverter}, ConverterParameter=x/2}"/>
               <Setter Property="StrokeThickness" Value="1"/>
-              <Setter Property="Stroke" Value="{DynamicResource ItemDividerBrush}"/>
+              <Setter Property="Stroke" Value="{DynamicResource {x:Static theming:AppColors.ItemDividerBrush}}"/>
             </Style>
           </Canvas.Resources>
           <StackPanel Orientation="Horizontal">
@@ -77,7 +78,7 @@
             </Canvas.Top>
             <controls:SvgIcon x:Name="_icon"
                               Icon="{TemplateBinding Icon}"
-                              Color="{DynamicResource TextPrimaryBrush}"
+                              Color="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"
                               Width="16" Height="16"
                               VerticalAlignment="Center"
                               Margin="8, 0"/>
@@ -116,11 +117,11 @@
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsPressed" Value="True">
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource TabPressedBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.TabPressedBackgroundBrush}}"/>
         </Trigger>
         <Trigger Property="IsChecked" Value="True">
           <Setter Property="Panel.ZIndex" Value="1"/>
-          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource ContextMenuBorderBrush}"/>
+          <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"/>
           <Setter TargetName="_border" Property="Background" Value="{StaticResource CheckedBackgroundBrush}"/>
           <Setter TargetName="_border" Property="Margin" Value="4, 0"/>
           <Setter TargetName="_rightBottomFacet" Property="Visibility" Value="Visible"/>
@@ -128,8 +129,8 @@
         </Trigger>
         <Trigger Property="IsChecked" Value="False">
           <Setter Property="Panel.ZIndex" Value="0"/>
-          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource TextSecondaryBrush}"/>
-          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
           <Setter TargetName="_text" Property="FontWeight" Value="Regular"/>
         </Trigger>
         <MultiTrigger>
@@ -138,7 +139,7 @@
             <Condition Property="IsChecked" Value="False"/>
             <Condition Property="IsPressed" Value="False"/>
           </MultiTrigger.Conditions>
-          <Setter TargetName="_border" Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

@@ -1,6 +1,7 @@
 using Prism.Events;
-using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit.Models;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Services;

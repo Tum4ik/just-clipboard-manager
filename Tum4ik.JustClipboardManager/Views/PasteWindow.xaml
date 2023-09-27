@@ -7,7 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" 
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" 
-        xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants" 
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         IsVisibleChanged="This_IsVisibleChanged"
@@ -82,11 +82,11 @@
                       <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                           <Setter TargetName="_border"
-                                  Property="Background" Value="{DynamicResource ItemHoverBackgroundBrush}"/>
+                                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                           <Setter TargetName="_border"
-                                  Property="Background" Value="{DynamicResource ItemPressedBackgroundBrush}"/>
+                                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
                         </Trigger>
                       </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -146,8 +146,8 @@
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
-                  BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}"
-                  Background="{DynamicResource ControlBackgroundBrush}">
+                  BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                  Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
             <ScrollViewer Padding="1">
               <ItemsPresenter/>
             </ScrollViewer>

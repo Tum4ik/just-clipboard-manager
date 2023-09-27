@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         xmlns:debug="debug-mode"
         mc:Ignorable="d"
         x:ClassModifier="internal"
@@ -54,7 +55,7 @@
               <TextBlock x:Name="_tag"
                          Grid.Column="2"
                          FontSize="12"
-                         Foreground="{DynamicResource TextSecondaryBrush}"
+                         Foreground="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                          VerticalAlignment="Center">
                 <mc:AlternateContent>
                   <mc:Choice Requires="debug">
@@ -77,10 +78,10 @@
                                         CornerRadius="0, 8, 0, 0"
                                         Icon="ChromeClose"
                                         Click="CloseButton_Click"
-                                        HoverBackgroundBrush="{DynamicResource ShellCloseButtonHoverBackgroundBrush}"
-                                        HoverIconBrush="{DynamicResource ShellCloseButtonHoverIconBrush}"
-                                        PressedBackgroundBrush="{DynamicResource ShellCloseButtonPressedBackgroundBrush}"
-                                        PressedIconBrush="{DynamicResource ShellCloseButtonPressedIconBrush}"/>
+                                        HoverBackgroundBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonHoverBackgroundBrush}}"
+                                        HoverIconBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonHoverIconBrush}}"
+                                        PressedBackgroundBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonPressedBackgroundBrush}}"
+                                        PressedIconBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonPressedIconBrush}}"/>
               </StackPanel>
             </Grid>
             <ContentPresenter/>
@@ -97,11 +98,11 @@
         </Trigger>
         <Trigger Property="IsActive" Value="False">
           <Setter TargetName="_icon" Property="Opacity" Value="0.5"/>
-          <Setter TargetName="_title" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_tag" Property="Foreground" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_chromeMinimizeButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_chromeMaximizeRestoreButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
-          <Setter TargetName="_chromeCloseButton" Property="IconColor" Value="{DynamicResource TextDisabledBrush}"/>
+          <Setter TargetName="_title" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_tag" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_chromeMinimizeButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_chromeMaximizeRestoreButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_chromeCloseButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

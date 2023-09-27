@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsHotkeysViewModel}"
              x:Name="this">
@@ -37,18 +38,19 @@
                   CornerRadius="4"
                   VerticalAlignment="Center"
                   Margin="8, 0"
-                  Background="{DynamicResource ItemHoverBackgroundBrush}">
+                  Background="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}">
             <Grid>
               <TextBlock x:Name="_keyBindingDescriptor"
                          Text="{Binding KeyBindingDescriptor}"
                          TextAlignment="Center"
                          Margin="8, 4"/>
               <Border x:Name="_errorBadge"
-                      Width="16" Height="16" CornerRadius="8" Background="{DynamicResource SystemCriticalBrush}"
+                      Width="16" Height="16" CornerRadius="8"
+                      Background="{DynamicResource {x:Static theming:AppColors.SystemCriticalBrush}}"
                       HorizontalAlignment="Center" VerticalAlignment="Center"
                       Visibility="Collapsed">
                 <controls:SvgIcon Icon="ChromeClose" Width="8" Height="8"
-                                  Color="{DynamicResource TextOnAccentPrimaryBrush}"/>
+                                  Color="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"/>
               </Border>
             </Grid>
           </Border>

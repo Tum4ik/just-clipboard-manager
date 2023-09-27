@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Prism.Events;
 using Prism.Navigation;
-using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.PluginDevKit.Events;
 using Tum4ik.JustClipboardManager.Services.Translation;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Base;
