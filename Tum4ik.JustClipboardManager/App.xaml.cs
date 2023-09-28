@@ -58,7 +58,7 @@ public partial class App : ISingleInstance
 #if DEBUG
     instanceUniqueName += "_Development";
 #endif
-    var restartAfterCrashArg = args.FirstOrDefault(a => a.StartsWith(RestartAfterCrashArg, StringComparison.Ordinal));
+    var restartAfterCrashArg = Array.Find(args, a => a.StartsWith(RestartAfterCrashArg, StringComparison.Ordinal));
     var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
     if (restartAfterCrashArg is null && !isFirstInstance)
     {

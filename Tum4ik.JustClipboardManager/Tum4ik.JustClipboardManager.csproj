@@ -25,6 +25,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon Condition="'$(Configuration)'=='Debug'">Resources\Icons\tray-dev.ico</ApplicationIcon>
     <ApplicationIcon Condition="'$(Configuration)'=='Release'">Resources\Icons\tray.ico</ApplicationIcon>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

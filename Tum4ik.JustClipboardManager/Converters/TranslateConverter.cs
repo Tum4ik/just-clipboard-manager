@@ -7,7 +7,7 @@ namespace Tum4ik.JustClipboardManager.Converters;
 
 internal class TranslateConverter : IMultiValueConverter
 {
-  public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+  public object? Convert(object[] values, Type? targetType, object? parameter, CultureInfo? culture)
   {
     if (values.Length != 2)
     {
@@ -16,7 +16,7 @@ internal class TranslateConverter : IMultiValueConverter
 
     var value0 = values[0];
     var value1 = values[1];
-    if (value0 == DependencyProperty.UnsetValue && value1 == DependencyProperty.UnsetValue)
+    if (value0 == DependencyProperty.UnsetValue || value1 == DependencyProperty.UnsetValue)
     {
       return null;
     }
@@ -38,7 +38,7 @@ internal class TranslateConverter : IMultiValueConverter
   }
 
 
-  public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+  public object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo? culture)
   {
     throw new NotImplementedException();
   }

@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+        xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
         mc:Ignorable="d"
         BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
         BorderThickness="1"
@@ -17,6 +18,8 @@
         x:Name="this"
         Loaded="This_Loaded">
   <Border.Resources>
+    <converters:TranslateConverter x:Key="TranslateConverter"/>
+    
     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
       <Style.Triggers>
         <DataTrigger Binding="{Binding IsPluginEnabled, ElementName=this}" Value="False">

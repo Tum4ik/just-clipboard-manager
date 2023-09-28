@@ -2,6 +2,9 @@ using System.Runtime.InteropServices;
 
 namespace Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
+#pragma warning disable S101 // Types should be named in PascalCase
+#pragma warning disable IDE1006 // Naming Styles
+
 /// <summary>
 /// Used by SendInput to store information for synthesizing input events
 /// such as keystrokes, mouse movement, and mouse clicks.

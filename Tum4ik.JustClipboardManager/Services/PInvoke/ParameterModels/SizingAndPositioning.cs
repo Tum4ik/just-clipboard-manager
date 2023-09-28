@@ -1,5 +1,7 @@
 namespace Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
 
+#pragma warning disable CA1069 // Enums values should not be duplicated
+
 /// <summary>
 /// The window sizing and positioning flags.
 /// </summary>

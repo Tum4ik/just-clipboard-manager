@@ -191,6 +191,9 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 ###############################
 [*.cs]
 
+# CA1010: Collections should implement generic interface
+dotnet_diagnostic.CA1010.severity = none
+
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
 

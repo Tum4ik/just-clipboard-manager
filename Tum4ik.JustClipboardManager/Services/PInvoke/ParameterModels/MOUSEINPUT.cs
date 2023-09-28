@@ -1,6 +1,8 @@
-using System;
-
 namespace Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+
+#pragma warning disable S101 // Types should be named in PascalCase
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable CA1712 // Do not prefix enum values with type name
 
 /// <summary>
 /// Contains information about a simulated mouse event.

@@ -1,7 +1,7 @@
 using System.Resources;
 
 namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;
-internal class PluginTranslationService : IPluginTranslationService
+internal sealed class PluginTranslationService : IPluginTranslationService
 {
   private readonly ResourceManager _resourceManager;
   private readonly ISettingsService _settingsService;
