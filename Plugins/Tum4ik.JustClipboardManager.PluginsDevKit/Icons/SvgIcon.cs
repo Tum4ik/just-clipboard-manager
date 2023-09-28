@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -51,13 +52,15 @@ public abstract class SvgIcon<TSvgIcon> : SvgViewbox
   public static readonly DependencyProperty AttachedIconProperty = DependencyProperty.RegisterAttached(
     "AttachedIcon", typeof(TSvgIcon?), typeof(SvgIcon<TSvgIcon>)
   );
+  [SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Desired")]
   public static TSvgIcon? GetAttachedIcon(UIElement target)
   {
-    return (TSvgIcon?) target.GetValue(AttachedIconProperty);
+    return (TSvgIcon?) target?.GetValue(AttachedIconProperty);
   }
+  [SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Desired")]
   public static void SetAttachedIcon(UIElement target, TSvgIcon? value)
   {
-    target.SetValue(AttachedIconProperty, value);
+    target?.SetValue(AttachedIconProperty, value);
   }
 
 

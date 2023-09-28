@@ -6,7 +6,6 @@
         xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" 
-        xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters" 
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
@@ -16,10 +15,6 @@
         WindowStartupLocation="Manual"
         x:Name="This">
   <Window.Resources>
-    <converters:BytesToStringConverter x:Key="BytesToStringConverter"/>
-    <converters:BytesToImageSourceConverter x:Key="BytesToImageSourceConverter"/>
-    <converters:BytesToFilesListConverter x:Key="BytesToFilesListConverter"/>
-
     <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>
   </Window.Resources>
   <i:Interaction.Triggers>
@@ -96,52 +91,6 @@
             </Setter.Value>
           </Setter>
         </Style>
-
-        <!--<DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeUndefined}">
-          <TextBlock Text="????"/>
-        </DataTemplate>
-        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeText}">
-          <Border Height="26" ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
-            <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
-                       Margin="0, 4"/>
-          </Border>
-        </DataTemplate>
-        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeImage}">
-          <Image Source="{Binding RepresentationData, Converter={StaticResource BytesToImageSourceConverter}}"
-                 HorizontalAlignment="Left"
-                 Height="48"
-                 Stretch="Uniform"
-                 Margin="0, 1"/>
-        </DataTemplate>
-        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeSingleFile}">
-          <Grid Height="26"
-                ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToStringConverter}}">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="24"/>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <icons:SvgIcon Grid.Column="0" Icon="File" Width="14"  />
-            <TextBlock Grid.Column="1" Text="..." Margin="4, 0, 0, 0"
-                       VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2" 
-                       Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Grid}}"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Center"/>
-          </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="{x:Static const:DataTemplateNames.ClipTypeFilesList}">
-          <Grid Height="26" 
-                ToolTip="{Binding RepresentationData, Converter={StaticResource BytesToFilesListConverter}}">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="24"/>
-              <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <icons:SvgIcon Grid.Column="0" Icon="Files" />
-            <TextBlock Grid.Column="1" Text="{Binding DataContext.Translate[Files], ElementName=This}" Margin="4, 0" 
-                       VerticalAlignment="Center"/>
-          </Grid>
-        </DataTemplate>-->
       </ListBox.Resources>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">

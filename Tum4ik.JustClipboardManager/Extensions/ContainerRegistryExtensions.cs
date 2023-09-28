@@ -56,7 +56,7 @@ internal static class ContainerRegistryExtensions
     var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
     var configuration = new ConfigurationBuilder()
       .SetBasePath(AppContext.BaseDirectory)
-      .AddJsonStream(appsettingsStream)
+      .AddJsonStream(appsettingsStream!)
 #if DEBUG
       .AddUserSecrets(Assembly.GetExecutingAssembly())
 #endif

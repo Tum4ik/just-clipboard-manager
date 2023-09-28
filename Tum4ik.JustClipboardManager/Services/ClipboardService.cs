@@ -168,37 +168,6 @@ internal class ClipboardService : IClipboardService
           dataBytes = GetDataBytes(data);
         }
 
-
-
-        /*if (dataObject.GetDataPresent("Scalable Vector Graphics"))
-        {
-
-        }
-        else*//*
-
-        else if (dataObject.GetDataPresent(typeof(Bitmap)))
-        {
-          var representationDataObject = dataObject.GetData(typeof(Bitmap));
-          representationData = GetBitmapBytes((Bitmap) representationDataObject);
-        }
-        else if (dataObject.GetDataPresent(DataFormats.FileDrop))
-        {
-          var filePaths = (string[]) dataObject.GetData(DataFormats.FileDrop);
-          if (filePaths.Length == 1)
-          {
-            searchLabel = filePaths[0];
-            representationData = GetStringBytes(filePaths[0]);
-          }
-          else
-          {
-            searchLabel = string.Join(";", filePaths);
-            representationData = GetStringArrayBytes(filePaths);
-          }
-        }
-
-    }*/
-
-
         if (dataBytes.Length > 0)
         {
           var formattedDataObject = new FormattedDataObject
