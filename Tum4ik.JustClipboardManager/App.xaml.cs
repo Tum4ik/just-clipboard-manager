@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
@@ -103,7 +102,7 @@ public partial class App : ISingleInstance
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
 #if !DEBUG
-      Process.Start(new ProcessStartInfo(processPath)
+      System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
@@ -149,9 +148,9 @@ public partial class App : ISingleInstance
     base.OnStartup(e);
 
     var configuration = Container.Resolve<IConfiguration>();
-    // todo: wrap AppCenter by service
-#if !DEBUG
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
+#if DEBUG
+    _ = AppCenter.SetEnabledAsync(false);
 #endif
 
     var updateService = Container.Resolve<IUpdateService>();
