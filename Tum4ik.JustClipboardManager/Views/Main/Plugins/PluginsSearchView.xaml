@@ -26,7 +26,9 @@
                                IsPluginEnabled="True">
             <controls:PluginCard.Footer>
               <Grid HorizontalAlignment="Right">
-                <controls:WinUiButton Text="{Binding DataContext.Translate[Install], RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <controls:WinUiButton Text="{Binding DataContext.Translate[Install], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      Command="{Binding DataContext.InstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      CommandParameter="{Binding}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding IsInstalled}" Value="True">
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>

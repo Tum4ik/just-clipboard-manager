@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;
 public interface IPluginsService
 {
@@ -9,4 +11,13 @@ public interface IPluginsService
   void DisablePlugin(string id);
   bool IsPluginInstalled(string id);
   bool IsPluginEnabled(string id);
+
+  Task InstallPluginAsync(Uri downloadLink,
+                          string pluginId,
+                          IProgress<int>? progress = null,
+                          CancellationToken cancellationToken = default);
+  Task InstallPluginAsync(FileInfo zipFile,
+                          string pluginId,
+                          IProgress<int>? progress = null,
+                          CancellationToken cancellationToken = default);
 }

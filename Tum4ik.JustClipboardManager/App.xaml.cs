@@ -202,6 +202,7 @@ public partial class App : ISingleInstance
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
       .RegisterSingleton<IPluginsService, PluginsService>()
+      .RegisterSingleton<IHttpClientFactory, HttpClientFactory>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()
