@@ -1,7 +1,10 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace Tum4ik.JustClipboardManager.Data.Dto;
 
-internal class SearchPluginInfoDto : PluginInfoDto
+[INotifyPropertyChanged]
+internal partial class SearchPluginInfoDto : PluginInfoDto
 {
   public required Uri DownloadLink { get; init; }
-  public bool IsInstalled { get; set; }
+  [ObservableProperty] private bool _isInstalled;
 }

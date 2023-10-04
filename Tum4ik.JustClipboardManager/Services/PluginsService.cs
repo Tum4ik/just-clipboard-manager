@@ -104,7 +104,6 @@ internal class PluginsService : IPluginsService
     Progress<int>? progress2 = progress is null ? null : new(p => progress.Report(p / 2 + 50));
     using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
-    progress?.Report(100);
   }
 
 
@@ -118,8 +117,8 @@ internal class PluginsService : IPluginsService
 
 
   private async Task<MemoryStream> DownloadPluginZipAsync(Uri downloadLink,
-                                                       IProgress<int>? progress = null,
-                                                       CancellationToken cancellationToken = default)
+                                                          IProgress<int>? progress = null,
+                                                          CancellationToken cancellationToken = default)
   {
     var memoryStream = new MemoryStream();
     using var httpClient = _httpClientFactory.CreateHttpClient();
@@ -135,7 +134,7 @@ internal class PluginsService : IPluginsService
       totalBytesRead += bytesRead;
       if (contentLength is not null)
       {
-        progress?.Report((int) (totalBytesRead / contentLength) * 100);
+        progress?.Report((int) ((double) totalBytesRead / contentLength * 100));
       }
     }
 
@@ -190,7 +189,7 @@ internal class PluginsService : IPluginsService
           }
         }
 
-        progress?.Report(i / entriesCount * 100);
+        progress?.Report((int) ((double) i / entriesCount * 100));
       }
     }, cancellationToken).ConfigureAwait(false);
 

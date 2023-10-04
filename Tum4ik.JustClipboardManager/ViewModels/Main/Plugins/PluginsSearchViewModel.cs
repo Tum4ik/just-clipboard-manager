@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Octokit;
 using Prism.Events;
@@ -31,13 +32,13 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
   public async void OnNavigatedTo(NavigationContext navigationContext)
   {
     Plugins.Clear();
-    
+
     try
     {
       var pluginsListJsonBytes = await _gitHubClient.Repository
-      .Content
-      .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
-      .ConfigureAwait(true);
+        .Content
+        .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
+        .ConfigureAwait(true);
       using var stream = new MemoryStream(pluginsListJsonBytes);
       await foreach (var pluginDto in JsonSerializer.DeserializeAsyncEnumerable<SearchPluginInfoDto>(stream))
       {
@@ -56,7 +57,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     {
       // todo: show message about wrong JSON file
     }
-    
+
   }
 
   public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -71,10 +72,20 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
 
   public ObservableCollection<SearchPluginInfoDto> Plugins { get; } = new();
 
+  [ObservableProperty] private int _pluginInstallationProgress;
+  [ObservableProperty] private string? _installingPluginId;
+
 
   [RelayCommand]
   private async Task InstallPluginAsync(SearchPluginInfoDto plugin)
   {
-    await _pluginsService.InstallPluginAsync(plugin.DownloadLink, plugin.Id).ConfigureAwait(false);
+    InstallingPluginId = plugin.Id;
+    var progress = new Progress<int>(p => PluginInstallationProgress = p);
+    await _pluginsService.InstallPluginAsync(plugin.DownloadLink, plugin.Id, progress).ConfigureAwait(true);
+    PluginInstallationProgress = 100;
+
+    plugin.IsInstalled = true;
+    PluginInstallationProgress = 0;
+    InstallingPluginId = null;
   }
 }
