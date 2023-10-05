@@ -31,6 +31,8 @@
                   <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <ProgressBar Grid.Column="0"
+                             Margin="0, 0, 14, 0"
+                             VerticalAlignment="Center"
                              Value="{Binding DataContext.PluginInstallationProgress, RelativeSource={RelativeSource AncestorType=UserControl}}">
                   <i:Interaction.Triggers>
                     <i:DataTrigger Binding="{Binding DataContext.InstallingPluginId, RelativeSource={RelativeSource AncestorType=UserControl}}"

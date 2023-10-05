@@ -22,7 +22,7 @@
                 Margin="1"
                 Width="40" Height="20" CornerRadius="10"
                 BorderThickness="1"
-                BorderBrush="{DynamicResource {x:Static theming:AppColors.CheckBoxBorderBrush}}"
+                BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
                 Background="{DynamicResource {x:Static theming:AppColors.CheckBoxBackgroundBrush}}">
           <Border x:Name="_thumb"
                   Width="12" Height="12" CornerRadius="6"

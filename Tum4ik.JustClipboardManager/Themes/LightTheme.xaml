@@ -84,7 +84,8 @@
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlHoverBackgroundBrush}" Color="#F9F9F9" Opacity="0.5"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlPressedBackgroundBrush}" Color="#F9F9F9" Opacity="0.3"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlDisabledBackgroundBrush}" Color="#F9F9F9" Opacity="0.3"/>
-  <LinearGradientBrush x:Key="{x:Static theming:AppColors.ControlBorderBrush}" StartPoint="0, 0" EndPoint="0, 1">
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlBorderBrush}" Color="Black" Opacity="0.6063"/>
+  <LinearGradientBrush x:Key="{x:Static theming:AppColors.ControlBorderGradientBrush}" StartPoint="0, 0" EndPoint="0, 1">
     <GradientStop Color="#0E000000" Offset="0.906" />
     <GradientStop Color="#29000000" Offset="1" />
   </LinearGradientBrush>
@@ -101,7 +102,6 @@
     <GradientStop Color="#29000000" Offset="0.96"/>
   </LinearGradientBrush>
 
-  <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxBorderBrush}" Color="Black" Opacity="0.6063"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxBackgroundBrush}" Color="Black" Opacity="0.0241"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxHoverBackgroundBrush}" Color="Black" Opacity="0.0578"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxPressedBackgroundBrush}" Color="Black" Opacity="0.0924"/>

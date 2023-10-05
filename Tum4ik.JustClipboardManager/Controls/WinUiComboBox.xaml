@@ -19,7 +19,7 @@
             <ControlTemplate TargetType="ToggleButton">
               <Border x:Name="_border"
                       CornerRadius="4"
-                      BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                      BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderGradientBrush}}"
                       Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
                 <Grid>
                   <Grid.ColumnDefinitions>

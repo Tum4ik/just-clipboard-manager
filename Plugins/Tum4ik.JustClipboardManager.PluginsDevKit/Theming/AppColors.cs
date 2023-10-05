@@ -42,11 +42,11 @@ public static class AppColors
   public const string ControlPressedBackgroundBrush = nameof(ControlPressedBackgroundBrush);
   public const string ControlDisabledBackgroundBrush = nameof(ControlDisabledBackgroundBrush);
   public const string ControlBorderBrush = nameof(ControlBorderBrush);
+  public const string ControlBorderGradientBrush = nameof(ControlBorderGradientBrush);
   public const string ControlPressedBorderBrush = nameof(ControlPressedBorderBrush);
   public const string ControlDisabledBorderBrush = nameof(ControlDisabledBorderBrush);
   public const string ControlAccentBorderBrush = nameof(ControlAccentBorderBrush);
   public const string ThumbBorderBrush = nameof(ThumbBorderBrush);
-  public const string CheckBoxBorderBrush = nameof(CheckBoxBorderBrush);
   public const string CheckBoxBackgroundBrush = nameof(CheckBoxBackgroundBrush);
   public const string CheckBoxHoverBackgroundBrush = nameof(CheckBoxHoverBackgroundBrush);
   public const string CheckBoxPressedBackgroundBrush = nameof(CheckBoxPressedBackgroundBrush);
