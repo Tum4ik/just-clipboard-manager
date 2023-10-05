@@ -187,6 +187,8 @@ public partial class App : ISingleInstance
       .RegisterConfiguration()
       .RegisterGeneratedWrappers()
       .RegisterDatabase()
+      .RegisterThreadSwitching()
+      .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
       .RegisterSingleton<IUser32DllService, User32DllService>()
       .RegisterSingleton<ISHCoreDllService, SHCoreDllService>()
@@ -245,6 +247,6 @@ public partial class App : ISingleInstance
 
   protected override IModuleCatalog CreateModuleCatalog()
   {
-    return new DirectoryModuleCatalog { ModulePath = "./" };
+    return new LoadableDirectoryModuleCatalog { ModulePath = "./" };
   }
 }

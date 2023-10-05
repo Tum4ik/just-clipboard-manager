@@ -1,8 +1,10 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
+using Microsoft.VisualStudio.Threading;
 using Prism.Events;
 using Prism.Ioc;
+using Prism.Modularity;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit;
@@ -16,14 +18,23 @@ internal class PluginsService : IPluginsService
   private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
   private readonly IHttpClientFactory _httpClientFactory;
+  private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
+  private readonly IModuleManager _moduleManager;
+  private readonly JoinableTaskFactory _joinableTaskFactory;
 
   public PluginsService(IContainerProvider containerProvider,
                         IEventAggregator eventAggregator,
-                        IHttpClientFactory httpClientFactory)
+                        IHttpClientFactory httpClientFactory,
+                        ILoadableDirectoryModuleCatalog moduleCatalog,
+                        IModuleManager moduleManager,
+                        JoinableTaskFactory joinableTaskFactory)
   {
     _containerProvider = containerProvider;
     _eventAggregator = eventAggregator;
     _httpClientFactory = httpClientFactory;
+    _moduleCatalog = moduleCatalog;
+    _moduleManager = moduleManager;
+    _joinableTaskFactory = joinableTaskFactory;
   }
 
 
@@ -104,6 +115,17 @@ internal class PluginsService : IPluginsService
     Progress<int>? progress2 = progress is null ? null : new(p => progress.Report(p / 2 + 50));
     using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
+    
+    _moduleCatalog.Load();
+    foreach (var module in _moduleCatalog.Modules)
+    {
+      if (module.State == ModuleState.NotStarted)
+      {
+        await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
+        _moduleManager.LoadModule(module.ModuleName);
+        progress?.Report(100);
+      }
+    }
   }
 
 

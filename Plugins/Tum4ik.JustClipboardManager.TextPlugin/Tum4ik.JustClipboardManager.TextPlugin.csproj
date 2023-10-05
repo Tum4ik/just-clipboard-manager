@@ -13,6 +13,13 @@
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <PropertyGroup>
     <BuildDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\x86\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x86>
     <BuildDestinationFolder_x64>..\..\Tum4ik.JustClipboardManager\bin\x64\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x64>
