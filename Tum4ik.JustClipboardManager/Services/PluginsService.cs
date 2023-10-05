@@ -123,6 +123,7 @@ internal class PluginsService : IPluginsService
       {
         await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
         _moduleManager.LoadModule(module.ModuleName);
+        EnablePlugin(pluginId);
         progress?.Report(100);
       }
     }

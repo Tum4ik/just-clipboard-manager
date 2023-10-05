@@ -75,16 +75,38 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
   [ObservableProperty] private int _pluginInstallationProgress;
   [ObservableProperty] private string? _installingPluginId;
 
+  private CancellationTokenSource? _installPluginCancellationTokenSource;
+
 
   [RelayCommand]
   private async Task InstallPluginAsync(SearchPluginInfoDto plugin)
   {
+    _installPluginCancellationTokenSource = new();
     InstallingPluginId = plugin.Id;
     var progress = new Progress<int>(p => PluginInstallationProgress = p);
-    await _pluginsService.InstallPluginAsync(plugin.DownloadLink, plugin.Id, progress).ConfigureAwait(true);
+    try
+    {
+      await _pluginsService.InstallPluginAsync(
+        plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
+      ).ConfigureAwait(true);
+      plugin.IsInstalled = true;
+    }
+    catch (TaskCanceledException)
+    {
+    }
+    finally
+    {
+      _installPluginCancellationTokenSource.Dispose();
+      _installPluginCancellationTokenSource = null;
+      PluginInstallationProgress = 0;
+      InstallingPluginId = null;
+    }
+  }
 
-    plugin.IsInstalled = true;
-    PluginInstallationProgress = 0;
-    InstallingPluginId = null;
+
+  [RelayCommand]
+  private void CancelInstallPlugin()
+  {
+    _installPluginCancellationTokenSource?.Cancel();
   }
 }
