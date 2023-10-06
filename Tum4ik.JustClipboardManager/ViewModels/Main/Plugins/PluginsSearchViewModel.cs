@@ -1,30 +1,25 @@
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Octokit;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsSearchViewModel : TranslationViewModel, INavigationAware
 {
-  private readonly IGitHubClient _gitHubClient;
   private readonly IPluginsService _pluginsService;
 
   public PluginsSearchViewModel(ITranslationService translationService,
                                 IEventAggregator eventAggregator,
-                                IGitHubClient gitHubClient,
                                 IPluginsService pluginsService)
     : base(translationService, eventAggregator)
   {
-    _gitHubClient = gitHubClient;
     _pluginsService = pluginsService;
   }
 
@@ -35,18 +30,9 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
 
     try
     {
-      var pluginsListJsonBytes = await _gitHubClient.Repository
-        .Content
-        .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
-        .ConfigureAwait(true);
-      using var stream = new MemoryStream(pluginsListJsonBytes);
-      await foreach (var pluginDto in JsonSerializer.DeserializeAsyncEnumerable<SearchPluginInfoDto>(stream))
+      await foreach (var pluginDto in _pluginsService.SearchPluginsAsync())
       {
-        if (pluginDto is not null)
-        {
-          pluginDto.IsInstalled = _pluginsService.IsPluginInstalled(pluginDto.Id);
-          Plugins.Add(pluginDto);
-        }
+        Plugins.Add(pluginDto);
       }
     }
     catch (HttpRequestException)
@@ -57,7 +43,6 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     {
       // todo: show message about wrong JSON file
     }
-
   }
 
   public bool IsNavigationTarget(NavigationContext navigationContext)

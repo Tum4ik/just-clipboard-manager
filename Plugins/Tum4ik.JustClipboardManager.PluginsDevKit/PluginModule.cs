@@ -43,7 +43,7 @@ public abstract class PluginModule<T> : IModule
       return;
     }
 
-    var pluginsService = containerProvider.Resolve<IPluginsService>();
+    var pluginsService = containerProvider.Resolve<IPluginsRegistryService>();
     pluginsService.RegisterPlugin(_pluginId);
   }
 

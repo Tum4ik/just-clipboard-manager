@@ -1,10 +1,13 @@
 using System.IO;
+using Tum4ik.JustClipboardManager.Data.Dto;
+using Tum4ik.JustClipboardManager.PluginDevKit;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
-namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;
-public interface IPluginsService
+namespace Tum4ik.JustClipboardManager.Services;
+internal interface IPluginsService : IPluginsRegistryService
 {
   IReadOnlyCollection<IPlugin> InstalledPlugins { get; }
-  void RegisterPlugin(string id);
+  IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync();
   void UnregisterPlugin(string id);
   IPlugin? GetPlugin(string id);
   void EnablePlugin(string id);

@@ -2,14 +2,15 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
 using Microsoft.VisualStudio.Threading;
+using Octokit;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;
+using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.PluginDevKit.Extensions;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -17,6 +18,7 @@ internal class PluginsService : IPluginsService
 {
   private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
+  private readonly IGitHubClient _gitHubClient;
   private readonly IHttpClientFactory _httpClientFactory;
   private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
   private readonly IModuleManager _moduleManager;
@@ -24,6 +26,7 @@ internal class PluginsService : IPluginsService
 
   public PluginsService(IContainerProvider containerProvider,
                         IEventAggregator eventAggregator,
+                        IGitHubClient gitHubClient,
                         IHttpClientFactory httpClientFactory,
                         ILoadableDirectoryModuleCatalog moduleCatalog,
                         IModuleManager moduleManager,
@@ -31,6 +34,7 @@ internal class PluginsService : IPluginsService
   {
     _containerProvider = containerProvider;
     _eventAggregator = eventAggregator;
+    _gitHubClient = gitHubClient;
     _httpClientFactory = httpClientFactory;
     _moduleCatalog = moduleCatalog;
     _moduleManager = moduleManager;
@@ -43,6 +47,24 @@ internal class PluginsService : IPluginsService
 
 
   public IReadOnlyCollection<IPlugin> InstalledPlugins => _plugins.Values;
+
+
+  public async IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync()
+  {
+    var pluginsListJsonBytes = await _gitHubClient.Repository
+      .Content
+      .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
+      .ConfigureAwait(false);
+    using var stream = new MemoryStream(pluginsListJsonBytes);
+    await foreach (var pluginDto in JsonSerializer.DeserializeAsyncEnumerable<SearchPluginInfoDto>(stream).ConfigureAwait(false))
+    {
+      if (pluginDto is not null)
+      {
+        pluginDto.IsInstalled = IsPluginInstalled(pluginDto.Id);
+        yield return pluginDto;
+      }
+    }
+  }
 
 
   public void RegisterPlugin(string id)
@@ -172,7 +194,7 @@ internal class PluginsService : IPluginsService
   {
     const string PluginsJsonFileName = "Plugins.json";
     var guid = Guid.NewGuid();
-    var pluginFilesStream = new FileStream(PluginsJsonFileName, FileMode.OpenOrCreate);
+    var pluginFilesStream = new FileStream(PluginsJsonFileName, System.IO.FileMode.OpenOrCreate);
     Dictionary<string, List<string>> pluginFiles;
     try
     {
