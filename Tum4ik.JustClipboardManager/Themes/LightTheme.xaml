@@ -27,11 +27,14 @@
   <SolidColorBrush x:Key="{x:Static theming:AppColors.AccentTertiaryBrush}" Color="#005FB8" Opacity="0.8"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.AccentDisabledBrush}" Color="Black" Opacity="0.2169"/>
 
-  <Brush x:Key="{x:Static theming:AppColors.SystemAttentionBrush}">#0070CB</Brush>
+  <Brush x:Key="{x:Static theming:AppColors.SystemAttentionBrush}">#005FB8</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemSuccessBrush}">#0F7B0F</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemCautionBrush}">#9D5D00</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemCriticalBrush}">#C42B1C</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemNeutralBrush}">#8A8A8A</Brush>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemSuccessBackgroundBrush}" Color="#DFF6DD"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemWarningBackgroundBrush}" Color="#FFF4CE"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemCriticalBackgroundBrush}" Color="#FDE7E9"/>
 
   <SolidColorBrush x:Key="{x:Static theming:AppColors.AppSurfaceBorderBrush}" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ContextMenuBorderBrush}" Color="Black" Opacity="0.0578"/>
@@ -128,5 +131,7 @@
     <ColorAnimation Storyboard.TargetProperty="(Hyperlink.Foreground).(SolidColorBrush.Color)"
                     To="{StaticResource AccentTextTertiaryColor}" Duration="0"/>
   </Storyboard>
+
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.InfoBarBackgroundBrush}" Color="#F6F6F6" Opacity="0.5"/>
 
 </ResourceDictionary>

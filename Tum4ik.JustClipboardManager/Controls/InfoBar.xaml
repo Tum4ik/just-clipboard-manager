@@ -1,0 +1,71 @@
+<Control x:Class="Tum4ik.JustClipboardManager.Controls.InfoBar"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+         mc:Ignorable="d">
+  <Control.Template>
+    <ControlTemplate TargetType="controls:InfoBar">
+      <Border x:Name="_border"
+              Width="500" MinHeight="50" CornerRadius="4"
+              BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
+              Background="{DynamicResource {x:Static theming:AppColors.InfoBarBackgroundBrush}}"
+              SizeChanged="Border_SizeChanged">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <controls:SvgIcon x:Name="_icon"
+                            Grid.Column="0"
+                            Icon="InfoFilled" Color="{DynamicResource {x:Static theming:AppColors.SystemAttentionBrush}}"
+                            Width="16" Height="16"
+                            Margin="16, 16, 0, 0"
+                            VerticalAlignment="Top"/>
+          <DockPanel Grid.Column="1">
+            <TextBlock x:Name="_title"
+                       DockPanel.Dock="Left"
+                       Text="{TemplateBinding Title}"
+                       Margin="12, 14, 12, 0"
+                       FontWeight="SemiBold"/>
+            <controls:WinUiButton x:Name="_actionButton"
+                                  DockPanel.Dock="Right" Text="{TemplateBinding ActionText}" Margin="0, 0, 6, 0"
+                                  Visibility="Collapsed"/>
+            <TextBlock x:Name="_body"
+                       Text="{TemplateBinding Body}"
+                       Margin="0, 14, 12, 14"
+                       TextWrapping="Wrap"/>
+          </DockPanel>
+          <controls:WinUiButton Grid.Column="2"
+                                Icon="ChromeClose" IconWidth="12" IconHeight="12"
+                                ButtonStyle="Subtle"
+                                VerticalAlignment="Top"
+                                Margin="0, 5, 5, 0"/>
+        </Grid>
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="Severity" Value="Success">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemSuccessBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="CheckCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}"/>
+        </Trigger>
+        <Trigger Property="Severity" Value="Warning">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemWarningBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="WarningCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemCautionBrush}}"/>
+        </Trigger>
+        <Trigger Property="Severity" Value="Critical">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemCriticalBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="CancelCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemCriticalBrush}}"/>
+        </Trigger>
+        <Trigger Property="ActionType" Value="Button">
+          <Setter TargetName="_actionButton" Property="Visibility" Value="Visible"/>
+        </Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+  </Control.Template>
+</Control>
