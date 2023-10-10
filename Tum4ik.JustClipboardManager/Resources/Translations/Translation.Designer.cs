@@ -97,6 +97,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Looks like the corresponding file with plugins info is corrupted or has wrong format. Please try again later..
+        /// </summary>
+        internal static string AvailablePluginsInfoLoadProblem_Body {
+            get {
+                return ResourceManager.GetString("AvailablePluginsInfoLoadProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugins info loading failed.
+        /// </summary>
+        internal static string AvailablePluginsInfoLoadProblem_Title {
+            get {
+                return ResourceManager.GetString("AvailablePluginsInfoLoadProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to by.
         /// </summary>
         internal static string by {
@@ -340,6 +358,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string Retry {
+            get {
+                return ResourceManager.GetString("Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         internal static string Search {
@@ -354,6 +381,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Sequence {
             get {
                 return ResourceManager.GetString("Sequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks like there is a problem connecting to the server. It can be caused by either internet connection problem or an error on the server side..
+        /// </summary>
+        internal static string ServerConnectionProblem_Body {
+            get {
+                return ResourceManager.GetString("ServerConnectionProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server connection problem.
+        /// </summary>
+        internal static string ServerConnectionProblem_Title {
+            get {
+                return ResourceManager.GetString("ServerConnectionProblem_Title", resourceCulture);
             }
         }
         

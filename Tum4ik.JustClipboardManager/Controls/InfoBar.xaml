@@ -5,10 +5,14 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
          xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
          mc:Ignorable="d"
          Opacity="0">
   <Control.Template>
     <ControlTemplate TargetType="controls:InfoBar">
+      <ControlTemplate.Resources>
+        <converters:TranslateConverter x:Key="TranslateConverter"/>
+      </ControlTemplate.Resources>
       <Border x:Name="_border"
               Width="600" MinHeight="50" CornerRadius="4"
               BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
@@ -29,17 +33,36 @@
           <DockPanel Grid.Column="1">
             <TextBlock x:Name="_title"
                        DockPanel.Dock="Left"
-                       Text="{TemplateBinding Title}"
                        Margin="12, 14, 12, 0"
-                       FontWeight="SemiBold"/>
+                       FontWeight="SemiBold">
+              <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="Title" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
             <controls:WinUiButton x:Name="_actionButton"
-                                  DockPanel.Dock="Right" Text="{TemplateBinding ActionText}" Margin="0, 0, 6, 0"
+                                  DockPanel.Dock="Right" Margin="0, 0, 6, 0"
                                   Visibility="Collapsed"
-                                  Click="ActionButton_Click"/>
+                                  Click="ActionButton_Click">
+              <controls:WinUiButton.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="ActionText" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </controls:WinUiButton.Text>
+            </controls:WinUiButton>
             <TextBlock x:Name="_body"
-                       Text="{TemplateBinding Body}"
                        Margin="0, 14, 12, 14"
-                       TextWrapping="Wrap"/>
+                       TextWrapping="Wrap">
+              <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="Body" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
           </DockPanel>
           <controls:WinUiButton Grid.Column="2"
                                 Icon="ChromeClose" IconWidth="12" IconHeight="12"

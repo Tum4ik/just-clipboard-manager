@@ -3,9 +3,11 @@ using System.Net.Http;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -14,17 +16,26 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsSearchViewModel : TranslationViewModel, INavigationAware
 {
   private readonly IPluginsService _pluginsService;
+  private readonly IInfoBarService _infoBarService;
 
   public PluginsSearchViewModel(ITranslationService translationService,
                                 IEventAggregator eventAggregator,
-                                IPluginsService pluginsService)
+                                IPluginsService pluginsService,
+                                IInfoBarService infoBarService)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
+    _infoBarService = infoBarService;
   }
 
 
   public async void OnNavigatedTo(NavigationContext navigationContext)
+  {
+    await LoadPluginsAsync().ConfigureAwait(false);
+  }
+
+
+  private async Task LoadPluginsAsync()
   {
     Plugins.Clear();
 
@@ -35,15 +46,32 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
         Plugins.Add(pluginDto);
       }
     }
-    catch (HttpRequestException)
+    catch (HttpRequestException e)
     {
-      // todo: show message it is impossible to execute search plugins request
+      _infoBarService.ShowWarning(
+        "ServerConnectionProblem_Body",
+        InfoBarActionType.Button,
+        "Retry",
+        "ServerConnectionProblem_Title",
+        r =>
+        {
+          if (r == InfoBarResult.Action)
+          {
+            _ = LoadPluginsAsync();
+          }
+        }
+      );
     }
-    catch (JsonException)
+    catch (JsonException e)
     {
-      // todo: show message about wrong JSON file
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "JSON parse exception when loading available plugins from the server" }
+      });
+      _infoBarService.ShowCritical("AvailablePluginsInfoLoadProblem_Body", "AvailablePluginsInfoLoadProblem_Title");
     }
   }
+
 
   public bool IsNavigationTarget(NavigationContext navigationContext)
   {

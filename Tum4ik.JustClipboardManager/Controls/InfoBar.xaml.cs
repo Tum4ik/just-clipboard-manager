@@ -12,7 +12,6 @@ public partial class InfoBar
   public InfoBar()
   {
     InitializeComponent();
-
     Unloaded += (s, e) =>
     {
       if (InfoBarSubscriber is not null)

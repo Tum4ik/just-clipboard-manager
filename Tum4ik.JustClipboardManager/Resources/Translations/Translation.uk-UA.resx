@@ -223,4 +223,19 @@
   <data name="Disabled" xml:space="preserve">
     <value>Вимкнено</value>
   </data>
+  <data name="ServerConnectionProblem_Body" xml:space="preserve">
+    <value>Схоже, виникла проблема з підключенням до сервера. Це може бути викликано проблемою підключення до Інтернету або помилкою на стороні сервера.</value>
+  </data>
+  <data name="ServerConnectionProblem_Title" xml:space="preserve">
+    <value>Проблема підключення до сервера</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Повторити спробу</value>
+  </data>
+  <data name="AvailablePluginsInfoLoadProblem_Title" xml:space="preserve">
+    <value>Не вдалося завантажити інформацію про плагіни</value>
+  </data>
+  <data name="AvailablePluginsInfoLoadProblem_Body" xml:space="preserve">
+    <value>Схоже, відповідний файл із інформацією про плагіни пошкоджений або має неправильний формат. Будь-ласка спробуйте пізніше.</value>
+  </data>
 </root>
