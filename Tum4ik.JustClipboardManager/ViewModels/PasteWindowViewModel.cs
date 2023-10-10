@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -142,15 +143,26 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
 
       _dbClips[clip.Id] = clip;
-      var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
-      Clips.Add(new()
+      try
       {
-        Id = clip.Id,
-        PluginId = clip.PluginId,
-        RepresentationData = representationData,
-        SearchLabel = clip.SearchLabel
-      });
-      loadedCount++;
+        var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
+        Clips.Add(new()
+        {
+          Id = clip.Id,
+          PluginId = clip.PluginId,
+          RepresentationData = representationData,
+          SearchLabel = clip.SearchLabel
+        });
+        loadedCount++;
+      }
+      catch (Exception e)
+      {
+        Crashes.TrackError(e, new Dictionary<string, string>
+        {
+          { "Info", "Exception when restore representation data for plugin" },
+          { "PluginId", plugin.Id }
+        });
+      }
     }
     return loadedCount;
   }

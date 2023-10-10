@@ -82,6 +82,7 @@ internal class PluginsService : IPluginsService
   }
 
 
+  // todo: maybe add option to get enabled/disabled plugins instead using IsPluginEnabled method
   public IPlugin? GetPlugin(string id)
   {
     if (_plugins.TryGetValue(id, out var plugin))

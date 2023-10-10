@@ -81,8 +81,7 @@ public partial class App : ISingleInstance
 
   private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
-    // TODO: improve to give user a chance to decide send or not
-    // TODO: and also notify user about the problem anyway
+    // TODO: notify user about the problem anyway
     Crashes.TrackError(e.Exception, new Dictionary<string, string>
     {
       { "Message", "Unhandled Exception" },
@@ -145,7 +144,14 @@ public partial class App : ISingleInstance
 
   protected override void OnStartup(StartupEventArgs e)
   {
-    base.OnStartup(e);
+    try
+    {
+      base.OnStartup(e);
+    }
+    catch (ModuleInitializeException ex)
+    {
+      Crashes.TrackError(ex);
+    }
 
     var configuration = Container.Resolve<IConfiguration>();
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));

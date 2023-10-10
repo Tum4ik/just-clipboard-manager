@@ -58,8 +58,21 @@ internal class ClipboardService : IClipboardService
       if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
       {
         var plugin = _plugins.First(p => p.Formats.Contains(formattedDataObject.Format));
-        data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
-        restoredByPlugin = true;
+        try
+        {
+          data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
+          restoredByPlugin = true;
+        }
+        catch (Exception e)
+        {
+          Crashes.TrackError(e, new Dictionary<string, string>
+          {
+            { "Info", "Exception when restore data for plugin on paste operation" },
+            { "PluginId", plugin.Id! }
+          });
+          data = GetDataFromBytes(formattedDataObject);
+        }
+        
       }
       else
       {
@@ -198,7 +211,17 @@ internal class ClipboardService : IClipboardService
     }
     catch (COMException e)
     {
-      Crashes.TrackError(e);
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "COM exception when saving clip" }
+      });
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "Unpredictable exception when saving clip" }
+      });
     }
   }
 
