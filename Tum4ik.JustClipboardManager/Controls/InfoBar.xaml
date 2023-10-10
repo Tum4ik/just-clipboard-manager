@@ -5,11 +5,12 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
          xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
-         mc:Ignorable="d">
+         mc:Ignorable="d"
+         Opacity="0">
   <Control.Template>
     <ControlTemplate TargetType="controls:InfoBar">
       <Border x:Name="_border"
-              Width="500" MinHeight="50" CornerRadius="4"
+              Width="600" MinHeight="50" CornerRadius="4"
               BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
               Background="{DynamicResource {x:Static theming:AppColors.InfoBarBackgroundBrush}}"
               SizeChanged="Border_SizeChanged">
@@ -33,7 +34,8 @@
                        FontWeight="SemiBold"/>
             <controls:WinUiButton x:Name="_actionButton"
                                   DockPanel.Dock="Right" Text="{TemplateBinding ActionText}" Margin="0, 0, 6, 0"
-                                  Visibility="Collapsed"/>
+                                  Visibility="Collapsed"
+                                  Click="ActionButton_Click"/>
             <TextBlock x:Name="_body"
                        Text="{TemplateBinding Body}"
                        Margin="0, 14, 12, 14"
@@ -43,7 +45,8 @@
                                 Icon="ChromeClose" IconWidth="12" IconHeight="12"
                                 ButtonStyle="Subtle"
                                 VerticalAlignment="Top"
-                                Margin="0, 5, 5, 0"/>
+                                Margin="0, 5, 5, 0"
+                                Click="CloseButton_Click"/>
         </Grid>
       </Border>
       <ControlTemplate.Triggers>
@@ -64,6 +67,42 @@
         </Trigger>
         <Trigger Property="ActionType" Value="Button">
           <Setter TargetName="_actionButton" Property="Visibility" Value="Visible"/>
+        </Trigger>
+        <Trigger Property="IsOpen" Value="True">
+          <Trigger.EnterActions>
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="1"
+                                 Duration="0:0:0.5">
+                  <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseIn" />
+                  </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <BooleanAnimationUsingKeyFrames Duration="0"
+                                                Storyboard.TargetProperty="CleanUpStarted">
+                  <DiscreteBooleanKeyFrame Value="False"/>
+                </BooleanAnimationUsingKeyFrames>
+              </Storyboard>
+            </BeginStoryboard>
+          </Trigger.EnterActions>
+          <Trigger.ExitActions>
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="0"
+                                 Duration="0:0:0.5">
+                  <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                  </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <BooleanAnimationUsingKeyFrames BeginTime="0:0:0.5" Duration="0"
+                                                Storyboard.TargetProperty="CleanUpStarted">
+                  <DiscreteBooleanKeyFrame Value="True"/>
+                </BooleanAnimationUsingKeyFrames>
+              </Storyboard>
+            </BeginStoryboard>
+          </Trigger.ExitActions>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

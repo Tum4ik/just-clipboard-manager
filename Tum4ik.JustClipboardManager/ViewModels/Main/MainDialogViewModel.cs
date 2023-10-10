@@ -14,14 +14,17 @@ internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
 {
   private readonly IRegionManager _regionManager;
 
+  public IInfoBarSubscriber InfoBarSubscriber { get; }
+
   public MainDialogViewModel(IInfoService infoService,
                              IRegionManager regionManager,
                              ITranslationService translationService,
-                             IEventAggregator eventAggregator)
+                             IEventAggregator eventAggregator,
+                             IInfoBarSubscriber infoBarSubscriber)
     : base(translationService, eventAggregator)
   {
     _regionManager = regionManager;
-
+    InfoBarSubscriber = infoBarSubscriber;
     Title = infoService.ProductName;
   }
 

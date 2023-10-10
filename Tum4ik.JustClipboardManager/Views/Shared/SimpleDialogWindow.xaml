@@ -32,7 +32,7 @@
                 </Style>
               </UniformGrid.Resources>
               <controls:WinUiButton x:Name="_acceptButton"
-                                    IsAccent="True" IsDefault="True"
+                                    ButtonStyle="Accent" IsDefault="True"
                                     Command="{Binding DataContext.AcceptButtonPressedCommand,
                                     RelativeSource={RelativeSource AncestorType=Window}}">
                 <controls:WinUiButton.Text>

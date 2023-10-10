@@ -26,7 +26,7 @@
                 <ColumnDefinition Width="Auto"/>
               </Grid.ColumnDefinitions>
               <controls:SvgIcon x:Name="_icon" Grid.Column="0"
-                                Width="16" Height="16"
+                                Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}"
                                 Icon="{TemplateBinding Icon}"
                                 Margin="4, 0"/>
               <TextBlock x:Name="_text" Grid.Column="1"
@@ -62,7 +62,7 @@
           <Setter TargetName="_icon" Property="Visibility" Value="Collapsed"/>
         </Trigger>
 
-        <Trigger Property="IsAccent" Value="True">
+        <Trigger Property="ButtonStyle" Value="Accent">
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"/>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Visible"/>
@@ -70,16 +70,21 @@
           <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"/>
         </Trigger>
 
+        <Trigger Property="ButtonStyle" Value="Subtle">
+          <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
+          <Setter TargetName="_border" Property="Background" Value="Transparent"/>
+        </Trigger>
+
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="False"/>
+            <Condition Property="ButtonStyle" Value="Standard"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="True"/>
+            <Condition Property="ButtonStyle" Value="Accent"/>
             <Condition Property="IsMouseOver" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
@@ -87,7 +92,14 @@
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="False"/>
+            <Condition Property="ButtonStyle" Value="Subtle"/>
+            <Condition Property="IsMouseOver" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="ButtonStyle" Value="Standard"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlHoverBackgroundBrush}}"/>
@@ -96,7 +108,7 @@
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="True"/>
+            <Condition Property="ButtonStyle" Value="Accent"/>
             <Condition Property="IsPressed" Value="True"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
@@ -111,7 +123,16 @@
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="False"/>
+            <Condition Property="ButtonStyle" Value="Subtle"/>
+            <Condition Property="IsPressed" Value="True"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="ButtonStyle" Value="Standard"/>
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.ControlDisabledBorderBrush}}"/>
@@ -121,12 +142,20 @@
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
-            <Condition Property="IsAccent" Value="True"/>
+            <Condition Property="ButtonStyle" Value="Accent"/>
             <Condition Property="IsEnabled" Value="False"/>
           </MultiTrigger.Conditions>
           <Setter TargetName="_accentBorder" Property="Visibility" Value="Collapsed"/>
           <Setter TargetName="_border" Property="BorderThickness" Value="0"/>
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.AccentDisabledBrush}}"/>
+        </MultiTrigger>
+        <MultiTrigger>
+          <MultiTrigger.Conditions>
+            <Condition Property="ButtonStyle" Value="Subtle"/>
+            <Condition Property="IsEnabled" Value="False"/>
+          </MultiTrigger.Conditions>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

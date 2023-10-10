@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 /// <summary>
@@ -11,6 +12,60 @@ public partial class InfoBar
   public InfoBar()
   {
     InitializeComponent();
+
+    Unloaded += (s, e) =>
+    {
+      if (InfoBarSubscriber is not null)
+      {
+        _closeCallback = null;
+        InfoBarSubscriber.InfoReceived -= InfoReceived;
+      }
+    };
+  }
+
+
+  private TextBlock? _title;
+  private TextBlock? _body;
+  private WinUiButton? _actionButton;
+
+  public override void OnApplyTemplate()
+  {
+    base.OnApplyTemplate();
+    _title = (TextBlock) GetTemplateChild("_title");
+    _body = (TextBlock) GetTemplateChild("_body");
+    _actionButton = (WinUiButton) GetTemplateChild("_actionButton");
+  }
+
+
+  private Action<InfoBarResult>? _closeCallback;
+
+
+  private void InfoReceived(InfoBarPayload payload)
+  {
+    Severity = payload.Severity;
+    ActionType = payload.ActionType;
+    Title = payload.Title;
+    Body = payload.Body;
+    ActionText = payload.ActionText;
+    _closeCallback = payload.Callback;
+    IsOpen = true;
+  }
+
+
+  public static readonly DependencyProperty InfoBarSubscriberProperty = DependencyProperty.Register(
+    nameof(InfoBarSubscriber), typeof(IInfoBarSubscriber), typeof(InfoBar), new((s, e) =>
+    {
+      var thisInfoBar = (InfoBar) s;
+      if (e.NewValue is IInfoBarSubscriber infoBarSubscriber)
+      {
+        infoBarSubscriber.InfoReceived += thisInfoBar.InfoReceived;
+      }
+    })
+  );
+  internal IInfoBarSubscriber? InfoBarSubscriber
+  {
+    get => (IInfoBarSubscriber) GetValue(InfoBarSubscriberProperty);
+    set => SetValue(InfoBarSubscriberProperty, value);
   }
 
 
@@ -31,16 +86,6 @@ public partial class InfoBar
   {
     get => (InfoBarActionType) GetValue(ActionTypeProperty);
     set => SetValue(ActionTypeProperty, value);
-  }
-
-
-  public static readonly DependencyProperty ActionCommandProperty = DependencyProperty.Register(
-    nameof(ActionCommand), typeof(ICommand), typeof(InfoBar)
-  );
-  public ICommand? ActionCommand
-  {
-    get => (ICommand?) GetValue(ActionCommandProperty);
-    set => SetValue(ActionCommandProperty, value);
   }
 
 
@@ -74,36 +119,91 @@ public partial class InfoBar
   }
 
 
+  public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
+    nameof(IsOpen), typeof(bool), typeof(InfoBar)
+  );
+  public bool IsOpen
+  {
+    get => (bool) GetValue(IsOpenProperty);
+    set => SetValue(IsOpenProperty, value);
+  }
+
+
   private void Border_SizeChanged(object sender, SizeChangedEventArgs e)
   {
-    var title = (TextBlock) GetTemplateChild("_title");
-    var body = (TextBlock) GetTemplateChild("_body");
-    var actionButton = (Button) GetTemplateChild("_actionButton");
-    var bodyMargin = body.Margin;
-    var actionButtonMargin = actionButton.Margin;
-    if (e.NewSize.Height > 50)
+    DefineLayout(e.NewSize.Height);
+  }
+
+
+  private void DefineLayout(double height)
+  {
+    if (_title is null || _body is null || _actionButton is null)
     {
-      DockPanel.SetDock(title, Dock.Top);
-      DockPanel.SetDock(actionButton, Dock.Bottom);
+      return;
+    }
+
+    var bodyMargin = _body.Margin;
+    var actionButtonMargin = _actionButton.Margin;
+    if (height > 50)
+    {
+      DockPanel.SetDock(_title, Dock.Top);
+      DockPanel.SetDock(_actionButton, Dock.Bottom);
       bodyMargin.Left = 12;
       bodyMargin.Top = 1;
       actionButtonMargin.Left = 12;
       actionButtonMargin.Bottom = 12;
-      actionButton.HorizontalAlignment = HorizontalAlignment.Left;
+      _actionButton.HorizontalAlignment = HorizontalAlignment.Left;
     }
     else
     {
-      DockPanel.SetDock(title, Dock.Left);
-      DockPanel.SetDock(actionButton, Dock.Right);
+      DockPanel.SetDock(_title, Dock.Left);
+      DockPanel.SetDock(_actionButton, Dock.Right);
       bodyMargin.Left = 0;
       bodyMargin.Top = 14;
       actionButtonMargin.Left = 0;
       actionButtonMargin.Bottom = 0;
-      actionButton.HorizontalAlignment = HorizontalAlignment.Right;
+      _actionButton.HorizontalAlignment = HorizontalAlignment.Right;
     }
 
-    body.Margin = bodyMargin;
-    actionButton.Margin = actionButtonMargin;
+    _body.Margin = bodyMargin;
+    _actionButton.Margin = actionButtonMargin;
+  }
+
+
+  private void CloseButton_Click(object sender, RoutedEventArgs e)
+  {
+    Close(InfoBarResult.Cancel);
+  }
+
+  private void ActionButton_Click(object sender, RoutedEventArgs e)
+  {
+    Close(InfoBarResult.Action);
+  }
+
+  private void Close(InfoBarResult result)
+  {
+    IsOpen = false;
+    _closeCallback?.Invoke(result);
+  }
+
+  private static readonly DependencyProperty CleanUpStartedProperty = DependencyProperty.Register(
+    nameof(CleanUpStarted), typeof(bool), typeof(InfoBar), new((s, e) =>
+    {
+      if (e.NewValue is true)
+      {
+        var thisInfoBar = (InfoBar) s;
+
+        thisInfoBar.Title = null;
+        thisInfoBar.Body = null;
+        thisInfoBar.ActionText = null;
+        thisInfoBar.DefineLayout(50);
+      }
+    })
+  );
+  private bool CleanUpStarted
+  {
+    get => (bool) GetValue(CleanUpStartedProperty);
+    set => SetValue(CleanUpStartedProperty, value);
   }
 }
 
@@ -111,9 +211,4 @@ public partial class InfoBar
 public enum InfoBarSeverity
 {
   Informational, Success, Warning, Critical
-}
-
-public enum InfoBarActionType
-{
-  None, /*HyperlinkButton,*/ Button
 }

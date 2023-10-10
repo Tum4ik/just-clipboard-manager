@@ -20,7 +20,7 @@
                 BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
                 Background="{DynamicResource {x:Static theming:AppColors.CheckBoxBackgroundBrush}}">
           <controls:SvgIcon x:Name="_check"
-                            Icon="Check" Width="11" Height="11"
+                            Icon="Check" Width="10" Height="10"
                             Color="{DynamicResource {x:Static theming:AppColors.TextOnAccentPrimaryBrush}}"
                             Visibility="Hidden"/>
         </Border>
