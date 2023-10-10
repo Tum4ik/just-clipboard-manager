@@ -46,7 +46,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
         Plugins.Add(pluginDto);
       }
     }
-    catch (HttpRequestException e)
+    catch (HttpRequestException)
     {
       _infoBarService.ShowWarning(
         "ServerConnectionProblem_Body",
@@ -106,8 +106,21 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     }
     catch (TaskCanceledException)
     {
+      // installation cancelled by user
     }
-    finally
+    catch (HttpRequestException)
+    {
+      _infoBarService.ShowWarning("ServerConnectionProblem_Body", "PluginDownloadProblem_Title");
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "Unpredictable error when installing plugin" }
+      });
+      _infoBarService.ShowCritical("PluginInstallationProblem_Body", "PluginInstallationProblem_Title");
+    }
+    finally 
     {
       _installPluginCancellationTokenSource.Dispose();
       _installPluginCancellationTokenSource = null;

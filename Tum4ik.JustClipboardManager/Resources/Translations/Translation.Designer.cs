@@ -331,6 +331,33 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin download problem.
+        /// </summary>
+        internal static string PluginDownloadProblem_Title {
+            get {
+                return ResourceManager.GetString("PluginDownloadProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In some reason the plugin installation failed..
+        /// </summary>
+        internal static string PluginInstallationProblem_Body {
+            get {
+                return ResourceManager.GetString("PluginInstallationProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin installation problem.
+        /// </summary>
+        internal static string PluginInstallationProblem_Title {
+            get {
+                return ResourceManager.GetString("PluginInstallationProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugins.
         /// </summary>
         internal static string Plugins {

@@ -238,4 +238,13 @@
   <data name="AvailablePluginsInfoLoadProblem_Body" xml:space="preserve">
     <value>Looks like the corresponding file with plugins info is corrupted or has wrong format. Please try again later.</value>
   </data>
+  <data name="PluginDownloadProblem_Title" xml:space="preserve">
+    <value>Plugin download problem</value>
+  </data>
+  <data name="PluginInstallationProblem_Title" xml:space="preserve">
+    <value>Plugin installation problem</value>
+  </data>
+  <data name="PluginInstallationProblem_Body" xml:space="preserve">
+    <value>In some reason the plugin installation failed.</value>
+  </data>
 </root>
