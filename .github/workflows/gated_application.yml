@@ -137,7 +137,7 @@ jobs:
 
     - name: Install Inno Setup
       run: |
-        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.1.exe
+        curl -L -o InnoSetupInstaller.exe http://files.jrsoftware.org/is/6/innosetup-6.2.2.exe
         .\InnoSetupInstaller.exe /verysilent /allusers /dir=inst | Out-Host
         curl -L -o inst\ISCrypt.dll https://jrsoftware.org/download.php/iscrypt.dll
 
