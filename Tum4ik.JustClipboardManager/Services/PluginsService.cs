@@ -8,6 +8,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.PluginDevKit.Extensions;
@@ -138,7 +139,7 @@ internal class PluginsService : IPluginsService
     Progress<int>? progress2 = progress is null ? null : new(p => progress.Report(p / 2 + 50));
     using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
-    
+
     _moduleCatalog.Load();
     foreach (var module in _moduleCatalog.Modules)
     {
@@ -213,8 +214,13 @@ internal class PluginsService : IPluginsService
 
     using var zipArchive = new ZipArchive(zipStream);
     var entriesCount = zipArchive.Entries.Count;
+    if (entriesCount > 10000)
+    {
+      throw new PluginZipSecurityException("entriesCount > 10000");
+    }
     await Task.Run(() =>
     {
+      var totalUncompressedArchiveSize = 0L;
       for (var i = 0; i < entriesCount; i++)
       {
         var entry = zipArchive.Entries[i];
@@ -231,6 +237,26 @@ internal class PluginsService : IPluginsService
             {
               entry.ExtractToFile(destinationPath, true);
               filesList.Add(destinationPath);
+              var uncompressedFileSize = new FileInfo(destinationPath).Length;
+              var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
+              totalUncompressedArchiveSize += uncompressedFileSize;
+              var isCompressionRatioViolation = compressionRatio > 10;
+              var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
+              if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
+              {
+                foreach (var filePath in filesList)
+                {
+                  File.Delete(filePath);
+                }
+                if (isCompressionRatioViolation)
+                {
+                  throw new PluginZipSecurityException("compressionRatio > 10");
+                }
+                if (isTotalUncompressedArchiveSizeViolation)
+                {
+                  throw new PluginZipSecurityException("totalUncompressedArchiveSize > 1 GB");
+                }
+              }
             }
           }
         }

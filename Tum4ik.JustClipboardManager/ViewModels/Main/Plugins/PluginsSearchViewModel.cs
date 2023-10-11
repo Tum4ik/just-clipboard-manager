@@ -7,6 +7,7 @@ using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
+using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -111,6 +112,11 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     catch (HttpRequestException)
     {
       _infoBarService.ShowWarning("ServerConnectionProblem_Body", "PluginDownloadProblem_Title");
+    }
+    catch (PluginZipSecurityException e)
+    {
+      Crashes.TrackError(e);
+      _infoBarService.ShowCritical("PluginSecurityViolation_Body", "PluginSecurityViolation_Title");
     }
     catch (Exception e)
     {

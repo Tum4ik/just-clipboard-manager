@@ -367,6 +367,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin installation is blocked because of security reasons..
+        /// </summary>
+        internal static string PluginSecurityViolation_Body {
+            get {
+                return ResourceManager.GetString("PluginSecurityViolation_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin security violation.
+        /// </summary>
+        internal static string PluginSecurityViolation_Title {
+            get {
+                return ResourceManager.GetString("PluginSecurityViolation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press the hotkey.
         /// </summary>
         internal static string PressHotkey {

@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -213,7 +214,9 @@ internal class ClipboardService : IClipboardService
     {
       Crashes.TrackError(e, new Dictionary<string, string>
       {
-        { "Info", "COM exception when saving clip" }
+        { "Info", "COM exception when saving clip" },
+        { "ErrorCode", e.ErrorCode.ToString(CultureInfo.InvariantCulture) },
+        { "HResult", e.HResult.ToString(CultureInfo.InvariantCulture) }
       });
     }
     catch (Exception e)

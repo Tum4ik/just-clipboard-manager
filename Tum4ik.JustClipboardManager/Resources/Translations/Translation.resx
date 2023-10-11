@@ -247,4 +247,10 @@
   <data name="PluginInstallationProblem_Body" xml:space="preserve">
     <value>In some reason the plugin installation failed.</value>
   </data>
+  <data name="PluginSecurityViolation_Title" xml:space="preserve">
+    <value>Plugin security violation</value>
+  </data>
+  <data name="PluginSecurityViolation_Body" xml:space="preserve">
+    <value>Plugin installation is blocked because of security reasons.</value>
+  </data>
 </root>
