@@ -1,56 +1,78 @@
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Net.Http;
 using System.Text.Json;
-using Octokit;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
+using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
-internal class PluginsSearchViewModel : TranslationViewModel, INavigationAware
+internal partial class PluginsSearchViewModel : TranslationViewModel, INavigationAware
 {
-  private readonly IGitHubClient _gitHubClient;
   private readonly IPluginsService _pluginsService;
+  private readonly IInfoBarService _infoBarService;
 
   public PluginsSearchViewModel(ITranslationService translationService,
                                 IEventAggregator eventAggregator,
-                                IGitHubClient gitHubClient,
-                                IPluginsService pluginsService)
+                                IPluginsService pluginsService,
+                                IInfoBarService infoBarService)
     : base(translationService, eventAggregator)
   {
-    _gitHubClient = gitHubClient;
     _pluginsService = pluginsService;
+    _infoBarService = infoBarService;
   }
 
 
   public async void OnNavigatedTo(NavigationContext navigationContext)
   {
+    await LoadPluginsAsync().ConfigureAwait(false);
+  }
+
+
+  private async Task LoadPluginsAsync()
+  {
     Plugins.Clear();
-    var pluginsListJsonBytes = (await _gitHubClient.Repository
-      .Content
-      .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
-      .ConfigureAwait(true));
-    using var stream = new MemoryStream(pluginsListJsonBytes);
+
     try
     {
-      await foreach (var pluginDto in JsonSerializer.DeserializeAsyncEnumerable<SearchPluginInfoDto>(stream))
+      await foreach (var pluginDto in _pluginsService.SearchPluginsAsync())
       {
-        if (pluginDto is not null)
-        {
-          pluginDto.IsInstalled = _pluginsService.IsPluginInstalled(pluginDto.Id);
-          Plugins.Add(pluginDto);
-        }
+        Plugins.Add(pluginDto);
       }
     }
-    catch (JsonException)
+    catch (HttpRequestException)
     {
-      // todo: show message about wrong JSON file
+      _infoBarService.ShowWarning(
+        "ServerConnectionProblem_Body",
+        InfoBarActionType.Button,
+        "Retry",
+        "ServerConnectionProblem_Title",
+        r =>
+        {
+          if (r == InfoBarResult.Action)
+          {
+            _ = LoadPluginsAsync();
+          }
+        }
+      );
     }
-    
+    catch (JsonException e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "JSON parse exception when loading available plugins from the server" }
+      });
+      _infoBarService.ShowCritical("AvailablePluginsInfoLoadProblem_Body", "AvailablePluginsInfoLoadProblem_Title");
+    }
   }
+
 
   public bool IsNavigationTarget(NavigationContext navigationContext)
   {
@@ -63,4 +85,60 @@ internal class PluginsSearchViewModel : TranslationViewModel, INavigationAware
 
 
   public ObservableCollection<SearchPluginInfoDto> Plugins { get; } = new();
+
+  [ObservableProperty] private int _pluginInstallationProgress;
+  [ObservableProperty] private string? _installingPluginId;
+
+  private CancellationTokenSource? _installPluginCancellationTokenSource;
+
+
+  [RelayCommand]
+  private async Task InstallPluginAsync(SearchPluginInfoDto plugin)
+  {
+    _installPluginCancellationTokenSource = new();
+    InstallingPluginId = plugin.Id;
+    var progress = new Progress<int>(p => PluginInstallationProgress = p);
+    try
+    {
+      await _pluginsService.InstallPluginAsync(
+        plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
+      ).ConfigureAwait(true);
+      plugin.IsInstalled = true;
+    }
+    catch (TaskCanceledException)
+    {
+      // installation cancelled by user
+    }
+    catch (HttpRequestException)
+    {
+      _infoBarService.ShowWarning("ServerConnectionProblem_Body", "PluginDownloadProblem_Title");
+    }
+    catch (PluginZipSecurityException e)
+    {
+      Crashes.TrackError(e);
+      _infoBarService.ShowCritical("PluginSecurityViolation_Body", "PluginSecurityViolation_Title");
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "Unpredictable error when installing plugin" }
+      });
+      _infoBarService.ShowCritical("PluginInstallationProblem_Body", "PluginInstallationProblem_Title");
+    }
+    finally 
+    {
+      _installPluginCancellationTokenSource.Dispose();
+      _installPluginCancellationTokenSource = null;
+      PluginInstallationProgress = 0;
+      InstallingPluginId = null;
+    }
+  }
+
+
+  [RelayCommand]
+  private void CancelInstallPlugin()
+  {
+    _installPluginCancellationTokenSource?.Cancel();
+  }
 }

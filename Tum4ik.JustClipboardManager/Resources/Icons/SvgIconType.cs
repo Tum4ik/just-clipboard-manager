@@ -4,12 +4,14 @@ namespace Tum4ik.JustClipboardManager.Resources.Icons;
 public enum SvgIconType
 {
   [SvgIconResource("bug-report")] BugReport,
+  [SvgIconResource("cancel-circle-filled")] CancelCircleFilled,
   [SvgIconResource("caret-down")] CaretDown,
   [SvgIconResource("caret-left")] CaretLeft,
   [SvgIconResource("caret-right")] CaretRight,
   [SvgIconResource("caret-up")] CaretUp,
   [SvgIconResource("check")] Check,
   [SvgIconResource("check-circle")] CheckCircle,
+  [SvgIconResource("check-circle-filled")] CheckCircleFilled,
   [SvgIconResource("chevron")] Chevron,
   [SvgIconResource("chrome-close")] ChromeClose,
   [SvgIconResource("chrome-maximize")] ChromeMaximize,
@@ -30,6 +32,7 @@ public enum SvgIconType
   [SvgIconResource("files")] Files,
   [SvgIconResource("format-list-numbered-rtl")] FormatListNumberedRtl,
   [SvgIconResource("info")] Info,
+  [SvgIconResource("info-filled")] InfoFilled,
   [SvgIconResource("keyboard")] Keyboard,
   [SvgIconResource("lightbulb")] Lightbulb,
   [SvgIconResource("light-mode")] LightMode,
@@ -40,5 +43,6 @@ public enum SvgIconType
   [SvgIconResource("search")] Search,
   [SvgIconResource("settings")] Settings,
   [SvgIconResource("ukraine")] Ukraine,
-  [SvgIconResource("usa")] USA
+  [SvgIconResource("usa")] USA,
+  [SvgIconResource("warning-circle-filled")] WarningCircleFilled
 }

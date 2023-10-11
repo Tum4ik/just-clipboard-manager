@@ -45,6 +45,26 @@ public partial class WinUiButton
   }
 
 
+  public static readonly DependencyProperty IconWidthProperty = DependencyProperty.Register(
+    nameof(IconWidth), typeof(double), typeof(WinUiButton), new(16d)
+  );
+  public double IconWidth
+  {
+    get => (double) GetValue(IconWidthProperty);
+    set => SetValue(IconWidthProperty, value);
+  }
+
+
+  public static readonly DependencyProperty IconHeightProperty = DependencyProperty.Register(
+    nameof(IconHeight), typeof(double), typeof(WinUiButton), new(16d)
+  );
+  public double IconHeight
+  {
+    get => (double) GetValue(IconHeightProperty);
+    set => SetValue(IconHeightProperty, value);
+  }
+
+
   public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
     nameof(Text), typeof(string), typeof(WinUiButton)
   );
@@ -55,13 +75,13 @@ public partial class WinUiButton
   }
 
 
-  public static readonly DependencyProperty IsAccentProperty = DependencyProperty.Register(
-    nameof(IsAccent), typeof(bool), typeof(WinUiButton)
+  public static readonly DependencyProperty ButtonStyleProperty = DependencyProperty.Register(
+    nameof(ButtonStyle), typeof(ButtonStyle), typeof(WinUiButton)
   );
-  public bool IsAccent
+  public ButtonStyle ButtonStyle
   {
-    get => (bool) GetValue(IsAccentProperty);
-    set => SetValue(IsAccentProperty, value);
+    get => (ButtonStyle) GetValue(ButtonStyleProperty);
+    set => SetValue(ButtonStyleProperty, value);
   }
 
 
@@ -83,4 +103,9 @@ public partial class WinUiButton
 public enum ButtonIconPosition
 {
   Before, After
+}
+
+public enum ButtonStyle
+{
+  Standard, Accent, Subtle
 }

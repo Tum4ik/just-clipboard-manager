@@ -25,11 +25,11 @@
     <controls:NavigationButton Icon="Keyboard" Text="{Binding Translate[Hotkeys]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsHotkeysView}"/>
   </controls:NavigationPanel>
-  <Border CornerRadius="8, 0, 8, 0"
-          BorderThickness="1, 1, 0, 0"
+  <Border CornerRadius="8, 4, 4, 8"
+          BorderThickness="1"
           BorderBrush="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
           Background="{DynamicResource {x:Static theming:AppColors.ViewContentAreaBackgroundBrush}}"
-          Margin="0, 32, 0, 0"
+          Margin="0, 32, 4, 4"
           Padding="8">
     <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogSettingsViewContent}"/>
   </Border>

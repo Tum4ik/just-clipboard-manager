@@ -63,8 +63,8 @@
                 </TextBlock>
                 <controls:WinUiButton DockPanel.Dock="Right"
                                       Text="{Binding DataContext.Translate[Uninstall], RelativeSource={RelativeSource AncestorType=UserControl}}"
-                      Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                      CommandParameter="{Binding}" />
+                                      Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      CommandParameter="{Binding}" />
               </DockPanel>
             </controls:PluginCard.Footer>
           </controls:PluginCard>

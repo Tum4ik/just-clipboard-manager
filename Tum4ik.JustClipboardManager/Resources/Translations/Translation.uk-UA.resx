@@ -206,7 +206,7 @@
     <value>Встановлено</value>
   </data>
   <data name="Sequence" xml:space="preserve">
-    <value>Черговість</value>
+    <value>Послідовність</value>
   </data>
   <data name="by" xml:space="preserve">
     <value>від</value>
@@ -222,5 +222,35 @@
   </data>
   <data name="Disabled" xml:space="preserve">
     <value>Вимкнено</value>
+  </data>
+  <data name="ServerConnectionProblem_Body" xml:space="preserve">
+    <value>Схоже, виникла проблема з підключенням до сервера. Це може бути викликано проблемою підключення до Інтернету або помилкою на стороні сервера.</value>
+  </data>
+  <data name="ServerConnectionProblem_Title" xml:space="preserve">
+    <value>Проблема підключення до сервера</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Повторити спробу</value>
+  </data>
+  <data name="AvailablePluginsInfoLoadProblem_Title" xml:space="preserve">
+    <value>Не вдалося завантажити інформацію про плагіни</value>
+  </data>
+  <data name="AvailablePluginsInfoLoadProblem_Body" xml:space="preserve">
+    <value>Схоже, відповідний файл із інформацією про плагіни пошкоджений або має неправильний формат. Будь-ласка спробуйте пізніше.</value>
+  </data>
+  <data name="PluginDownloadProblem_Title" xml:space="preserve">
+    <value>Проблема із завантаженням плагіна</value>
+  </data>
+  <data name="PluginInstallationProblem_Title" xml:space="preserve">
+    <value>Проблема встановлення плагіна</value>
+  </data>
+  <data name="PluginInstallationProblem_Body" xml:space="preserve">
+    <value>З якоїсь причини не вдалося встановити плагін.</value>
+  </data>
+  <data name="PluginSecurityViolation_Title" xml:space="preserve">
+    <value>Порушення безпеки плагіна</value>
+  </data>
+  <data name="PluginSecurityViolation_Body" xml:space="preserve">
+    <value>Встановлення плагіна заблоковано з міркувань безпеки.</value>
   </data>
 </root>

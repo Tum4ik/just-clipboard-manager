@@ -36,14 +36,14 @@
               BorderThickness="{TemplateBinding BorderThickness}"
               BorderBrush="{TemplateBinding BorderBrush}"
               Effect="{TemplateBinding Effect}"
-              Padding="8">
+              Padding="4">
         <ContentPresenter/>
       </Border>
     </ControlTemplate>
   </Window.Template>
   <DockPanel>
     <controls:SearchBox DockPanel.Dock="Top" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
-    <ListBox x:Name="_listBox" Margin="0, 8, 0, 0"
+    <ListBox x:Name="_listBox" Margin="0, 4, 0, 0"
              ItemsSource="{Binding Clips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
              ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
@@ -95,7 +95,7 @@
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
-                  BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                  BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderGradientBrush}}"
                   Background="{DynamicResource {x:Static theming:AppColors.ControlBackgroundBrush}}">
             <ScrollViewer Padding="1">
               <ItemsPresenter/>

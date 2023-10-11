@@ -11,30 +11,35 @@
              x:ClassModifier="internal"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:MainDialogViewModel}">
-  <DockPanel>
-    <controls:TabButtonsControl DockPanel.Dock="Top">
-      <controls:TabButtonsControl.Resources>
-        <Style TargetType="controls:TabButton" BasedOn="{StaticResource {x:Type controls:TabButton}}">
-          <Setter Property="Command" Value="{Binding NavigateCommand}"/>
-        </Style>
-      </controls:TabButtonsControl.Resources>
-      <controls:TabButton Text="{Binding Translate[Settings]}"
-                          Icon="Settings"
-                          IsChecked="{Binding IsSettingsTabChecked}"
-                          CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
-      <controls:TabButton Text="{Binding Translate[Plugins]}"
-                          Icon="Extension"
-                          IsChecked="{Binding IsPluginsTabChecked}"
-                          CommandParameter="{x:Static const:ViewNames.PluginsView}"/>
-      <controls:TabButton Text="{Binding Translate[About]}"
-                          Icon="Info"
-                          IsChecked="{Binding IsAboutTabChecked}"
-                          CommandParameter="{x:Static const:ViewNames.AboutView}"/>
-    </controls:TabButtonsControl>
-    <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}"
-            CornerRadius="0, 0, 8, 8">
-      <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
-                      prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
-    </Border>
-  </DockPanel>
+  <Grid>
+    <DockPanel>
+      <controls:TabButtonsControl DockPanel.Dock="Top">
+        <controls:TabButtonsControl.Resources>
+          <Style TargetType="controls:TabButton" BasedOn="{StaticResource {x:Type controls:TabButton}}">
+            <Setter Property="Command" Value="{Binding NavigateCommand}"/>
+          </Style>
+        </controls:TabButtonsControl.Resources>
+        <controls:TabButton Text="{Binding Translate[Settings]}"
+                            Icon="Settings"
+                            IsChecked="{Binding IsSettingsTabChecked}"
+                            CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
+        <controls:TabButton Text="{Binding Translate[Plugins]}"
+                            Icon="Extension"
+                            IsChecked="{Binding IsPluginsTabChecked}"
+                            CommandParameter="{x:Static const:ViewNames.PluginsView}"/>
+        <controls:TabButton Text="{Binding Translate[About]}"
+                            Icon="Info"
+                            IsChecked="{Binding IsAboutTabChecked}"
+                            CommandParameter="{x:Static const:ViewNames.AboutView}"/>
+      </controls:TabButtonsControl>
+      <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}"
+              CornerRadius="0, 0, 8, 8">
+        <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
+                        prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
+      </Border>
+    </DockPanel>
+    <controls:InfoBar InfoBarSubscriber="{Binding InfoBarSubscriber}"
+                      VerticalAlignment="Bottom"
+                      Margin="0, 8"/>
+  </Grid>
 </UserControl>

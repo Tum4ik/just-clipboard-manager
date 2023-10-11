@@ -32,6 +32,9 @@
   <Brush x:Key="{x:Static theming:AppColors.SystemCautionBrush}">#FCE100</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemCriticalBrush}">#FF99A4</Brush>
   <Brush x:Key="{x:Static theming:AppColors.SystemNeutralBrush}">#9D9D9D</Brush>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemSuccessBackgroundBrush}" Color="#393D1B"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemWarningBackgroundBrush}" Color="#433519"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SystemCriticalBackgroundBrush}" Color="#442726"/>
 
   <SolidColorBrush x:Key="{x:Static theming:AppColors.AppSurfaceBorderBrush}" Color="#757575" Opacity="0.4"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ContextMenuBorderBrush}" Color="Black" Opacity="0.2"/>
@@ -87,7 +90,8 @@
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlHoverBackgroundBrush}" Color="White" Opacity="0.0837"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlPressedBackgroundBrush}" Color="White" Opacity="0.0326"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlDisabledBackgroundBrush}" Color="White" Opacity="0.0419"/>
-  <LinearGradientBrush x:Key="{x:Static theming:AppColors.ControlBorderBrush}" StartPoint="0, 0" EndPoint="0, 1">
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.ControlBorderBrush}" Color="White" Opacity="0.6047"/>
+  <LinearGradientBrush x:Key="{x:Static theming:AppColors.ControlBorderGradientBrush}" StartPoint="0, 0" EndPoint="0, 1">
     <GradientStop Color="#17FFFFFF" Offset="0" />
     <GradientStop Color="#11FFFFFF" Offset="0.094" />
   </LinearGradientBrush>
@@ -104,7 +108,6 @@
     <GradientStop Color="#12FFFFFF" Offset="0.5"/>
   </LinearGradientBrush>
 
-  <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxBorderBrush}" Color="White" Opacity="0.6047"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxBackgroundBrush}" Color="Black" Opacity="0.1"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxHoverBackgroundBrush}" Color="White" Opacity="0.0419"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxPressedBackgroundBrush}" Color="White" Opacity="0.0698"/>
@@ -131,5 +134,7 @@
     <ColorAnimation Storyboard.TargetProperty="(Hyperlink.Foreground).(SolidColorBrush.Color)"
                     To="{StaticResource AccentTextTertiaryColor}" Duration="0"/>
   </Storyboard>
+
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.InfoBarBackgroundBrush}" Color="White" Opacity="0.0326"/>
 
 </ResourceDictionary>

@@ -383,4 +383,25 @@
     </Style.Triggers>
   </Style>
 
+  <Style TargetType="ProgressBar">
+    <Setter Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"/>
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ProgressBar">
+          <Grid Height="3">
+            <Border x:Name="PART_Track"
+                    Height="1" CornerRadius="0.5"
+                    VerticalAlignment="Center"
+                    Background="{TemplateBinding Background}"/>
+            <Border x:Name="PART_Indicator"
+                    Height="3" CornerRadius="1.5"
+                    HorizontalAlignment="Left"
+                    Background="{TemplateBinding Foreground}"/>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
 </ResourceDictionary>

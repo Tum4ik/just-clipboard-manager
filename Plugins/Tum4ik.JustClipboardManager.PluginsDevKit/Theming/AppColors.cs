@@ -16,11 +16,16 @@ public static class AppColors
   public const string AccentSecondaryBrush = nameof(AccentSecondaryBrush);
   public const string AccentTertiaryBrush = nameof(AccentTertiaryBrush);
   public const string AccentDisabledBrush = nameof(AccentDisabledBrush);
+
   public const string SystemAttentionBrush = nameof(SystemAttentionBrush);
   public const string SystemSuccessBrush = nameof(SystemSuccessBrush);
   public const string SystemCautionBrush = nameof(SystemCautionBrush);
   public const string SystemCriticalBrush = nameof(SystemCriticalBrush);
   public const string SystemNeutralBrush = nameof(SystemNeutralBrush);
+  public const string SystemSuccessBackgroundBrush = nameof(SystemSuccessBackgroundBrush);
+  public const string SystemWarningBackgroundBrush = nameof(SystemWarningBackgroundBrush);
+  public const string SystemCriticalBackgroundBrush = nameof(SystemCriticalBackgroundBrush);
+
   public const string AppSurfaceBorderBrush = nameof(AppSurfaceBorderBrush);
   public const string ContextMenuBorderBrush = nameof(ContextMenuBorderBrush);
   public const string AppSurfaceBackgroundBrush = nameof(AppSurfaceBackgroundBrush);
@@ -42,11 +47,11 @@ public static class AppColors
   public const string ControlPressedBackgroundBrush = nameof(ControlPressedBackgroundBrush);
   public const string ControlDisabledBackgroundBrush = nameof(ControlDisabledBackgroundBrush);
   public const string ControlBorderBrush = nameof(ControlBorderBrush);
+  public const string ControlBorderGradientBrush = nameof(ControlBorderGradientBrush);
   public const string ControlPressedBorderBrush = nameof(ControlPressedBorderBrush);
   public const string ControlDisabledBorderBrush = nameof(ControlDisabledBorderBrush);
   public const string ControlAccentBorderBrush = nameof(ControlAccentBorderBrush);
   public const string ThumbBorderBrush = nameof(ThumbBorderBrush);
-  public const string CheckBoxBorderBrush = nameof(CheckBoxBorderBrush);
   public const string CheckBoxBackgroundBrush = nameof(CheckBoxBackgroundBrush);
   public const string CheckBoxHoverBackgroundBrush = nameof(CheckBoxHoverBackgroundBrush);
   public const string CheckBoxPressedBackgroundBrush = nameof(CheckBoxPressedBackgroundBrush);
@@ -58,4 +63,5 @@ public static class AppColors
   public const string CardBorderBrush = nameof(CardBorderBrush);
   public const string CardBackgroundBrush = nameof(CardBackgroundBrush);
   public const string CardDisabledBackgroundBrush = nameof(CardDisabledBackgroundBrush);
+  public const string InfoBarBackgroundBrush = nameof(InfoBarBackgroundBrush);
 }

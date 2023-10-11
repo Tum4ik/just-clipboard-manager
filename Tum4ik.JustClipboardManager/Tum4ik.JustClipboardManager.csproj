@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Controls\InfoBar.xaml" />
     <None Remove="Controls\InputFieldButton.xaml" />
     <None Remove="Controls\NavigationButton.xaml" />
     <None Remove="Controls\NavigationPanel.xaml" />
@@ -43,10 +44,12 @@
     <None Remove="Controls\WinUiComboBox.xaml" />
     <None Remove="Resources\Assets\noise-256.png" />
     <None Remove="Resources\Icons\bug-report.svg" />
+    <None Remove="Resources\Icons\cancel-circle-filled.svg" />
     <None Remove="Resources\Icons\caret-down.svg" />
     <None Remove="Resources\Icons\caret-left.svg" />
     <None Remove="Resources\Icons\caret-right.svg" />
     <None Remove="Resources\Icons\caret-up.svg" />
+    <None Remove="Resources\Icons\check-circle-filled.svg" />
     <None Remove="Resources\Icons\check-circle.svg" />
     <None Remove="Resources\Icons\check.svg" />
     <None Remove="Resources\Icons\chevron.svg" />
@@ -68,6 +71,7 @@
     <None Remove="Resources\Icons\file.svg" />
     <None Remove="Resources\Icons\files.svg" />
     <None Remove="Resources\Icons\format-list-numbered-rtl.svg" />
+    <None Remove="Resources\Icons\info-filled.svg" />
     <None Remove="Resources\Icons\info.svg" />
     <None Remove="Resources\Icons\keyboard.svg" />
     <None Remove="Resources\Icons\light-mode.svg" />
@@ -82,6 +86,7 @@
     <None Remove="Resources\Icons\tray.ico" />
     <None Remove="Resources\Icons\ukraine.svg" />
     <None Remove="Resources\Icons\usa.svg" />
+    <None Remove="Resources\Icons\warning-circle-filled.svg" />
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
@@ -117,10 +122,12 @@
   <ItemGroup>
     <Resource Include="Resources\Assets\noise-256.png" />
     <Resource Include="Resources\Icons\bug-report.svg" />
+    <Resource Include="Resources\Icons\cancel-circle-filled.svg" />
     <Resource Include="Resources\Icons\caret-down.svg" />
     <Resource Include="Resources\Icons\caret-left.svg" />
     <Resource Include="Resources\Icons\caret-right.svg" />
     <Resource Include="Resources\Icons\caret-up.svg" />
+    <Resource Include="Resources\Icons\check-circle-filled.svg" />
     <Resource Include="Resources\Icons\check-circle.svg" />
     <Resource Include="Resources\Icons\check.svg" />
     <Resource Include="Resources\Icons\chevron.svg" />
@@ -142,6 +149,7 @@
     <Resource Include="Resources\Icons\file.svg" />
     <Resource Include="Resources\Icons\files.svg" />
     <Resource Include="Resources\Icons\format-list-numbered-rtl.svg" />
+    <Resource Include="Resources\Icons\info-filled.svg" />
     <Resource Include="Resources\Icons\info.svg" />
     <Resource Include="Resources\Icons\keyboard.svg" />
     <Resource Include="Resources\Icons\light-mode.svg" />
@@ -156,6 +164,7 @@
     <Resource Include="Resources\Icons\tray-dev.ico" />
     <Resource Include="Resources\Icons\ukraine.svg" />
     <Resource Include="Resources\Icons\usa.svg" />
+    <Resource Include="Resources\Icons\warning-circle-filled.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -171,14 +180,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Octokit" Version="7.1.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
     <PackageReference Include="YT.IIGen" Version="0.0.23115.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

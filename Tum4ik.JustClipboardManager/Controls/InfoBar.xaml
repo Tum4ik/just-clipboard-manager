@@ -1,0 +1,133 @@
+<Control x:Class="Tum4ik.JustClipboardManager.Controls.InfoBar"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+         mc:Ignorable="d"
+         Opacity="0">
+  <Control.Template>
+    <ControlTemplate TargetType="controls:InfoBar">
+      <ControlTemplate.Resources>
+        <converters:TranslateConverter x:Key="TranslateConverter"/>
+      </ControlTemplate.Resources>
+      <Border x:Name="_border"
+              Width="600" MinHeight="50" CornerRadius="4"
+              BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
+              Background="{DynamicResource {x:Static theming:AppColors.InfoBarBackgroundBrush}}"
+              SizeChanged="Border_SizeChanged">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <controls:SvgIcon x:Name="_icon"
+                            Grid.Column="0"
+                            Icon="InfoFilled" Color="{DynamicResource {x:Static theming:AppColors.SystemAttentionBrush}}"
+                            Width="16" Height="16"
+                            Margin="16, 16, 0, 0"
+                            VerticalAlignment="Top"/>
+          <DockPanel Grid.Column="1">
+            <TextBlock x:Name="_title"
+                       DockPanel.Dock="Left"
+                       Margin="12, 14, 12, 0"
+                       FontWeight="SemiBold">
+              <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="Title" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+            <controls:WinUiButton x:Name="_actionButton"
+                                  DockPanel.Dock="Right" Margin="0, 0, 6, 0"
+                                  Visibility="Collapsed"
+                                  Click="ActionButton_Click">
+              <controls:WinUiButton.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="ActionText" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </controls:WinUiButton.Text>
+            </controls:WinUiButton>
+            <TextBlock x:Name="_body"
+                       Margin="0, 14, 12, 14"
+                       TextWrapping="Wrap">
+              <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource TranslateConverter}">
+                  <Binding Path="DataContext.Translate" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                  <Binding Path="Body" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+          </DockPanel>
+          <controls:WinUiButton Grid.Column="2"
+                                Icon="ChromeClose" IconWidth="12" IconHeight="12"
+                                ButtonStyle="Subtle"
+                                VerticalAlignment="Top"
+                                Margin="0, 5, 5, 0"
+                                Click="CloseButton_Click"/>
+        </Grid>
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="Severity" Value="Success">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemSuccessBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="CheckCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}"/>
+        </Trigger>
+        <Trigger Property="Severity" Value="Warning">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemWarningBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="WarningCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemCautionBrush}}"/>
+        </Trigger>
+        <Trigger Property="Severity" Value="Critical">
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.SystemCriticalBackgroundBrush}}"/>
+          <Setter TargetName="_icon" Property="Icon" Value="CancelCircleFilled"/>
+          <Setter TargetName="_icon" Property="Color" Value="{DynamicResource {x:Static theming:AppColors.SystemCriticalBrush}}"/>
+        </Trigger>
+        <Trigger Property="ActionType" Value="Button">
+          <Setter TargetName="_actionButton" Property="Visibility" Value="Visible"/>
+        </Trigger>
+        <Trigger Property="IsOpen" Value="True">
+          <Trigger.EnterActions>
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="1"
+                                 Duration="0:0:0.5">
+                  <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseIn" />
+                  </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <BooleanAnimationUsingKeyFrames Duration="0"
+                                                Storyboard.TargetProperty="CleanUpStarted">
+                  <DiscreteBooleanKeyFrame Value="False"/>
+                </BooleanAnimationUsingKeyFrames>
+              </Storyboard>
+            </BeginStoryboard>
+          </Trigger.EnterActions>
+          <Trigger.ExitActions>
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 To="0"
+                                 Duration="0:0:0.5">
+                  <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                  </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <BooleanAnimationUsingKeyFrames BeginTime="0:0:0.5" Duration="0"
+                                                Storyboard.TargetProperty="CleanUpStarted">
+                  <DiscreteBooleanKeyFrame Value="True"/>
+                </BooleanAnimationUsingKeyFrames>
+              </Storyboard>
+            </BeginStoryboard>
+          </Trigger.ExitActions>
+        </Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+  </Control.Template>
+</Control>

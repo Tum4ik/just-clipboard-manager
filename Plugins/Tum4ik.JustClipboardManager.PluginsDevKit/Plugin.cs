@@ -4,6 +4,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
 namespace Tum4ik.JustClipboardManager.PluginDevKit;
+
 public abstract class Plugin<T> : IPlugin
   where T : FrameworkElement
 {

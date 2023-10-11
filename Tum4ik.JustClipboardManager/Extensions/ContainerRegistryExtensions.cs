@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
@@ -85,5 +86,15 @@ internal static class ContainerRegistryExtensions
       .RegisterSingleton<IFile, FileWrapper>()
       .RegisterSingleton<IPath, PathWrapper>()
       .RegisterSingleton<IClipboard, ClipboardWrapper>();
+  }
+
+
+  public static IContainerRegistry RegisterThreadSwitching(this IContainerRegistry services)
+  {
+    var mainThread = Thread.CurrentThread;
+    var synchronizationContext = SynchronizationContext.Current;
+    return services
+      .RegisterSingleton<JoinableTaskContext>(() => new JoinableTaskContext(mainThread, synchronizationContext))
+      .RegisterSingleton<JoinableTaskFactory>();
   }
 }

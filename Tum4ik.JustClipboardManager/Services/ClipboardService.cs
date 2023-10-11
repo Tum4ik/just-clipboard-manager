@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,7 +15,6 @@ using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.PluginDevKit;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
@@ -59,8 +59,21 @@ internal class ClipboardService : IClipboardService
       if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
       {
         var plugin = _plugins.First(p => p.Formats.Contains(formattedDataObject.Format));
-        data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
-        restoredByPlugin = true;
+        try
+        {
+          data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
+          restoredByPlugin = true;
+        }
+        catch (Exception e)
+        {
+          Crashes.TrackError(e, new Dictionary<string, string>
+          {
+            { "Info", "Exception when restore data for plugin on paste operation" },
+            { "PluginId", plugin.Id! }
+          });
+          data = GetDataFromBytes(formattedDataObject);
+        }
+        
       }
       else
       {
@@ -199,7 +212,19 @@ internal class ClipboardService : IClipboardService
     }
     catch (COMException e)
     {
-      Crashes.TrackError(e);
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "COM exception when saving clip" },
+        { "ErrorCode", e.ErrorCode.ToString(CultureInfo.InvariantCulture) },
+        { "HResult", e.HResult.ToString(CultureInfo.InvariantCulture) }
+      });
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
+      {
+        { "Info", "Unpredictable exception when saving clip" }
+      });
     }
   }
 

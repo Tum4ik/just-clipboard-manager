@@ -97,6 +97,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Looks like the corresponding file with plugins info is corrupted or has wrong format. Please try again later..
+        /// </summary>
+        internal static string AvailablePluginsInfoLoadProblem_Body {
+            get {
+                return ResourceManager.GetString("AvailablePluginsInfoLoadProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugins info loading failed.
+        /// </summary>
+        internal static string AvailablePluginsInfoLoadProblem_Title {
+            get {
+                return ResourceManager.GetString("AvailablePluginsInfoLoadProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to by.
         /// </summary>
         internal static string by {
@@ -313,11 +331,56 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin download problem.
+        /// </summary>
+        internal static string PluginDownloadProblem_Title {
+            get {
+                return ResourceManager.GetString("PluginDownloadProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In some reason the plugin installation failed..
+        /// </summary>
+        internal static string PluginInstallationProblem_Body {
+            get {
+                return ResourceManager.GetString("PluginInstallationProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin installation problem.
+        /// </summary>
+        internal static string PluginInstallationProblem_Title {
+            get {
+                return ResourceManager.GetString("PluginInstallationProblem_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugins.
         /// </summary>
         internal static string Plugins {
             get {
                 return ResourceManager.GetString("Plugins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin installation is blocked because of security reasons..
+        /// </summary>
+        internal static string PluginSecurityViolation_Body {
+            get {
+                return ResourceManager.GetString("PluginSecurityViolation_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin security violation.
+        /// </summary>
+        internal static string PluginSecurityViolation_Title {
+            get {
+                return ResourceManager.GetString("PluginSecurityViolation_Title", resourceCulture);
             }
         }
         
@@ -340,6 +403,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string Retry {
+            get {
+                return ResourceManager.GetString("Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         internal static string Search {
@@ -354,6 +426,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Sequence {
             get {
                 return ResourceManager.GetString("Sequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks like there is a problem connecting to the server. It can be caused by either internet connection problem or an error on the server side..
+        /// </summary>
+        internal static string ServerConnectionProblem_Body {
+            get {
+                return ResourceManager.GetString("ServerConnectionProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server connection problem.
+        /// </summary>
+        internal static string ServerConnectionProblem_Title {
+            get {
+                return ResourceManager.GetString("ServerConnectionProblem_Title", resourceCulture);
             }
         }
         

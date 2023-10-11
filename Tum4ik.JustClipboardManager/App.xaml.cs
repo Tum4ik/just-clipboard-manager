@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
@@ -82,8 +81,7 @@ public partial class App : ISingleInstance
 
   private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
-    // TODO: improve to give user a chance to decide send or not
-    // TODO: and also notify user about the problem anyway
+    // TODO: notify user about the problem anyway
     Crashes.TrackError(e.Exception, new Dictionary<string, string>
     {
       { "Message", "Unhandled Exception" },
@@ -103,7 +101,7 @@ public partial class App : ISingleInstance
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
 #if !DEBUG
-      Process.Start(new ProcessStartInfo(processPath)
+      System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
@@ -146,12 +144,19 @@ public partial class App : ISingleInstance
 
   protected override void OnStartup(StartupEventArgs e)
   {
-    base.OnStartup(e);
+    try
+    {
+      base.OnStartup(e);
+    }
+    catch (ModuleInitializeException ex)
+    {
+      Crashes.TrackError(ex);
+    }
 
     var configuration = Container.Resolve<IConfiguration>();
-    // todo: wrap AppCenter by service
-#if !DEBUG
     AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
+#if DEBUG
+    _ = AppCenter.SetEnabledAsync(false);
 #endif
 
     var updateService = Container.Resolve<IUpdateService>();
@@ -188,6 +193,8 @@ public partial class App : ISingleInstance
       .RegisterConfiguration()
       .RegisterGeneratedWrappers()
       .RegisterDatabase()
+      .RegisterThreadSwitching()
+      .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
       .RegisterSingleton<IUser32DllService, User32DllService>()
       .RegisterSingleton<ISHCoreDllService, SHCoreDllService>()
@@ -203,6 +210,11 @@ public partial class App : ISingleInstance
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
       .RegisterSingleton<IPluginsService, PluginsService>()
+      .RegisterSingleton<IPluginsRegistryService>(p => p.Resolve<IPluginsService>())
+      .RegisterSingleton<IHttpClientFactory, HttpClientFactory>()
+      .RegisterSingleton<InfoBarService>()
+      .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
+      .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()
@@ -245,6 +257,6 @@ public partial class App : ISingleInstance
 
   protected override IModuleCatalog CreateModuleCatalog()
   {
-    return new DirectoryModuleCatalog { ModulePath = "./" };
+    return new LoadableDirectoryModuleCatalog { ModulePath = "./" };
   }
 }

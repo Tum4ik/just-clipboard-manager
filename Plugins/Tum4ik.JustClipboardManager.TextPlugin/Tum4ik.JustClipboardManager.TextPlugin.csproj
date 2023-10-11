@@ -13,8 +13,14 @@
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <PropertyGroup>
-    <PluginId>D930D2CD-3FD9-4012-A363-120676E22AFA</PluginId>
     <BuildDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\x86\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x86>
     <BuildDestinationFolder_x64>..\..\Tum4ik.JustClipboardManager\bin\x64\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x64>
     <PublishDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\publish\x86</PublishDestinationFolder_x86>
@@ -26,12 +32,12 @@
     <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
   </ItemGroup>
   <Target Name="CopyPluginToBuildOutput" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CopyPluginToPublishOutput" AfterTargets="Publish">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x86)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x64)\%(RecursiveDir)%(Filename)$(PluginId)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
 </Project>
