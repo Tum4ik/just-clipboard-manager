@@ -28,12 +28,19 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
 
   public async void OnNavigatedTo(NavigationContext navigationContext)
   {
+    await LoadPluginsAsync().ConfigureAwait(false);
+  }
+
+
+  private async Task LoadPluginsAsync()
+  {
     Plugins.Clear();
     await foreach (var installedPluginDto in CreatePluginsDtoAsync(_pluginsService.InstalledPlugins))
     {
       Plugins.Add(installedPluginDto);
     }
   }
+
 
   public void OnNavigatedFrom(NavigationContext navigationContext)
   {
@@ -60,9 +67,10 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
 
 
   [RelayCommand]
-  private void UninstallPlugin(InstalledPluginInfoDto plugin)
+  private async Task UninstallPluginAsync(InstalledPluginInfoDto plugin)
   {
-
+    await _pluginsService.UninstallPluginAsync(plugin.Id).ConfigureAwait(true);
+    await LoadPluginsAsync().ConfigureAwait(false);
   }
 
 
