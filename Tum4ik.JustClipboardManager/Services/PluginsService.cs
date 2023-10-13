@@ -313,13 +313,17 @@ internal class PluginsService : IPluginsService
         }
         else
         {
-          await File.WriteAllLinesAsync(PluginFilesToRemoveFileName, pluginsFilesToRemove, cancellationToken).ConfigureAwait(false);
+          await File.WriteAllLinesAsync(PluginFilesToRemoveFileName, pluginsFilesToRemove, CancellationToken.None).ConfigureAwait(false);
         }
       }
     }
     catch (TaskCanceledException)
     {
-      // todo: remove already extracted files
+      // delete already extracted files
+      foreach (var filePath in filesList)
+      {
+        File.Delete(filePath);
+      }
       throw;
     }
   }
