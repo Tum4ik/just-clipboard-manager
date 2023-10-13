@@ -64,7 +64,14 @@
                 <controls:WinUiButton DockPanel.Dock="Right"
                                       Text="{Binding DataContext.Translate[Uninstall], RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                      CommandParameter="{Binding}" />
+                                      CommandParameter="{Binding}">
+                  <i:Interaction.Triggers>
+                    <!-- Special case for Default Text Plugin -->
+                    <i:DataTrigger Binding="{Binding Id}" Value="D930D2CD-3FD9-4012-A363-120676E22AFA">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                  </i:Interaction.Triggers>
+                </controls:WinUiButton>
               </DockPanel>
             </controls:PluginCard.Footer>
           </controls:PluginCard>
