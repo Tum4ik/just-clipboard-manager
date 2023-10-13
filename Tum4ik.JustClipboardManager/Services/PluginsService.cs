@@ -19,6 +19,7 @@ internal class PluginsService : IPluginsService
 {
   internal const string PluginsJsonFileName = "Plugins.json";
   internal const string PluginFilesToRemoveFileName = "plugin-files-to-remove";
+  internal const string DefaultTextPluginId = "D930D2CD-3FD9-4012-A363-120676E22AFA";
 
   private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
@@ -50,7 +51,20 @@ internal class PluginsService : IPluginsService
   private readonly Dictionary<string, bool> _enabledPlugins = new();
 
 
-  public IReadOnlyCollection<IPlugin> InstalledPlugins => _plugins.Values;
+  public IReadOnlyCollection<IPlugin> InstalledPlugins
+  {
+    get
+    {
+      var pluginsToReturn = new List<IPlugin>();
+      // Default Text Plugin should be the first
+      if (_plugins.TryGetValue(DefaultTextPluginId, out var defaultTextPlugin))
+      {
+        pluginsToReturn.Add(defaultTextPlugin);
+      }
+      pluginsToReturn.AddRange(_plugins.Values.Where(p => p.Id != DefaultTextPluginId));
+      return pluginsToReturn;
+    }
+  }
 
 
   public async IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync()
@@ -269,7 +283,7 @@ internal class PluginsService : IPluginsService
                   // should be ignored in case the plugin is installed immediately after uninstallation
                   // and the plugins files are not removed yet
                 }
-                
+
                 filesList.Add(destinationPath);
                 var uncompressedFileSize = new FileInfo(destinationPath).Length;
                 var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;

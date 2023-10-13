@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
@@ -78,43 +79,53 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   {
     foreach (var plugin in plugins)
     {
-      var dto = await Task.Run(() =>
-      {
-        var pluginAttribute = plugin.GetType().GetCustomAttribute<PluginAttribute>();
-        if (pluginAttribute is null)
-        {
-          return null;
-        }
-
-        Version version;
-        try
-        {
-          version = Version.Parse(pluginAttribute.Version);
-        }
-        catch (Exception e)
-        when (e is ArgumentNullException
-           || e is ArgumentException
-           || e is ArgumentOutOfRangeException
-           || e is FormatException
-           || e is OverflowException)
-        {
-          return null;
-        }
-
-        return new InstalledPluginInfoDto
-        {
-          Id = pluginAttribute.Id,
-          Name = pluginAttribute.Name,
-          Version = version,
-          Author = pluginAttribute.Author,
-          Description = pluginAttribute.Description,
-          IsEnabled = _pluginsService.IsPluginEnabled(pluginAttribute.Id)
-        };
-      }).ConfigureAwait(false);
+      var dto = await PluginToDtoAsync(plugin).ConfigureAwait(false);
       if (dto is not null)
       {
         yield return dto;
       }
     }
+  }
+
+
+  private async Task<InstalledPluginInfoDto?> PluginToDtoAsync(IPlugin plugin)
+  {
+    return await Task.Run(() =>
+    {
+      var pluginAttribute = plugin.GetType().GetCustomAttribute<PluginAttribute>();
+      if (pluginAttribute is null)
+      {
+        return null;
+      }
+
+      Version version;
+      try
+      {
+        version = Version.Parse(pluginAttribute.Version);
+      }
+      catch (Exception e)
+      when (e is ArgumentNullException
+         || e is ArgumentException
+         || e is ArgumentOutOfRangeException
+         || e is FormatException
+         || e is OverflowException)
+      {
+        Crashes.TrackError(e, new Dictionary<string, string>
+        {
+          { "Info", "Plugin version parsing problem" }
+        });
+        return null;
+      }
+
+      return new InstalledPluginInfoDto
+      {
+        Id = pluginAttribute.Id,
+        Name = pluginAttribute.Name,
+        Version = version,
+        Author = pluginAttribute.Author,
+        Description = pluginAttribute.Description,
+        IsEnabled = _pluginsService.IsPluginEnabled(pluginAttribute.Id)
+      };
+    }).ConfigureAwait(false);
   }
 }
