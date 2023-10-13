@@ -144,6 +144,9 @@ public partial class App : ISingleInstance
 
   protected override void OnStartup(StartupEventArgs e)
   {
+    // Important to call before base.OnStartup(e).
+    // Otherwise the plugins will be initialized and it will not be possible to remove files.
+    RemoveFilesOfDeletedPlugins();
     try
     {
       base.OnStartup(e);
@@ -184,6 +187,20 @@ public partial class App : ISingleInstance
   {
     var clipRepository = Container.Resolve<IClipRepository>();
     clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)).Await(e => Crashes.TrackError(e)); // TODO: before date from settings
+  }
+
+
+  private static void RemoveFilesOfDeletedPlugins()
+  {
+    const string FileName = PluginsService.PluginFilesToRemoveFileName;
+    if (System.IO.File.Exists(FileName))
+    {
+      foreach (var line in System.IO.File.ReadLines(FileName).Where(System.IO.File.Exists))
+      {
+        System.IO.File.Delete(line);
+      }
+      System.IO.File.Delete(FileName);
+    }
   }
 
 

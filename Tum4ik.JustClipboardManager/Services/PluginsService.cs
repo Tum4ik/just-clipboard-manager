@@ -17,6 +17,10 @@ using Tum4ik.JustClipboardManager.Properties;
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PluginsService : IPluginsService
 {
+  internal const string PluginsJsonFileName = "Plugins.json";
+  internal const string PluginFilesToRemoveFileName = "plugin-files-to-remove";
+  internal const string DefaultTextPluginId = "D930D2CD-3FD9-4012-A363-120676E22AFA";
+
   private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
   private readonly IGitHubClient _gitHubClient;
@@ -47,7 +51,20 @@ internal class PluginsService : IPluginsService
   private readonly Dictionary<string, bool> _enabledPlugins = new();
 
 
-  public IReadOnlyCollection<IPlugin> InstalledPlugins => _plugins.Values;
+  public IReadOnlyCollection<IPlugin> InstalledPlugins
+  {
+    get
+    {
+      var pluginsToReturn = new List<IPlugin>();
+      // Default Text Plugin should be the first
+      if (_plugins.TryGetValue(DefaultTextPluginId, out var defaultTextPlugin))
+      {
+        pluginsToReturn.Add(defaultTextPlugin);
+      }
+      pluginsToReturn.AddRange(_plugins.Values.Where(p => p.Id != DefaultTextPluginId));
+      return pluginsToReturn;
+    }
+  }
 
 
   public async IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync()
@@ -76,9 +93,29 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public void UnregisterPlugin(string id)
+  public async Task UninstallPluginAsync(string id)
   {
     _plugins.Remove(id);
+    _enabledPlugins.Remove(id);
+
+    Dictionary<string, List<string>> pluginFiles;
+    try
+    {
+      pluginFiles = await GetPluginsFilesAsync(default).ConfigureAwait(false);
+    }
+    catch (JsonException)
+    {
+      return;
+    }
+
+    var filesToRemove = pluginFiles[id];
+    await File.AppendAllLinesAsync(PluginFilesToRemoveFileName, filesToRemove).ConfigureAwait(false);
+
+    pluginFiles.Remove(id);
+    await WritePluginsFilesAsync(pluginFiles, default).ConfigureAwait(false);
+
+    _moduleCatalog.Modules.First(m => m.ModuleName == id).State = ModuleState.NotStarted;
+
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }
 
@@ -194,23 +231,23 @@ internal class PluginsService : IPluginsService
                                                            IProgress<int>? progress = null,
                                                            CancellationToken cancellationToken = default)
   {
-    const string PluginsJsonFileName = "Plugins.json";
-    var guid = Guid.NewGuid();
-    var pluginFilesStream = new FileStream(PluginsJsonFileName, System.IO.FileMode.OpenOrCreate);
     Dictionary<string, List<string>> pluginFiles;
     try
     {
-      pluginFiles = await JsonSerializer
-        .DeserializeAsync<Dictionary<string, List<string>>>(pluginFilesStream, cancellationToken: cancellationToken)
-        .ConfigureAwait(false) ?? new();
+      pluginFiles = await GetPluginsFilesAsync(cancellationToken).ConfigureAwait(false);
     }
     catch (JsonException)
     {
       pluginFiles = new Dictionary<string, List<string>>();
     }
-    pluginFilesStream.Close();
     var filesList = new List<string>();
     pluginFiles[pluginId] = filesList;
+
+    HashSet<string>? pluginsFilesToRemove = null;
+    if (File.Exists(PluginFilesToRemoveFileName))
+    {
+      pluginsFilesToRemove = (await File.ReadAllLinesAsync(PluginFilesToRemoveFileName, cancellationToken).ConfigureAwait(false)).ToHashSet();
+    }
 
     using var zipArchive = new ZipArchive(zipStream);
     var entriesCount = zipArchive.Entries.Count;
@@ -218,54 +255,107 @@ internal class PluginsService : IPluginsService
     {
       throw new PluginZipSecurityException("entriesCount > 10000");
     }
-    await Task.Run(() =>
+    try
     {
-      var totalUncompressedArchiveSize = 0L;
-      for (var i = 0; i < entriesCount; i++)
+      await Task.Run(() =>
       {
-        var entry = zipArchive.Entries[i];
-        var entryFullName = entry.FullName;
-        if (!File.Exists(entryFullName))
+        var totalUncompressedArchiveSize = 0L;
+        for (var i = 0; i < entriesCount; i++)
         {
-          var directory = Path.GetDirectoryName(entryFullName);
-          var fileName = Path.GetFileNameWithoutExtension(entryFullName);
-          var extension = Path.GetExtension(entryFullName);
-          if (directory is not null && fileName is not null && extension is not null)
+          var entry = zipArchive.Entries[i];
+          var entryFullName = entry.FullName;
+          if (!File.Exists(entryFullName))
           {
-            var destinationPath = Path.Combine(directory, $"{guid}_{fileName}{extension}");
-            if (destinationPath.StartsWith(directory, StringComparison.Ordinal))
+            var directory = Path.GetDirectoryName(entryFullName);
+            var fileName = Path.GetFileNameWithoutExtension(entryFullName);
+            var extension = Path.GetExtension(entryFullName);
+            if (directory is not null && fileName is not null && extension is not null)
             {
-              entry.ExtractToFile(destinationPath, true);
-              filesList.Add(destinationPath);
-              var uncompressedFileSize = new FileInfo(destinationPath).Length;
-              var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
-              totalUncompressedArchiveSize += uncompressedFileSize;
-              var isCompressionRatioViolation = compressionRatio > 10;
-              var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
-              if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
+              var destinationPath = Path.Combine(directory, $"{pluginId}_{fileName}{extension}");
+              if (destinationPath.StartsWith(directory, StringComparison.Ordinal))
               {
-                foreach (var filePath in filesList)
+                try
                 {
-                  File.Delete(filePath);
+                  entry.ExtractToFile(destinationPath, true);
                 }
-                if (isCompressionRatioViolation)
+                catch (IOException)
                 {
-                  throw new PluginZipSecurityException("compressionRatio > 10");
+                  // should be ignored in case the plugin is installed immediately after uninstallation
+                  // and the plugins files are not removed yet
                 }
-                if (isTotalUncompressedArchiveSizeViolation)
+
+                filesList.Add(destinationPath);
+                var uncompressedFileSize = new FileInfo(destinationPath).Length;
+                var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
+                totalUncompressedArchiveSize += uncompressedFileSize;
+                var isCompressionRatioViolation = compressionRatio > 10;
+                var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
+                if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
                 {
-                  throw new PluginZipSecurityException("totalUncompressedArchiveSize > 1 GB");
+                  foreach (var filePath in filesList)
+                  {
+                    File.Delete(filePath);
+                  }
+                  if (isCompressionRatioViolation)
+                  {
+                    throw new PluginZipSecurityException("compressionRatio > 10");
+                  }
+                  if (isTotalUncompressedArchiveSizeViolation)
+                  {
+                    throw new PluginZipSecurityException("totalUncompressedArchiveSize > 1 GB");
+                  }
+                }
+
+                if (pluginsFilesToRemove is not null && pluginsFilesToRemove.Count > 0)
+                {
+                  pluginsFilesToRemove.Remove(destinationPath);
                 }
               }
             }
           }
+
+          progress?.Report((int) ((double) i / entriesCount * 100));
         }
+      }, cancellationToken).ConfigureAwait(false);
 
-        progress?.Report((int) ((double) i / entriesCount * 100));
+      await WritePluginsFilesAsync(pluginFiles, cancellationToken).ConfigureAwait(false);
+      if (pluginsFilesToRemove is not null)
+      {
+        if (pluginsFilesToRemove.Count <= 0)
+        {
+          File.Delete(PluginFilesToRemoveFileName);
+        }
+        else
+        {
+          await File.WriteAllLinesAsync(PluginFilesToRemoveFileName, pluginsFilesToRemove, CancellationToken.None).ConfigureAwait(false);
+        }
       }
-    }, cancellationToken).ConfigureAwait(false);
+    }
+    catch (TaskCanceledException)
+    {
+      // delete already extracted files
+      foreach (var filePath in filesList)
+      {
+        File.Delete(filePath);
+      }
+      throw;
+    }
+  }
 
-    var serializedPluginFiles = JsonSerializer.Serialize(pluginFiles);
+
+  private static async Task<Dictionary<string, List<string>>> GetPluginsFilesAsync(CancellationToken cancellationToken)
+  {
+    using var pluginFilesStream = new FileStream(PluginsJsonFileName, System.IO.FileMode.OpenOrCreate);
+    return await JsonSerializer
+      .DeserializeAsync<Dictionary<string, List<string>>>(pluginFilesStream, cancellationToken: cancellationToken)
+      .ConfigureAwait(false) ?? new();
+  }
+
+
+  private static async Task WritePluginsFilesAsync(Dictionary<string, List<string>> pluginsFiles,
+                                                   CancellationToken cancellationToken)
+  {
+    var serializedPluginFiles = JsonSerializer.Serialize(pluginsFiles);
     await File.WriteAllTextAsync(PluginsJsonFileName, serializedPluginFiles, cancellationToken).ConfigureAwait(false);
   }
 }

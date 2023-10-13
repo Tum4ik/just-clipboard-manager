@@ -8,7 +8,7 @@ internal interface IPluginsService : IPluginsRegistryService
 {
   IReadOnlyCollection<IPlugin> InstalledPlugins { get; }
   IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync();
-  void UnregisterPlugin(string id);
+  Task UninstallPluginAsync(string id);
   IPlugin? GetPlugin(string id);
   void EnablePlugin(string id);
   void DisablePlugin(string id);
