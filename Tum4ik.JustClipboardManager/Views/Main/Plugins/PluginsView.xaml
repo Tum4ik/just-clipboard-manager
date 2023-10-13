@@ -22,8 +22,8 @@
                                IsChecked="True"/>
     <controls:NavigationButton Icon="ManageSearch" Text="{Binding Translate[Search]}"
                                CommandParameter="{x:Static const:ViewNames.PluginsSearchView}"/>
-    <controls:NavigationButton Icon="FormatListNumberedRtl" Text="{Binding Translate[Sequence]}"
-                               CommandParameter="{x:Static const:ViewNames.PluginsSequenceView}"/>
+    <!--<controls:NavigationButton Icon="FormatListNumberedRtl" Text="{Binding Translate[Sequence]}"
+                               CommandParameter="{x:Static const:ViewNames.PluginsSequenceView}"/>-->
   </controls:NavigationPanel>
   <Border CornerRadius="8, 4, 4, 8"
           BorderThickness="1"
