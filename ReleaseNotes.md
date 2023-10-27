@@ -5,3 +5,4 @@
 
 ### Fixes
 * Fixed problem when the application breaks the clipboard viewer chain on exit.
+* Fixed Main window bottom corners rounding when the window is maximized (#72).
