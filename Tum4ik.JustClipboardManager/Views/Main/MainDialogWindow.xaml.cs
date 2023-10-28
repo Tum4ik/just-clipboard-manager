@@ -29,6 +29,7 @@ internal partial class MainDialogWindow : IDialogWindowExtended
 
 
   private readonly Thickness _initialMargin;
+  private bool _windowLocationChangedSubscribed;
 
 
   public IDialogResult? Result { get; set; }
@@ -52,6 +53,13 @@ internal partial class MainDialogWindow : IDialogWindowExtended
       case 0x0112: // WM_SYSCOMMAND
         switch (wParam)
         {
+          case 0xF012: // Window titlebar click
+            if (WindowState == WindowState.Maximized && !_windowLocationChangedSubscribed)
+            {
+              LocationChanged += MainDialogWindow_LocationChanged;
+              _windowLocationChangedSubscribed = true;
+            }
+            break;
           case 0xF030: // SC_MAXIMIZE
           case 0xF032: // SC_MAXIMIZE_DBLCLICK
             BeforeMaximize();
@@ -64,6 +72,14 @@ internal partial class MainDialogWindow : IDialogWindowExtended
         break;
     }
     return nint.Zero;
+  }
+
+
+  private void MainDialogWindow_LocationChanged(object? sender, EventArgs e)
+  {
+    LocationChanged -= MainDialogWindow_LocationChanged;
+    BeforeRestore();
+    _windowLocationChangedSubscribed = false;
   }
 
 
