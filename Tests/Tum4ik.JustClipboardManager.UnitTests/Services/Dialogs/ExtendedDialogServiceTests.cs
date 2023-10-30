@@ -3,8 +3,8 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Tum4ik.JustClipboardManager.UnitTests.Services.Dialogs;
 public class ExtendedDialogServiceTests
@@ -160,7 +160,7 @@ public class ExtendedDialogServiceTests
     _dialogViewModel.Received(1).OnDialogOpened(secondCallDialogParameters);
     if (windowState == WindowState.Minimized)
     {
-      _user32Dll.Received(1).ShowWindow(dialogWindowHandle, ShowWindowCommand.SW_RESTORE);
+      _user32Dll.Received(1).ShowWindow(dialogWindowHandle, SHOW_WINDOW_CMD.SW_RESTORE);
       _dialogWindowExtended.DidNotReceive().Activate();
     }
     else if (!windowIsActive)

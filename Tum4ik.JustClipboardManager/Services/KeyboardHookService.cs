@@ -1,8 +1,8 @@
 using Prism.Events;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.PluginDevKit.Models;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using static Windows.Win32.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
@@ -87,9 +87,9 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
 
   public nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
   {
-    switch (msg)
+    switch ((uint) msg)
     {
-      case 0x0312: // WM_HOTKEY
+      case WM_HOTKEY:
         var atom = wParam.ToInt32();
         if (_registeredActionCallbacks.TryGetValue(atom, out var @delegate))
         {

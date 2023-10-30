@@ -1,8 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Windows.Input;
-using Tum4ik.JustClipboardManager.PluginDevKit.Models;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -92,6 +91,21 @@ internal class SettingsService : ISettingsService
       SettingsHotkeys.Default.ShowPasteWindow = JsonSerializer.Serialize(value);
       SettingsHotkeys.Default.Save();
       _keyBindingDescriptor = value;
+    }
+  }
+
+
+  private PasteWindowSnappingType _pasteWindowSnappingType = (PasteWindowSnappingType) SettingsPasteWindow.Default.SnappingType;
+  public PasteWindowSnappingType PasteWindowSnappingType
+  {
+    get => _pasteWindowSnappingType;
+    set
+    {
+      if (_pasteWindowSnappingType != value)
+      {
+        SettingsPasteWindow.Default.SnappingType = (int) value;
+        SettingsPasteWindow.Default.Save();
+      }
     }
   }
 }

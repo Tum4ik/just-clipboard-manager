@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Tum4ik.JustClipboardManager.PluginDevKit.Models;
+namespace Tum4ik.JustClipboardManager.Data.Models;
 
 public record KeyBindingDescriptor(ModifierKeys Modifiers, Key Key)
 {

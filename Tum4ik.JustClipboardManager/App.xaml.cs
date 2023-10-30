@@ -22,7 +22,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
@@ -129,6 +129,7 @@ public partial class App : ISingleInstance
       SettingsGeneral.Default.Upgrade();
       SettingsHotkeys.Default.Upgrade();
       SettingsInterface.Default.Upgrade();
+      SettingsPasteWindow.Default.Upgrade();
       
       InternalSettings.Default.IsSettingsUpgradeRequired = false;
       InternalSettings.Default.Save();
@@ -216,6 +217,7 @@ public partial class App : ISingleInstance
       .RegisterSingleton<IUser32DllService, User32DllService>()
       .RegisterSingleton<ISHCoreDllService, SHCoreDllService>()
       .RegisterSingleton<IKernel32DllService, Kernel32DllService>()
+      .RegisterSingleton<IOleaccDllService, OleaccDllService>()
       .RegisterInstance<IAppResourcesService>(new AppResourcesService(Resources))
       .RegisterSingleton<GeneralHookService>()
       .RegisterSingleton<IKeyboardHookService, KeyboardHookService>()
@@ -224,6 +226,7 @@ public partial class App : ISingleInstance
       .RegisterSingleton<IPasteService, PasteService>()
       .RegisterSingleton<IClipboardService, ClipboardService>()
       .RegisterSingleton<ISettingsService, SettingsService>()
+      .RegisterSingleton<IPluginSettingsService>(p => p.Resolve<ISettingsService>())
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
       .RegisterSingleton<IPluginsService, PluginsService>()

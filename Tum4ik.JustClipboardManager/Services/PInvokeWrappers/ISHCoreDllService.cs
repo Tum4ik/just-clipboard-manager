@@ -1,7 +1,8 @@
-using System.Runtime.InteropServices;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Windows.Win32;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.HiDpi;
 
-namespace Tum4ik.JustClipboardManager.Services.PInvoke;
+namespace Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 
 internal interface ISHCoreDllService
 {
@@ -19,16 +20,11 @@ internal interface ISHCoreDllService
   /// even when the screen is rotated.
   /// </param>
   /// <returns>True if operation succeeds, otherwise - false.</returns>
-  bool GetDpiForMonitor(nint hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY)
+  bool GetDpiForMonitor(nint hmonitor, MONITOR_DPI_TYPE dpiType, out uint dpiX, out uint dpiY)
   {
-    var result = _GetDpiForMonitor(hmonitor, dpiType, out dpiX, out dpiY);
-    return result == 0;
+    var result = PInvoke.GetDpiForMonitor((HMONITOR)hmonitor, dpiType, out dpiX, out dpiY);
+    return result.Succeeded;
   }
-
-
-  [DllImport("SHCore.dll", EntryPoint = "GetDpiForMonitor")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern int _GetDpiForMonitor(nint hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
 }
 
 

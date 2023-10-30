@@ -2,8 +2,8 @@ using System.Windows;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Constants;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Tum4ik.JustClipboardManager.Services.Dialogs;
 
@@ -86,7 +86,7 @@ internal class ExtendedDialogService : DialogService, IDialogService
         {
           if (dialogWindowExtended.WindowState == WindowState.Minimized)
           {
-            _user32Dll.ShowWindow(dialogWindowExtended.Handle, ShowWindowCommand.SW_RESTORE);
+            _user32Dll.ShowWindow(dialogWindowExtended.Handle, SHOW_WINDOW_CMD.SW_RESTORE);
           }
           else if (!dialogWindowExtended.IsActive)
           {

@@ -180,6 +180,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Octokit" Version="8.1.1" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
@@ -220,6 +223,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SettingsInterface.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\SettingsPasteWindow.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SettingsPasteWindow.settings</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Translations\Translation.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -254,6 +262,10 @@
     <None Update="Properties\SettingsInterface.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsInterface.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\SettingsPasteWindow.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsPasteWindow.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   

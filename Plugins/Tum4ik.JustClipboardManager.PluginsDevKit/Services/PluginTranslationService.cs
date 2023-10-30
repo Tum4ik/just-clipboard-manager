@@ -4,10 +4,10 @@ namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;
 internal sealed class PluginTranslationService : IPluginTranslationService
 {
   private readonly ResourceManager _resourceManager;
-  private readonly ISettingsService _settingsService;
+  private readonly IPluginSettingsService _settingsService;
 
   public PluginTranslationService(ResourceManager resourceManager,
-                                  ISettingsService settingsService)
+                                  IPluginSettingsService settingsService)
   {
     _resourceManager = resourceManager;
     _settingsService = settingsService;

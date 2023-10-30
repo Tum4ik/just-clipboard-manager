@@ -1,18 +1,23 @@
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
+using Windows.Win32.UI.WindowsAndMessaging;
 
-namespace Tum4ik.JustClipboardManager.Services.PInvoke;
+namespace Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 internal interface IUser32DllService
 {
   /// <summary>
   /// Retrieves the position of the mouse cursor, in screen coordinates.
   /// </summary>
   /// <param name="lpPoint">
-  /// A pointer to a <see cref="POINT"/> structure that receives the screen coordinates of the cursor.
+  /// A pointer to a <see cref="Point"/> structure that receives the screen coordinates of the cursor.
   /// </param>
   /// <returns>Returns true if successful or false otherwise.</returns>
-  bool GetCursorPos(out POINT lpPoint) => _GetCursorPos(out lpPoint);
+  bool GetCursorPos(out Point lpPoint) => PInvoke.GetCursorPos(out lpPoint);
 
   /// <summary>
   /// Changes the size, position, and Z order of a child, pop-up, or top-level window. These windows are ordered
@@ -33,8 +38,8 @@ internal interface IUser32DllService
   /// If the function succeeds, the return value is true.
   /// If the function fails, the return value is false.
   /// </returns>
-  bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, SizingAndPositioning uFlags)
-    => _SetWindowPos(hWnd, hWndInsertAfter, X, Y, cx, cy, uFlags);
+  bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, SET_WINDOW_POS_FLAGS uFlags)
+    => PInvoke.SetWindowPos((HWND) hWnd, (HWND) hWndInsertAfter, X, Y, cx, cy, uFlags);
 
   /// <summary>
   /// Sets the specified window's show state.
@@ -45,7 +50,7 @@ internal interface IUser32DllService
   /// If the window was previously visible, the return value is nonzero.
   /// If the window was previously hidden, the return value is zero.
   /// </returns>
-  bool ShowWindow(nint hWnd, ShowWindowCommand nCmdShow) => _ShowWindow(hWnd, nCmdShow);
+  bool ShowWindow(nint hWnd, SHOW_WINDOW_CMD nCmdShow) => PInvoke.ShowWindow((HWND) hWnd, nCmdShow);
 
   /// <summary>
   /// Retrieves a handle to the foreground window (the window with which the user is currently working). The system
@@ -55,7 +60,7 @@ internal interface IUser32DllService
   /// C++ ( Type: Type: HWND )<br /> The return value is a handle to the foreground window. The foreground window
   /// can be NULL in certain circumstances, such as when a window is losing activation.
   /// </returns>
-  nint GetForegroundWindow() => _GetForegroundWindow();
+  nint GetForegroundWindow() => PInvoke.GetForegroundWindow();
 
   /// <summary>
   /// Retrieves a handle to the display monitor that contains a specified point.
@@ -70,7 +75,7 @@ internal interface IUser32DllService
   /// If the point is not contained by a display monitor,
   /// the return value depends on the value of <see cref="dwFlags"/>.
   /// </returns>
-  nint MonitorFromPoint(POINT pt, MonitorOptions dwFlags) => _MonitorFromPoint(pt, dwFlags);
+  nint MonitorFromPoint(Point pt, MONITOR_FROM_FLAGS dwFlags) => PInvoke.MonitorFromPoint(pt, dwFlags);
 
   /// <summary>
   /// Retrieves a handle to the display monitor that has the largest area of intersection with the bounding rectangle
@@ -88,7 +93,7 @@ internal interface IUser32DllService
   /// <remarks>
   /// If the window is currently minimized, MonitorFromWindow uses the rectangle of the window before it was minimized.
   /// </remarks>
-  nint MonitorFromWindow(nint hwnd, MonitorOptions dwFlags) => _MonitorFromWindow(hwnd, dwFlags);
+  nint MonitorFromWindow(nint hwnd, MONITOR_FROM_FLAGS dwFlags) => PInvoke.MonitorFromWindow((HWND) hwnd, dwFlags);
 
   /// <summary>
   /// Retrieves information about a display monitor.
@@ -99,11 +104,11 @@ internal interface IUser32DllService
   /// If the function succeeds, the return value is true.
   /// If the function fails, the return value is false.
   /// </returns>
-  bool GetMonitorInfo(nint hMonitor, out MonitorInfo monitorInfo)
+  bool GetMonitorInfo(nint hMonitor, out MONITORINFO monitorInfo)
   {
-    monitorInfo = new MonitorInfo();
-    monitorInfo.Size = (uint) Marshal.SizeOf(monitorInfo);
-    return _GetMonitorInfo(hMonitor, ref monitorInfo);
+    monitorInfo = new MONITORINFO();
+    monitorInfo.cbSize = (uint) Marshal.SizeOf(monitorInfo);
+    return PInvoke.GetMonitorInfo((HMONITOR) hMonitor, ref monitorInfo);
   }
 
   /// <summary>
@@ -127,7 +132,7 @@ internal interface IUser32DllService
   bool RegisterHotKey(nint hWnd, int id, ModifierKeys modifiers, Key key)
   {
     var vk = (uint) KeyInterop.VirtualKeyFromKey(key);
-    return _RegisterHotKey(hWnd, id, (uint) modifiers, vk);
+    return PInvoke.RegisterHotKey((HWND) hWnd, id, (HOT_KEY_MODIFIERS) modifiers, vk);
   }
 
   /// <summary>
@@ -142,26 +147,25 @@ internal interface IUser32DllService
   /// If the function succeeds, the return value is true.
   /// If the function fails, the return value is false.
   /// </returns>
-  bool UnregisterHotKey(nint hWnd, int id) => _UnregisterHotKey(hWnd, id);
+  bool UnregisterHotKey(nint hWnd, int id) => PInvoke.UnregisterHotKey((HWND) hWnd, id);
 
   /// <summary>
   /// Places the given window in the system-maintained clipboard format listener list.
   /// </summary>
   /// <param name="hwnd">A handle to the window to be placed in the clipboard format listener list.</param>
   /// <returns>Returns TRUE if successful, FALSE otherwise</returns>
-  bool AddClipboardFormatListener(nint hwnd) => _AddClipboardFormatListener(hwnd);
+  bool AddClipboardFormatListener(nint hwnd) => PInvoke.AddClipboardFormatListener((HWND) hwnd);
 
   /// <summary>
   /// Removes the given window from the system-maintained clipboard format listener list.
   /// </summary>
   /// <param name="hwnd">A handle to the window to remove from the clipboard format listener list.</param>
   /// <returns>Returns TRUE if successful, FALSE otherwise.</returns>
-  bool RemoveClipboardFormatListener(nint hwnd) => _RemoveClipboardFormatListener(hwnd);
+  bool RemoveClipboardFormatListener(nint hwnd) => PInvoke.RemoveClipboardFormatListener((HWND) hwnd);
 
   /// <summary>
   /// Synthesizes keystrokes, mouse motions, and button clicks.
   /// </summary>
-  /// <param name="cInputs">The number of structures in the pInputs array.</param>
   /// <param name="pInputs">
   /// An array of <see cref="INPUT"/> structures.
   /// Each structure represents an event to be inserted into the keyboard or mouse input stream.
@@ -174,7 +178,7 @@ internal interface IUser32DllService
   /// The function returns the number of events that it successfully inserted into the keyboard or mouse input stream.
   /// If the function returns zero, the input was already blocked by another thread.
   /// </returns>
-  uint SendInput(uint cInputs, INPUT[] pInputs, int cbSize) => _SendInput(cInputs, pInputs, cbSize);
+  uint SendInput(INPUT[] pInputs, int cbSize) => PInvoke.SendInput(/*cInputs,*/ pInputs, cbSize);
 
   /// <summary>
   /// Brings the thread that created the specified window into the foreground and activates the window.
@@ -187,7 +191,7 @@ internal interface IUser32DllService
   /// If the window was brought to the foreground, the return value is true.
   /// If the window was not brought to the foreground, the return value is false.
   /// </returns>
-  bool SetForegroundWindow(nint hWnd) => _SetForegroundWindow(hWnd);
+  bool SetForegroundWindow(nint hWnd) => PInvoke.SetForegroundWindow((HWND) hWnd);
 
   /// <summary>
   /// Sets the keyboard focus to the specified window.
@@ -201,88 +205,7 @@ internal interface IUser32DllService
   /// If the hWnd parameter is invalid or the window is not attached to the calling thread's message queue,
   /// the return value is NULL.
   /// </returns>
-  nint SetFocus(nint hWnd) => _SetFocus(hWnd);
-
-
-  [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _GetCursorPos(out POINT lpPoint);
-
-
-  [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _SetWindowPos(
-    nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, SizingAndPositioning uFlags
-  );
-
-
-  [DllImport("user32.dll", EntryPoint = "ShowWindow")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _ShowWindow(nint hWnd, ShowWindowCommand nCmdShow);
-
-
-  [DllImport("user32.dll", EntryPoint = "GetForegroundWindow")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern nint _GetForegroundWindow();
-
-
-  [DllImport("user32.dll", EntryPoint = "MonitorFromPoint")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern nint _MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
-
-
-  [DllImport("user32.dll", EntryPoint = "MonitorFromWindow")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern nint _MonitorFromWindow(nint hwnd, MonitorOptions dwFlags);
-
-
-  [DllImport("user32.dll", EntryPoint = "GetMonitorInfo")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _GetMonitorInfo(nint hMonitor, ref MonitorInfo lpmi);
-
-
-  [DllImport("user32.dll", EntryPoint = "RegisterHotKey")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
-
-
-  [DllImport("user32.dll", EntryPoint = "UnregisterHotKey")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _UnregisterHotKey(nint hWnd, int id);
-
-
-  [DllImport("user32.dll", EntryPoint = "AddClipboardFormatListener", SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _AddClipboardFormatListener(nint hwnd);
-
-
-  [DllImport("user32.dll", EntryPoint = "RemoveClipboardFormatListener", SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _RemoveClipboardFormatListener(nint hwnd);
-
-
-  [DllImport("user32.dll", EntryPoint = "SendInput")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern uint _SendInput(uint cInputs, INPUT[] pInputs, int cbSize);
-
-
-  [DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  [return: MarshalAs(UnmanagedType.Bool)]
-  private static extern bool _SetForegroundWindow(nint hWnd);
-
-
-  [DllImport("user32.dll", EntryPoint = "SetFocus")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern nint _SetFocus(nint hWnd);
+  nint SetFocus(nint hWnd) => PInvoke.SetFocus((HWND) hWnd);
 }
 
 

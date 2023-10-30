@@ -1,7 +1,6 @@
-using System.Windows.Input;
 using Tum4ik.JustClipboardManager.Data.Models;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PasteService : IPasteService
@@ -31,21 +30,21 @@ internal class PasteService : IPasteService
     _user32Dll.SetForegroundWindow(targetWindowPtr);
     _user32Dll.SetFocus(targetWindowPtr);
 
-    var ctrl = (ushort) KeyInterop.VirtualKeyFromKey(Key.LeftCtrl);
-    var v = (ushort) KeyInterop.VirtualKeyFromKey(Key.V);
+    var ctrl = VIRTUAL_KEY.VK_LCONTROL;
+    var v = VIRTUAL_KEY.VK_V;
 
     var inputs = new INPUT[4];
-    inputs[0].type = inputs[1].type = inputs[2].type = inputs[3].type = INPUTTYPE.INPUT_KEYBOARD;
+    inputs[0].type = inputs[1].type = inputs[2].type = inputs[3].type = INPUT_TYPE.INPUT_KEYBOARD;
 
-    inputs[0].data.ki.wVk = ctrl;
-    inputs[1].data.ki.wVk = v;
+    inputs[0].Anonymous.ki.wVk = ctrl;
+    inputs[1].Anonymous.ki.wVk = v;
 
-    inputs[2].data.ki.wVk = v;
-    inputs[2].data.ki.dwFlags = KEYEVENT.KEYEVENTF_KEYUP;
+    inputs[2].Anonymous.ki.wVk = v;
+    inputs[2].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
 
-    inputs[3].data.ki.wVk = ctrl;
-    inputs[3].data.ki.dwFlags = KEYEVENT.KEYEVENTF_KEYUP;
+    inputs[3].Anonymous.ki.wVk = ctrl;
+    inputs[3].Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
 
-    _user32Dll.SendInput((uint) inputs.Length, inputs, InputStructSize);
+    _user32Dll.SendInput(inputs, InputStructSize);
   }
 }
