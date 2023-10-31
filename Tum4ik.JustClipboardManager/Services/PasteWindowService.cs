@@ -40,9 +40,6 @@ internal class PasteWindowService : IPasteWindowService
   {
     switch (_settingsService.PasteWindowSnappingType)
     {
-      case PasteWindowSnappingType.Mouse:
-        _user32Dll.GetCursorPos(out _windowPosition);
-        break;
       case PasteWindowSnappingType.Caret:
         var guid = typeof(IAccessible).GUID;
         _oleaccDllService.AccessibleObjectFromWindow(targetWindowToPasteHandle, OBJECT_IDENTIFIER.OBJID_CARET, guid, out var accessibleObject);
@@ -53,12 +50,29 @@ internal class PasteWindowService : IPasteWindowService
           _windowPosition.X = left;
           _windowPosition.Y = top;
         }
+        if (_windowPosition.X == 0 && _windowPosition.Y == 0)
+        {
+          goto default;
+        }
         break;
       case PasteWindowSnappingType.DisplayCorner:
-        
+        var monitorHandle = GetMonitorHandle();
+        var monitorInfo = GetMonitorInfo(monitorHandle);
+        _windowPosition = _settingsService.PasteWindowSnappingDisplayCorner switch
+        {
+          PasteWindowSnappingDisplayCorner.TopLeft => new(monitorInfo.rcMonitor.X, monitorInfo.rcMonitor.Y),
+          PasteWindowSnappingDisplayCorner.TopRight => new(monitorInfo.rcMonitor.Width - 1, monitorInfo.rcMonitor.Y),
+          PasteWindowSnappingDisplayCorner.BottomLeft => new(monitorInfo.rcMonitor.X, monitorInfo.rcMonitor.Height - 1),
+          PasteWindowSnappingDisplayCorner.BottomRight => new(monitorInfo.rcMonitor.Width - 1, monitorInfo.rcMonitor.Height - 1),
+          _ => throw new NotImplementedException(),
+        };
+        break;
+      default:
+      case PasteWindowSnappingType.Mouse:
+        _user32Dll.GetCursorPos(out _windowPosition);
         break;
     }
-    
+
     _user32Dll.SetWindowPos(
       WindowHandle, nint.Zero, _windowPosition.X, _windowPosition.Y, 0, 0,
       SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
@@ -75,16 +89,15 @@ internal class PasteWindowService : IPasteWindowService
     _pasteWindow.Hide();
   }
 
-  
+
   private void PasteWindow_SizeChanged(object? sender, System.Windows.SizeChangedEventArgs e)
   {
-    var monitorHandle = _user32Dll.MonitorFromPoint(_windowPosition, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+    var monitorHandle = GetMonitorHandle();
+    var monitorInfo = GetMonitorInfo(monitorHandle);
     _shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY);
 
     var windowPixelWidth = e.NewSize.Width * dpiX / 96;
     var windowPixelHeight = e.NewSize.Height * dpiY / 96;
-
-    _user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo);
 
     var winLeft = _windowPosition.X;
     var winTop = _windowPosition.Y;
@@ -108,6 +121,19 @@ internal class PasteWindowService : IPasteWindowService
   {
     _pasteWindow.SizeChanged -= PasteWindow_SizeChanged;
     _pasteWindow.Deactivated -= PasteWindow_Deactivated;
+  }
+
+
+  private nint GetMonitorHandle()
+  {
+    return _user32Dll.MonitorFromPoint(_windowPosition, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+  }
+
+
+  private MONITORINFO GetMonitorInfo(nint monitorHandle)
+  {
+    _user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo);
+    return monitorInfo;
   }
 
 

@@ -95,7 +95,8 @@ internal class SettingsService : ISettingsService
   }
 
 
-  private PasteWindowSnappingType _pasteWindowSnappingType = (PasteWindowSnappingType) SettingsPasteWindow.Default.SnappingType;
+  private PasteWindowSnappingType _pasteWindowSnappingType
+    = (PasteWindowSnappingType) SettingsPasteWindow.Default.SnappingType;
   public PasteWindowSnappingType PasteWindowSnappingType
   {
     get => _pasteWindowSnappingType;
@@ -104,6 +105,21 @@ internal class SettingsService : ISettingsService
       if (_pasteWindowSnappingType != value)
       {
         SettingsPasteWindow.Default.SnappingType = (int) value;
+        SettingsPasteWindow.Default.Save();
+      }
+    }
+  }
+
+
+  private PasteWindowSnappingDisplayCorner _pasteWindowSnappingDisplayCorner
+    = (PasteWindowSnappingDisplayCorner) SettingsPasteWindow.Default.DisplayCorner;
+  public PasteWindowSnappingDisplayCorner PasteWindowSnappingDisplayCorner {
+    get=> _pasteWindowSnappingDisplayCorner;
+    set
+    {
+      if (_pasteWindowSnappingDisplayCorner != value)
+      {
+        SettingsPasteWindow.Default.DisplayCorner = (int) value;
         SettingsPasteWindow.Default.Save();
       }
     }

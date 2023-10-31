@@ -7,10 +7,16 @@ internal interface ISettingsService : IPluginSettingsService
 {
   KeyBindingDescriptor HotkeyShowPasteWindow { get; set; }
   PasteWindowSnappingType PasteWindowSnappingType { get; set; }
+  PasteWindowSnappingDisplayCorner PasteWindowSnappingDisplayCorner { get; set; }
 }
 
 
 internal enum PasteWindowSnappingType
 {
   Mouse, Caret, DisplayCorner
+}
+
+internal enum PasteWindowSnappingDisplayCorner
+{
+  TopLeft, TopRight, BottomLeft, BottomRight
 }
