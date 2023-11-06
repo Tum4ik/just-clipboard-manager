@@ -3,9 +3,9 @@ using System.Windows.Interop;
 using Accessibility;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Views;
-using Windows.Win32.UI.WindowsAndMessaging;
-using Windows.Win32.UI.HiDpi;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.HiDpi;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PasteWindowService : IPasteWindowService
@@ -64,7 +64,7 @@ internal class PasteWindowService : IPasteWindowService
           PasteWindowSnappingDisplayCorner.TopRight => new(monitorInfo.rcMonitor.Width - 1, monitorInfo.rcMonitor.Y),
           PasteWindowSnappingDisplayCorner.BottomLeft => new(monitorInfo.rcMonitor.X, monitorInfo.rcMonitor.Height - 1),
           PasteWindowSnappingDisplayCorner.BottomRight => new(monitorInfo.rcMonitor.Width - 1, monitorInfo.rcMonitor.Height - 1),
-          _ => throw new NotImplementedException(),
+          _ => new(),
         };
         break;
       default:

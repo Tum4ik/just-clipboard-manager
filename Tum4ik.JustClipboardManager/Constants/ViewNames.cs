@@ -5,6 +5,7 @@ internal static class ViewNames
   public const string SettingsView = nameof(SettingsView);
   public const string SettingsGeneralView = nameof(SettingsGeneralView);
   public const string SettingsInterfaceView = nameof(SettingsInterfaceView);
+  public const string SettingsPasteWindowView = nameof(SettingsPasteWindowView);
   public const string SettingsHotkeysView = nameof(SettingsHotkeysView);
 
   public const string PluginsView = nameof(PluginsView);
