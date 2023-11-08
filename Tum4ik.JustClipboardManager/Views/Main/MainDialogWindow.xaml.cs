@@ -68,7 +68,10 @@ internal partial class MainDialogWindow : IDialogWindowExtended
             break;
           case SC_RESTORE:
           case 0xF122: // SC_RESTORE_DBLCLICK
-            BeforeRestore();
+            if (WindowState != WindowState.Minimized)
+            {
+              BeforeRestore();
+            }
             break;
         }
         break;
