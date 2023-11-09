@@ -5,6 +5,7 @@ using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Octokit;
@@ -166,7 +167,15 @@ public partial class App : ISingleInstance
     updateService.SilentUpdate();
 
     using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
-    dbContext.Database.Migrate();
+    try
+    {
+      dbContext.Database.Migrate();
+    }
+    catch (SqliteException)
+    {
+      dbContext.Database.EnsureDeleted();
+      dbContext.Database.Migrate();
+    }
 
     RemoveOldClips();
     var trayIcon = Container.Resolve<TrayIcon>();
