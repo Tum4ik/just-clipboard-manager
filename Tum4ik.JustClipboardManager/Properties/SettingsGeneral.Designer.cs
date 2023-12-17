@@ -12,7 +12,7 @@ namespace Tum4ik.JustClipboardManager.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
     internal sealed partial class SettingsGeneral : global::System.Configuration.ApplicationSettingsBase {
         
         private static SettingsGeneral defaultInstance = ((SettingsGeneral)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SettingsGeneral())));
@@ -20,6 +20,30 @@ namespace Tum4ik.JustClipboardManager.Properties {
         public static SettingsGeneral Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int RemoveClipsPeriod {
+            get {
+                return ((int)(this["RemoveClipsPeriod"]));
+            }
+            set {
+                this["RemoveClipsPeriod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int RemoveClipsPeriodType {
+            get {
+                return ((int)(this["RemoveClipsPeriodType"]));
+            }
+            set {
+                this["RemoveClipsPeriodType"] = value;
             }
         }
     }

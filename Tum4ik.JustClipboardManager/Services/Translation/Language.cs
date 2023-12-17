@@ -3,4 +3,8 @@ using Tum4ik.JustClipboardManager.Resources.Icons;
 
 namespace Tum4ik.JustClipboardManager.Services.Translation;
 
-internal record Language(CultureInfo Culture, SvgIconType Icon);
+internal record Language(
+  CultureInfo Culture,
+  GrammaticalNumberModel GrammaticalNumberModel,
+  SvgIconType Icon
+);

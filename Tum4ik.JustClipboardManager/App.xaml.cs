@@ -194,8 +194,18 @@ public partial class App : ISingleInstance
 
   private void RemoveOldClips()
   {
+    var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
-    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)).Await(e => Crashes.TrackError(e)); // TODO: before date from settings
+    var period = settingsService.RemoveClipsPeriod;
+    var periodType = settingsService.RemoveClipsPeriodType;
+    var beforDate = periodType switch
+    {
+      PeriodType.Day => DateTime.Now.AddDays(-period),
+      PeriodType.Month => DateTime.Now.AddMonths(-period),
+      PeriodType.Year => DateTime.Now.AddYears(-period),
+      _ => DateTime.Now.AddMonths(-period)
+    };
+    clipRepository.DeleteBeforeDateAsync(beforDate).Await(e => Crashes.TrackError(e));
   }
 
 

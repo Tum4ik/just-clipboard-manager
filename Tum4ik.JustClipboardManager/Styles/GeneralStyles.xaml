@@ -254,14 +254,15 @@
     </Setter>
   </Style>
 
+  <Style TargetType="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
   <Style TargetType="TextBox">
     <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>
     <Setter Property="CaretBrush" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>
   </Style>
-  <Style TargetType="controls:SearchBox">
-    <Setter Property="ContextMenu" Value="{StaticResource ContextMenuDisabled}"/>
-    <Setter Property="CaretBrush" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>
-  </Style>
+  <Style TargetType="controls:SearchBox" BasedOn="{StaticResource {x:Type TextBox}}"/>
+  <Style TargetType="controls:NumberBox" BasedOn="{StaticResource {x:Type TextBox}}"/>
 
   <Style TargetType="controls:SvgIcon">
     <Setter Property="Color" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>

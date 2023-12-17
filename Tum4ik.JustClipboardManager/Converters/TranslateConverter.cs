@@ -31,7 +31,7 @@ internal class TranslateConverter : IMultiValueConverter
     }
     if (value1 is not string key)
     {
-      throw new ArgumentException($"The second binding must be a string.");
+      throw new ArgumentException("The second binding must be a string.");
     }
 
     return translationService[key];

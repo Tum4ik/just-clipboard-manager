@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:translation="clr-namespace:Tum4ik.JustClipboardManager.Services.Translation"
@@ -31,17 +30,13 @@
                           Color="{x:Null}"
                           Width="16" Height="16"
                           Margin="12, 0"/>
-        <i:Interaction.Triggers>
-          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                         Value="True">
-            <i:ChangePropertyAction PropertyName="Opacity" Value="0.75"/>
-          </i:DataTrigger>
-          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                         Value="False">
-            <i:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-          </i:DataTrigger>
-        </i:Interaction.Triggers>
       </Grid>
+      <DataTemplate.Triggers>
+        <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                     Value="True">
+          <Setter Property="Opacity" Value="0.75"/>
+        </DataTrigger>
+      </DataTemplate.Triggers>
     </DataTemplate>
     <DataTemplate x:Key="ThemeItemTemplate" DataType="theme:ColorTheme">
       <Grid>
@@ -64,17 +59,13 @@
                           Color="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
                           Width="16" Height="16"
                           Margin="12, 0"/>
-        <i:Interaction.Triggers>
-          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                         Value="True">
-            <i:ChangePropertyAction PropertyName="Opacity" Value="0.75"/>
-          </i:DataTrigger>
-          <i:DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-                         Value="False">
-            <i:ChangePropertyAction PropertyName="Opacity" Value="1"/>
-          </i:DataTrigger>
-        </i:Interaction.Triggers>
       </Grid>
+      <DataTemplate.Triggers>
+        <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+               Value="True">
+          <Setter Property="Opacity" Value="0.75"/>
+        </DataTrigger>
+      </DataTemplate.Triggers>
     </DataTemplate>
   </UserControl.Resources>
   <Grid>
