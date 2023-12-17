@@ -94,4 +94,36 @@ internal class SettingsService : ISettingsService
       _keyBindingDescriptor = value;
     }
   }
+
+
+  private int? _removeClipsPeriod;
+  public int RemoveClipsPeriod
+  {
+    get => _removeClipsPeriod ??= SettingsGeneral.Default.RemoveClipsPeriod;
+    set
+    {
+      if (value != _removeClipsPeriod)
+      {
+        SettingsGeneral.Default.RemoveClipsPeriod = value;
+        SettingsGeneral.Default.Save();
+        _removeClipsPeriod = value;
+      }
+    }
+  }
+
+
+  private PeriodType? _removeClipsPeriodType;
+  public PeriodType RemoveClipsPeriodType
+  {
+    get=> _removeClipsPeriodType ??= (PeriodType) SettingsGeneral.Default.RemoveClipsPeriodType;
+    set
+    {
+      if (value != _removeClipsPeriodType)
+      {
+        SettingsGeneral.Default.RemoveClipsPeriodType = (int) value;
+        SettingsGeneral.Default.Save();
+        _removeClipsPeriodType = value;
+      }
+    }
+  }
 }

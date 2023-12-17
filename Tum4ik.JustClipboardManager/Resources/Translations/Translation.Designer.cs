@@ -178,6 +178,42 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to days.
+        /// </summary>
+        internal static string day_Paucal {
+            get {
+                return ResourceManager.GetString("day_Paucal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to days.
+        /// </summary>
+        internal static string day_Plural {
+            get {
+                return ResourceManager.GetString("day_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to day.
+        /// </summary>
+        internal static string day_Singular {
+            get {
+                return ResourceManager.GetString("day_Singular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete clips older than.
+        /// </summary>
+        internal static string DeleteClipsOlderThan {
+            get {
+                return ResourceManager.GetString("DeleteClipsOlderThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Development.
         /// </summary>
         internal static string Development {
@@ -318,6 +354,33 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to months.
+        /// </summary>
+        internal static string month_Paucal {
+            get {
+                return ResourceManager.GetString("month_Paucal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to months.
+        /// </summary>
+        internal static string month_Plural {
+            get {
+                return ResourceManager.GetString("month_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to month.
+        /// </summary>
+        internal static string month_Singular {
+            get {
+                return ResourceManager.GetString("month_Singular", resourceCulture);
             }
         }
         
@@ -525,6 +588,33 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to years.
+        /// </summary>
+        internal static string year_Paucal {
+            get {
+                return ResourceManager.GetString("year_Paucal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to years.
+        /// </summary>
+        internal static string year_Plural {
+            get {
+                return ResourceManager.GetString("year_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to year.
+        /// </summary>
+        internal static string year_Singular {
+            get {
+                return ResourceManager.GetString("year_Singular", resourceCulture);
             }
         }
     }

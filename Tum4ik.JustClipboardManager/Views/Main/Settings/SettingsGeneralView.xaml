@@ -5,17 +5,51 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+             xmlns:system="clr-namespace:System;assembly=netstandard" xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=vm:SettingsGeneralViewModel}">
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
-    <StackPanel Grid.Column="1">
-      <controls:ToggleSwitch Text="{Binding Translate[AutoStartApplication]}"
-                             IsChecked="{Binding AutoStartApplication}"/>
-    </StackPanel>
-  </Grid>
+             d:DataContext="{d:DesignInstance Type=vm:SettingsGeneralViewModel}"
+             x:Name="this">
+  <UserControl.Resources>
+    <system:Double x:Key="SettingsSpacing">16</system:Double>
+    <converters:TranslateWithQuantityAwareConverter x:Key="TranslateWithQuantityAwareConverter"/>
+
+    <DataTemplate x:Key="PeriodTypesItemTemplate">
+      <TextBlock VerticalAlignment="Center"
+             Margin="12 ,0">
+        <TextBlock.Text>
+          <MultiBinding Converter="{StaticResource TranslateWithQuantityAwareConverter}">
+            <Binding Path="DataContext.Translate" ElementName="this"/>
+            <Binding Path="DataContext.RemoveClipsPeriod" ElementName="this"/>
+            <Binding Path="."/>
+          </MultiBinding>
+        </TextBlock.Text>
+      </TextBlock>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <ItemsControl HorizontalAlignment="Center">
+    <DockPanel>
+      <controls:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding AutoStartApplication}"/>
+      <TextBlock Text="{Binding Translate[AutoStartApplication]}"
+                 VerticalAlignment="Center"
+                 Margin="12, 0"/>
+    </DockPanel>
+    <DockPanel>
+      <DockPanel.Margin>
+        <Thickness Top="{StaticResource SettingsSpacing}"/>
+      </DockPanel.Margin>
+      <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+        <controls:NumberBox Text="{Binding RemoveClipsPeriod, UpdateSourceTrigger=PropertyChanged}"
+                            MinValue="1" MaxValue="999"/>
+        <controls:WinUiComboBox Margin="8, 0"
+                                ItemsSource="{Binding RemoveClipsPeriodTypes}"
+                                SelectedItem="{Binding SelectedRemoveClipsPeriodType}"
+                                ItemTemplate="{StaticResource PeriodTypesItemTemplate}"
+                                SelectedItemTemplate="{StaticResource PeriodTypesItemTemplate}"/>
+      </WrapPanel>
+      <TextBlock Grid.Column="0" Text="{Binding Translate[DeleteClipsOlderThan]}"
+                 VerticalAlignment="Center"
+                 Margin="12, 0"/>
+    </DockPanel>
+  </ItemsControl>
 </UserControl>

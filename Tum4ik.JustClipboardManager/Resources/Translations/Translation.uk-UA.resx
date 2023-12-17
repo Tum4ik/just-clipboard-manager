@@ -253,4 +253,34 @@
   <data name="PluginSecurityViolation_Body" xml:space="preserve">
     <value>Встановлення плагіна заблоковано з міркувань безпеки.</value>
   </data>
+  <data name="DeleteClipsOlderThan" xml:space="preserve">
+    <value>Видалити кліпи, старші за</value>
+  </data>
+  <data name="day_Singular" xml:space="preserve">
+    <value>день</value>
+  </data>
+  <data name="month_Singular" xml:space="preserve">
+    <value>місяць</value>
+  </data>
+  <data name="year_Singular" xml:space="preserve">
+    <value>рік</value>
+  </data>
+  <data name="day_Paucal" xml:space="preserve">
+    <value>дні</value>
+  </data>
+  <data name="day_Plural" xml:space="preserve">
+    <value>днів</value>
+  </data>
+  <data name="month_Paucal" xml:space="preserve">
+    <value>місяці</value>
+  </data>
+  <data name="month_Plural" xml:space="preserve">
+    <value>місяців</value>
+  </data>
+  <data name="year_Plural" xml:space="preserve">
+    <value>років</value>
+  </data>
+  <data name="year_Paucal" xml:space="preserve">
+    <value>роки</value>
+  </data>
 </root>

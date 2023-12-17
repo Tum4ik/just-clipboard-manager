@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Globalization;
 using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
@@ -9,4 +10,18 @@ public interface ISettingsService
   string Theme { get; set; }
 
   KeyBindingDescriptor HotkeyShowPasteWindow { get; set; }
+
+  int RemoveClipsPeriod { get; set; }
+  PeriodType RemoveClipsPeriodType { get; set; }
+}
+
+
+public enum PeriodType
+{
+  [Description("day")]
+  Day,
+  [Description("month")]
+  Month,
+  [Description("year")]
+  Year
 }
