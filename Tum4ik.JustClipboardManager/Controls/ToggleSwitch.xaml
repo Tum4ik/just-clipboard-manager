@@ -13,36 +13,59 @@
       <ControlTemplate.Resources>
         <Duration x:Key="SwitchDuration">0:0:0.1</Duration>
       </ControlTemplate.Resources>
-      <Border x:Name="_focusBorder"
-              BorderThickness="2"
-              CornerRadius="13"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center">
-        <Border x:Name="_border"
-                Margin="1"
-                Width="40" Height="20" CornerRadius="10"
-                BorderThickness="1"
-                BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
-                Background="{DynamicResource {x:Static theming:AppColors.CheckBoxBackgroundBrush}}">
-          <Border x:Name="_thumb"
-                  Width="12" Height="12" CornerRadius="6"
-                  Background="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
-                  Margin="3, 0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center"
-                  RenderTransformOrigin="0.5, 0.5">
-            <Border.RenderTransform>
-              <TransformGroup>
-                <ScaleTransform />
-                <TranslateTransform />
-              </TransformGroup>
-            </Border.RenderTransform>
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="_text" Text="{TemplateBinding Text}"
+                   VerticalAlignment="Center"
+                   Margin="12, 0"/>
+        <Border x:Name="_focusBorder"
+                BorderThickness="2"
+                CornerRadius="13"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+          <Border x:Name="_border"
+                  Margin="1"
+                  Width="40" Height="20" CornerRadius="10"
+                  BorderThickness="1"
+                  BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderBrush}}"
+                  Background="{DynamicResource {x:Static theming:AppColors.CheckBoxBackgroundBrush}}">
+            <Border x:Name="_thumb"
+                    Width="12" Height="12" CornerRadius="6"
+                    Background="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
+                    Margin="3, 0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    RenderTransformOrigin="0.5, 0.5">
+              <Border.RenderTransform>
+                <TransformGroup>
+                  <ScaleTransform />
+                  <TranslateTransform />
+                </TransformGroup>
+              </Border.RenderTransform>
+            </Border>
           </Border>
         </Border>
-      </Border>
+      </Grid>
       <ControlTemplate.Triggers>
         <Trigger Property="IsKeyboardNavigatedFocus" Value="True">
           <Setter TargetName="_focusBorder" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>
+        </Trigger>
+        <Trigger Property="Text" Value="{x:Null}">
+          <Setter TargetName="_text" Property="Visibility" Value="Collapsed"/>
+        </Trigger>
+        <Trigger Property="Text" Value="">
+          <Setter TargetName="_text" Property="Visibility" Value="Collapsed"/>
+        </Trigger>
+        <Trigger Property="Layout" Value="TextBefore">
+          <Setter TargetName="_text" Property="Grid.Column" Value="0"/>
+          <Setter TargetName="_focusBorder" Property="Grid.Column" Value="1"/>
+        </Trigger>
+        <Trigger Property="Layout" Value="TextAfter">
+          <Setter TargetName="_text" Property="Grid.Column" Value="1"/>
+          <Setter TargetName="_focusBorder" Property="Grid.Column" Value="0"/>
         </Trigger>
         <Trigger Property="IsMouseOver" Value="True">
           <Trigger.EnterActions>
@@ -156,6 +179,7 @@
           <Setter TargetName="_border" Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.CheckBoxDisabledBorderBrush}}"/>
           <Setter TargetName="_border" Property="Background" Value="Transparent"/>
           <Setter TargetName="_thumb" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
         <MultiTrigger>
           <MultiTrigger.Conditions>
@@ -169,6 +193,7 @@
           <Setter TargetName="_thumb" Property="Height" Value="12"/>
           <Setter TargetName="_thumb" Property="Margin" Value="24, 0, 4, 0"/>
           <Setter TargetName="_thumb" Property="Background" Value="{DynamicResource {x:Static theming:AppColors.TextOnAccentDisabledBrush}}"/>
+          <Setter TargetName="_text" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </MultiTrigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

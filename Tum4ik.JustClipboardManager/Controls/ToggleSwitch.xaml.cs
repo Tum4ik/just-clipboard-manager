@@ -24,6 +24,26 @@ public partial class ToggleSwitch
   }
 
 
+  public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register(
+    nameof(Layout), typeof(ToggleSwitchLayout), typeof(ToggleSwitch)
+  );
+  public ToggleSwitchLayout Layout
+  {
+    get => (ToggleSwitchLayout) GetValue(LayoutProperty);
+    set => SetValue(LayoutProperty, value);
+  }
+
+
+  public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+    nameof(Text), typeof(string), typeof(ToggleSwitch)
+  );
+  public string? Text
+  {
+    get => (string) GetValue(TextProperty);
+    set => SetValue(TextProperty, value);
+  }
+
+
   protected override void OnGotFocus(RoutedEventArgs e)
   {
     base.OnGotFocus(e);
@@ -36,4 +56,10 @@ public partial class ToggleSwitch
     base.OnLostFocus(e);
     IsKeyboardNavigatedFocus = false;
   }
+}
+
+
+public enum ToggleSwitchLayout
+{
+  TextBefore, TextAfter
 }

@@ -5,6 +5,7 @@ using IWshRuntimeLibrary;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Octokit;
@@ -167,7 +168,15 @@ public partial class App : ISingleInstance
     updateService.SilentUpdate();
 
     using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
-    dbContext.Database.Migrate();
+    try
+    {
+      dbContext.Database.Migrate();
+    }
+    catch (SqliteException)
+    {
+      dbContext.Database.EnsureDeleted();
+      dbContext.Database.Migrate();
+    }
 
     RemoveOldClips();
     var trayIcon = Container.Resolve<TrayIcon>();
@@ -186,8 +195,18 @@ public partial class App : ISingleInstance
 
   private void RemoveOldClips()
   {
+    var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
-    clipRepository.DeleteBeforeDateAsync(DateTime.Now.AddMonths(-3)).Await(e => Crashes.TrackError(e)); // TODO: before date from settings
+    var period = settingsService.RemoveClipsPeriod;
+    var periodType = settingsService.RemoveClipsPeriodType;
+    var beforDate = periodType switch
+    {
+      PeriodType.Day => DateTime.Now.AddDays(-period),
+      PeriodType.Month => DateTime.Now.AddMonths(-period),
+      PeriodType.Year => DateTime.Now.AddYears(-period),
+      _ => DateTime.Now.AddMonths(-period)
+    };
+    clipRepository.DeleteBeforeDateAsync(beforDate).Await(e => Crashes.TrackError(e));
   }
 
 

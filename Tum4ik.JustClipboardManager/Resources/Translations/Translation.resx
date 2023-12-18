@@ -253,4 +253,34 @@
   <data name="PluginSecurityViolation_Body" xml:space="preserve">
     <value>Plugin installation is blocked because of security reasons.</value>
   </data>
+  <data name="DeleteClipsOlderThan" xml:space="preserve">
+    <value>Delete clips older than</value>
+  </data>
+  <data name="day_Singular" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="month_Singular" xml:space="preserve">
+    <value>month</value>
+  </data>
+  <data name="year_Singular" xml:space="preserve">
+    <value>year</value>
+  </data>
+  <data name="day_Paucal" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="day_Plural" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="month_Paucal" xml:space="preserve">
+    <value>months</value>
+  </data>
+  <data name="month_Plural" xml:space="preserve">
+    <value>months</value>
+  </data>
+  <data name="year_Paucal" xml:space="preserve">
+    <value>years</value>
+  </data>
+  <data name="year_Plural" xml:space="preserve">
+    <value>years</value>
+  </data>
 </root>

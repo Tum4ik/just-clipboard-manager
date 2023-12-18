@@ -8,6 +8,10 @@ namespace Tum4ik.JustClipboardManager.Services.Translation;
 
 internal class TranslationService : ResourceManager, ITranslationService
 {
+  private const string SingularSuffix = "_Singular";
+  private const string PaucalSuffix = "_Paucal";
+  private const string PluralSuffix = "_Plural";
+
   private readonly ISettingsService _settingsService;
   private readonly IEventAggregator _eventAggregator;
 
@@ -29,10 +33,42 @@ internal class TranslationService : ResourceManager, ITranslationService
   }
 
 
+  public string this[string key, int quantity]
+  {
+    get
+    {
+      var suffix = PluralSuffix;
+      quantity = Math.Abs(quantity);
+      var tens = quantity % 100 / 10;
+      if (tens != 1) // 1-9, 20-99
+      {
+        if (SelectedLanguage.GrammaticalNumberModel == GrammaticalNumberModel.Ukrainian)
+        {
+          var unity = quantity % 10;
+          if (unity == 1) // 1, 21, 31, 41, ..., 91
+          {
+            suffix = SingularSuffix;
+          }
+          else if (unity > 1 && unity < 5) // 2, 3, 4, 22, 23, 24, ..., 92, 93, 94
+          {
+            suffix = PaucalSuffix;
+          }
+        }
+        else if (quantity == 1) // 1
+        {
+          suffix = SingularSuffix;
+        }
+      }
+
+      return GetString(key + suffix, _settingsService.Language) ?? this[key];
+    }
+  }
+
+
   public ImmutableArray<Language> SupportedLanguages { get; } = new[]
   {
-    new Language(new("en-US"), SvgIconType.USA),
-    new Language(new("uk-UA"), SvgIconType.Ukraine)
+    new Language(new("en-US"), GrammaticalNumberModel.English, SvgIconType.USA),
+    new Language(new("uk-UA"), GrammaticalNumberModel.Ukrainian, SvgIconType.Ukraine)
   }.ToImmutableArray();
 
 
@@ -57,4 +93,10 @@ internal class TranslationService : ResourceManager, ITranslationService
     return SupportedLanguages.SingleOrDefault(l => l.Culture.Equals(_settingsService.Language))
       ?? SupportedLanguages.First();
   }
+}
+
+
+internal enum GrammaticalNumberModel
+{
+  English, Ukrainian
 }

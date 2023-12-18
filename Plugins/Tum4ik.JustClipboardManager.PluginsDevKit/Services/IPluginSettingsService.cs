@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Globalization;
 
 namespace Tum4ik.JustClipboardManager.PluginDevKit.Services;

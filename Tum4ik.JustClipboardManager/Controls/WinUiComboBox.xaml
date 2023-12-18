@@ -64,7 +64,7 @@
           </ToggleButton.Template>
         </ToggleButton>
         <Popup AllowsTransparency="True"
-               IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
+               IsOpen="{TemplateBinding IsDropDownOpen}"
                StaysOpen="False"
                PopupAnimation="Fade"
                Opened="Popup_Opened">

@@ -42,6 +42,7 @@ public enum SvgIconType
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
   [SvgIconResource("search")] Search,
   [SvgIconResource("settings")] Settings,
+  [SvgIconResource("spinner")] Spinner,
   [SvgIconResource("ukraine")] Ukraine,
   [SvgIconResource("usa")] USA,
   [SvgIconResource("warning-circle-filled")] WarningCircleFilled
