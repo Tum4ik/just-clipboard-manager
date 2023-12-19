@@ -40,7 +40,7 @@ internal class TranslateWithQuantityAwareConverter : IMultiValueConverter
     var key = value3 is Enum @enum ? @enum.Humanize() : value3.ToString();
     if (key is null)
     {
-      return null;
+      throw new ArgumentException("The second binding must be a string or enum.");
     }
 
     return translationService[key, quantity];

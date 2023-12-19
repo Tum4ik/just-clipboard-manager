@@ -2,8 +2,10 @@ using System.Windows;
 using System.Windows.Interop;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Windows.Win32.UI.HiDpi;
+using Windows.Win32.Graphics.Gdi;
+using static Windows.Win32.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Views.Main;
 
@@ -41,17 +43,17 @@ internal partial class MainDialogWindow : IDialogWindowExtended
 
   private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
   {
-    switch (msg)
+    switch ((uint) msg)
     {
-      case 0x00A3: // WM_NCLBUTTONDBLCLK
+      case WM_NCLBUTTONDBLCLK:
         if (WindowState == WindowState.Normal)
         {
           SystemCommands.MaximizeWindow(this);
           handled = true;
         }
         break;
-      case 0x0112: // WM_SYSCOMMAND
-        switch (wParam)
+      case WM_SYSCOMMAND:
+        switch ((uint) wParam)
         {
           case 0xF012: // Window titlebar click
             if (WindowState == WindowState.Maximized && !_windowLocationChangedSubscribed)
@@ -60,11 +62,11 @@ internal partial class MainDialogWindow : IDialogWindowExtended
               _windowLocationChangedSubscribed = true;
             }
             break;
-          case 0xF030: // SC_MAXIMIZE
+          case SC_MAXIMIZE:
           case 0xF032: // SC_MAXIMIZE_DBLCLICK
             BeforeMaximize();
             break;
-          case 0xF120: // SC_RESTORE
+          case SC_RESTORE:
           case 0xF122: // SC_RESTORE_DBLCLICK
             if (WindowState != WindowState.Minimized)
             {
@@ -88,12 +90,12 @@ internal partial class MainDialogWindow : IDialogWindowExtended
 
   private void BeforeMaximize()
   {
-    var monitorHandle = _user32Dll.MonitorFromWindow(Handle, MonitorOptions.MONITOR_DEFAULTTONEAREST);
+    var monitorHandle = _user32Dll.MonitorFromWindow(Handle, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
     if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
-        && _shCoreDll.GetDpiForMonitor(monitorHandle, MonitorDpiType.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
+        && _shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
     {
-      MaxWidth = (monitorInfo.WorkArea.Right - monitorInfo.WorkArea.Left) / (dpiX / 96d);
-      MaxHeight = (monitorInfo.WorkArea.Bottom - monitorInfo.WorkArea.Top) / (dpiY / 96d);
+      MaxWidth = (monitorInfo.rcWork.right - monitorInfo.rcWork.left) / (dpiX / 96d);
+      MaxHeight = (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top) / (dpiY / 96d);
       Margin = new(0, 0, 0, 0);
     }
   }

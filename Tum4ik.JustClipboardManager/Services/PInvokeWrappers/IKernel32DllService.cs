@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
+using Windows.Win32;
 
-namespace Tum4ik.JustClipboardManager.Services.PInvoke;
+namespace Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 internal interface IKernel32DllService
 {
   /// <summary>
@@ -15,7 +15,7 @@ internal interface IKernel32DllService
   /// If the function succeeds, the return value is the newly created atom.
   /// If the function fails, the return value is zero.
   /// </returns>
-  ushort GlobalAddAtom(string lpString) => _GlobalAddAtom(lpString);
+  ushort GlobalAddAtom(string lpString) => PInvoke.GlobalAddAtom(lpString);
 
   /// <summary>
   /// Decrements the reference count of a global string atom. If the atom's reference count reaches zero,
@@ -23,17 +23,7 @@ internal interface IKernel32DllService
   /// </summary>
   /// <param name="nAtom">The atom and character string to be deleted.</param>
   /// <returns>The function always returns (ATOM) 0.</returns>
-  ushort GlobalDeleteAtom(ushort nAtom) => _GlobalDeleteAtom(nAtom);
-
-
-  [DllImport("kernel32.dll", EntryPoint = "GlobalAddAtom", CharSet = CharSet.Unicode)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern ushort _GlobalAddAtom(string lpString);
-
-
-  [DllImport("kernel32.dll", EntryPoint = "GlobalDeleteAtom")]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern ushort _GlobalDeleteAtom(ushort nAtom);
+  ushort GlobalDeleteAtom(ushort nAtom) => PInvoke.GlobalDeleteAtom(nAtom);
 }
 
 

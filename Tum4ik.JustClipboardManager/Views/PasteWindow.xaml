@@ -13,6 +13,7 @@
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="Manual"
+        Margin="24"
         x:Name="This">
   <Window.Resources>
     <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>

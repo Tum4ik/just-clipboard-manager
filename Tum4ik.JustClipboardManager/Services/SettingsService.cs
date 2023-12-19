@@ -1,8 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Windows.Input;
-using Tum4ik.JustClipboardManager.PluginDevKit.Models;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -115,7 +114,7 @@ internal class SettingsService : ISettingsService
   private PeriodType? _removeClipsPeriodType;
   public PeriodType RemoveClipsPeriodType
   {
-    get=> _removeClipsPeriodType ??= (PeriodType) SettingsGeneral.Default.RemoveClipsPeriodType;
+    get => _removeClipsPeriodType ??= (PeriodType) SettingsGeneral.Default.RemoveClipsPeriodType;
     set
     {
       if (value != _removeClipsPeriodType)
@@ -123,6 +122,38 @@ internal class SettingsService : ISettingsService
         SettingsGeneral.Default.RemoveClipsPeriodType = (int) value;
         SettingsGeneral.Default.Save();
         _removeClipsPeriodType = value;
+      }
+    }
+  }
+
+
+  private PasteWindowSnappingType? _pasteWindowSnappingType;
+  public PasteWindowSnappingType PasteWindowSnappingType
+  {
+    get => _pasteWindowSnappingType ??= (PasteWindowSnappingType) SettingsPasteWindow.Default.SnappingType;
+    set
+    {
+      if (_pasteWindowSnappingType != value)
+      {
+        SettingsPasteWindow.Default.SnappingType = (int) value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowSnappingType = value;
+      }
+    }
+  }
+
+
+  private PasteWindowSnappingDisplayCorner? _pasteWindowSnappingDisplayCorner;
+  public PasteWindowSnappingDisplayCorner PasteWindowSnappingDisplayCorner
+  {
+    get => _pasteWindowSnappingDisplayCorner ??= (PasteWindowSnappingDisplayCorner) SettingsPasteWindow.Default.DisplayCorner;
+    set
+    {
+      if (_pasteWindowSnappingDisplayCorner != value)
+      {
+        SettingsPasteWindow.Default.DisplayCorner = (int) value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowSnappingDisplayCorner = value;
       }
     }
   }

@@ -47,7 +47,7 @@
                                 ItemTemplate="{StaticResource PeriodTypesItemTemplate}"
                                 SelectedItemTemplate="{StaticResource PeriodTypesItemTemplate}"/>
       </WrapPanel>
-      <TextBlock Grid.Column="0" Text="{Binding Translate[DeleteClipsOlderThan]}"
+      <TextBlock Text="{Binding Translate[DeleteClipsOlderThan]}"
                  VerticalAlignment="Center"
                  Margin="12, 0"/>
     </DockPanel>

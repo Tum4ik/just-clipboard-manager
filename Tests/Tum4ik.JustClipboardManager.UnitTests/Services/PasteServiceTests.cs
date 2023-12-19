@@ -1,8 +1,7 @@
-using System.Windows.Input;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Services;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
-using Tum4ik.JustClipboardManager.Services.PInvoke.ParameterModels;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class PasteServiceTests
@@ -47,7 +46,7 @@ public class PasteServiceTests
     _clipboardService.Received(1).Paste(data, additionalInfo);
     _user32Dll.Received(1).SetForegroundWindow(TargetWindowPtr);
     _user32Dll.Received(1).SetFocus(TargetWindowPtr);
-    _user32Dll.Received(1).SendInput(4, IsCtrlVInput(), InputStructSize());
+    _user32Dll.Received(1).SendInput(IsCtrlVInput(), InputStructSize());
   }
 
 
@@ -56,21 +55,21 @@ public class PasteServiceTests
     return ref Arg.Is<INPUT[]>(inputs =>
       inputs.Length == 4
       &&
-      inputs[0].type == INPUTTYPE.INPUT_KEYBOARD
-        && inputs[0].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.LeftCtrl)
-        && inputs[0].data.ki.dwFlags == default
+      inputs[0].type == INPUT_TYPE.INPUT_KEYBOARD
+        && inputs[0].Anonymous.ki.wVk == VIRTUAL_KEY.VK_LCONTROL
+        && inputs[0].Anonymous.ki.dwFlags == default
       &&
-      inputs[1].type == INPUTTYPE.INPUT_KEYBOARD
-        && inputs[1].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.V)
-        && inputs[1].data.ki.dwFlags == default
+      inputs[1].type == INPUT_TYPE.INPUT_KEYBOARD
+        && inputs[1].Anonymous.ki.wVk == VIRTUAL_KEY.VK_V
+        && inputs[1].Anonymous.ki.dwFlags == default
       &&
-      inputs[2].type == INPUTTYPE.INPUT_KEYBOARD
-        && inputs[2].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.V)
-        && inputs[2].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP
+      inputs[2].type == INPUT_TYPE.INPUT_KEYBOARD
+        && inputs[2].Anonymous.ki.wVk == VIRTUAL_KEY.VK_V
+        && inputs[2].Anonymous.ki.dwFlags == KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP
       &&
-      inputs[3].type == INPUTTYPE.INPUT_KEYBOARD
-        && inputs[3].data.ki.wVk == KeyInterop.VirtualKeyFromKey(Key.LeftCtrl)
-        && inputs[3].data.ki.dwFlags == KEYEVENT.KEYEVENTF_KEYUP);
+      inputs[3].type == INPUT_TYPE.INPUT_KEYBOARD
+        && inputs[3].Anonymous.ki.wVk == VIRTUAL_KEY.VK_LCONTROL
+        && inputs[3].Anonymous.ki.dwFlags == KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP);
   }
 
   private static unsafe ref int InputStructSize()

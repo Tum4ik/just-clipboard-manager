@@ -38,6 +38,7 @@ public enum SvgIconType
   [SvgIconResource("light-mode")] LightMode,
   [SvgIconResource("live-help")] LiveHelp,
   [SvgIconResource("manage-search")] ManageSearch,
+  [SvgIconResource("paste-window")] PasteWindow,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
   [SvgIconResource("search")] Search,

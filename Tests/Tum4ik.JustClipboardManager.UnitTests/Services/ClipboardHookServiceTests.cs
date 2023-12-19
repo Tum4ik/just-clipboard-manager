@@ -2,7 +2,7 @@ using System.ComponentModel;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 
 namespace Tum4ik.JustClipboardManager.UnitTests.Services;
 public class ClipboardHookServiceTests

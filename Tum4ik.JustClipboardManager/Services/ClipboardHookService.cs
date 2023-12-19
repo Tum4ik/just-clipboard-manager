@@ -2,7 +2,8 @@ using System.ComponentModel;
 using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.Services.PInvoke;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using static Windows.Win32.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
@@ -45,9 +46,9 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 
   public nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
   {
-    switch (msg)
+    switch ((uint) msg)
     {
-      case 0x031D: // WM_CLIPBOARDUPDATE
+      case WM_CLIPBOARDUPDATE:
         // Very often the event raises several times in a raw, however it is the same clipboard change.
         // To prevent that multiple raising of the same event the timer is used.
         lock (s_locker)
@@ -58,7 +59,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
           }
         }
         break;
-      case 0x0002: // WM_DESTROY
+      case WM_DESTROY:
         var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_windowHandle);
         if (!isClipboardListenerRemoved)
         {

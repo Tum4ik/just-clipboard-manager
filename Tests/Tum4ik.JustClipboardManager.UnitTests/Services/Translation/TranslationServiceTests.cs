@@ -1,7 +1,7 @@
 using System.Globalization;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.PluginDevKit.Events;
-using Tum4ik.JustClipboardManager.PluginDevKit.Services;
+using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 
 namespace Tum4ik.JustClipboardManager.UnitTests.Services.Translation;
