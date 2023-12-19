@@ -115,6 +115,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bottom left.
+        /// </summary>
+        internal static string BottomLeft {
+            get {
+                return ResourceManager.GetString("BottomLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom right.
+        /// </summary>
+        internal static string BottomRight {
+            get {
+                return ResourceManager.GetString("BottomRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to by.
         /// </summary>
         internal static string by {
@@ -129,6 +147,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caret.
+        /// </summary>
+        internal static string Caret {
+            get {
+                return ResourceManager.GetString("Caret", resourceCulture);
             }
         }
         
@@ -237,6 +264,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string DisallowedHotkey {
             get {
                 return ResourceManager.GetString("DisallowedHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display corner.
+        /// </summary>
+        internal static string DisplayCorner {
+            get {
+                return ResourceManager.GetString("DisplayCorner", resourceCulture);
             }
         }
         
@@ -385,11 +421,29 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mouse.
+        /// </summary>
+        internal static string Mouse {
+            get {
+                return ResourceManager.GetString("Mouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         internal static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste window.
+        /// </summary>
+        internal static string PasteWindow {
+            get {
+                return ResourceManager.GetString("PasteWindow", resourceCulture);
             }
         }
         
@@ -529,6 +583,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Snapping.
+        /// </summary>
+        internal static string Snapping {
+            get {
+                return ResourceManager.GetString("Snapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source code.
         /// </summary>
         internal static string SourceCode {
@@ -552,6 +615,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Theme {
             get {
                 return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top left.
+        /// </summary>
+        internal static string TopLeft {
+            get {
+                return ResourceManager.GetString("TopLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top right.
+        /// </summary>
+        internal static string TopRight {
+            get {
+                return ResourceManager.GetString("TopRight", resourceCulture);
             }
         }
         

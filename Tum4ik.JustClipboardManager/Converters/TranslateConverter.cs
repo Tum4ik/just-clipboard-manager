@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using Humanizer;
 using Tum4ik.JustClipboardManager.Services.Translation;
 
 namespace Tum4ik.JustClipboardManager.Converters;
@@ -29,9 +30,10 @@ internal class TranslateConverter : IMultiValueConverter
     {
       return null;
     }
-    if (value1 is not string key)
+    var key = value1 is Enum @enum ? @enum.Humanize() : value1 as string;
+    if (key is null)
     {
-      throw new ArgumentException("The second binding must be a string.");
+      throw new ArgumentException("The second binding must be a string or enum.");
     }
 
     return translationService[key];

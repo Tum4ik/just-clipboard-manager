@@ -18,20 +18,22 @@ internal interface ISettingsService : IPluginSettingsService
 
 public enum PeriodType
 {
-  [Description("day")]
-  Day,
-  [Description("month")]
-  Month,
-  [Description("year")]
-  Year
+  [Description("day")] Day,
+  [Description("month")] Month,
+  [Description("year")] Year
 }
 
 internal enum PasteWindowSnappingType
 {
-  Mouse, Caret, DisplayCorner
+  [Description("Mouse")] Mouse,
+  [Description("Caret")] Caret,
+  [Description("DisplayCorner")] DisplayCorner
 }
 
 internal enum PasteWindowSnappingDisplayCorner
 {
-  TopLeft, TopRight, BottomLeft, BottomRight
+  [Description("TopLeft")] TopLeft,
+  [Description("TopRight")] TopRight,
+  [Description("BottomLeft")] BottomLeft,
+  [Description("BottomRight")] BottomRight
 }

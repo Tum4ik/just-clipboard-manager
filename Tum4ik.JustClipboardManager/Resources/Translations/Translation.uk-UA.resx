@@ -283,4 +283,31 @@
   <data name="year_Paucal" xml:space="preserve">
     <value>роки</value>
   </data>
+  <data name="DisplayCorner" xml:space="preserve">
+    <value>Кут дисплея</value>
+  </data>
+  <data name="BottomLeft" xml:space="preserve">
+    <value>Нижній лівий</value>
+  </data>
+  <data name="BottomRight" xml:space="preserve">
+    <value>Нижній правий</value>
+  </data>
+  <data name="TopLeft" xml:space="preserve">
+    <value>Верхній лівий</value>
+  </data>
+  <data name="TopRight" xml:space="preserve">
+    <value>Верхній правий</value>
+  </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>Мишка</value>
+  </data>
+  <data name="Caret" xml:space="preserve">
+    <value>Каретка</value>
+  </data>
+  <data name="PasteWindow" xml:space="preserve">
+    <value>Вікно вставки</value>
+  </data>
+  <data name="Snapping" xml:space="preserve">
+    <value>Прив'язка</value>
+  </data>
 </root>

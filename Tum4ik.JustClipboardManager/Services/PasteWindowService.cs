@@ -68,7 +68,6 @@ internal class PasteWindowService : IPasteWindowService
         };
         break;
       default:
-      case PasteWindowSnappingType.Mouse:
         _user32Dll.GetCursorPos(out _windowPosition);
         break;
     }

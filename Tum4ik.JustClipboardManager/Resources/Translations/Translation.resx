@@ -283,4 +283,31 @@
   <data name="year_Plural" xml:space="preserve">
     <value>years</value>
   </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>Mouse</value>
+  </data>
+  <data name="Caret" xml:space="preserve">
+    <value>Caret</value>
+  </data>
+  <data name="DisplayCorner" xml:space="preserve">
+    <value>Display corner</value>
+  </data>
+  <data name="TopLeft" xml:space="preserve">
+    <value>Top left</value>
+  </data>
+  <data name="TopRight" xml:space="preserve">
+    <value>Top right</value>
+  </data>
+  <data name="BottomLeft" xml:space="preserve">
+    <value>Bottom left</value>
+  </data>
+  <data name="BottomRight" xml:space="preserve">
+    <value>Bottom right</value>
+  </data>
+  <data name="PasteWindow" xml:space="preserve">
+    <value>Paste window</value>
+  </data>
+  <data name="Snapping" xml:space="preserve">
+    <value>Snapping</value>
+  </data>
 </root>
