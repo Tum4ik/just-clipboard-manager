@@ -124,6 +124,7 @@ jobs:
           -Base64Pfx "${{ secrets.BASE64_ENCODED_PFX }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
+          -SigntoolPath .\signtool.exe `
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.PFX_KEY }} `
