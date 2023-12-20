@@ -143,8 +143,14 @@ jobs:
 
     - name: Build installer
       run: |
-        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86
-        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86 `
+          -SigntoolPath .\signtool.exe `
+          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
+          -PfxPassword ${{ secrets.PFX_KEY }}
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64 `
+          -SigntoolPath .\signtool.exe `
+          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
+          -PfxPassword ${{ secrets.PFX_KEY }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.2
