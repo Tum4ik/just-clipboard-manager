@@ -143,16 +143,17 @@ jobs:
 
     - name: Build installer
       run: |
+        $pfxFullPath = (Resolve-Path ${{ env.TemporaryPfxFilePath }}).Path
         ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.BASE64_ENCODED_PFX }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
         ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86 `
-          -SigntoolPath .\signtool.exe `
-          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
+          -SigntoolPath signtool.exe `
+          -PfxFilePath $pfxFullPath `
           -PfxPassword ${{ secrets.PFX_KEY }}
         ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64 `
-          -SigntoolPath .\signtool.exe `
-          -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
+          -SigntoolPath signtool.exe `
+          -PfxFilePath $pfxFullPath `
           -PfxPassword ${{ secrets.PFX_KEY }}
         Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
