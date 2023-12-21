@@ -118,12 +118,16 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
 
-    - name: Sign code files
+    - name: Prepare PFX fil for code signing
       run: |
         ${{ env.Scripts }}\DecodePfx.ps1 `
           -Base64Pfx "${{ secrets.BASE64_ENCODED_PFX }}" `
           -OutputPath ${{ env.TemporaryPfxFilePath }}
+
+    - name: Sign code files
+      run: |
         ${{ env.Scripts }}\SignMyCodeFiles.ps1 `
+          -SigntoolPath .\signtool.exe `
           -FilesDirectoryPath ${{ env.PublishDir }} `
           -PfxFilePath ${{ env.TemporaryPfxFilePath }} `
           -PfxPassword ${{ secrets.PFX_KEY }} `
@@ -132,8 +136,7 @@ jobs:
             JustClipboardManager.exe, `
             Tum4ik.JustClipboardManager.PluginDevKit.dll, `
             JustClipboardManager.resources.dll, `
-            Tum4ik.JustClipboardManager.TextPluginD930D2CD-3FD9-4012-A363-120676E22AFA.dll
-        Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
+            Tum4ik.JustClipboardManager.TextPlugin.dll
 
     - name: Install Inno Setup
       run: |
@@ -142,8 +145,18 @@ jobs:
 
     - name: Build installer
       run: |
-        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86
-        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64
+        $pfxFullPath = (Resolve-Path ${{ env.TemporaryPfxFilePath }}).Path
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x86 `
+          -SigntoolPath signtool.exe `
+          -PfxFilePath $pfxFullPath `
+          -PfxPassword ${{ secrets.PFX_KEY }}
+        ${{ env.Scripts }}\BuildInstaller.ps1 -Architecture x64 `
+          -SigntoolPath signtool.exe `
+          -PfxFilePath $pfxFullPath `
+          -PfxPassword ${{ secrets.PFX_KEY }}
+
+    - name: Clean up temporary files for code signing
+      run: Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.2

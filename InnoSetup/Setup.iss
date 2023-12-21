@@ -44,6 +44,7 @@ VersionInfoCompany={#MyAppPublisher}
 VersionInfoProductName={#MyAppName}
 VersionInfoProductTextVersion={#MyAppVersion}
 ArchitecturesInstallIn64BitMode=x64
+SignTool=MsSigntool
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -159,7 +160,7 @@ end;
 function IsAppRunning(const FileName: String): Boolean;
 var
   FSWbemLocator: Variant;
-  FWMIService   : Variant;
+  FWMIService: Variant;
   FWbemObjectSet: Variant;
 begin
   Result := false;

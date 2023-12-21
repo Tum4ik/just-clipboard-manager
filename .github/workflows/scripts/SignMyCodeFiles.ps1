@@ -1,4 +1,5 @@
 param (
+  [string] $SigntoolPath,
   [string] $FilesDirectoryPath,
   [string] $PfxFilePath,
   [string] $PfxPassword,
@@ -22,8 +23,13 @@ $filesToSign = Get-ChildItem -Recurse `
   -Include $FileNamesToInclude `
   $FilesDirectoryPath `
   | Select-Object -ExpandProperty FullName
-$signtool = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.20348.0\x64\signtool.exe"
-& $signtool sign /f $PfxFilePath /p $PfxPassword /fd SHA256 $filesToSign
+& $SigntoolPath sign `
+  /tr http://timestamp.digicert.com `
+  /fd SHA256 `
+  /td SHA256 `
+  /f $PfxFilePath `
+  /p $PfxPassword `
+  $filesToSign
 
 if ($LastExitCode -ne 0) {
   throw
