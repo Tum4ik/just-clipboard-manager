@@ -23,8 +23,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{EFB58FFF-AFD1-4788-AA48-0652BD800A3A}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\codecov-update.yml = .github\workflows\codecov-update.yml
-		.github\workflows\gated_application.yml = .github\workflows\gated_application.yml
-		.github\workflows\geted_plugin-dev-kit.yml = .github\workflows\geted_plugin-dev-kit.yml
+		.github\workflows\release-2.0_application.yml = .github\workflows\release-2.0_application.yml
+		.github\workflows\release-2.0_plugin-dev-kit.yml = .github\workflows\release-2.0_plugin-dev-kit.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6422F7E7-8F3A-4750-9A82-9C0153726062}"

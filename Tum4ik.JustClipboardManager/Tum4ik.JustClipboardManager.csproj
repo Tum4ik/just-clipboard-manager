@@ -275,5 +275,16 @@
       <LastGenOutput>SettingsPasteWindow.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <FilesToCopy Condition="'$(Configuration)'=='Debug'" Include="Resources\Icons\tray-dev.ico" />
+    <FilesToCopy Include="Resources\Icons\tray.ico" />
+  </ItemGroup>
+  <Target Name="CopyFilesAfteBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutDir)" />
+  </Target>
+  <Target Name="CopyFilesAfterPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
+  </Target>
   
 </Project>
