@@ -214,6 +214,8 @@ begin
       Result := False;
     end else begin
       IsUpgrade := True;
+      ShouldInstallImagesPlugin := True;
+      ShouldInstallFilesPlugin := True;
     end;
   end;
   if Result and IsAppRunning(ExpandConstant('{#MyAppExeName}')) then begin
