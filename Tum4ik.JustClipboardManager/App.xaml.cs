@@ -16,6 +16,7 @@ using Prism.Services.Dialogs;
 using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data;
+using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
@@ -178,7 +179,12 @@ public partial class App : ISingleInstance
       dbContext.Database.Migrate();
     }
 
-    RemoveOldClips();
+    var settingsService = Container.Resolve<ISettingsService>();
+    var clipRepository = Container.Resolve<IClipRepository>();
+    var pluginsService = Container.Resolve<IPluginsService>();
+
+    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => Crashes.TrackError(e));
+    PreInstallPluginsAsync(pluginsService).Await(e => Crashes.TrackError(e));
     var trayIcon = Container.Resolve<TrayIcon>();
     var hookService = Container.Resolve<GeneralHookService>();
   }
@@ -193,20 +199,38 @@ public partial class App : ISingleInstance
   }
 
 
-  private void RemoveOldClips()
+  private static async Task RemoveOldClipsAsync(ISettingsService settingsService, IClipRepository clipRepository)
   {
-    var settingsService = Container.Resolve<ISettingsService>();
-    var clipRepository = Container.Resolve<IClipRepository>();
     var period = settingsService.RemoveClipsPeriod;
     var periodType = settingsService.RemoveClipsPeriodType;
-    var beforDate = periodType switch
+    var beforeDate = periodType switch
     {
       PeriodType.Day => DateTime.Now.AddDays(-period),
       PeriodType.Month => DateTime.Now.AddMonths(-period),
       PeriodType.Year => DateTime.Now.AddYears(-period),
       _ => DateTime.Now.AddMonths(-period)
     };
-    clipRepository.DeleteBeforeDateAsync(beforDate).Await(e => Crashes.TrackError(e));
+    await clipRepository.DeleteBeforeDateAsync(beforeDate).ConfigureAwait(false);
+  }
+
+
+  private static async Task PreInstallPluginsAsync(IPluginsService pluginsService)
+  {
+    const string FileName = "pre-install-plugins";
+    if (!System.IO.File.Exists(FileName))
+    {
+      return;
+    }
+
+    var pluginIdsToInstall = await System.IO.File.ReadAllLinesAsync(FileName).ConfigureAwait(false);
+    await foreach (var pluginDto in pluginsService.SearchPluginsAsync().ConfigureAwait(false))
+    {
+      if (pluginIdsToInstall.Contains(pluginDto.Id))
+      {
+        await pluginsService.InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id).ConfigureAwait(false);
+      }
+    }
+    System.IO.File.Delete(FileName);
   }
 
 

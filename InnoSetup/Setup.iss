@@ -55,18 +55,36 @@ RunMyAppOnSystemStartup=Run %1 on system startup
 DoYouWantRemoveAppSettingsAndClips=Do you also want to remove the application settings and "clips"?
 YouHaveNewerVersion=You have newer version (%1) installed already
 YouHaveThisVersion=You have this version (%1) installed already
+Plugins=Plugins
+TextPlugin=Text plugin
+ImagesPlugin=Images plugin
+FilesPlugin=Files plugin
 ukrainian.RunMyAppOnSystemStartup=Запускати %1 під час запуску системи
 ukrainian.DoYouWantRemoveAppSettingsAndClips=Чи бажаєте також видалити налаштування застосунку та "кліпи"?
 ukrainian.YouHaveNewerVersion=У Вас вже встановлена новіша версія (%1)
 ukrainian.YouHaveThisVersion=У Вас вже втановлена ця версія (%1)
+ukrainian.Plugins=Плагіни
+ukrainian.TextPlugin=Плагін тексту
+ukrainian.ImagesPlugin=Плагін зображень
+ukrainian.FilesPlugin=Плагін файлів
 
 [Tasks]
-Name: "desktopicon"; \
+Name: desktopicon; \
   Description: "{cm:CreateDesktopIcon}"; \
-  GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "autostart"; \
+  GroupDescription: "{cm:AdditionalIcons}"; \
+  Flags: unchecked
+Name: autostart; \
   Description: "{cm:RunMyAppOnSystemStartup,{#MyAppName}}"; \
   GroupDescription: "{cm:AutoStartProgramGroupDescription}"
+Name: textplugin; \
+  Description: "{cm:TextPlugin}"; \
+  GroupDescription: "{cm:Plugins}"
+Name: imagesplugin; \
+  Description: "{cm:ImagesPlugin}"; \
+  GroupDescription: "{cm:Plugins}"
+Name: filesplugin; \
+  Description: "{cm:FilesPlugin}"; \
+  GroupDescription: "{cm:Plugins}"
 
 [Files]
 Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
@@ -103,6 +121,8 @@ Filename: "{sys}\taskkill.exe"; Parameters: "/f /im {#MyAppExeName}"; Flags: ski
 var
   MustOpenAppAfterInstall: Boolean;
   IsUpgrade: Boolean;
+  ShouldInstallImagesPlugin: Boolean;
+  ShouldInstallFilesPlugin: Boolean;
 
 
 function ShowPostinstallLaunchOption(): Boolean;
@@ -194,6 +214,8 @@ begin
       Result := False;
     end else begin
       IsUpgrade := True;
+      ShouldInstallImagesPlugin := True;
+      ShouldInstallFilesPlugin := True;
     end;
   end;
   if Result and IsAppRunning(ExpandConstant('{#MyAppExeName}')) then begin
@@ -211,6 +233,20 @@ begin
 end;
 
 
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if CurPageID = wpSelectTasks then begin
+    if WizardIsTaskSelected('imagesplugin') then begin
+      ShouldInstallImagesPlugin := True;
+    end;
+    if WizardIsTaskSelected('filesplugin') then begin
+      ShouldInstallFilesPlugin := True;
+    end;
+  end;
+end;
+
+
 procedure CancelButtonClick(CurPageID: Integer; var Cancel, Confirm: Boolean);
 begin
   if MustOpenAppAfterInstall then begin
@@ -220,10 +256,15 @@ end;
 
 
 procedure CurStepChanged(CurStep: TSetupStep);
-
 begin
   case CurStep of
     ssDone: begin
+      if ShouldInstallImagesPlugin then begin
+        SaveStringToFile(ExpandConstant('{app}\pre-install-plugins'), 'F4B1D3C8-8A70-4F29-A5C6-940510A9FA5D' + #13#10, True);
+      end;
+      if ShouldInstallFilesPlugin then begin
+        SaveStringToFile(ExpandConstant('{app}\pre-install-plugins'), 'D2D7663B-39C5-488A-B323-8063963D47F5' + #13#10, True);
+      end;
       if MustOpenAppAfterInstall then begin
         LaunchApplication();
       end;
@@ -256,5 +297,14 @@ begin
         end;
       end;
     end;
+  end;
+end;
+
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if CurPageID = wpSelectTasks then begin
+    { Disable Text plugin interaction }
+    WizardForm.TasksList.ItemEnabled[5] := False;
   end;
 end;

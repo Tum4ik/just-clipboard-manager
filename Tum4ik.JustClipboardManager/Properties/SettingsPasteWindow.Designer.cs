@@ -12,7 +12,7 @@ namespace Tum4ik.JustClipboardManager.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
     internal sealed partial class SettingsPasteWindow : global::System.Configuration.ApplicationSettingsBase {
         
         private static SettingsPasteWindow defaultInstance = ((SettingsPasteWindow)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SettingsPasteWindow())));
