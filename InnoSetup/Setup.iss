@@ -30,7 +30,7 @@ PrivilegesRequired=lowest
 OutputDir=..\Tum4ik.JustClipboardManager\bin\setup
 OutputBaseFilename=JustClipboardManager-{#MyAppVersion}-{#Architecture}
 SetupIconFile=install.ico
-UninstallDisplayIcon={app}\uninstall.ico
+UninstallDisplayIcon={app}\install.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -92,20 +92,19 @@ Source: "..\Tum4ik.JustClipboardManager\bin\publish\{#Architecture}\*"; \
   Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "install.ico"; DestDir: "{app}"
-Source: "uninstall.ico"; DestDir: "{app}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
-  IconFilename: "{app}\tray.ico"
+  IconFilename: "{app}\install.ico"
 Name: "{autodesktop}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: desktopicon; \
-  IconFilename: "{app}\tray.ico"
+  IconFilename: "{app}\install.ico"
 Name: "{autostartup}\{#MyAppName}"; \
   Filename: "{app}\{#MyAppExeName}"; \
   Tasks: autostart; \
-  IconFilename: "{app}\tray.ico"
+  IconFilename: "{app}\install.ico"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; \
