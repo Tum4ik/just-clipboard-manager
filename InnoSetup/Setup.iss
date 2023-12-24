@@ -282,6 +282,7 @@ begin
     usPostUninstall: begin
       DialogResult := MsgBox(CustomMessage('DoYouWantRemoveAppSettingsAndClips'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
       if DialogResult = IDYES then begin
+        { Do not delete the PublisherDir itself, because it may contain other products data of the publisher }
         PublisherDir := ExpandConstant('{localappdata}\Tum4ik\');
         if FindFirst(PublisherDir + 'JustClipboardManager*', FoundRecord) then begin
           try
@@ -295,6 +296,8 @@ begin
           end;
         end;
       end;
+      { Remove program installation folder to clean up unregistered files (for ex. plugins files) }
+      DelTree(SetupSetting('DefaultDirName'), True, True, True);
     end;
   end;
 end;
