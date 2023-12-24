@@ -201,7 +201,7 @@ var
 begin
   MustOpenAppAfterInstall := False;
   Result := True;
-  RegistryUninstallPath := ExpandConstant('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1');
+  RegistryUninstallPath := ExpandConstant('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1');
   if RegQueryStringValue(HKCU, RegistryUninstallPath, 'DisplayVersion', InstalledVersion) then begin
     PackedPreviousVersion := GetPackedVersionComponents(InstalledVersion);
     PackedCurrentVersion := GetPackedVersionComponents(ExpandConstant('{#MyAppVersion}'));
@@ -297,7 +297,7 @@ begin
         end;
       end;
       { Remove program installation folder to clean up unregistered files (for ex. plugins files) }
-      DelTree(SetupSetting('DefaultDirName'), True, True, True);
+      DelTree('{#SetupSetting("DefaultDirName")}', True, True, True);
     end;
   end;
 end;
