@@ -11,6 +11,7 @@
     <AssemblyName>JustClipboardManager</AssemblyName>
     <Platforms>x86;x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <PropertyGroup>
