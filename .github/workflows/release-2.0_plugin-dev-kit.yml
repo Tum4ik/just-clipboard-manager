@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - 'release/**'
+    paths:
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
   pull_request:
     branches:
       - 'main'
