@@ -297,7 +297,7 @@ begin
         end;
       end;
       { Remove program installation folder to clean up unregistered files (for ex. plugins files) }
-      DelTree('{#SetupSetting("DefaultDirName")}', True, True, True);
+      DelTree(ExpandConstant('{#SetupSetting("DefaultDirName")}'), True, True, True);
     end;
   end;
 end;
