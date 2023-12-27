@@ -167,8 +167,8 @@
     <Resource Include="Resources\Icons\search.svg" />
     <Resource Include="Resources\Icons\settings.svg" />
     <Resource Include="Resources\Icons\spinner.svg" />
-    <Resource Include="Resources\Icons\tray.ico" />
     <Resource Include="Resources\Icons\tray-dev.ico" />
+    <Resource Include="Resources\Icons\tray.ico" />
     <Resource Include="Resources\Icons\ukraine.svg" />
     <Resource Include="Resources\Icons\usa.svg" />
     <Resource Include="Resources\Icons\warning-circle-filled.svg" />

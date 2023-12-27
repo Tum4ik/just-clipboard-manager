@@ -4,8 +4,8 @@
   Just Clipboard Manager
 </h1>
 <h1 align="center">
-  <img src=".attachments/paste-window-light.png" alt="Paste Window" />
-  <img src=".attachments/paste-window-dark.png" alt="Paste Window" />
+  <img src=".attachments/paste-window-light.png" alt="Paste Window Light" />
+  <img src=".attachments/paste-window-dark.png" alt="Paste Window Dark" />
 </h1>
 <h1 align="center">
 
@@ -13,7 +13,8 @@
   [![Platform: Windows](https://img.shields.io/badge/platform-windows-%23373737)]()
   [![Latest release](https://img.shields.io/github/v/release/Tum4ik/just-clipboard-manager)](https://github.com/Tum4ik/just-clipboard-manager/releases)
 
-  [![Gated build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
+  [![Gated application build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
+  [![Gated plugin dev kit build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml)
 </h1>
 
 <h1 align="center">
