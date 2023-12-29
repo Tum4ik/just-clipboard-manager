@@ -138,6 +138,10 @@ internal class UpdateService : IUpdateService
     {
       // download canceled
     }
+    catch (IOException)
+    {
+      // aborted connection
+    }
 
     return null;
   }
