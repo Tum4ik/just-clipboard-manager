@@ -17,10 +17,26 @@
     <AssemblyName>JustClipboardManager</AssemblyName>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Views\PasteWindow.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+    <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
+    <PackageReference Include="DryIoc.dll" Version="5.4.3" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
     <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\PasteWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>
