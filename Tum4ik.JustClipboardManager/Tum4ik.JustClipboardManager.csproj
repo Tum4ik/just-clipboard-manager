@@ -202,7 +202,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
+    <ProjectReference Include="..\Plugins\_Tum4ik.JustClipboardManager.PluginsDevKit\_Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
