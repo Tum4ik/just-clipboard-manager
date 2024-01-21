@@ -1,43 +1,43 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
     <AnalysisMode>All</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.7.30">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
   </ItemGroup>
 
   <PropertyGroup>
-    <BuildDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\x86\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x86>
-    <BuildDestinationFolder_x64>..\..\Tum4ik.JustClipboardManager\bin\x64\$(Configuration)\$(TargetFramework)</BuildDestinationFolder_x64>
-    <PublishDestinationFolder_x86>..\..\Tum4ik.JustClipboardManager\bin\publish\x86</PublishDestinationFolder_x86>
-    <PublishDestinationFolder_x64>..\..\Tum4ik.JustClipboardManager\bin\publish\x64</PublishDestinationFolder_x64>
+    <BuildDestinationFolder_x64>..\..\Tum4ik.JCM\bin\x64\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x64>
+    <PublishDestinationFolder_x64>..\..\Tum4ik.JCM\bin\publish\x64\Plugins</PublishDestinationFolder_x64>
   </PropertyGroup>
 
   <ItemGroup>
     <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
     <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="TextDataTemplate.xaml" />
+    <EmbeddedResource Include="TextDataTemplate.xaml" />
+  </ItemGroup>
+
   <Target Name="CopyPluginToBuildOutput" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CopyPluginToPublishOutput" AfterTargets="Publish">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-
 </Project>
