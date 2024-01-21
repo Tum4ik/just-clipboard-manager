@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Application x:Class="Tum4ik.JCM.App"
+<Application x:Class="Tum4ik.JustClipboardManager.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:Tum4ik.JCM">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>

@@ -1,4 +1,4 @@
-namespace Tum4ik.JCM.Services;
+namespace Tum4ik.JustClipboardManager.Services;
 
 /// <summary>
 /// Provides the functionality to control the application lifetime.

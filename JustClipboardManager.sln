@@ -50,9 +50,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{82637701-F680-4526-ACD7-01E54950444E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\_Tum4ik.JustClipboardManager.PluginsDevKit\_Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.TextPlugin", "Plugins\Tum4ik.JustClipboardManager.TextPlugin\Tum4ik.JustClipboardManager.TextPlugin.csproj", "{6DA0F318-A17F-4518-A324-423E5236ECB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Tum4ik.JustClipboardManager.TextPlugin", "Plugins\_Tum4ik.JustClipboardManager.TextPlugin\_Tum4ik.JustClipboardManager.TextPlugin.csproj", "{6DA0F318-A17F-4518-A324-423E5236ECB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Properties", "Solution Properties", "{12059B79-3D95-42EF-B3CD-E7EEF124F380}"
 	ProjectSection(SolutionItems) = preProject
@@ -64,6 +64,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Properties", "Solu
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JCM", "Tum4ik.JCM\Tum4ik.JCM.csproj", "{E5578AD2-ACD8-479F-BB93-587A20223844}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tum4ik.JustClipboardManager.TextPlugin", "Plugins\Tum4ik.JustClipboardManager.TextPlugin\Tum4ik.JustClipboardManager.TextPlugin.csproj", "{1261E863-1477-42DD-8755-BA1F6BFDFC57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +175,38 @@ Global
 		{E5578AD2-ACD8-479F-BB93-587A20223844}.Release|x86.ActiveCfg = Release|x86
 		{E5578AD2-ACD8-479F-BB93-587A20223844}.Release|x86.Build.0 = Release|x86
 		{E5578AD2-ACD8-479F-BB93-587A20223844}.Release|x86.Deploy.0 = Release|x86
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|arm64.Build.0 = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|arm64.ActiveCfg = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|arm64.Build.0 = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|x64.Build.0 = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA}.Release|x86.Build.0 = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|arm64.Build.0 = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|x64.Build.0 = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Debug|x86.Build.0 = Debug|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|arm64.ActiveCfg = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|arm64.Build.0 = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|x64.ActiveCfg = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|x64.Build.0 = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|x86.ActiveCfg = Release|Any CPU
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +220,8 @@ Global
 		{5873C9B0-C2EF-4FEF-A9AD-99FD3F0078E5} = {1A911254-6A56-4D1C-B8D3-7A7EE3EF2B0E}
 		{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F} = {82637701-F680-4526-ACD7-01E54950444E}
 		{6DA0F318-A17F-4518-A324-423E5236ECB9} = {82637701-F680-4526-ACD7-01E54950444E}
+		{EA1C15DA-28F6-4646-A738-39F57B6DF7DA} = {82637701-F680-4526-ACD7-01E54950444E}
+		{1261E863-1477-42DD-8755-BA1F6BFDFC57} = {82637701-F680-4526-ACD7-01E54950444E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4AFFE08-D045-4D40-B481-77043A089158}
