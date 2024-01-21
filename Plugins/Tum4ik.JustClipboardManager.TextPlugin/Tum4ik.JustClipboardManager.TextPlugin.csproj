@@ -15,16 +15,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <BuildDestinationFolder_x64>..\..\Tum4ik.JCM\bin\x64\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x64>
-    <PublishDestinationFolder_x64>..\..\Tum4ik.JCM\bin\publish\x64\Plugins</PublishDestinationFolder_x64>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
-    <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
@@ -34,6 +24,15 @@
     <EmbeddedResource Include="TextDataTemplate.xaml" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <BuildDestinationFolder_x64>..\..\Tum4ik.JCM\bin\x64\$(Configuration)\$(TargetFramework)\Plugins</BuildDestinationFolder_x64>
+    <PublishDestinationFolder_x64>..\..\Tum4ik.JCM\bin\publish\x64\Plugins</PublishDestinationFolder_x64>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
+    <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
+  </ItemGroup>
   <Target Name="CopyPluginToBuildOutput" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
