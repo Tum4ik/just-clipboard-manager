@@ -3,11 +3,13 @@
 
 using DryIoc;
 using Tum4ik.JustClipboardManager.Controls;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.Plugins;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace Tum4ik.JustClipboardManager;
 /// <summary>
@@ -45,14 +47,6 @@ public partial class App : Application, IApplicationLifetime
     _iocContainer = new Container();
     RegisterTypes(_iocContainer);
     LoadPlugins(_iocContainer);
-
-    //var tP = _iocContainer.Resolve<IPlugin>("D930D2CD-3FD9-4012-A363-120676E22AFA");
-    //var dt = tP.RepresentationDataDataTemplate;
-    _iocContainer.Register<PasteWindow>();
-    _iocContainer.Register<PasteWindowViewModel>();
-
-    var wind = _iocContainer.Resolve<PasteWindow>();
-    wind.Activate();
   }
 
 
@@ -65,6 +59,8 @@ public partial class App : Application, IApplicationLifetime
     registrator.Register<IApplicationLifetime, App>(Reuse.Singleton);
     registrator.Register<IPluginLoader, PluginLoader>(Reuse.Singleton);
     registrator.Register<ClipTypeDataTemplateSelector>(Reuse.Singleton);
+
+    registrator.RegisterViewWithViewModel<PasteWindow, PasteWindowViewModel>(Reuse.Singleton);
   }
 
 
