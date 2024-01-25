@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=_Tum4ik.JustClipboardManager.PluginDevKit"
         mc:Ignorable="d"
         BorderBrush="{DynamicResource {x:Static theming:AppColors.CardBorderBrush}}"
         BorderThickness="1"

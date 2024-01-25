@@ -4,12 +4,11 @@
 using DryIoc;
 using Tum4ik.JustClipboardManager.Controls;
 using Tum4ik.JustClipboardManager.Extensions;
-using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.Plugins;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Wrappers;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace Tum4ik.JustClipboardManager;
 /// <summary>
@@ -47,6 +46,9 @@ public partial class App : Application, IApplicationLifetime
     _iocContainer = new Container();
     RegisterTypes(_iocContainer);
     LoadPlugins(_iocContainer);
+
+    var trayIcon = _iocContainer.Resolve<TrayIcon>();
+    trayIcon.ForceCreate();
   }
 
 
@@ -56,10 +58,13 @@ public partial class App : Application, IApplicationLifetime
   /// <param name="registrator">The IoC container (registrator).</param>
   private static void RegisterTypes(IRegistrator registrator)
   {
+    registrator.Register<IEnvironment, EnvironmentWrapper>(Reuse.Transient);
+
     registrator.Register<IApplicationLifetime, App>(Reuse.Singleton);
-    registrator.Register<IPluginLoader, PluginLoader>(Reuse.Singleton);
+    registrator.Register<IPluginLoader, PluginLoader>(Reuse.Transient);
     registrator.Register<ClipTypeDataTemplateSelector>(Reuse.Singleton);
 
+    registrator.RegisterViewWithViewModel<TrayIcon, TrayIconViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<PasteWindow, PasteWindowViewModel>(Reuse.Singleton);
   }
 

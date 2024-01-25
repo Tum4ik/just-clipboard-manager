@@ -8,7 +8,7 @@
                 xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
                 xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
                 xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-                xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+                xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=_Tum4ik.JustClipboardManager.PluginDevKit"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconViewModel}"
                 IconSource="{Binding TrayIcon}">
