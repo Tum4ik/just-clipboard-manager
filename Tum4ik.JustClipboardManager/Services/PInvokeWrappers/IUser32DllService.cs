@@ -10,13 +10,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 internal interface IUser32DllService
 {
-  /// <summary>
-  /// Retrieves the position of the mouse cursor, in screen coordinates.
-  /// </summary>
-  /// <param name="lpPoint">
-  /// A pointer to a <see cref="Point"/> structure that receives the screen coordinates of the cursor.
-  /// </param>
-  /// <returns>Returns true if successful or false otherwise.</returns>
+  /// <inheritdoc cref="PInvoke.GetCursorPos(out Point)"/>
   bool GetCursorPos(out Point lpPoint) => PInvoke.GetCursorPos(out lpPoint);
 
   /// <summary>

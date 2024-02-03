@@ -16,11 +16,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>JustClipboardManager</AssemblyName>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
   <ItemGroup>
     <None Remove="Views\PasteWindow.xaml" />
     <None Remove="Views\TrayIcon.xaml" />
+    <None Remove="Views\TrayMenuWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +34,7 @@
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.124" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta" PrivateAssets="all" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.8.14" />
@@ -39,7 +42,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Tum4ik.StinimGen" Version="1.0.24024.17" />
+    <PackageReference Include="Tum4ik.StinimGen" Version="2.0.24033.3-rc" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -67,5 +70,11 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\TrayMenuWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

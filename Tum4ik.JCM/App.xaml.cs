@@ -6,6 +6,7 @@ using Tum4ik.JustClipboardManager.Controls;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Plugins;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Services.Wrappers;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.Views;
@@ -47,8 +48,10 @@ public partial class App : Application, IApplicationLifetime
     RegisterTypes(_iocContainer);
     LoadPlugins(_iocContainer);
 
+
     var trayIcon = _iocContainer.Resolve<TrayIcon>();
     trayIcon.ForceCreate();
+
   }
 
 
@@ -56,15 +59,19 @@ public partial class App : Application, IApplicationLifetime
   /// Registers types with the IoC container.
   /// </summary>
   /// <param name="registrator">The IoC container (registrator).</param>
-  private static void RegisterTypes(IRegistrator registrator)
+  private void RegisterTypes(IRegistrator registrator)
   {
     registrator.Register<IEnvironment, EnvironmentWrapper>(Reuse.Transient);
 
-    registrator.Register<IApplicationLifetime, App>(Reuse.Singleton);
+    registrator.Register<IUser32Dll, User32Dll>(Reuse.Transient);
+    registrator.Register<IComctl32Dll, Comctl32Dll>(Reuse.Transient);
+
+    registrator.RegisterInstance<IApplicationLifetime>(this);
     registrator.Register<IPluginLoader, PluginLoader>(Reuse.Transient);
     registrator.Register<ClipTypeDataTemplateSelector>(Reuse.Singleton);
 
     registrator.RegisterViewWithViewModel<TrayIcon, TrayIconViewModel>(Reuse.Singleton);
+    registrator.RegisterViewWithViewModel<TrayMenuWindow, TrayMenuWindowViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<PasteWindow, PasteWindowViewModel>(Reuse.Singleton);
   }
 

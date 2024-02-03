@@ -6,13 +6,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="using:CommunityToolkit.WinUI.Controls"
         mc:Ignorable="d">
+  <Window.SystemBackdrop>
+    <MicaBackdrop/>
+  </Window.SystemBackdrop>
   <controls:DockPanel>
     <controls:DockPanel.Resources>
-      
+
     </controls:DockPanel.Resources>
     <ListView ItemsSource="{x:Bind Vm.Clips}"
               ItemTemplateSelector="{x:Bind Vm.ClipTypeDataTemplateSelector}">
-      
+
     </ListView>
   </controls:DockPanel>
 </Window>
