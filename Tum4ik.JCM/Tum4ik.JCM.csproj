@@ -18,8 +18,17 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>0.0.0.0-dev</Version>
+    <SolutionPropertiesLocation>..\SolutionProperties</SolutionPropertiesLocation>
+    <ApplicationIcon>Assets\tray.ico</ApplicationIcon>
+  </PropertyGroup>
+  <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets" />
   
   <ItemGroup>
+    <None Remove="Styles\GlobalStyles.xaml" />
+    <None Remove="Views\Main\MainWindow.xaml" />
     <None Remove="Views\PasteWindow.xaml" />
     <None Remove="Views\TrayIcon.xaml" />
     <None Remove="Views\TrayMenuWindow.xaml" />
@@ -70,6 +79,18 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles\GlobalStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

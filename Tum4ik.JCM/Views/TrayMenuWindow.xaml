@@ -10,8 +10,8 @@
     <MicaBackdrop/>
   </Window.SystemBackdrop>
   <StackPanel x:Name="_rootStackPanel" Margin="0, 2">
-    <MenuFlyoutItem Text="Settings"/>
-    <MenuFlyoutItem Text="About"/>
+    <MenuFlyoutItem Text="Settings" Command="{x:Bind Vm.SettingsCommand}"/>
+    <MenuFlyoutItem Text="About" Command="{x:Bind Vm.AboutCommand}"/>
     <MenuFlyoutSeparator/>
     <MenuFlyoutItem Text="Exit" Command="{x:Bind Vm.ExitCommand}"/>
   </StackPanel>

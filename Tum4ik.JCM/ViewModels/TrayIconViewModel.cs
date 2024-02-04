@@ -4,7 +4,7 @@ using Tum4ik.JustClipboardManager.Views;
 
 namespace Tum4ik.JustClipboardManager.ViewModels;
 
-internal partial class TrayIconViewModel : ObservableObject
+internal sealed partial class TrayIconViewModel : ObservableObject
 {
   private readonly Lazy<TrayMenuWindow> _trayMenu;
 

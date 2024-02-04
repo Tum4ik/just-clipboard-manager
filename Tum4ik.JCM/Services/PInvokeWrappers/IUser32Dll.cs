@@ -13,6 +13,10 @@ internal interface IUser32Dll
 
   /// <inheritdoc cref="PInvoke.SetForegroundWindow(HWND)"/>
   bool SetForegroundWindow(HWND hWnd) => PInvoke.SetForegroundWindow(hWnd);
+
+  /// <inheritdoc cref="PInvoke.SendMessage(HWND, uint, WPARAM, LPARAM)"/>
+  LRESULT SendMessage(HWND hWnd, uint Msg, WPARAM wParam, LPARAM lParam) =>
+    PInvoke.SendMessage(hWnd, Msg, wParam, lParam);
 }
 
 

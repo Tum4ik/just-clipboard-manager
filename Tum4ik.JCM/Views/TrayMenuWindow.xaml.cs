@@ -9,7 +9,7 @@ using static Windows.Win32.PInvoke;
 
 namespace Tum4ik.JustClipboardManager.Views;
 
-internal sealed partial class TrayMenuWindow
+internal sealed partial class TrayMenuWindow : Window
 {
   private const int MenuMinWidth = 164;
   private const int MenuMinHeight = 44;

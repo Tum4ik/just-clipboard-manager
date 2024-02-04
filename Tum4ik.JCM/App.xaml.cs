@@ -9,7 +9,9 @@ using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Services.Wrappers;
 using Tum4ik.JustClipboardManager.ViewModels;
+using Tum4ik.JustClipboardManager.ViewModels.Main;
 using Tum4ik.JustClipboardManager.Views;
+using Tum4ik.JustClipboardManager.Views.Main;
 
 namespace Tum4ik.JustClipboardManager;
 /// <summary>
@@ -69,10 +71,12 @@ public partial class App : Application, IApplicationLifetime
     registrator.RegisterInstance<IApplicationLifetime>(this);
     registrator.Register<IPluginLoader, PluginLoader>(Reuse.Transient);
     registrator.Register<ClipTypeDataTemplateSelector>(Reuse.Singleton);
+    registrator.Register<IInfoService, InfoService>(Reuse.Transient);
 
     registrator.RegisterViewWithViewModel<TrayIcon, TrayIconViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<TrayMenuWindow, TrayMenuWindowViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<PasteWindow, PasteWindowViewModel>(Reuse.Singleton);
+    registrator.RegisterViewWithViewModel<MainWindow, MainWindowViewModel>(Reuse.Transient);
   }
 
 
