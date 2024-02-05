@@ -40,4 +40,17 @@ internal sealed partial class MainWindow : Window
       }
     }
   }
+
+
+  private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+  {
+    if (args.WindowActivationState == WindowActivationState.Deactivated)
+    {
+      _titleBar.Opacity = 0.5;
+    }
+    else
+    {
+      _titleBar.Opacity = 1;
+    }
+  }
 }

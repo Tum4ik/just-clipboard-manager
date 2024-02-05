@@ -5,18 +5,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="{x:Bind Vm.Title}">
+        Title="{x:Bind Vm.Title}"
+        Activated="MainWindow_Activated">
   <Window.SystemBackdrop>
     <MicaBackdrop/>
   </Window.SystemBackdrop>
   <Grid RowDefinitions="32, *">
-    <StackPanel Grid.Row="0"
+    <StackPanel x:Name="_titleBar"
+                Grid.Row="0"
                 Orientation="Horizontal"
                 Margin="16, 0"
                 Spacing="16">
       <Image Source="ms-appx:///Assets/tray.ico"
              Width="16" Height="16"/>
-      <TextBlock Text="{x:Bind Vm.Title}" FontSize="12" VerticalAlignment="Center"/>
+      <TextBlock Text="{x:Bind Vm.Title}" FontSize="12" VerticalAlignment="Center" />
     </StackPanel>
   </Grid>
 </Window>
