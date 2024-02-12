@@ -23,12 +23,19 @@
     <Version>0.0.0.0-dev</Version>
     <SolutionPropertiesLocation>..\SolutionProperties</SolutionPropertiesLocation>
     <ApplicationIcon>Assets\tray.ico</ApplicationIcon>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   <Import Project="$(SolutionPropertiesLocation)\SolutionProperties.targets" />
   
   <ItemGroup>
+    <None Remove="Controls\AppBarNavigationViewItem.xaml" />
     <None Remove="Styles\GlobalStyles.xaml" />
+    <None Remove="Views\Main\AboutPage.xaml" />
     <None Remove="Views\Main\MainWindow.xaml" />
+    <None Remove="Views\Main\Plugins\PluginsPage.xaml" />
+    <None Remove="Views\Main\Settings\SettingsGeneralPage.xaml" />
+    <None Remove="Views\Main\Settings\SettingsInterfacePage.xaml" />
+    <None Remove="Views\Main\Settings\SettingsPage.xaml" />
     <None Remove="Views\PasteWindow.xaml" />
     <None Remove="Views\TrayIcon.xaml" />
     <None Remove="Views\TrayMenuWindow.xaml" />
@@ -38,8 +45,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
-    <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.0.240109" />
     <PackageReference Include="DryIoc.dll" Version="5.4.3" />
     <PackageReference Include="H.NotifyIcon.WinUI" Version="2.0.124" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
@@ -47,12 +54,12 @@
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta" PrivateAssets="all" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.8.14" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.8.14">
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.9.28" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.9.28">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Tum4ik.StinimGen" Version="2.0.24033.3-rc" />
+    <PackageReference Include="Tum4ik.StinimGen" Version="2.0.24039.8" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -80,6 +87,42 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\Settings\SettingsInterfacePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\Settings\SettingsGeneralPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\AboutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\Plugins\PluginsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Main\Settings\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\AppBarNavigationViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

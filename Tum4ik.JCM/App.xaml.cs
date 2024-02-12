@@ -1,7 +1,6 @@
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-using DryIoc;
 using Tum4ik.JustClipboardManager.Controls;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Plugins;
@@ -10,6 +9,8 @@ using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Services.Wrappers;
 using Tum4ik.JustClipboardManager.ViewModels;
 using Tum4ik.JustClipboardManager.ViewModels.Main;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
+using Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
 using Tum4ik.JustClipboardManager.Views;
 using Tum4ik.JustClipboardManager.Views.Main;
 
@@ -47,6 +48,7 @@ public partial class App : Application, IApplicationLifetime
   private void CreateIocContainer()
   {
     _iocContainer = new Container();
+    ServiceLocator.Initialize(_iocContainer);
     RegisterTypes(_iocContainer);
     LoadPlugins(_iocContainer);
 
@@ -77,6 +79,10 @@ public partial class App : Application, IApplicationLifetime
     registrator.RegisterViewWithViewModel<TrayMenuWindow, TrayMenuWindowViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<PasteWindow, PasteWindowViewModel>(Reuse.Singleton);
     registrator.RegisterViewWithViewModel<MainWindow, MainWindowViewModel>(Reuse.Transient);
+
+    registrator.Register<SettingsPageViewModel>(Reuse.Transient);
+    registrator.Register<PluginsPageViewModel>(Reuse.Transient);
+    registrator.Register<AboutPageViewModel>(Reuse.Transient);
   }
 
 

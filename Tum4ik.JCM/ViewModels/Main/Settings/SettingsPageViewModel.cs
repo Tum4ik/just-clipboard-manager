@@ -1,0 +1,10 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
+internal class SettingsPageViewModel
+{
+}

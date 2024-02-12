@@ -4,10 +4,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Application.Resources>
     <ResourceDictionary>
+      
       <ResourceDictionary.MergedDictionaries>
         <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-        <!-- Other merged dictionaries here -->
+        <ResourceDictionary Source="Styles/GlobalStyles.xaml"/>
       </ResourceDictionary.MergedDictionaries>
+          <Style TargetType="Page">
+  <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+</Style>
     </ResourceDictionary>
+    
   </Application.Resources>
 </Application>

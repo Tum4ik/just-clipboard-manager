@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:Tum4ik.JustClipboardManager.Controls"
         mc:Ignorable="d"
         Title="{x:Bind Vm.Title}"
         Activated="MainWindow_Activated">
@@ -20,5 +21,30 @@
              Width="16" Height="16"/>
       <TextBlock Text="{x:Bind Vm.Title}" FontSize="12" VerticalAlignment="Center" />
     </StackPanel>
+    <controls:AppNavigationView Grid.Row="1"
+                                IsPaneToggleButtonVisible="False"
+                                Margin="0, 0, 3, 3"
+                                PaneDisplayMode="Left"
+                                CompactPaneLength="90"
+                                OpenPaneLength="90">
+      <NavigationView.Resources>
+        <Thickness x:Key="NavigationViewContentGridBorderThickness">1</Thickness>
+        <CornerRadius x:Key="NavigationViewContentGridCornerRadius">4</CornerRadius>
+        <Thickness x:Key="NavigationViewPaneContentGridMargin">-1 -2 -2 -2</Thickness>
+        <Thickness x:Key="NavigationViewItemContentPresenterMargin">10</Thickness>
+
+        <Style TargetType="controls:AppBarNavigationViewItem">
+          <Setter Property="FontSize" Value="10"/>
+          <Setter Property="Height" Value="62"/>
+        </Style>
+      </NavigationView.Resources>
+      <NavigationView.MenuItems>
+        <controls:AppBarNavigationViewItem Glyph="&#xE713;" Text="Налаштування" NavigateTo="Settings"/>
+        <controls:AppBarNavigationViewItem Glyph="&#xEA86;" Text="Plugins" NavigateTo="Plugins"/>
+      </NavigationView.MenuItems>
+      <NavigationView.FooterMenuItems>
+        <controls:AppBarNavigationViewItem Glyph="&#xE946;" Text="About" NavigateTo="About"/>
+      </NavigationView.FooterMenuItems>
+    </controls:AppNavigationView>
   </Grid>
 </Window>
