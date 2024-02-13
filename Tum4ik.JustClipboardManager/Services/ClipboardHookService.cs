@@ -18,8 +18,8 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
     _eventAggregator = eventAggregator;
     _user32Dll = user32Dll;
 
-    _windowHandle = pasteWindowService.WindowHandle;
-    var isClipboardListenerAdded = user32Dll.AddClipboardFormatListener(_windowHandle);
+    _pasteWindowHandle = pasteWindowService.WindowHandle;
+    var isClipboardListenerAdded = user32Dll.AddClipboardFormatListener(_pasteWindowHandle);
     if (!isClipboardListenerAdded)
     {
       var ex = new Win32Exception();
@@ -35,7 +35,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 
 
   private static readonly object s_locker = new();
-  private readonly nint _windowHandle;
+  private readonly nint _pasteWindowHandle;
 
   private readonly System.Timers.Timer _timer = new(500)
   {
@@ -59,8 +59,8 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
           }
         }
         break;
-      case WM_DESTROY:
-        var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_windowHandle);
+      case WM_CLOSE:
+        var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_pasteWindowHandle);
         if (!isClipboardListenerRemoved)
         {
           Crashes.TrackError(new Win32Exception(), new Dictionary<string, string>

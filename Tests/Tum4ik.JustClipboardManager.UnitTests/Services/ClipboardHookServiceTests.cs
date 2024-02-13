@@ -68,7 +68,7 @@ public class ClipboardHookServiceTests
 
 
   [Fact]
-  internal void HwndHook_DestroyMsg_RemovesClipboardListener()
+  internal void HwndHook_CloseMsg_RemovesClipboardListener()
   {
     const nint WinHandle = 33;
     _pasteWindowService.WindowHandle.Returns(WinHandle);
@@ -78,7 +78,7 @@ public class ClipboardHookServiceTests
     var testeeService = new ClipboardHookService(_pasteWindowService, _eventAggregator, _user32Dll);
 
     var handled = false;
-    testeeService.HwndHook(WinHandle, 0x0002, default, default, ref handled);
+    testeeService.HwndHook(WinHandle, 0x0010, default, default, ref handled);
 
     _user32Dll.Received(1).RemoveClipboardFormatListener(WinHandle);
   }
