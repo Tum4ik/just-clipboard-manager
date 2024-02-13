@@ -54,7 +54,7 @@ internal interface IUser32DllService
   bool RemoveClipboardFormatListener(nint hwnd) => PInvoke.RemoveClipboardFormatListener((HWND) hwnd);
 
   /// <inheritdoc cref="PInvoke.SendInput(Span{INPUT}, int)"/>
-  uint SendInput(Span<INPUT> pInputs, int cbSize) => PInvoke.SendInput(pInputs, cbSize);
+  uint SendInput(INPUT[] pInputs, int cbSize) => PInvoke.SendInput(pInputs, cbSize);
 
   /// <inheritdoc cref="PInvoke.SetForegroundWindow(HWND)"/>
   bool SetForegroundWindow(nint hWnd) => PInvoke.SetForegroundWindow((HWND) hWnd);

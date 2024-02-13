@@ -1,9 +1,9 @@
 using System.IO;
-using YT.IIGen.Attributes;
+using Tum4ik.StinimGen.Attributes;
 
 namespace Tum4ik.JustClipboardManager.Ioc.Wrappers;
 
-[IIFor(typeof(Path), "PathWrapper")]
+[IIFor(typeof(Path), WrapperClassName = "PathWrapper")]
 internal partial interface IPath
 {
 }

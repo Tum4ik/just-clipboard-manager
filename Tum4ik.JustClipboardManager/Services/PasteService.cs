@@ -33,7 +33,7 @@ internal class PasteService : IPasteService
     var ctrl = VIRTUAL_KEY.VK_LCONTROL;
     var v = VIRTUAL_KEY.VK_V;
 
-    Span<INPUT> inputs = stackalloc INPUT[4];
+    var inputs = new INPUT[4];
     inputs[0].type = inputs[1].type = inputs[2].type = inputs[3].type = INPUT_TYPE.INPUT_KEYBOARD;
 
     inputs[0].Anonymous.ki.wVk = ctrl;
