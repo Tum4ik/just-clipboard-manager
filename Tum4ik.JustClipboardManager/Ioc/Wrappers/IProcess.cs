@@ -1,9 +1,9 @@
 using System.Diagnostics;
-using YT.IIGen.Attributes;
+using Tum4ik.StinimGen.Attributes;
 
 namespace Tum4ik.JustClipboardManager.Ioc.Wrappers;
 
-[IIFor(typeof(Process), "ProcessWrapper")]
+[IIFor(typeof(Process), WrapperClassName = "ProcessWrapper")]
 internal partial interface IProcess
 {
 }

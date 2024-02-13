@@ -38,7 +38,7 @@ public class ClipboardHookServiceTests
 
     var handled = false;
     testeeService.HwndHook(WinHandle, 0x031D, default, default, ref handled);
-    await Task.Delay(505);
+    await Task.Delay(600);
 
     clipboardChangedEvent.Received(1).Publish();
   }

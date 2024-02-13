@@ -1,9 +1,9 @@
 using System.Windows;
-using YT.IIGen.Attributes;
+using Tum4ik.StinimGen.Attributes;
 
 namespace Tum4ik.JustClipboardManager.Ioc.Wrappers;
 
-[IIFor(typeof(Clipboard), "ClipboardWrapper")]
+[IIFor(typeof(Clipboard), WrapperClassName = "ClipboardWrapper")]
 internal partial interface IClipboard
 {
 }

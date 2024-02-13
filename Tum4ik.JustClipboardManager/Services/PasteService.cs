@@ -19,7 +19,7 @@ internal class PasteService : IPasteService
   private static readonly unsafe int InputStructSize = sizeof(INPUT);
 
 
-  public void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data, string? additionalInfo)
+  public unsafe void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data, string? additionalInfo)
   {
     if (data.Count == 0)
     {
