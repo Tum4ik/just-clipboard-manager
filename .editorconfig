@@ -194,11 +194,16 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 # CA1010: Collections should implement generic interface
 dotnet_diagnostic.CA1010.severity = none
 
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
 
 dotnet_diagnostic.S1186.severity = none
+dotnet_diagnostic.S3885.severity = none
 dotnet_diagnostic.S4200.severity = none
+dotnet_diagnostic.S6602.severity = none
 
 dotnet_diagnostic.VSTHRD100.severity = none
 

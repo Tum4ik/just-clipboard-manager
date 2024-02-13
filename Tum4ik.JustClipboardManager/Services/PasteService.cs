@@ -19,7 +19,7 @@ internal class PasteService : IPasteService
   private static readonly unsafe int InputStructSize = sizeof(INPUT);
 
 
-  public void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data, string? additionalInfo)
+  public unsafe void PasteData(nint targetWindowPtr, ICollection<FormattedDataObject> data, string? additionalInfo)
   {
     if (data.Count == 0)
     {
@@ -33,7 +33,7 @@ internal class PasteService : IPasteService
     var ctrl = VIRTUAL_KEY.VK_LCONTROL;
     var v = VIRTUAL_KEY.VK_V;
 
-    var inputs = new INPUT[4];
+    Span<INPUT> inputs = stackalloc INPUT[4];
     inputs[0].type = inputs[1].type = inputs[2].type = inputs[3].type = INPUT_TYPE.INPUT_KEYBOARD;
 
     inputs[0].Anonymous.ki.wVk = ctrl;
