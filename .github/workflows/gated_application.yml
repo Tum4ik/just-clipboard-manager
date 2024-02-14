@@ -109,8 +109,16 @@ jobs:
 
     - name: Test
       run: |
+        $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsInstallationPath = & $vswherePath `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.Workload.ManagedDesktop Microsoft.VisualStudio.Workload.Web `
+          -requiresAny `
+          -property installationPath
+        $vstestPath = Join-Path $vsInstallationPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
         msbuild /t:Restore /t:Build /p:Configuration=Release
-        vstest.console.exe .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
+        & $vstestPath .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
           /Parallel `
           /Enablecodecoverage `
           /Collect:"Code Coverage;Format=Cobertura"
