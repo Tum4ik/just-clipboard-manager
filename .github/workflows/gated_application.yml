@@ -80,6 +80,22 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
+    - name: Test
+      run: |
+        $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsInstallationPath = & $vswherePath `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.Workload.ManagedDesktop Microsoft.VisualStudio.Workload.Web `
+          -requiresAny `
+          -property installationPath
+        $vstestPath = Join-Path $vsInstallationPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+        msbuild /t:Restore /t:Build /p:Configuration=Release
+        & $vstestPath .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
+          /Parallel `
+          /Enablecodecoverage `
+          /Collect:"Code Coverage;Format=Cobertura"
+
     - name: Define version
       id: define-version
       run: |
@@ -103,25 +119,6 @@ jobs:
         Write-Host "Build version: $version" -ForegroundColor green
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x64 -Version $version
-
-    # - name: Setup VSTest.console.exe
-    #   uses: darenm/Setup-VSTest@v1.2
-
-    - name: Test
-      run: |
-        $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-        $vsInstallationPath = & $vswherePath `
-          -latest `
-          -products * `
-          -requires Microsoft.VisualStudio.Workload.ManagedDesktop Microsoft.VisualStudio.Workload.Web `
-          -requiresAny `
-          -property installationPath
-        $vstestPath = Join-Path $vsInstallationPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-        msbuild /t:Restore /t:Build /p:Configuration=Release
-        & $vstestPath .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
-          /Parallel `
-          /Enablecodecoverage `
-          /Collect:"Code Coverage;Format=Cobertura"
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
