@@ -22,7 +22,7 @@
                     RenderingBias="Quality"/>
 
 
-  <Style TargetType="Window">
+  <Style x:Key="WindowBefore11Style" TargetType="Window">
     <Setter Property="UseLayoutRounding" Value="True"/>
     <Setter Property="WindowStyle" Value="None"/>
     <Setter Property="AllowsTransparency" Value="True"/>
@@ -32,6 +32,11 @@
     <Setter Property="BorderThickness" Value="1"/>
     <Setter Property="BorderBrush" Value="{DynamicResource {x:Static theming:AppColors.AppSurfaceBorderBrush}}"/>
     <Setter Property="Effect" Value="{StaticResource DefaultDropShadowEffect}"/>
+  </Style>
+
+  <Style TargetType="Window">
+    <Setter Property="UseLayoutRounding" Value="True"/>
+    <Setter Property="FontSize" Value="{StaticResource FontSize}"/>
   </Style>
 
   <Style TargetType="ContentControl">

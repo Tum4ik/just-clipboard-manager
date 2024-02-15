@@ -4,7 +4,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
@@ -34,18 +33,6 @@
                             CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       </controls:TabButtonsControl>
       <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}">
-        <i:Interaction.Triggers>
-          <i:DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
-                         Comparison="Equal"
-                         Value="Maximized">
-            <i:ChangePropertyAction PropertyName="CornerRadius" Value="0"/>
-          </i:DataTrigger>
-          <i:DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
-                         Comparison="NotEqual"
-                         Value="Maximized">
-            <i:ChangePropertyAction PropertyName="CornerRadius" Value="0, 0, 8, 8"/>
-          </i:DataTrigger>
-        </i:Interaction.Triggers>
         <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
                         prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
       </Border>

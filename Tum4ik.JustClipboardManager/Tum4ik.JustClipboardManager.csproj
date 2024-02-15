@@ -93,6 +93,7 @@
     <None Remove="Resources\Icons\warning-circle-filled.svg" />
     <None Remove="Views\MainDialog.xaml" />
     <None Remove="Views\Main\AboutView.xaml" />
+    <None Remove="Views\Main\MainDialogBefore11Window.xaml" />
     <None Remove="Views\Main\MainDialogWindow.xaml" />
     <None Remove="Views\Main\Plugins\PluginsInstalledView.xaml" />
     <None Remove="Views\Main\Plugins\PluginsSearchView.xaml" />

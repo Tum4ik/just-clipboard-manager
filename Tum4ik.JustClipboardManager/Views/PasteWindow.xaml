@@ -14,6 +14,7 @@
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="Manual"
         Margin="24"
+        Style="{StaticResource WindowBefore11Style}"
         x:Name="This">
   <Window.Resources>
     <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>
