@@ -32,7 +32,7 @@
                             IsChecked="{Binding IsAboutTabChecked}"
                             CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       </controls:TabButtonsControl>
-      <Border Background="{DynamicResource {x:Static theming:AppColors.AppContentAreaBackgroundBrush}}">
+      <Border Background="{DynamicResource {x:Static theming:AppColors.ViewContentAreaBackgroundBrush}}">
         <ContentControl prism:RegionManager.RegionManager="{prism:ContainerProvider Type={x:Type prism:IRegionManager}}"
                         prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogContent}"/>
       </Border>

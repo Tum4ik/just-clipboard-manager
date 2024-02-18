@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{82637701-F680-4526-ACD7-01E54950444E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.PluginDevKit", "Plugins\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj", "{877793B0-8BB2-4F06-B8FA-39B95D5C8F0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tum4ik.JustClipboardManager.TextPlugin", "Plugins\Tum4ik.JustClipboardManager.TextPlugin\Tum4ik.JustClipboardManager.TextPlugin.csproj", "{6DA0F318-A17F-4518-A324-423E5236ECB9}"
 EndProject

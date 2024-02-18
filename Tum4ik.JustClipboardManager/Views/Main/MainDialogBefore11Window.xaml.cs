@@ -124,30 +124,4 @@ internal partial class MainDialogBefore11Window : IDialogWindowExtended
   {
     Margin = _initialMargin;
   }
-
-
-  private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-  {
-    SystemCommands.MinimizeWindow(this);
-  }
-
-
-  private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
-  {
-    if (WindowState == WindowState.Normal)
-    {
-      SystemCommands.MaximizeWindow(this);
-    }
-    else if (WindowState == WindowState.Maximized)
-    {
-      SystemCommands.RestoreWindow(this);
-    }
-  }
-
-
-  private void CloseButton_Click(object sender, RoutedEventArgs e)
-  {
-    Result = new DialogResult();
-    Close();
-  }
 }

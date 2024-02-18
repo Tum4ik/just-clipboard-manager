@@ -5,9 +5,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
-        xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
-        xmlns:debug="debug-mode"
+        xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainDialogViewModel}}"
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen"
         Width="832" Height="632"
@@ -29,63 +29,7 @@
                 Effect="{TemplateBinding Effect}"
                 SizeChanged="Border_SizeChanged">
           <DockPanel>
-            <Grid DockPanel.Dock="Top" Height="32">
-              <Grid.ColumnDefinitions>
-                <!-- Icon -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- App name -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- Tag -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- Free space -->
-                <ColumnDefinition Width="*"/>
-                <!-- Caption buttons -->
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
-              <Image x:Name="_icon"
-                     Grid.Column="0"
-                     Source="/Resources/Icons/tray.ico"
-                     Width="16" Height="16"
-                     VerticalAlignment="Center"
-                     Margin="16, 0"/>
-              <TextBlock x:Name="_title"
-                         Grid.Column="1"
-                         Text="{Binding DataContext.Title, RelativeSource={RelativeSource TemplatedParent}}"
-                         FontSize="12"
-                         VerticalAlignment="Center"
-                         Margin="0, 0, 8, 0"/>
-              <TextBlock x:Name="_tag"
-                         Grid.Column="2"
-                         FontSize="12"
-                         Foreground="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
-                         VerticalAlignment="Center">
-                <mc:AlternateContent>
-                  <mc:Choice Requires="debug">
-                    <TextBlock.Text>
-                      <Binding Path="DataContext.Translate[Development]"
-                               RelativeSource="{RelativeSource TemplatedParent}"/>
-                    </TextBlock.Text>
-                  </mc:Choice>
-                </mc:AlternateContent>
-              </TextBlock>
-              <StackPanel Grid.Column="4" Orientation="Horizontal"
-                          WindowChrome.IsHitTestVisibleInChrome="True">
-                <controls:CaptionButton x:Name="_chromeMinimizeButton"
-                                        Icon="ChromeMinimize"
-                                        Click="MinimizeButton_Click"/>
-                <controls:CaptionButton x:Name="_chromeMaximizeRestoreButton"
-                                        Icon="ChromeMaximize"
-                                        Click="MaximizeRestoreButton_Click"/>
-                <controls:CaptionButton x:Name="_chromeCloseButton"
-                                        CornerRadius="0, 8, 0, 0"
-                                        Icon="ChromeClose"
-                                        Click="CloseButton_Click"
-                                        HoverBackgroundBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonHoverBackgroundBrush}}"
-                                        HoverIconBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonHoverIconBrush}}"
-                                        PressedBackgroundBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonPressedBackgroundBrush}}"
-                                        PressedIconBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonPressedIconBrush}}"/>
-              </StackPanel>
-            </Grid>
+            <controls:WindowTitleBar DockPanel.Dock="Top" />
             <ContentPresenter />
           </DockPanel>
         </Border>
@@ -95,16 +39,6 @@
           <Setter TargetName="_border" Property="CornerRadius" Value="0"/>
           <Setter Property="Effect" Value="{x:Null}"/>
           <Setter Property="BorderThickness" Value="0"/>
-          <Setter TargetName="_chromeMaximizeRestoreButton" Property="Icon" Value="ChromeRestore"/>
-          <Setter TargetName="_chromeCloseButton" Property="CornerRadius" Value="0"/>
-        </Trigger>
-        <Trigger Property="IsActive" Value="False">
-          <Setter TargetName="_icon" Property="Opacity" Value="0.5"/>
-          <Setter TargetName="_title" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-          <Setter TargetName="_tag" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-          <Setter TargetName="_chromeMinimizeButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-          <Setter TargetName="_chromeMaximizeRestoreButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-          <Setter TargetName="_chromeCloseButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
         </Trigger>
       </ControlTemplate.Triggers>
     </ControlTemplate>

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
+    <ProjectReference Include="..\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

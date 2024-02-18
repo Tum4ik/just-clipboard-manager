@@ -4,9 +4,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
+        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainDialogViewModel}}"
         Title="{Binding Title}"
         MinWidth="800" MinHeight="600"
-        WindowStartupLocation="CenterScreen">
-    
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow">
+  <WindowChrome.WindowChrome>
+    <WindowChrome  GlassFrameThickness="-1" />
+  </WindowChrome.WindowChrome>
+  <Window.Template>
+    <ControlTemplate TargetType="Window">
+      <DockPanel>
+        <controls:WindowTitleBar DockPanel.Dock="Top"/>
+        <ContentPresenter/>
+      </DockPanel>
+    </ControlTemplate>
+  </Window.Template>
 </Window>

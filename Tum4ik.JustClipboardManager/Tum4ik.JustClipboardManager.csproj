@@ -41,6 +41,7 @@
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
     <None Remove="Controls\ToggleSwitch.xaml" />
+    <None Remove="Controls\WindowTitleBar.xaml" />
     <None Remove="Controls\WinUiButton.xaml" />
     <None Remove="Controls\WinUiCheckBox.xaml" />
     <None Remove="Controls\WinUiComboBox.xaml" />
@@ -203,7 +204,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
+    <ProjectReference Include="..\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\Tum4ik.JustClipboardManager.PluginDevKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

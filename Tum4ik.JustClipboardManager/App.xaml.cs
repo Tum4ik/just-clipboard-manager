@@ -88,7 +88,8 @@ public partial class App : ISingleInstance
     {
       { "Message", "Unhandled Exception" },
       { "OS Architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86" },
-      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" }
+      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" },
+      { "OS Version", Environment.OSVersion.Version.ToString() }
     });
     Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
     e.Handled = true;
