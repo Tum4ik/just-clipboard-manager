@@ -18,6 +18,7 @@ AccessibleObjectFromWindow
 
 // Methods (user32.dll) ---------------------------------------------------------------------------
 GetCursorPos
+GetSystemMetrics
 SetWindowPos
 ShowWindow
 GetForegroundWindow

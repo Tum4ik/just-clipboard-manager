@@ -20,7 +20,7 @@ internal partial class MainDialogBefore11Window : IDialogWindowExtended
   private readonly ISHCoreDllService _shCoreDll;
 
   public MainDialogBefore11Window(IUser32DllService user32Dll,
-                          ISHCoreDllService shCoreDll)
+                                  ISHCoreDllService shCoreDll)
   {
     _user32Dll = user32Dll;
     _shCoreDll = shCoreDll;

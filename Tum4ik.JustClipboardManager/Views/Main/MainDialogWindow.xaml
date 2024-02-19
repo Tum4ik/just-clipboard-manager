@@ -11,16 +11,19 @@
         Title="{Binding Title}"
         MinWidth="800" MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow">
+        WindowStyle="SingleBorderWindow"
+        StateChanged="Window_StateChanged">
   <WindowChrome.WindowChrome>
-    <WindowChrome  GlassFrameThickness="-1" />
+    <WindowChrome CaptionHeight="28" GlassFrameThickness="-1" />
   </WindowChrome.WindowChrome>
   <Window.Template>
     <ControlTemplate TargetType="Window">
-      <DockPanel>
-        <controls:WindowTitleBar DockPanel.Dock="Top"/>
-        <ContentPresenter/>
-      </DockPanel>
+      <AdornerDecorator>
+        <DockPanel Margin="{TemplateBinding Padding}">
+          <controls:WindowTitleBar DockPanel.Dock="Top"/>
+          <ContentPresenter/>
+        </DockPanel>
+      </AdornerDecorator>
     </ControlTemplate>
   </Window.Template>
 </Window>
