@@ -67,7 +67,7 @@
       </Grid>
     </VisualBrush.Visual>
   </VisualBrush>
-  <SolidColorBrush x:Key="{x:Static theming:AppColors.AppContentAreaBackgroundBrush}" Color="White" Opacity="0.7"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.AppContentAreaBackgroundBrush}" Color="#F3F3F3" />
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ViewContentAreaBackgroundBrush}" Color="White" Opacity="0.5"/>
 
   <Brush x:Key="{x:Static theming:AppColors.SimpleDialogBackgroundBrush}">#F3F3F3</Brush>

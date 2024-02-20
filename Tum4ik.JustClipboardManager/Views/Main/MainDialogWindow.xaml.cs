@@ -1,15 +1,13 @@
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
 using Prism.Events;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Helpers;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Windows.Win32;
-using Windows.Win32.Foundation;
-using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Gdi;
 using Windows.Win32.UI.HiDpi;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -41,10 +39,9 @@ internal partial class MainDialogWindow : IDialogWindowExtended
   public override void OnApplyTemplate()
   {
     base.OnApplyTemplate();
-    RemoveDefaultTitleBar();
-    RemoveBackground();
-    ApplyBackdrop(); // TODO: apply Mica backdrop from settings if allowed for OS
-    ApplyTheme(_themeService.SelectedTheme.ThemeType);
+    WindowHelper.RemoveDefaultTitleBar(Handle);
+    WindowHelper.ApplyBackdrop(Handle); // TODO: apply Mica backdrop from settings if allowed for OS
+    WindowHelper.ApplyTheme(Handle, _themeService.SelectedTheme.ThemeType);
   }
 
 
@@ -57,69 +54,7 @@ internal partial class MainDialogWindow : IDialogWindowExtended
 
   private void OnThemeChanged()
   {
-    ApplyTheme(_themeService.SelectedTheme.ThemeType);
-  }
-
-
-  private void RemoveDefaultTitleBar()
-  {
-    var hwnd = (HWND) Handle;
-    var windowStyleLong = PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
-    windowStyleLong &= ~(int) WINDOW_STYLE.WS_SYSMENU;
-    if (nint.Size == 4)
-    {
-      _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
-    }
-    else
-    {
-      PInvoke.SetWindowLongPtr(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
-    }
-  }
-
-
-  private void RemoveBackground()
-  {
-    SetCurrentValue(BackgroundProperty, Brushes.Transparent);
-    var windowSource = HwndSource.FromHwnd(Handle);
-    if (windowSource?.Handle != IntPtr.Zero && windowSource?.CompositionTarget != null)
-    {
-      windowSource.CompositionTarget.BackgroundColor = Colors.Transparent;
-    }
-  }
-
-
-  private unsafe void ApplyBackdrop()
-  {
-    if (Environment.OSVersion.Version >= new Version("10.0.22523"))
-    {
-      var backdropType = DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW;
-      PInvoke.DwmSetWindowAttribute(
-        (HWND) Handle,
-        DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
-        &backdropType,
-        sizeof(DWM_SYSTEMBACKDROP_TYPE)
-      );
-    }
-    else
-    {
-      var backdropPvAttribute = 1;
-      PInvoke.DwmSetWindowAttribute(
-        (HWND) Handle,
-        (DWMWINDOWATTRIBUTE) 1029,
-        &backdropPvAttribute,
-        sizeof(int)
-      );
-    }
-  }
-
-
-  private unsafe void ApplyTheme(ThemeType themeType)
-  {
-    var dwAttribute = Environment.OSVersion.Version >= new Version("10.0.22523")
-      ? DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE
-      : (DWMWINDOWATTRIBUTE) 19;
-    var enableDark = themeType == ThemeType.Dark ? 0x1 : 0x0;
-    PInvoke.DwmSetWindowAttribute((HWND) Handle, dwAttribute, &enableDark, sizeof(int));
+    WindowHelper.ApplyTheme(Handle, _themeService.SelectedTheme.ThemeType);
   }
 
 

@@ -72,6 +72,7 @@
   </Style>
 
   <Style TargetType="controls:CaptionButton">
+    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
     <Setter Property="Cursor" Value="Hand"/>
     <Setter Property="HoverBackgroundBrush" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
     <Setter Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>

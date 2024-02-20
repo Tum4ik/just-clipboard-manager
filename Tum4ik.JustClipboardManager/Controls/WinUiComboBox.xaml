@@ -8,13 +8,15 @@
           mc:Ignorable="d"
           x:Name="this"
           Height="32"
-          MinWidth="128">
+          MinWidth="128"
+          FocusVisualStyle="{x:Null}">
   <ComboBox.Template>
     <ControlTemplate TargetType="controls:WinUiComboBox">
       <Grid>
         <ToggleButton x:Name="_toggleButton"
                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                      Cursor="Hand">
+                      Cursor="Hand"
+                      Focusable="False">
           <ToggleButton.Template>
             <ControlTemplate TargetType="ToggleButton">
               <Border x:Name="_border"
