@@ -55,6 +55,8 @@
     <None Remove="Resources\Icons\check-circle-filled.svg" />
     <None Remove="Resources\Icons\check-circle.svg" />
     <None Remove="Resources\Icons\check.svg" />
+    <None Remove="Resources\Icons\chevron-down.svg" />
+    <None Remove="Resources\Icons\chevron-up.svg" />
     <None Remove="Resources\Icons\chevron.svg" />
     <None Remove="Resources\Icons\chrome-close.svg" />
     <None Remove="Resources\Icons\chrome-maximize.svg" />
@@ -137,6 +139,8 @@
     <Resource Include="Resources\Icons\check-circle-filled.svg" />
     <Resource Include="Resources\Icons\check-circle.svg" />
     <Resource Include="Resources\Icons\check.svg" />
+    <Resource Include="Resources\Icons\chevron-down.svg" />
+    <Resource Include="Resources\Icons\chevron-up.svg" />
     <Resource Include="Resources\Icons\chevron.svg" />
     <Resource Include="Resources\Icons\chrome-close.svg" />
     <Resource Include="Resources\Icons\chrome-maximize.svg" />
