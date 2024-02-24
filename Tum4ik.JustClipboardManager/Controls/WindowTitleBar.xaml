@@ -57,7 +57,7 @@
                                   Icon="ChromeMaximize"
                                   Click="MaximizeRestoreButton_Click"/>
           <controls:CaptionButton x:Name="_chromeCloseButton"
-                                  CornerRadius="0, 8, 0, 0"
+                                  CornerRadius="0, 6, 0, 0"
                                   Icon="ChromeClose"
                                   Click="CloseButton_Click"
                                   HoverBackgroundBrush="{DynamicResource {x:Static theming:AppColors.ShellCloseButtonHoverBackgroundBrush}}"

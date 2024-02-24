@@ -8,6 +8,7 @@ using Windows.Win32.Graphics.Gdi;
 using static Windows.Win32.PInvoke;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace Tum4ik.JustClipboardManager.Views.Main;
 
@@ -123,5 +124,23 @@ internal partial class MainDialogBefore11Window : IDialogWindowExtended
   private void BeforeRestore()
   {
     Margin = _initialMargin;
+  }
+
+
+  private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+  {
+    ResetFocus();
+  }
+
+
+  private void Window_Deactivated(object sender, EventArgs e)
+  {
+    ResetFocus();
+  }
+
+
+  private void ResetFocus()
+  {
+    MoveFocus(new(FocusNavigationDirection.Last));
   }
 }

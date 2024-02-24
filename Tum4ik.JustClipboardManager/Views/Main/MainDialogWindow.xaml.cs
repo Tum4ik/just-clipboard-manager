@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using Prism.Events;
 using Prism.Services.Dialogs;
@@ -89,5 +90,21 @@ internal partial class MainDialogWindow : IDialogWindowExtended
     }
 
     return default;
+  }
+
+
+  private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+  {
+    ResetFocus();
+  }
+
+  private void Window_Deactivated(object sender, EventArgs e)
+  {
+    ResetFocus();
+  }
+
+  private void ResetFocus()
+  {
+    MoveFocus(new(FocusNavigationDirection.Last));
   }
 }

@@ -13,7 +13,9 @@
         Width="832" Height="632"
         Icon="/Resources/Icons/tray.ico"
         ResizeMode="NoResize"
-        Style="{StaticResource WindowBefore11Style}">
+        Style="{StaticResource WindowBefore11Style}"
+        MouseDown="Window_MouseDown"
+        Deactivated="Window_Deactivated">
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="32" ResizeBorderThickness="0"/>
   </WindowChrome.WindowChrome>
