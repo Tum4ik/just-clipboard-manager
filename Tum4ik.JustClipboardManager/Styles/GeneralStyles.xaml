@@ -1,7 +1,7 @@
 <ResourceDictionary x:Class="Tum4ik.JustClipboardManager.Styles.GeneralStyles"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-                    xmlns:system="clr-namespace:System;assembly=netstandard" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=netstandard"
                     xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
                     xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
                     xmlns:math="http://hexinnovation.com/math">
@@ -13,7 +13,7 @@
   <ContextMenu x:Key="ContextMenuDisabled" Visibility="Collapsed"/>
 
 
-  <DropShadowEffect x:Key="DefaultDropShadowEffect" 
+  <DropShadowEffect x:Key="DefaultDropShadowEffect"
                     Color="Black"
                     Direction="270"
                     Opacity="{DynamicResource ShadowOpacity}"
@@ -68,6 +68,9 @@
     <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
   </Style>
   <Style TargetType="controls:NavigationButton">
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
+  </Style>
+  <Style TargetType="controls:AppBarNavigationButton">
     <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
   </Style>
 
@@ -168,7 +171,7 @@
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <controls:SvgIcon Grid.Column="0" 
+        <controls:SvgIcon Grid.Column="0"
                           x:Name="_checkIcon"
                           Visibility="Collapsed"
                           Icon="Check" Color="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"
