@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance {x:Type vm:MainDialogViewModel}}"
         Title="{Binding Title}"
         WindowStartupLocation="CenterScreen"
-        Width="832" Height="632"
+        Width="930" Height="632"
         Icon="/Resources/Icons/tray.ico"
         ResizeMode="NoResize"
         Style="{StaticResource WindowBefore11Style}"

@@ -39,6 +39,7 @@
     <None Remove="Controls\NumberBox.xaml" />
     <None Remove="Controls\PluginCard.xaml" />
     <None Remove="Controls\SearchBox.xaml" />
+    <None Remove="Controls\SettingCard\SettingCard.xaml" />
     <None Remove="Controls\TabButton.xaml" />
     <None Remove="Controls\TabButtonsControl.xaml" />
     <None Remove="Controls\ToggleSwitch.xaml" />
@@ -47,6 +48,8 @@
     <None Remove="Controls\WinUiCheckBox.xaml" />
     <None Remove="Controls\WinUiComboBox.xaml" />
     <None Remove="Resources\Assets\noise-256.png" />
+    <None Remove="Resources\Icons\auto-delete.svg" />
+    <None Remove="Resources\Icons\autostart-app.svg" />
     <None Remove="Resources\Icons\bug-report.svg" />
     <None Remove="Resources\Icons\cancel-circle-filled.svg" />
     <None Remove="Resources\Icons\caret-down.svg" />
@@ -77,13 +80,16 @@
     <None Remove="Resources\Icons\file.svg" />
     <None Remove="Resources\Icons\files.svg" />
     <None Remove="Resources\Icons\format-list-numbered-rtl.svg" />
+    <None Remove="Resources\Icons\frame.svg" />
     <None Remove="Resources\Icons\info-filled.svg" />
     <None Remove="Resources\Icons\info.svg" />
     <None Remove="Resources\Icons\keyboard.svg" />
+    <None Remove="Resources\Icons\language.svg" />
     <None Remove="Resources\Icons\light-mode.svg" />
     <None Remove="Resources\Icons\lightbulb.svg" />
     <None Remove="Resources\Icons\live-help.svg" />
     <None Remove="Resources\Icons\manage-search.svg" />
+    <None Remove="Resources\Icons\palette.svg" />
     <None Remove="Resources\Icons\paste-window.svg" />
     <None Remove="Resources\Icons\scroll-left-arrow.svg" />
     <None Remove="Resources\Icons\scroll-right-arrow.svg" />
@@ -92,6 +98,7 @@
     <None Remove="Resources\Icons\spinner.svg" />
     <None Remove="Resources\Icons\tray-dev.ico" />
     <None Remove="Resources\Icons\tray.ico" />
+    <None Remove="Resources\Icons\tune.svg" />
     <None Remove="Resources\Icons\ukraine.svg" />
     <None Remove="Resources\Icons\usa.svg" />
     <None Remove="Resources\Icons\warning-circle-filled.svg" />
@@ -131,6 +138,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\Assets\noise-256.png" />
+    <Resource Include="Resources\Icons\auto-delete.svg" />
+    <Resource Include="Resources\Icons\autostart-app.svg" />
     <Resource Include="Resources\Icons\bug-report.svg" />
     <Resource Include="Resources\Icons\cancel-circle-filled.svg" />
     <Resource Include="Resources\Icons\caret-down.svg" />
@@ -161,13 +170,16 @@
     <Resource Include="Resources\Icons\file.svg" />
     <Resource Include="Resources\Icons\files.svg" />
     <Resource Include="Resources\Icons\format-list-numbered-rtl.svg" />
+    <Resource Include="Resources\Icons\frame.svg" />
     <Resource Include="Resources\Icons\info-filled.svg" />
     <Resource Include="Resources\Icons\info.svg" />
     <Resource Include="Resources\Icons\keyboard.svg" />
+    <Resource Include="Resources\Icons\language.svg" />
     <Resource Include="Resources\Icons\light-mode.svg" />
     <Resource Include="Resources\Icons\lightbulb.svg" />
     <Resource Include="Resources\Icons\live-help.svg" />
     <Resource Include="Resources\Icons\manage-search.svg" />
+    <Resource Include="Resources\Icons\palette.svg" />
     <Resource Include="Resources\Icons\paste-window.svg" />
     <Resource Include="Resources\Icons\scroll-left-arrow.svg" />
     <Resource Include="Resources\Icons\scroll-right-arrow.svg" />
@@ -176,6 +188,7 @@
     <Resource Include="Resources\Icons\spinner.svg" />
     <Resource Include="Resources\Icons\tray-dev.ico" />
     <Resource Include="Resources\Icons\tray.ico" />
+    <Resource Include="Resources\Icons\tune.svg" />
     <Resource Include="Resources\Icons\ukraine.svg" />
     <Resource Include="Resources\Icons\usa.svg" />
     <Resource Include="Resources\Icons\warning-circle-filled.svg" />
@@ -183,6 +196,10 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="DependencyPropertyGenerator" Version="1.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="Humanizer.Core.uk" Version="2.14.1" />
     <PackageReference Include="MathConverter" Version="2.2.1" />
@@ -198,7 +215,7 @@
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Octokit" Version="9.1.2" />
+    <PackageReference Include="Octokit" Version="10.0.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="SingleInstanceCore" Version="2.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.9.28">

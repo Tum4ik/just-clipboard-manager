@@ -17,7 +17,7 @@
         <Setter Property="Command" Value="{Binding NavigateCommand}"/>
       </Style>
     </controls:NavigationPanel.Resources>
-    <controls:NavigationButton Icon="Settings" Text="{Binding Translate[General]}"
+    <controls:NavigationButton Icon="Tune" Text="{Binding Translate[General]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsGeneralView}"
                                IsChecked="True"/>
     <controls:NavigationButton Icon="DisplaySettings" Text="{Binding Translate[Interface]}"

@@ -97,6 +97,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Starts automatically when you sign in.
+        /// </summary>
+        internal static string AutoStartApplication_Description {
+            get {
+                return ResourceManager.GetString("AutoStartApplication_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Looks like the corresponding file with plugins info is corrupted or has wrong format. Please try again later..
         /// </summary>
         internal static string AvailablePluginsInfoLoadProblem_Body {
@@ -241,6 +250,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatically deletes clips that are older than a specified number of days/months/years.
+        /// </summary>
+        internal static string DeleteClipsOlderThan_Description {
+            get {
+                return ResourceManager.GetString("DeleteClipsOlderThan_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Development.
         /// </summary>
         internal static string Development {
@@ -372,6 +390,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The language for the user interface.
+        /// </summary>
+        internal static string Language_Description {
+            get {
+                return ResourceManager.GetString("Language_Description", resourceCulture);
             }
         }
         
@@ -615,6 +642,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Theme {
             get {
                 return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The visual appearance of the user interface.
+        /// </summary>
+        internal static string Theme_Description {
+            get {
+                return ResourceManager.GetString("Theme_Description", resourceCulture);
             }
         }
         

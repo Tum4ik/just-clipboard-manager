@@ -10,6 +10,7 @@
         d:DataContext="{d:DesignInstance {x:Type vm:MainDialogViewModel}}"
         Title="{Binding Title}"
         MinWidth="800" MinHeight="600"
+        Width="1000"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         StateChanged="Window_StateChanged"

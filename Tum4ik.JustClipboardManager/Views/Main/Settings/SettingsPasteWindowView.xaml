@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+             xmlns:settingcard="clr-namespace:Tum4ik.JustClipboardManager.Controls.SettingCard"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SettingsPasteWindowViewModel}"
              x:Name="this">
@@ -23,15 +24,17 @@
       </TextBlock>
     </DataTemplate>
   </UserControl.Resources>
-  <ItemsControl HorizontalAlignment="Center">
-    <DockPanel>
-      <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+  <ItemsControl>
+    <settingcard:SettingCard Margin="0"
+                             Icon="Frame"
+                             Header="{Binding Translate[Snapping]}">
+      <StackPanel>
         <controls:WinUiComboBox x:Name="_snappingTypeComboBox"
                                 ItemsSource="{Binding SnappingTypes}"
                                 SelectedItem="{Binding SnappingType}"
                                 ItemTemplate="{StaticResource TranslatedItemTemplate}"
                                 SelectedItemTemplate="{StaticResource TranslatedItemTemplate}"/>
-        <controls:WinUiComboBox Margin="8, 0"
+        <controls:WinUiComboBox Margin="0, 4, 0, 0"
                                 ItemsSource="{Binding SnappingDisplayCorners}"
                                 SelectedItem="{Binding SnappingDisplayCorner}"
                                 ItemTemplate="{StaticResource TranslatedItemTemplate}"
@@ -48,10 +51,7 @@
             </i:DataTrigger>
           </i:Interaction.Triggers>
         </controls:WinUiComboBox>
-      </WrapPanel>
-      <TextBlock Text="{Binding Translate[Snapping]}"
-                 VerticalAlignment="Center"
-                 Margin="12, 0"/>
-    </DockPanel>
+      </StackPanel>
+    </settingcard:SettingCard>
   </ItemsControl>
 </UserControl>
