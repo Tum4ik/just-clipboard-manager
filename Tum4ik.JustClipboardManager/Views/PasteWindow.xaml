@@ -9,6 +9,7 @@
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
+        Activated="This_Activated"
         IsVisibleChanged="This_IsVisibleChanged"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
@@ -44,7 +45,9 @@
     </ControlTemplate>
   </Window.Template>
   <DockPanel>
-    <controls:SearchBox DockPanel.Dock="Top" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
+    <controls:SearchBox x:Name="_searchBox"
+                        DockPanel.Dock="Top"
+                        Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
     <ListBox x:Name="_listBox" Margin="0, 4, 0, 0"
              ItemsSource="{Binding Clips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"

@@ -24,6 +24,12 @@ public partial class PasteWindow
   private ScrollViewer? _scrollViewer;
 
 
+  private void This_Activated(object sender, EventArgs e)
+  {
+    _searchBox.Focus();
+  }
+
+
   private void This_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
   {
     if (!(bool) e.NewValue)
