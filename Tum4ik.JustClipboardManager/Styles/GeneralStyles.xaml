@@ -257,7 +257,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Separator">
-          <Border Background="{DynamicResource {x:Static theming:AppColors.ItemDividerBrush}}" Height="1"/>
+          <Border Background="{DynamicResource {x:Static theming:AppColors.ItemDividerBrush}}"/>
         </ControlTemplate>
       </Setter.Value>
     </Setter>

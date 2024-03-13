@@ -76,9 +76,8 @@ internal class PasteWindowService : IPasteWindowService
       WindowHandle, nint.Zero, _windowPosition.X, _windowPosition.Y, 0, 0,
       SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
     );
-    _pasteWindow.SizeChanged += PasteWindow_SizeChanged;
-    _pasteWindow.Deactivated += PasteWindow_Deactivated;
     _pasteWindow.Show();
+    KeepWindowOnScreen();
     _pasteWindow.Activate();
   }
 
@@ -89,14 +88,14 @@ internal class PasteWindowService : IPasteWindowService
   }
 
 
-  private void PasteWindow_SizeChanged(object? sender, System.Windows.SizeChangedEventArgs e)
+  private void KeepWindowOnScreen()
   {
     var monitorHandle = GetMonitorHandle();
     var monitorInfo = GetMonitorInfo(monitorHandle);
     _shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY);
 
-    var windowPixelWidth = e.NewSize.Width * dpiX / 96;
-    var windowPixelHeight = e.NewSize.Height * dpiY / 96;
+    var windowPixelWidth = _pasteWindow.ActualWidth * dpiX / 96;
+    var windowPixelHeight = _pasteWindow.ActualHeight * dpiY / 96;
 
     var winLeft = _windowPosition.X;
     var winTop = _windowPosition.Y;
@@ -106,20 +105,13 @@ internal class PasteWindowService : IPasteWindowService
     }
     if (winTop + windowPixelHeight > monitorInfo.rcWork.bottom)
     {
-      winTop = Math.Min(monitorInfo.rcWork.bottom - (int) windowPixelHeight, winTop - (int) windowPixelHeight);
+      winTop = monitorInfo.rcWork.bottom - (int) windowPixelHeight;
     }
 
     if (winLeft != _windowPosition.X || winTop != _windowPosition.Y)
     {
       SetWindowPosition(winLeft, winTop);
     }
-  }
-
-
-  private void PasteWindow_Deactivated(object? sender, EventArgs e)
-  {
-    _pasteWindow.SizeChanged -= PasteWindow_SizeChanged;
-    _pasteWindow.Deactivated -= PasteWindow_Deactivated;
   }
 
 

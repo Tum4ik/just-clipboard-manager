@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.ViewModels;
+using System.Windows.Controls.Primitives;
 
 namespace Tum4ik.JustClipboardManager.Views;
 
@@ -22,6 +23,14 @@ public partial class PasteWindow
   private static readonly object s_locker = new();
   private bool _isLoading;
   private ScrollViewer? _scrollViewer;
+  private Border? _windowBorder;
+
+
+  public override void OnApplyTemplate()
+  {
+    base.OnApplyTemplate();
+    _windowBorder = (Border) GetTemplateChild("_windowBorder");
+  }
 
 
   private void This_Activated(object sender, EventArgs e)
@@ -60,6 +69,34 @@ public partial class PasteWindow
     else
     {
       _isLoading = false;
+    }
+  }
+
+
+  private void Thumb_VerticalDragDelta(object sender, DragDeltaEventArgs e)
+  {
+    if (_windowBorder is null)
+    {
+      return;
+    }
+    var newHeight = _windowBorder.ActualHeight + e.VerticalChange;
+    if (newHeight > 0)
+    {
+      _windowBorder.Height = newHeight;
+    }
+  }
+
+
+  private void Thumb_HorizontalDragDelta(object sender, DragDeltaEventArgs e)
+  {
+    if (_windowBorder is null)
+    {
+      return;
+    }
+    var newWidth = _windowBorder.ActualWidth + e.HorizontalChange;
+    if (newWidth > 0)
+    {
+      _windowBorder.Width = newWidth;
     }
   }
 }

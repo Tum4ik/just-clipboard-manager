@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AppCenter.Crashes;
 using Prism.Events;
@@ -37,8 +38,10 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   private bool _windowDeactivationTriggeredByDataPasting;
 
-  private readonly Dictionary<int, Clip> _dbClips = new();
-  public ObservableCollection<ClipDto> Clips { get; } = new();
+  private readonly Dictionary<int, Clip> _dbClips = [];
+  public ObservableCollection<ClipDto> Clips { get; } = [];
+
+  [ObservableProperty] private bool _isSettingsMode;
 
 
   private string? _search;
@@ -49,7 +52,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     {
       if (SetProperty(ref _search, value))
       {
-        SearchStarted?.Invoke();
         _dbClips.Clear();
         Clips.Clear();
         _loadedClipsCount = 0;
@@ -57,8 +59,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
     }
   }
-
-  public event Action? SearchStarted;
 
 
   public async Task LoadNextClipsBatchAsync()
@@ -94,6 +94,13 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
 
     _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(null);
+  }
+
+
+  [RelayCommand]
+  private void Settings()
+  {
+    IsSettingsMode = !IsSettingsMode;
   }
 
 

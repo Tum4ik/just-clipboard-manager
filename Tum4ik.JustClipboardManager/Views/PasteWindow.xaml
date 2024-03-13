@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels" 
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls" 
+        xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
@@ -19,6 +19,7 @@
         x:Name="This">
   <Window.Resources>
     <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </Window.Resources>
   <i:Interaction.Triggers>
     <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=This}">
@@ -31,8 +32,11 @@
   </i:Interaction.Triggers>
   <Window.Template>
     <ControlTemplate TargetType="Window">
-      <Border Width="300"
-              MaxHeight="300"
+      <Border x:Name="_windowBorder"
+              Width="420"
+              Height="300"
+              MinWidth="200"
+              MinHeight="86"
               CornerRadius="8"
               Margin="{TemplateBinding Margin}"
               Background="{TemplateBinding Background}"
@@ -40,14 +44,68 @@
               BorderBrush="{TemplateBinding BorderBrush}"
               Effect="{TemplateBinding Effect}"
               Padding="4">
-        <ContentPresenter/>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <ContentPresenter Grid.Row="0" Grid.Column="0"/>
+          <Thumb Grid.Row="1" Grid.Column="0" Cursor="SizeNS" DragDelta="Thumb_VerticalDragDelta"
+                 Visibility="{Binding DataContext.IsSettingsMode, ElementName=This, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Thumb.Template>
+              <ControlTemplate>
+                <Border Height="5" Margin="2, 4, 2, 0" Background="Transparent">
+                  <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                             Background="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+                </Border>
+              </ControlTemplate>
+            </Thumb.Template>
+          </Thumb>
+          <Thumb Grid.Row="0" Grid.Column="1" Cursor="SizeWE" DragDelta="Thumb_HorizontalDragDelta"
+                 Visibility="{Binding DataContext.IsSettingsMode, ElementName=This, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Thumb.Template>
+              <ControlTemplate>
+                <Border Width="5" Margin="4, 2, 0, 2" Background="Transparent">
+                  <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                               Background="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+                  </StackPanel>
+                </Border>
+              </ControlTemplate>
+            </Thumb.Template>
+          </Thumb>
+        </Grid>
       </Border>
     </ControlTemplate>
   </Window.Template>
   <DockPanel>
-    <controls:SearchBox x:Name="_searchBox"
-                        DockPanel.Dock="Top"
-                        Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"/>
+    <Grid DockPanel.Dock="Top">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <controls:SearchBox x:Name="_searchBox"
+                          Grid.Column="0"
+                          Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
+                          Margin="0, 0, 4, 0"/>
+      <controls:WinUiButton Grid.Column="1"
+                            Icon="Settings"
+                            ToolTip="{Binding Translate[Settings]}"
+                            Command="{Binding SettingsCommand}">
+        <i:Interaction.Triggers>
+          <i:DataTrigger Binding="{Binding IsSettingsMode}" Value="True">
+            <i:ChangePropertyAction PropertyName="ButtonStyle" Value="Accent"/>
+          </i:DataTrigger>
+          <i:DataTrigger Binding="{Binding IsSettingsMode}" Value="False">
+            <i:ChangePropertyAction PropertyName="ButtonStyle" Value="Standard"/>
+          </i:DataTrigger>
+        </i:Interaction.Triggers>
+      </controls:WinUiButton>
+    </Grid>
     <ListBox x:Name="_listBox" Margin="0, 4, 0, 0"
              ItemsSource="{Binding Clips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
