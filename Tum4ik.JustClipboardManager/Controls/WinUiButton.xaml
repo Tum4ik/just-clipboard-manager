@@ -33,7 +33,7 @@
         </Border>
         <Rectangle x:Name="_accentBorder"
                    StrokeThickness="1"
-                   RadiusX="4" RadiusY="4" Margin="1"
+                   RadiusX="4" RadiusY="4"
                    Stroke="{DynamicResource {x:Static theming:AppColors.ControlAccentBorderBrush}}"
                    Visibility="Collapsed"/>
         <Border x:Name="_focusBorder"
