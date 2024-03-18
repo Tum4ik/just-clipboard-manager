@@ -1,15 +1,17 @@
 using System.Windows;
 using System.Windows.Controls;
-using Tum4ik.JustClipboardManager.Extensions;
-using Tum4ik.JustClipboardManager.ViewModels;
 using System.Windows.Controls.Primitives;
+using System.Windows.Interop;
+using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.ViewModels;
 
 namespace Tum4ik.JustClipboardManager.Views;
 
 /// <summary>
 /// Interaction logic for PasteWindow.xaml
 /// </summary>
-public partial class PasteWindow
+internal partial class PasteWindow
 {
   private PasteWindowViewModel _vm = null!;
 
@@ -26,10 +28,20 @@ public partial class PasteWindow
   private Border? _windowBorder;
 
 
+  private nint? _handle;
+  public nint Handle => _handle ??= new WindowInteropHelper(this).EnsureHandle();
+
+
   public override void OnApplyTemplate()
   {
     base.OnApplyTemplate();
     _windowBorder = (Border) GetTemplateChild("_windowBorder");
+  }
+
+
+  internal Task<PasteWindowResult?> WaitForInputResultAsync()
+  {
+    return _vm.WaitForInputAsync();
   }
 
 

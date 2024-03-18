@@ -7,7 +7,6 @@ using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
-using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -16,7 +15,6 @@ namespace Tum4ik.JustClipboardManager.ViewModels;
 
 internal partial class PasteWindowViewModel : TranslationViewModel
 {
-  private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
 
@@ -26,7 +24,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
                               IPluginsService pluginsService)
     : base(translationService, eventAggregator)
   {
-    _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
   }
@@ -37,6 +34,8 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private int _loadedClipsCount;
 
   private bool _windowDeactivationTriggeredByDataPasting;
+
+  private TaskCompletionSource<PasteWindowResult?>? _showPasteWindowTcs;
 
   private readonly Dictionary<int, Clip> _dbClips = [];
   public ObservableCollection<ClipDto> Clips { get; } = [];
@@ -68,6 +67,13 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   }
 
 
+  public Task<PasteWindowResult?> WaitForInputAsync()
+  {
+    _showPasteWindowTcs = new();
+    return _showPasteWindowTcs.Task;
+  }
+
+
   [RelayCommand]
   private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
@@ -81,6 +87,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       Search = null;
       _dbClips.Clear();
       Clips.Clear();
+      IsSettingsMode = false;
     }
   }
 
@@ -93,7 +100,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       return;
     }
 
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(null);
+    SetInputResult(null);
   }
 
 
@@ -114,7 +121,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
 
     var dataObjects = clip.FormattedDataObjects;
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(new()
+    SetInputResult(new()
     {
       FormattedDataObjects = dataObjects,
       AdditionalInfo = clip.AdditionalInfo
@@ -134,6 +141,12 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       Clips.Remove(clipDto);
       await _clipRepository.DeleteAsync(clip).ConfigureAwait(false);
     }
+  }
+
+
+  private void SetInputResult(PasteWindowResult? result)
+  {
+    _showPasteWindowTcs?.SetResult(result);
   }
 
 
