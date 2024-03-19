@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:Tum4ik.JustClipboardManager.Views"
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
@@ -34,10 +35,10 @@
     </i:EventTrigger>
   </i:Interaction.Triggers>
   <Window.Template>
-    <ControlTemplate TargetType="Window">
+    <ControlTemplate TargetType="local:PasteWindow">
       <Border x:Name="_windowBorder"
-              Width="420"
-              Height="300"
+              Width="{Binding DataContext.WindowWidth, ElementName=This, Mode=TwoWay}"
+              Height="{Binding DataContext.WindowHeight, ElementName=This, Mode=TwoWay}"
               MinWidth="200"
               MinHeight="86"
               CornerRadius="8"

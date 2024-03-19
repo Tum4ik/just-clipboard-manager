@@ -91,7 +91,7 @@ internal partial class PasteWindow
     {
       return;
     }
-    var newHeight = _windowBorder.ActualHeight + e.VerticalChange;
+    var newHeight = (int) (_windowBorder.ActualHeight + e.VerticalChange);
     if (newHeight > 0)
     {
       _windowBorder.Height = newHeight;
@@ -105,7 +105,7 @@ internal partial class PasteWindow
     {
       return;
     }
-    var newWidth = _windowBorder.ActualWidth + e.HorizontalChange;
+    var newWidth = (int) (_windowBorder.ActualWidth + e.HorizontalChange);
     if (newWidth > 0)
     {
       _windowBorder.Width = newWidth;

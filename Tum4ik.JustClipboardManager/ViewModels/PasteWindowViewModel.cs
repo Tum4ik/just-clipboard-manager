@@ -17,15 +17,21 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 {
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
+  private readonly ISettingsService _settingsService;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
                               ITranslationService translationService,
-                              IPluginsService pluginsService)
+                              IPluginsService pluginsService,
+                              ISettingsService settingsService)
     : base(translationService, eventAggregator)
   {
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
+    _settingsService = settingsService;
+
+    WindowWidth = _settingsService.PasteWindowWidth;
+    WindowHeight = _settingsService.PasteWindowHeight;
   }
 
 
@@ -41,6 +47,17 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   public ObservableCollection<ClipDto> Clips { get; } = [];
 
   [ObservableProperty] private bool _isSettingsMode;
+  partial void OnIsSettingsModeChanged(bool value)
+  {
+    if (!value)
+    {
+      _settingsService.PasteWindowWidth = WindowWidth;
+      _settingsService.PasteWindowHeight = WindowHeight;
+    }
+  }
+
+  [ObservableProperty] private int _windowWidth;
+  [ObservableProperty] private int _windowHeight;
 
 
   private string? _search;
