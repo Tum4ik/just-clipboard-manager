@@ -334,4 +334,10 @@
   <data name="Default" xml:space="preserve">
     <value>За замовчуванням</value>
   </data>
+  <data name="Snapping_Description" xml:space="preserve">
+    <value>Дозволяє автоматично позиціонувати вікно вставки на основі обраного параметра</value>
+  </data>
+  <data name="Size_Description" xml:space="preserve">
+    <value>Дозволяє вказати розмір вікна вставки</value>
+  </data>
 </root>

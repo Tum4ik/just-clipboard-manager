@@ -637,11 +637,29 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allows you to specify the size of the paste window.
+        /// </summary>
+        internal static string Size_Description {
+            get {
+                return ResourceManager.GetString("Size_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Snapping.
         /// </summary>
         internal static string Snapping {
             get {
                 return ResourceManager.GetString("Snapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to automatically position the paste window based on the selected option.
+        /// </summary>
+        internal static string Snapping_Description {
+            get {
+                return ResourceManager.GetString("Snapping_Description", resourceCulture);
             }
         }
         

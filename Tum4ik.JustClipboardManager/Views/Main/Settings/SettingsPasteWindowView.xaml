@@ -27,7 +27,8 @@
   <ItemsControl>
     <settingcard:SettingCard Margin="0"
                              Icon="Frame"
-                             Header="{Binding Translate[Snapping]}">
+                             Header="{Binding Translate[Snapping]}"
+                             Description="{Binding Translate[Snapping_Description]}">
       <StackPanel>
         <controls:WinUiComboBox x:Name="_snappingTypeComboBox"
                                 ItemsSource="{Binding SnappingTypes}"
@@ -54,7 +55,8 @@
       </StackPanel>
     </settingcard:SettingCard>
     <settingcard:SettingCard Icon="AspectRatio"
-                             Header="{Binding Translate[Size]}">
+                             Header="{Binding Translate[Size]}"
+                             Description="{Binding Translate[Size_Description]}">
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
