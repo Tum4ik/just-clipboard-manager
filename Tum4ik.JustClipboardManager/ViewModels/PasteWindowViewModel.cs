@@ -96,6 +96,8 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   {
     if (visibility == Visibility.Visible)
     {
+      WindowWidth = _settingsService.PasteWindowWidth;
+      WindowHeight = _settingsService.PasteWindowHeight;
       _windowDeactivationTriggeredByDataPasting = false;
       _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }

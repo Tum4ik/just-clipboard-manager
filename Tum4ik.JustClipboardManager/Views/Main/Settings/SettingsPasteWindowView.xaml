@@ -53,5 +53,41 @@
         </controls:WinUiComboBox>
       </StackPanel>
     </settingcard:SettingCard>
+    <settingcard:SettingCard Icon="AspectRatio"
+                             Header="{Binding Translate[Size]}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="4"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+          <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="8, 0"/>
+          </Style>
+          <Style TargetType="controls:WinUiButton">
+            <Setter Property="Margin" Value="4, 0, 0, 0"/>
+          </Style>
+        </Grid.Resources>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Translate[Width]}"/>
+        <controls:NumberBox Grid.Row="0" Grid.Column="1"
+                            Text="{Binding WindowWidth, UpdateSourceTrigger=PropertyChanged}"/>
+        <controls:WinUiButton Grid.Row="0" Grid.Column="2"
+                              Icon="Restore" ToolTip="{Binding Translate[Default]}"
+                              Command="{Binding SetDefaultWidthCommand}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Translate[Height]}"/>
+        <controls:NumberBox Grid.Row="2" Grid.Column="1"
+                            Text="{Binding WindowHeight, UpdateSourceTrigger=PropertyChanged}"/>
+        <controls:WinUiButton Grid.Row="2" Grid.Column="2"
+                              Icon="Restore" ToolTip="{Binding Translate[Default]}"
+                              Command="{Binding SetDefaultHeightCommand}"/>
+      </Grid>
+    </settingcard:SettingCard>
   </ItemsControl>
 </UserControl>

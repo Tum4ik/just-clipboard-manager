@@ -1,10 +1,11 @@
+using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Settings;
-internal class SettingsPasteWindowViewModel : TranslationViewModel
+internal partial class SettingsPasteWindowViewModel : TranslationViewModel
 {
   private readonly ISettingsService _settingsService;
 
@@ -24,34 +25,63 @@ internal class SettingsPasteWindowViewModel : TranslationViewModel
     = Enum.GetValues<PasteWindowSnappingDisplayCorner>().AsReadOnly();
 
 
-  private PasteWindowSnappingType? _snappingType;
   public PasteWindowSnappingType SnappingType
   {
-    get => _snappingType ??= _settingsService.PasteWindowSnappingType;
-    set
-    {
-      if (value != _snappingType)
-      {
-        _settingsService.PasteWindowSnappingType = value;
-        _snappingType = value;
-        OnPropertyChanged();
-      }
+    get => _settingsService.PasteWindowSnappingType;
+    set => _settingsService.PasteWindowSnappingType = value;
+  }
+
+
+  public PasteWindowSnappingDisplayCorner SnappingDisplayCorner
+  {
+    get => _settingsService.PasteWindowSnappingDisplayCorner;
+    set => _settingsService.PasteWindowSnappingDisplayCorner = value;
+  }
+
+
+  public int WindowWidth
+  {
+    get => _settingsService.PasteWindowWidth;
+    set {
+      _settingsService.PasteWindowWidth = value;
+      SetDefaultWidthCommand.NotifyCanExecuteChanged();
     }
   }
 
 
-  private PasteWindowSnappingDisplayCorner? _snappingDisplayCorner;
-  public PasteWindowSnappingDisplayCorner SnappingDisplayCorner
+  public int WindowHeight
   {
-    get => _snappingDisplayCorner ??= _settingsService.PasteWindowSnappingDisplayCorner;
+    get => _settingsService.PasteWindowHeight;
     set
     {
-      if (value != _snappingDisplayCorner)
-      {
-        _settingsService.PasteWindowSnappingDisplayCorner = value;
-        _snappingDisplayCorner = value;
-        OnPropertyChanged();
-      }
+      _settingsService.PasteWindowHeight = value;
+      SetDefaultHeightCommand.NotifyCanExecuteChanged();
     }
+  }
+
+
+  [RelayCommand(CanExecute = nameof(CanExecuteSetDefaultWidth))]
+  private void SetDefaultWidth()
+  {
+    WindowWidth = _settingsService.PasteWindowDefaultWidth;
+    OnPropertyChanged(nameof(WindowWidth));
+  }
+
+  private bool CanExecuteSetDefaultWidth()
+  {
+    return WindowWidth != _settingsService.PasteWindowDefaultWidth;
+  }
+
+
+  [RelayCommand(CanExecute = nameof(CanExecuteSetDefaultHeight))]
+  private void SetDefaultHeight()
+  {
+    WindowHeight = _settingsService.PasteWindowDefaultHeight;
+    OnPropertyChanged(nameof(WindowHeight));
+  }
+
+  private bool CanExecuteSetDefaultHeight()
+  {
+    return WindowHeight != _settingsService.PasteWindowDefaultHeight;
   }
 }

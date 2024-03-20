@@ -241,6 +241,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        internal static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete clips older than.
         /// </summary>
         internal static string DeleteClipsOlderThan {
@@ -336,6 +345,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string General {
             get {
                 return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        internal static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
             }
         }
         
@@ -610,6 +628,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        internal static string Size {
+            get {
+                return ResourceManager.GetString("Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Snapping.
         /// </summary>
         internal static string Snapping {
@@ -705,6 +732,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        internal static string Width {
+            get {
+                return ResourceManager.GetString("Width", resourceCulture);
             }
         }
         

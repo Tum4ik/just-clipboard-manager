@@ -322,4 +322,16 @@
   <data name="Theme_Description" xml:space="preserve">
     <value>Зовнішній вигляд інтерфейсу користувача</value>
   </data>
+  <data name="Size" xml:space="preserve">
+    <value>Розмір</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Висота</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Ширина</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>За замовчуванням</value>
+  </data>
 </root>

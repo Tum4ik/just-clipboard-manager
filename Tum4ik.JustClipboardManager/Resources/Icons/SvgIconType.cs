@@ -3,6 +3,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 namespace Tum4ik.JustClipboardManager.Resources.Icons;
 public enum SvgIconType
 {
+  [SvgIconResource("aspect-ratio")] AspectRatio,
   [SvgIconResource("auto-delete")] AutoDelete,
   [SvgIconResource("autostart-app")] AutostartApp,
   [SvgIconResource("bug-report")] BugReport,
@@ -46,6 +47,7 @@ public enum SvgIconType
   [SvgIconResource("manage-search")] ManageSearch,
   [SvgIconResource("palette")] Palette,
   [SvgIconResource("paste-window")] PasteWindow,
+  [SvgIconResource("restore")] Restore,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,
   [SvgIconResource("search")] Search,
