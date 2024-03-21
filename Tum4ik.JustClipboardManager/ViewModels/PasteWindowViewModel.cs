@@ -59,6 +59,9 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   [ObservableProperty] private int _windowWidth;
   [ObservableProperty] private int _windowHeight;
 
+  public int WindowMinWidth => _settingsService.PasteWindowMinWidth;
+  public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
+
 
   private string? _search;
   public string? Search
@@ -162,10 +165,11 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
   }
 
-
+  
   private void SetInputResult(PasteWindowResult? result)
   {
     _showPasteWindowTcs?.SetResult(result);
+    _showPasteWindowTcs = null;
   }
 
 

@@ -48,6 +48,8 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
     }
   }
 
+  public int WindowMinWidth => _settingsService.PasteWindowMinWidth;
+
 
   public int WindowHeight
   {
@@ -58,6 +60,8 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
       SetDefaultHeightCommand.NotifyCanExecuteChanged();
     }
   }
+
+  public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
 
 
   [RelayCommand(CanExecute = nameof(CanExecuteSetDefaultWidth))]

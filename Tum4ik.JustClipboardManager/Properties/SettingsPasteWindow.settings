@@ -14,5 +14,11 @@
     <Setting Name="Height" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>
     </Setting>
+    <Setting Name="MinWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="MinHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">86</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

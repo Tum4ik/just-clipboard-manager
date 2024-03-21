@@ -70,5 +70,29 @@ namespace Tum4ik.JustClipboardManager.Properties {
                 this["Height"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int MinWidth {
+            get {
+                return ((int)(this["MinWidth"]));
+            }
+            set {
+                this["MinWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("86")]
+        public int MinHeight {
+            get {
+                return ((int)(this["MinHeight"]));
+            }
+            set {
+                this["MinHeight"] = value;
+            }
+        }
     }
 }

@@ -16,8 +16,10 @@ internal interface ISettingsService : IPluginSettingsService
 
   int PasteWindowWidth { get; set; }
   int PasteWindowDefaultWidth { get; }
+  int PasteWindowMinWidth { get; }
   int PasteWindowHeight { get; set; }
   int PasteWindowDefaultHeight { get; }
+  int PasteWindowMinHeight { get; }
 }
 
 

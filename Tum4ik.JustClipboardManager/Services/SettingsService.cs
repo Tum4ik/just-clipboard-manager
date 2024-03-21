@@ -195,6 +195,9 @@ internal class SettingsService : ISettingsService
     }
   }
 
+  private int? _pasteWindowMinWidth;
+  public int PasteWindowMinWidth => _pasteWindowMinWidth ??= SettingsPasteWindow.Default.MinWidth;
+
 
   private int? _pasteWindowHeight;
   public int PasteWindowHeight
@@ -210,7 +213,6 @@ internal class SettingsService : ISettingsService
       }
     }
   }
-
 
   private int? _pasteWindowDefaultHeight;
   public int PasteWindowDefaultHeight
@@ -232,4 +234,7 @@ internal class SettingsService : ISettingsService
       return default;
     }
   }
+
+  private int? _pasteWindowMinHeight;
+  public int PasteWindowMinHeight => _pasteWindowMinHeight ??= SettingsPasteWindow.Default.MinHeight;
 }
