@@ -7,6 +7,7 @@ using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
+using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -15,6 +16,7 @@ namespace Tum4ik.JustClipboardManager.ViewModels;
 
 internal partial class PasteWindowViewModel : TranslationViewModel
 {
+  private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
   private readonly ISettingsService _settingsService;
@@ -26,6 +28,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
                               ISettingsService settingsService)
     : base(translationService, eventAggregator)
   {
+    _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
     _settingsService = settingsService;
@@ -53,6 +56,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     {
       _settingsService.PasteWindowWidth = WindowWidth;
       _settingsService.PasteWindowHeight = WindowHeight;
+      _eventAggregator.GetEvent<PasteWindowSizeChangedEvent>().Publish();
     }
   }
 
