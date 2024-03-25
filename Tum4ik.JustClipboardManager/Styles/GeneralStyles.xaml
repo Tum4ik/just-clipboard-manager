@@ -73,6 +73,9 @@
   <Style TargetType="controls:AppBarNavigationButton">
     <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
   </Style>
+  <Style TargetType="controls:WinUiSlider">
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusStyle}"/>
+  </Style>
 
   <Style TargetType="controls:CaptionButton">
     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
