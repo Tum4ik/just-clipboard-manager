@@ -13,6 +13,7 @@
              x:Name="this">
   <UserControl.Resources>
     <converters:TranslateConverter x:Key="TranslateConverter"/>
+    <converters:ToPercentageConverter x:Key="ToPercentageConverter"/>
     <DataTemplate x:Key="TranslatedItemTemplate">
       <TextBlock VerticalAlignment="Center" Margin="12, 0">
         <TextBlock.Text>
@@ -92,6 +93,19 @@
                               Icon="Restore" ToolTip="{Binding Translate[Default]}"
                               Command="{Binding SetDefaultHeightCommand}"/>
       </Grid>
+    </settingcard:SettingCard>
+    <settingcard:SettingCard Icon="Opacity"
+                             Header="{Binding Translate[Opacity]}"
+                             Description="{Binding Translate[Opacity_Description]}">
+      <StackPanel Orientation="Horizontal">
+        <controls:WinUiSlider Value="{Binding WindowOpacity}"
+                              Minimum="0"
+                              Maximum="1"/>
+        <TextBlock Text="{Binding WindowOpacity, Converter={StaticResource ToPercentageConverter}}"
+                   TextAlignment="Right"
+                   VerticalAlignment="Center"
+                   Width="40"/>
+      </StackPanel>
     </settingcard:SettingCard>
   </ItemsControl>
 </UserControl>

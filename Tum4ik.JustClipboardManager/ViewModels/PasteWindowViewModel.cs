@@ -32,9 +32,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
     _settingsService = settingsService;
-
-    WindowWidth = _settingsService.PasteWindowWidth;
-    WindowHeight = _settingsService.PasteWindowHeight;
   }
 
 
@@ -54,14 +51,13 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   {
     if (!value)
     {
-      _settingsService.PasteWindowWidth = WindowWidth;
-      _settingsService.PasteWindowHeight = WindowHeight;
-      _eventAggregator.GetEvent<PasteWindowSizeChangedEvent>().Publish();
+      SaveSettings();
     }
   }
 
   [ObservableProperty] private int _windowWidth;
   [ObservableProperty] private int _windowHeight;
+  [ObservableProperty] private double _windowOpacity;
 
   public int WindowMinWidth => _settingsService.PasteWindowMinWidth;
   public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
@@ -103,8 +99,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   {
     if (visibility == Visibility.Visible)
     {
-      WindowWidth = _settingsService.PasteWindowWidth;
-      WindowHeight = _settingsService.PasteWindowHeight;
+      ApplySettings();
       _windowDeactivationTriggeredByDataPasting = false;
       _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }
@@ -212,5 +207,22 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
     }
     return loadedCount;
+  }
+
+
+  private void SaveSettings()
+  {
+    _settingsService.PasteWindowWidth = WindowWidth;
+    _settingsService.PasteWindowHeight = WindowHeight;
+    _settingsService.PasteWindowOpacity = WindowOpacity;
+    _eventAggregator.GetEvent<PasteWindowSettingsChangedEvent>().Publish();
+  }
+
+
+  private void ApplySettings()
+  {
+    WindowWidth = _settingsService.PasteWindowWidth;
+    WindowHeight = _settingsService.PasteWindowHeight;
+    WindowOpacity = _settingsService.PasteWindowOpacity;
   }
 }

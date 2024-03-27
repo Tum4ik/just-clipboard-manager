@@ -484,6 +484,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        internal static string Opacity {
+            get {
+                return ResourceManager.GetString("Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to control the degree of transparency of the paste window.
+        /// </summary>
+        internal static string Opacity_Description {
+            get {
+                return ResourceManager.GetString("Opacity_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste window.
         /// </summary>
         internal static string PasteWindow {

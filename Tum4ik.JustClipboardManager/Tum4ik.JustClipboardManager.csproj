@@ -91,6 +91,7 @@
     <None Remove="Resources\Icons\lightbulb.svg" />
     <None Remove="Resources\Icons\live-help.svg" />
     <None Remove="Resources\Icons\manage-search.svg" />
+    <None Remove="Resources\Icons\opacity.svg" />
     <None Remove="Resources\Icons\palette.svg" />
     <None Remove="Resources\Icons\paste-window.svg" />
     <None Remove="Resources\Icons\restore.svg" />
@@ -183,6 +184,7 @@
     <Resource Include="Resources\Icons\lightbulb.svg" />
     <Resource Include="Resources\Icons\live-help.svg" />
     <Resource Include="Resources\Icons\manage-search.svg" />
+    <Resource Include="Resources\Icons\opacity.svg" />
     <Resource Include="Resources\Icons\palette.svg" />
     <Resource Include="Resources\Icons\paste-window.svg" />
     <Resource Include="Resources\Icons\restore.svg" />

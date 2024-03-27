@@ -340,4 +340,10 @@
   <data name="Size_Description" xml:space="preserve">
     <value>Дозволяє вказати розмір вікна вставки</value>
   </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Непрозорість</value>
+  </data>
+  <data name="Opacity_Description" xml:space="preserve">
+    <value>Дозволяє контролювати ступінь прозорості вікна вставки</value>
+  </data>
 </root>

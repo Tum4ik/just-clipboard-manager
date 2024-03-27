@@ -17,7 +17,7 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
   {
     _settingsService = settingsService;
 
-    eventAggregator.GetEvent<PasteWindowSizeChangedEvent>().Subscribe(OnPasteWindowSizeChanged);
+    eventAggregator.GetEvent<PasteWindowSettingsChangedEvent>().Subscribe(OnPasteWindowSettingsChanged);
   }
 
 
@@ -67,6 +67,17 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
   public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
 
 
+  public double WindowOpacity
+  {
+    get => _settingsService.PasteWindowOpacity;
+    set
+    {
+      _settingsService.PasteWindowOpacity = value;
+      OnPropertyChanged();
+    }
+  }
+
+
   [RelayCommand(CanExecute = nameof(CanExecuteSetDefaultWidth))]
   private void SetDefaultWidth()
   {
@@ -93,11 +104,12 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
   }
 
 
-  private void OnPasteWindowSizeChanged()
+  private void OnPasteWindowSettingsChanged()
   {
     OnPropertyChanged(nameof(WindowWidth));
     SetDefaultWidthCommand.NotifyCanExecuteChanged();
     OnPropertyChanged(nameof(WindowHeight));
     SetDefaultHeightCommand.NotifyCanExecuteChanged();
+    OnPropertyChanged(nameof(WindowOpacity));
   }
 }

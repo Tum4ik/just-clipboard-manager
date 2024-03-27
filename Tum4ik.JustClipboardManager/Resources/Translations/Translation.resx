@@ -340,4 +340,10 @@
   <data name="Size_Description" xml:space="preserve">
     <value>Allows you to specify the size of the paste window</value>
   </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="Opacity_Description" xml:space="preserve">
+    <value>Allows you to control the degree of transparency of the paste window</value>
+  </data>
 </root>

@@ -45,6 +45,7 @@ public enum SvgIconType
   [SvgIconResource("light-mode")] LightMode,
   [SvgIconResource("live-help")] LiveHelp,
   [SvgIconResource("manage-search")] ManageSearch,
+  [SvgIconResource("opacity")] Opacity,
   [SvgIconResource("palette")] Palette,
   [SvgIconResource("paste-window")] PasteWindow,
   [SvgIconResource("restore")] Restore,

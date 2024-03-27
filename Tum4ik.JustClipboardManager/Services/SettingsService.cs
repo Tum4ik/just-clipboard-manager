@@ -237,4 +237,20 @@ internal class SettingsService : ISettingsService
 
   private int? _pasteWindowMinHeight;
   public int PasteWindowMinHeight => _pasteWindowMinHeight ??= SettingsPasteWindow.Default.MinHeight;
+
+
+  private double? _pasteWindowOpacity;
+  public double PasteWindowOpacity
+  {
+    get => _pasteWindowOpacity ??= SettingsPasteWindow.Default.Opacity;
+    set
+    {
+      if (_pasteWindowOpacity != value && value >= 0 && value <= 1)
+      {
+        SettingsPasteWindow.Default.Opacity = value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowOpacity = value;
+      }
+    }
+  }
 }

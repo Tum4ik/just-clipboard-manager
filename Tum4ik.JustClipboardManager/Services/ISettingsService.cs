@@ -20,6 +20,7 @@ internal interface ISettingsService : IPluginSettingsService
   int PasteWindowHeight { get; set; }
   int PasteWindowDefaultHeight { get; }
   int PasteWindowMinHeight { get; }
+  double PasteWindowOpacity { get; set; }
 }
 
 
