@@ -88,7 +88,8 @@ public partial class App : ISingleInstance
     {
       { "Message", "Unhandled Exception" },
       { "OS Architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86" },
-      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" }
+      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" },
+      { "OS Version", Environment.OSVersion.Version.ToString() }
     });
     Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
     e.Handled = true;
@@ -292,7 +293,14 @@ public partial class App : ISingleInstance
       .RegisterShell<TrayIcon, TrayIconViewModel>()
       .RegisterShell<PasteWindow, PasteWindowViewModel>();
 
-    containerRegistry.RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow);
+    if (Environment.OSVersion.Version >= Version.Parse("10.0.22000"))
+    {
+      containerRegistry.RegisterDialogWindow<MainDialogWindow>(WindowNames.MainAppWindow);
+    }
+    else
+    {
+      containerRegistry.RegisterDialogWindow<MainDialogBefore11Window>(WindowNames.MainAppWindow);
+    }
     containerRegistry.RegisterDialogWindow<SimpleDialogWindow>(WindowNames.SimpleDialogWindow);
     containerRegistry.RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog);
     containerRegistry.RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog);

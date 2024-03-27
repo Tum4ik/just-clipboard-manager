@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         mc:Ignorable="d" 
         Height="26" ToolTip="{Binding RepresentationData}">
-  <TextBlock Text="{Binding ToolTip, RelativeSource={RelativeSource AncestorType=Border}}"
-             Margin="0, 4"/>
+  <TextBlock Text="{Binding RepresentationData}"
+             Margin="0, 4"
+             TextTrimming="CharacterEllipsis"/>
 </Border>

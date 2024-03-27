@@ -11,6 +11,7 @@
       <ResourceDictionary.MergedDictionaries>
         <d:ResourceDictionary Source="Themes/LightTheme.xaml"/>
         <ResourceDictionary Source="Styles/GeneralStyles.xaml"/>
+        <ResourceDictionary Source="Controls/SettingCard/SettingCard.xaml"/>
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

@@ -157,4 +157,100 @@ internal class SettingsService : ISettingsService
       }
     }
   }
+
+
+  private int? _pasteWindowWidth;
+  public int PasteWindowWidth
+  {
+    get => _pasteWindowWidth ??= SettingsPasteWindow.Default.Width;
+    set
+    {
+      if (_pasteWindowWidth != value)
+      {
+        SettingsPasteWindow.Default.Width = value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowWidth = value;
+      }
+    }
+  }
+
+  private int? _pasteWindowDefaultWidth;
+  public int PasteWindowDefaultWidth
+  {
+    get
+    {
+      if (_pasteWindowDefaultWidth.HasValue)
+      {
+        return _pasteWindowDefaultWidth.Value;
+      }
+
+      var defaultValue = SettingsPasteWindow.Default.Properties[nameof(SettingsPasteWindow.Default.Width)].DefaultValue;
+      if (int.TryParse(defaultValue.ToString(), out var defaultWidth))
+      {
+        _pasteWindowDefaultWidth = defaultWidth;
+        return defaultWidth;
+      }
+
+      return default;
+    }
+  }
+
+  private int? _pasteWindowMinWidth;
+  public int PasteWindowMinWidth => _pasteWindowMinWidth ??= SettingsPasteWindow.Default.MinWidth;
+
+
+  private int? _pasteWindowHeight;
+  public int PasteWindowHeight
+  {
+    get => _pasteWindowHeight ??= SettingsPasteWindow.Default.Height;
+    set
+    {
+      if (_pasteWindowHeight != value)
+      {
+        SettingsPasteWindow.Default.Height = value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowHeight = value;
+      }
+    }
+  }
+
+  private int? _pasteWindowDefaultHeight;
+  public int PasteWindowDefaultHeight
+  {
+    get
+    {
+      if (_pasteWindowDefaultHeight.HasValue)
+      {
+        return _pasteWindowDefaultHeight.Value;
+      }
+
+      var defaultValue = SettingsPasteWindow.Default.Properties[nameof(SettingsPasteWindow.Default.Height)].DefaultValue;
+      if (int.TryParse(defaultValue.ToString(), out var defaultHeight))
+      {
+        _pasteWindowDefaultHeight = defaultHeight;
+        return defaultHeight;
+      }
+
+      return default;
+    }
+  }
+
+  private int? _pasteWindowMinHeight;
+  public int PasteWindowMinHeight => _pasteWindowMinHeight ??= SettingsPasteWindow.Default.MinHeight;
+
+
+  private double? _pasteWindowOpacity;
+  public double PasteWindowOpacity
+  {
+    get => _pasteWindowOpacity ??= SettingsPasteWindow.Default.Opacity;
+    set
+    {
+      if (_pasteWindowOpacity != value && value >= 0 && value <= 1)
+      {
+        SettingsPasteWindow.Default.Opacity = value;
+        SettingsPasteWindow.Default.Save();
+        _pasteWindowOpacity = value;
+      }
+    }
+  }
 }

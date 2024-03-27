@@ -25,11 +25,11 @@ internal class ThemeService : IThemeService
   }
 
 
-  public ImmutableArray<ColorTheme> Themes { get; } = new[]
-  {
-    new ColorTheme("Light", SvgIconType.LightMode, "LightTheme.xaml"),
-    new ColorTheme("Dark", SvgIconType.DarkMode, "DarkTheme.xaml")
-  }.ToImmutableArray();
+  public ImmutableArray<ColorTheme> Themes { get; } =
+  [
+    new ColorTheme(ThemeType.Light, SvgIconType.LightMode, "LightTheme.xaml"),
+    new ColorTheme(ThemeType.Dark, SvgIconType.DarkMode, "DarkTheme.xaml")
+  ];
 
 
   private ColorTheme? _selectedTheme;

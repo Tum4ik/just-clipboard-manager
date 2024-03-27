@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Tum4ik.JustClipboardManager.Controls;
@@ -11,6 +13,21 @@ public partial class NumberBox
   public NumberBox()
   {
     InitializeComponent();
+  }
+
+
+  public override void OnApplyTemplate()
+  {
+    base.OnApplyTemplate();
+    var window = Window.GetWindow(this);
+    var popup = (Popup) GetTemplateChild("_spinnerPopup");
+    window.LocationChanged += (s, e) =>
+    {
+      // to move spinner popup together with the window
+      var o = popup.HorizontalOffset;
+      popup.HorizontalOffset++;
+      popup.HorizontalOffset = o;
+    };
   }
 
 
@@ -34,8 +51,21 @@ public partial class NumberBox
   }
 
 
+  public static readonly DependencyProperty StepProperty = DependencyProperty.Register(
+    nameof(Step), typeof(int), typeof(NumberBox), new(1)
+  );
+  public int Step
+  {
+    get => (int) GetValue(StepProperty);
+    set => SetValue(StepProperty, value);
+  }
+
+
+  private string? _valueBeforeClear;
+
   private void ClearButton_Click(object sender, RoutedEventArgs e)
   {
+    _valueBeforeClear = Text;
     Text = string.Empty;
   }
 
@@ -65,5 +95,40 @@ public partial class NumberBox
   private void TextBox_GotFocus(object sender, RoutedEventArgs e)
   {
     SelectAll();
+  }
+
+
+  private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+  {
+    if (string.IsNullOrEmpty(Text))
+    {
+      Text = _valueBeforeClear;
+    }
+  }
+
+
+  private void IncreaseButton_Click(object sender, RoutedEventArgs e)
+  {
+    DoStep(Step);
+  }
+
+
+  private void DecreaseButton_Click(object sender, RoutedEventArgs e)
+  {
+    DoStep(-Step);
+  }
+
+
+  private void DoStep(int step)
+  {
+    if (int.TryParse(Text, out var number))
+    {
+      var result = number + step;
+      if (result >= MinValue && result <= MaxValue)
+      {
+        Text = result.ToString(CultureInfo.InvariantCulture);
+        SelectAll();
+      }
+    }
   }
 }

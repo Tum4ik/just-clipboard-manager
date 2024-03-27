@@ -113,6 +113,10 @@
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxPressedBackgroundBrush}" Color="White" Opacity="0.0698"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxDisabledBorderBrush}" Color="White" Opacity="0.1581"/>
 
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderThumbBackgroundBrush}" Color="#454545"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderTrackBackgroundBrush}" Color="White" Opacity="0.5442"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderTrackDisabledBackgroundBrush}" Color="White" Opacity="0.6047"/>
+
   <SolidColorBrush x:Key="{x:Static theming:AppColors.TextBoxBorderBrush}" Color="White" Opacity="0.08"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.TextBoxBorderUnderlineBrush}" Color="White" Opacity="0.5442"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.TextBoxInputActiveBackgroundBrush}" Color="#1E1E1E" Opacity="0.7"/>

@@ -1,6 +1,4 @@
-using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Models;
-using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using static Windows.Win32.PInvoke;
 
@@ -11,14 +9,12 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly IUser32DllService _user32Dll;
   private readonly IKernel32DllService _kernel32Dll;
   private readonly IPasteService _pasteService;
-  private readonly IEventAggregator _eventAggregator;
   private readonly ISettingsService _settingsService;
 
   public KeyboardHookService(IPasteWindowService pasteWindowService,
                              IUser32DllService user32Dll,
                              IKernel32DllService kernel32Dll,
                              IPasteService pasteService,
-                             IEventAggregator eventAggregator,
                              ISettingsService settingsService)
   {
     _windowHandle = pasteWindowService.WindowHandle;
@@ -26,7 +22,6 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _user32Dll = user32Dll;
     _kernel32Dll = kernel32Dll;
     _pasteService = pasteService;
-    _eventAggregator = eventAggregator;
     _settingsService = settingsService;
   }
 
@@ -114,8 +109,7 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     UnregisterAll();
   }
 
-
-  private TaskCompletionSource<PasteWindowResultPayload?> _showPasteWindowTcs = new();
+  
   private bool _isWaitingPasteWindowResult;
 
   private async Task HandleShowPasteWindowHotkeyAsync()
@@ -127,26 +121,14 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _isWaitingPasteWindowResult = true;
 
     var targetWindowToPaste = _user32Dll.GetForegroundWindow();
-    _eventAggregator
-      .GetEvent<PasteWindowResultEvent>()
-      .Subscribe(HandlePasteWindowResult, ThreadOption.BackgroundThread);
-    _pasteWindowService.ShowWindow(targetWindowToPaste);
-
-    var data = await _showPasteWindowTcs.Task.ConfigureAwait(true);
+    var data = await _pasteWindowService.ShowWindowAsync(targetWindowToPaste).ConfigureAwait(true);
     if (data is not null && data.FormattedDataObjects.Count > 0)
     {
       _pasteService.PasteData(targetWindowToPaste, data.FormattedDataObjects, data.AdditionalInfo);
     }
 
     _pasteWindowService.HideWindow();
-    // prepare task completion source for the next usage
-    _showPasteWindowTcs = new();
+    
     _isWaitingPasteWindowResult = false;
-  }
-
-  private void HandlePasteWindowResult(PasteWindowResultPayload? payload)
-  {
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Unsubscribe(HandlePasteWindowResult);
-    _showPasteWindowTcs.SetResult(payload);
   }
 }

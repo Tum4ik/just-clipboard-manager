@@ -9,6 +9,12 @@ namespace Tum4ik.JustClipboardManager.Controls;
 /// </summary>
 public partial class WinUiButton
 {
+  static WinUiButton()
+  {
+    HeightProperty.OverrideMetadata(typeof(WinUiButton), new FrameworkPropertyMetadata(32d));
+  }
+
+
   public WinUiButton()
   {
     InitializeComponent();

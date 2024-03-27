@@ -1,11 +1,9 @@
 ### Features
-* Plugins support.
-* Keep user settings from the previous version of the application after upgrade.
-* Automatic restart on application crash.
-* "Remove clips older than..." setting.
-* Paste window settings.
+* Possibility to use WinUI 3 Mica backdrop window style (Windows 11 only).
+* UI improvements.
+* Paste window size and opacity settings.
+* Possibility to configure paste window size and opacity directly.
 
 ### Fixes
-* Fixed problem when the application breaks the clipboard viewer chain on exit.
-* Fixed Main window bottom corners rounding when the window is maximized (#72).
-* Fixed Main window shadow after restoring the window state (#73).
+* Fixed problem when remove clipboard listener operation fails.
+* Fixed accent button strange margin.

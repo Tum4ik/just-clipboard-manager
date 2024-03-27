@@ -56,6 +56,9 @@ public static class AppColors
   public const string CheckBoxHoverBackgroundBrush = nameof(CheckBoxHoverBackgroundBrush);
   public const string CheckBoxPressedBackgroundBrush = nameof(CheckBoxPressedBackgroundBrush);
   public const string CheckBoxDisabledBorderBrush = nameof(CheckBoxDisabledBorderBrush);
+  public const string SliderThumbBackgroundBrush = nameof(SliderThumbBackgroundBrush);
+  public const string SliderTrackBackgroundBrush = nameof(SliderTrackBackgroundBrush);
+  public const string SliderTrackDisabledBackgroundBrush = nameof(SliderTrackDisabledBackgroundBrush);
   public const string TextBoxBorderBrush = nameof(TextBoxBorderBrush);
   public const string TextBoxBorderUnderlineBrush = nameof(TextBoxBorderUnderlineBrush);
   public const string TextBoxInputActiveBackgroundBrush = nameof(TextBoxInputActiveBackgroundBrush);

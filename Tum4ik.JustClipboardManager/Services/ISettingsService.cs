@@ -13,6 +13,14 @@ internal interface ISettingsService : IPluginSettingsService
 
   PasteWindowSnappingType PasteWindowSnappingType { get; set; }
   PasteWindowSnappingDisplayCorner PasteWindowSnappingDisplayCorner { get; set; }
+
+  int PasteWindowWidth { get; set; }
+  int PasteWindowDefaultWidth { get; }
+  int PasteWindowMinWidth { get; }
+  int PasteWindowHeight { get; set; }
+  int PasteWindowDefaultHeight { get; }
+  int PasteWindowMinHeight { get; }
+  double PasteWindowOpacity { get; set; }
 }
 
 

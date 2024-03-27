@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AppCenter.Crashes;
 using Prism.Events;
@@ -18,16 +19,19 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
+  private readonly ISettingsService _settingsService;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
                               ITranslationService translationService,
-                              IPluginsService pluginsService)
+                              IPluginsService pluginsService,
+                              ISettingsService settingsService)
     : base(translationService, eventAggregator)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
+    _settingsService = settingsService;
   }
 
 
@@ -37,8 +41,26 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   private bool _windowDeactivationTriggeredByDataPasting;
 
-  private readonly Dictionary<int, Clip> _dbClips = new();
-  public ObservableCollection<ClipDto> Clips { get; } = new();
+  private TaskCompletionSource<PasteWindowResult?>? _showPasteWindowTcs;
+
+  private readonly Dictionary<int, Clip> _dbClips = [];
+  public ObservableCollection<ClipDto> Clips { get; } = [];
+
+  [ObservableProperty] private bool _isSettingsMode;
+  partial void OnIsSettingsModeChanged(bool value)
+  {
+    if (!value)
+    {
+      SaveSettings();
+    }
+  }
+
+  [ObservableProperty] private int _windowWidth;
+  [ObservableProperty] private int _windowHeight;
+  [ObservableProperty] private double _windowOpacity;
+
+  public int WindowMinWidth => _settingsService.PasteWindowMinWidth;
+  public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
 
 
   private string? _search;
@@ -49,7 +71,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     {
       if (SetProperty(ref _search, value))
       {
-        SearchStarted?.Invoke();
         _dbClips.Clear();
         Clips.Clear();
         _loadedClipsCount = 0;
@@ -57,8 +78,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
     }
   }
-
-  public event Action? SearchStarted;
 
 
   public async Task LoadNextClipsBatchAsync()
@@ -68,11 +87,19 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   }
 
 
+  public Task<PasteWindowResult?> WaitForInputAsync()
+  {
+    _showPasteWindowTcs = new();
+    return _showPasteWindowTcs.Task;
+  }
+
+
   [RelayCommand]
   private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
     if (visibility == Visibility.Visible)
     {
+      ApplySettings();
       _windowDeactivationTriggeredByDataPasting = false;
       _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
     }
@@ -81,6 +108,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       Search = null;
       _dbClips.Clear();
       Clips.Clear();
+      IsSettingsMode = false;
     }
   }
 
@@ -93,7 +121,14 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       return;
     }
 
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(null);
+    SetInputResult(null);
+  }
+
+
+  [RelayCommand]
+  private void Settings()
+  {
+    IsSettingsMode = !IsSettingsMode;
   }
 
 
@@ -107,7 +142,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
 
     var dataObjects = clip.FormattedDataObjects;
-    _eventAggregator.GetEvent<PasteWindowResultEvent>().Publish(new()
+    SetInputResult(new()
     {
       FormattedDataObjects = dataObjects,
       AdditionalInfo = clip.AdditionalInfo
@@ -127,6 +162,13 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       Clips.Remove(clipDto);
       await _clipRepository.DeleteAsync(clip).ConfigureAwait(false);
     }
+  }
+
+  
+  private void SetInputResult(PasteWindowResult? result)
+  {
+    _showPasteWindowTcs?.SetResult(result);
+    _showPasteWindowTcs = null;
   }
 
 
@@ -165,5 +207,22 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
     }
     return loadedCount;
+  }
+
+
+  private void SaveSettings()
+  {
+    _settingsService.PasteWindowWidth = WindowWidth;
+    _settingsService.PasteWindowHeight = WindowHeight;
+    _settingsService.PasteWindowOpacity = WindowOpacity;
+    _eventAggregator.GetEvent<PasteWindowSettingsChangedEvent>().Publish();
+  }
+
+
+  private void ApplySettings()
+  {
+    WindowWidth = _settingsService.PasteWindowWidth;
+    WindowHeight = _settingsService.PasteWindowHeight;
+    WindowOpacity = _settingsService.PasteWindowOpacity;
   }
 }

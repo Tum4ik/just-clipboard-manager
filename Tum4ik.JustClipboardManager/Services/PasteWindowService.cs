@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Windows.Interop;
 using Accessibility;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using Tum4ik.JustClipboardManager.Views;
@@ -12,32 +11,31 @@ internal class PasteWindowService : IPasteWindowService
 {
   private readonly PasteWindow _pasteWindow;
   private readonly IUser32DllService _user32Dll;
-  private readonly ISHCoreDllService _shCoreDll;
   private readonly IOleaccDllService _oleaccDllService;
+  private readonly ISHCoreDllService _shCoreDll;
   private readonly ISettingsService _settingsService;
 
   public PasteWindowService(PasteWindow pasteWindow,
                             IUser32DllService user32Dll,
-                            ISHCoreDllService shCoreDll,
                             IOleaccDllService oleaccDllService,
+                            ISHCoreDllService shCoreDll,
                             ISettingsService settingsService)
   {
     _pasteWindow = pasteWindow;
     _user32Dll = user32Dll;
-    _shCoreDll = shCoreDll;
     _oleaccDllService = oleaccDllService;
+    _shCoreDll = shCoreDll;
     _settingsService = settingsService;
-    WindowHandle = new WindowInteropHelper(_pasteWindow).EnsureHandle();
   }
 
 
-  public nint WindowHandle { get; }
+  private nint? _windowHandle;
+  public nint WindowHandle => _windowHandle ??= _pasteWindow.Handle;
 
 
-  private Point _windowPosition;
-
-  public void ShowWindow(nint targetWindowToPasteHandle)
+  public Task<PasteWindowResult?> ShowWindowAsync(nint targetWindowToPasteHandle)
   {
+    Point windowPosition = default;
     switch (_settingsService.PasteWindowSnappingType)
     {
       case PasteWindowSnappingType.Caret:
@@ -47,18 +45,18 @@ internal class PasteWindowService : IPasteWindowService
         if (accessible is not null)
         {
           accessible.accLocation(out var left, out var top, out _, out _, 0);
-          _windowPosition.X = left;
-          _windowPosition.Y = top;
+          windowPosition.X = left;
+          windowPosition.Y = top;
         }
-        if (_windowPosition.X == 0 && _windowPosition.Y == 0)
+        if (windowPosition.X == 0 && windowPosition.Y == 0)
         {
           goto default;
         }
         break;
       case PasteWindowSnappingType.DisplayCorner:
-        var monitorHandle = GetMonitorHandle();
+        var monitorHandle = GetMonitorHandle(windowPosition);
         var monitorInfo = GetMonitorInfo(monitorHandle);
-        _windowPosition = _settingsService.PasteWindowSnappingDisplayCorner switch
+        windowPosition = _settingsService.PasteWindowSnappingDisplayCorner switch
         {
           PasteWindowSnappingDisplayCorner.TopLeft => new(monitorInfo.rcMonitor.X, monitorInfo.rcMonitor.Y),
           PasteWindowSnappingDisplayCorner.TopRight => new(monitorInfo.rcMonitor.Width - 1, monitorInfo.rcMonitor.Y),
@@ -68,18 +66,19 @@ internal class PasteWindowService : IPasteWindowService
         };
         break;
       default:
-        _user32Dll.GetCursorPos(out _windowPosition);
+        _user32Dll.GetCursorPos(out windowPosition);
         break;
     }
 
     _user32Dll.SetWindowPos(
-      WindowHandle, nint.Zero, _windowPosition.X, _windowPosition.Y, 0, 0,
+      WindowHandle, nint.Zero, windowPosition.X, windowPosition.Y, 0, 0,
       SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
     );
-    _pasteWindow.SizeChanged += PasteWindow_SizeChanged;
-    _pasteWindow.Deactivated += PasteWindow_Deactivated;
+
     _pasteWindow.Show();
+    KeepWindowOnScreen(WindowHandle, windowPosition, _pasteWindow.ActualWidth, _pasteWindow.ActualHeight);
     _pasteWindow.Activate();
+    return _pasteWindow.WaitForInputResultAsync();
   }
 
 
@@ -89,43 +88,39 @@ internal class PasteWindowService : IPasteWindowService
   }
 
 
-  private void PasteWindow_SizeChanged(object? sender, System.Windows.SizeChangedEventArgs e)
+  private void KeepWindowOnScreen(nint windowHandle,
+                                  Point windowPosition,
+                                  double windowWidth,
+                                  double windowHeight)
   {
-    var monitorHandle = GetMonitorHandle();
+    var monitorHandle = GetMonitorHandle(windowPosition);
     var monitorInfo = GetMonitorInfo(monitorHandle);
     _shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY);
 
-    var windowPixelWidth = e.NewSize.Width * dpiX / 96;
-    var windowPixelHeight = e.NewSize.Height * dpiY / 96;
+    var windowPixelWidth = windowWidth * dpiX / 96;
+    var windowPixelHeight = windowHeight * dpiY / 96;
 
-    var winLeft = _windowPosition.X;
-    var winTop = _windowPosition.Y;
+    var winLeft = windowPosition.X;
+    var winTop = windowPosition.Y;
     if (winLeft + windowPixelWidth > monitorInfo.rcWork.right)
     {
       winLeft = monitorInfo.rcWork.right - (int) windowPixelWidth;
     }
     if (winTop + windowPixelHeight > monitorInfo.rcWork.bottom)
     {
-      winTop = Math.Min(monitorInfo.rcWork.bottom - (int) windowPixelHeight, winTop - (int) windowPixelHeight);
+      winTop = monitorInfo.rcWork.bottom - (int) windowPixelHeight;
     }
 
-    if (winLeft != _windowPosition.X || winTop != _windowPosition.Y)
+    if (winLeft != windowPosition.X || winTop != windowPosition.Y)
     {
-      SetWindowPosition(winLeft, winTop);
+      SetWindowPosition(windowHandle, winLeft, winTop);
     }
   }
 
 
-  private void PasteWindow_Deactivated(object? sender, EventArgs e)
+  private nint GetMonitorHandle(Point windowPosition)
   {
-    _pasteWindow.SizeChanged -= PasteWindow_SizeChanged;
-    _pasteWindow.Deactivated -= PasteWindow_Deactivated;
-  }
-
-
-  private nint GetMonitorHandle()
-  {
-    return _user32Dll.MonitorFromPoint(_windowPosition, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+    return _user32Dll.MonitorFromPoint(windowPosition, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
   }
 
 
@@ -136,9 +131,9 @@ internal class PasteWindowService : IPasteWindowService
   }
 
 
-  private void SetWindowPosition(int left, int top)
+  private void SetWindowPosition(nint windowHandle, int left, int top)
   {
-    _user32Dll.SetWindowPos(WindowHandle, nint.Zero, left, top, 0, 0,
+    _user32Dll.SetWindowPos(windowHandle, nint.Zero, left, top, 0, 0,
       SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
     );
   }

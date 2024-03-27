@@ -1,7 +1,7 @@
 <UserControl x:Class="Tum4ik.JustClipboardManager.Views.Main.Settings.SettingsInterfaceView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
@@ -9,6 +9,7 @@
              xmlns:theme="clr-namespace:Tum4ik.JustClipboardManager.Services.Theme"
              xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
+             xmlns:settingcard="clr-namespace:Tum4ik.JustClipboardManager.Controls.SettingCard"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SettingsInterfaceViewModel}"
              Focusable="False"
@@ -62,36 +63,31 @@
       </Grid>
       <DataTemplate.Triggers>
         <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
-               Value="True">
+                     Value="True">
           <Setter Property="Opacity" Value="0.75"/>
         </DataTrigger>
       </DataTemplate.Triggers>
     </DataTemplate>
   </UserControl.Resources>
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
-    <StackPanel Grid.Column="1">
-      <StackPanel.Resources>
-        <Style TargetType="controls:WinUiComboBox">
-          <Setter Property="Margin" Value="0, 8, 0, 16"/>
-        </Style>
-      </StackPanel.Resources>
-      <TextBlock Text="{Binding Translate[Language]}"/>
+  <ItemsControl>
+    <settingcard:SettingCard Margin="0"
+                             Icon="Language"
+                             Header="{Binding Translate[Language]}"
+                             Description="{Binding Translate[Language_Description]}">
       <controls:WinUiComboBox ItemsSource="{Binding Translate.SupportedLanguages}"
                               SelectedItem="{Binding Translate.SelectedLanguage}"
                               SelectedItemTemplate="{StaticResource LanguageItemTemplate}"
                               ItemTemplate="{StaticResource LanguageItemTemplate}"
                               Width="250"/>
-      <TextBlock Text="{Binding Translate[Theme]}"/>
+    </settingcard:SettingCard>
+    <settingcard:SettingCard Icon="Palette"
+                             Header="{Binding Translate[Theme]}"
+                             Description="{Binding Translate[Theme_Description]}">
       <controls:WinUiComboBox ItemsSource="{Binding Themes}"
                               SelectedItem="{Binding SelectedTheme}"
                               SelectedItemTemplate="{StaticResource ThemeItemTemplate}"
                               ItemTemplate="{StaticResource ThemeItemTemplate}"
                               Width="250"/>
-    </StackPanel>
-  </Grid>
+    </settingcard:SettingCard>
+  </ItemsControl>
 </UserControl>

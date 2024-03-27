@@ -87,7 +87,7 @@
       </Grid>
     </StackPanel>
 
-    <StackPanel HorizontalAlignment="Center" Margin="0, 24, 0, 0">
+    <StackPanel HorizontalAlignment="Center">
       <StackPanel Orientation="Horizontal" Margin="8, 4">
         <TextBlock Text="{Binding Translate[Version]}"/>
         <TextBlock Text="{Binding Version}" Margin="8, 0" FontWeight="SemiBold"/>
