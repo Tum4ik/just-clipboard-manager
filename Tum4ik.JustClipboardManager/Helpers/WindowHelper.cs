@@ -1,4 +1,3 @@
-using System.Reflection.Metadata;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -13,14 +12,11 @@ internal static class WindowHelper
     var hwnd = (HWND) windowHandle;
     var windowStyleLong = PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
     windowStyleLong &= ~(int) WINDOW_STYLE.WS_SYSMENU;
-    if (nint.Size == 4)
-    {
-      _ = PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
-    }
-    else
-    {
-      PInvoke.SetWindowLongPtr(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
-    }
+#if x64
+    PInvoke.SetWindowLongPtr(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
+#elif x86
+    PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, windowStyleLong);
+#endif
   }
 
 
