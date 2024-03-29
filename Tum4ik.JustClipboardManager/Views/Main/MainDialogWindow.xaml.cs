@@ -1,11 +1,17 @@
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
+using Prism.Events;
 using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Helpers;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
-using Windows.Win32.UI.HiDpi;
+using Tum4ik.JustClipboardManager.Services.Theme;
+using Windows.Win32;
 using Windows.Win32.Graphics.Gdi;
-using static Windows.Win32.PInvoke;
+using Windows.Win32.UI.HiDpi;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Tum4ik.JustClipboardManager.Views.Main;
 
@@ -14,121 +20,91 @@ namespace Tum4ik.JustClipboardManager.Views.Main;
 /// </summary>
 internal partial class MainDialogWindow : IDialogWindowExtended
 {
+  private readonly IThemeService _themeService;
   private readonly IUser32DllService _user32Dll;
   private readonly ISHCoreDllService _shCoreDll;
 
-  public MainDialogWindow(IUser32DllService user32Dll,
+  public MainDialogWindow(IEventAggregator eventAggregator,
+                          IThemeService themeService,
+                          IUser32DllService user32Dll,
                           ISHCoreDllService shCoreDll)
   {
+    _themeService = themeService;
     _user32Dll = user32Dll;
     _shCoreDll = shCoreDll;
-
+    eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(OnThemeChanged);
     InitializeComponent();
-
-    HwndSource.FromHwnd(Handle).AddHook(HwndHook);
-    _initialMargin = Margin;
   }
 
 
-  private readonly Thickness _initialMargin;
-  private bool _windowLocationChangedSubscribed;
-
-
-  public IDialogResult? Result { get; set; }
+  public override void OnApplyTemplate()
+  {
+    base.OnApplyTemplate();
+    WindowHelper.RemoveDefaultTitleBar(Handle);
+    WindowHelper.ApplyBackdrop(Handle); // TODO: apply Mica backdrop from settings if allowed for OS
+    WindowHelper.ApplyTheme(Handle, _themeService.SelectedTheme.ThemeType);
+  }
 
 
   private nint? _handle;
   public nint Handle => _handle ??= new WindowInteropHelper(this).EnsureHandle();
 
 
-  private nint HwndHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled)
+  public IDialogResult? Result { get; set; }
+
+
+  private void OnThemeChanged()
   {
-    switch ((uint) msg)
+    WindowHelper.ApplyTheme(Handle, _themeService.SelectedTheme.ThemeType);
+  }
+
+
+  private void Window_StateChanged(object sender, EventArgs e)
+  {
+    Padding = WindowState switch
     {
-      case WM_NCLBUTTONDBLCLK:
-        if (WindowState == WindowState.Normal)
-        {
-          SystemCommands.MaximizeWindow(this);
-          handled = true;
-        }
-        break;
-      case WM_SYSCOMMAND:
-        switch ((uint) wParam)
-        {
-          case 0xF012: // Window titlebar click
-            if (WindowState == WindowState.Maximized && !_windowLocationChangedSubscribed)
-            {
-              LocationChanged += MainDialogWindow_LocationChanged;
-              _windowLocationChangedSubscribed = true;
-            }
-            break;
-          case SC_MAXIMIZE:
-          case 0xF032: // SC_MAXIMIZE_DBLCLICK
-            BeforeMaximize();
-            break;
-          case SC_RESTORE:
-          case 0xF122: // SC_RESTORE_DBLCLICK
-            if (WindowState != WindowState.Minimized)
-            {
-              BeforeRestore();
-            }
-            break;
-        }
-        break;
-    }
-    return nint.Zero;
+      WindowState.Maximized => GetPaddingForMaximizedWindow(),
+      _ => default
+    };
   }
 
 
-  private void MainDialogWindow_LocationChanged(object? sender, EventArgs e)
-  {
-    LocationChanged -= MainDialogWindow_LocationChanged;
-    BeforeRestore();
-    _windowLocationChangedSubscribed = false;
-  }
+  private readonly Dictionary<nint, Thickness> _monitorToMaximizedPadding = new();
 
-
-  private void BeforeMaximize()
+  private Thickness GetPaddingForMaximizedWindow()
   {
     var monitorHandle = _user32Dll.MonitorFromWindow(Handle, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
-    if (_user32Dll.GetMonitorInfo(monitorHandle, out var monitorInfo)
-        && _shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
+    if (_monitorToMaximizedPadding.TryGetValue(monitorHandle, out var padding))
     {
-      MaxWidth = (monitorInfo.rcWork.right - monitorInfo.rcWork.left) / (dpiX / 96d);
-      MaxHeight = (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top) / (dpiY / 96d);
-      Margin = new(0, 0, 0, 0);
+      return padding;
     }
-  }
 
-
-  private void BeforeRestore()
-  {
-    Margin = _initialMargin;
-  }
-
-
-  private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-  {
-    SystemCommands.MinimizeWindow(this);
-  }
-
-
-  private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
-  {
-    if (WindowState == WindowState.Normal)
+    if (_shCoreDll.GetDpiForMonitor(monitorHandle, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var dpiX, out var dpiY))
     {
-      SystemCommands.MaximizeWindow(this);
+      var paddedBorder = (double) PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER);
+      var leftRight = SystemParameters.ResizeFrameVerticalBorderWidth + paddedBorder / (dpiX / 96d);
+      var topBottom = SystemParameters.ResizeFrameHorizontalBorderHeight + paddedBorder / (dpiY / 96d);
+      var thickness = new Thickness(leftRight, topBottom, leftRight, topBottom);
+      _monitorToMaximizedPadding[monitorHandle] = thickness;
+      return thickness;
     }
-    else if (WindowState == WindowState.Maximized)
-    {
-      SystemCommands.RestoreWindow(this);
-    }
+
+    return default;
   }
 
 
-  private void CloseButton_Click(object sender, RoutedEventArgs e)
+  private void Window_MouseDown(object sender, MouseButtonEventArgs e)
   {
-    Result = new DialogResult();
-    Close();
+    ResetFocus();
+  }
+
+  private void Window_Deactivated(object sender, EventArgs e)
+  {
+    ResetFocus();
+  }
+
+  private void ResetFocus()
+  {
+    MoveFocus(new(FocusNavigationDirection.Last));
   }
 }

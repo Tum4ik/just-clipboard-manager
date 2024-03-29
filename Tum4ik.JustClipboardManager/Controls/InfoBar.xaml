@@ -7,7 +7,8 @@
          xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
          xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
          mc:Ignorable="d"
-         Opacity="0">
+         Opacity="0"
+         Focusable="False">
   <Control.Template>
     <ControlTemplate TargetType="controls:InfoBar">
       <ControlTemplate.Resources>

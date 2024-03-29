@@ -10,7 +10,8 @@
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Style="{StaticResource WindowBefore11Style}">
   <Window.Resources>
     <converters:TranslateConverter x:Key="TranslateConverter"/>
   </Window.Resources>

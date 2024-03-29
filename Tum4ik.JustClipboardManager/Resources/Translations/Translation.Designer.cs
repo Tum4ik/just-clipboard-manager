@@ -97,6 +97,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Starts automatically when you sign in.
+        /// </summary>
+        internal static string AutoStartApplication_Description {
+            get {
+                return ResourceManager.GetString("AutoStartApplication_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Looks like the corresponding file with plugins info is corrupted or has wrong format. Please try again later..
         /// </summary>
         internal static string AvailablePluginsInfoLoadProblem_Body {
@@ -232,11 +241,29 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        internal static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete clips older than.
         /// </summary>
         internal static string DeleteClipsOlderThan {
             get {
                 return ResourceManager.GetString("DeleteClipsOlderThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically deletes clips that are older than a specified number of days/months/years.
+        /// </summary>
+        internal static string DeleteClipsOlderThan_Description {
+            get {
+                return ResourceManager.GetString("DeleteClipsOlderThan_Description", resourceCulture);
             }
         }
         
@@ -322,6 +349,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        internal static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The hotkey is already registered.
         /// </summary>
         internal static string HotkeyIsAlreadyRegistered {
@@ -372,6 +408,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The language for the user interface.
+        /// </summary>
+        internal static string Language_Description {
+            get {
+                return ResourceManager.GetString("Language_Description", resourceCulture);
             }
         }
         
@@ -435,6 +480,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        internal static string Opacity {
+            get {
+                return ResourceManager.GetString("Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to control the degree of transparency of the paste window.
+        /// </summary>
+        internal static string Opacity_Description {
+            get {
+                return ResourceManager.GetString("Opacity_Description", resourceCulture);
             }
         }
         
@@ -583,11 +646,38 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        internal static string Size {
+            get {
+                return ResourceManager.GetString("Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to specify the size of the paste window.
+        /// </summary>
+        internal static string Size_Description {
+            get {
+                return ResourceManager.GetString("Size_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Snapping.
         /// </summary>
         internal static string Snapping {
             get {
                 return ResourceManager.GetString("Snapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows you to automatically position the paste window based on the selected option.
+        /// </summary>
+        internal static string Snapping_Description {
+            get {
+                return ResourceManager.GetString("Snapping_Description", resourceCulture);
             }
         }
         
@@ -615,6 +705,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Theme {
             get {
                 return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The visual appearance of the user interface.
+        /// </summary>
+        internal static string Theme_Description {
+            get {
+                return ResourceManager.GetString("Theme_Description", resourceCulture);
             }
         }
         
@@ -669,6 +768,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width.
+        /// </summary>
+        internal static string Width {
+            get {
+                return ResourceManager.GetString("Width", resourceCulture);
             }
         }
         

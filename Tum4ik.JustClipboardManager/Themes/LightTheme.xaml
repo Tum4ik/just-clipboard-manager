@@ -67,7 +67,7 @@
       </Grid>
     </VisualBrush.Visual>
   </VisualBrush>
-  <SolidColorBrush x:Key="{x:Static theming:AppColors.AppContentAreaBackgroundBrush}" Color="White" Opacity="0.7"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.AppContentAreaBackgroundBrush}" Color="#F3F3F3" />
   <SolidColorBrush x:Key="{x:Static theming:AppColors.ViewContentAreaBackgroundBrush}" Color="White" Opacity="0.5"/>
 
   <Brush x:Key="{x:Static theming:AppColors.SimpleDialogBackgroundBrush}">#F3F3F3</Brush>
@@ -109,6 +109,10 @@
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxHoverBackgroundBrush}" Color="Black" Opacity="0.0578"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxPressedBackgroundBrush}" Color="Black" Opacity="0.0924"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.CheckBoxDisabledBorderBrush}" Color="Black" Opacity="0.2169"/>
+
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderThumbBackgroundBrush}" Color="White"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderTrackBackgroundBrush}" Color="Black" Opacity="0.4458"/>
+  <SolidColorBrush x:Key="{x:Static theming:AppColors.SliderTrackDisabledBackgroundBrush}" Color="Black" Opacity="0.3173"/>
 
   <SolidColorBrush x:Key="{x:Static theming:AppColors.TextBoxBorderBrush}" Color="Black" Opacity="0.0578"/>
   <SolidColorBrush x:Key="{x:Static theming:AppColors.TextBoxBorderUnderlineBrush}" Color="Black" Opacity="0.4458"/>

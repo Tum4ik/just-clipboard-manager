@@ -6,13 +6,13 @@ on:
     branches:
       - 'release/**'
     paths:
-      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginDevKit/**'
   pull_request:
     branches:
       - 'main'
       - 'release/**'
     paths:
-      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginDevKit/**'
 
 
 jobs:
@@ -27,19 +27,19 @@ jobs:
     env:
       Scripts: .\.github\workflows\scripts
       TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
-      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\net7.0-windows
-      PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\pack
+      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\net8.0-windows
+      PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\pack
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4.0.0
+      uses: actions/checkout@v4.1.1
       with:
         fetch-depth: 0
 
-    - name: Install .NET
-      uses: actions/setup-dotnet@v3.2.0
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4.0.0
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
 
     - name: Define version
       id: define-version
@@ -54,7 +54,7 @@ jobs:
     - name: Build
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+        dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
           /p:PackageVersion=$version `
@@ -78,7 +78,7 @@ jobs:
     - name: Pack
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        dotnet pack ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+        dotnet pack ./Plugins/Tum4ik.JustClipboardManager.PluginDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
           --no-build `
@@ -89,7 +89,7 @@ jobs:
           /p:SymbolPackageFormat=snupkg
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v4.3.1
       with:
         if-no-files-found: error
         name: Package
@@ -105,7 +105,7 @@ jobs:
 
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v3.0.2
+      uses: actions/download-artifact@v4.1.2
 
     - name: NuGet push
       run: |

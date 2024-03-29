@@ -6,6 +6,8 @@ SC_*
 
 // Enums ------------------------------------------------------------------------------------------
 OBJECT_IDENTIFIER
+DWM_SYSTEMBACKDROP_TYPE
+WINDOW_STYLE
 // ------------------------------------------------------------------------------------------------
 
 
@@ -16,6 +18,7 @@ AccessibleObjectFromWindow
 
 // Methods (user32.dll) ---------------------------------------------------------------------------
 GetCursorPos
+GetSystemMetrics
 SetWindowPos
 ShowWindow
 GetForegroundWindow
@@ -29,6 +32,9 @@ RemoveClipboardFormatListener
 SendInput
 SetForegroundWindow
 SetFocus
+GetWindowLong
+SetWindowLong
+SetWindowLongPtr
 // ------------------------------------------------------------------------------------------------
 
 
@@ -40,4 +46,9 @@ GlobalDeleteAtom
 
 // Methods (SHCore.dll) ---------------------------------------------------------------------------
 GetDpiForMonitor
+// ------------------------------------------------------------------------------------------------
+
+
+// Methods (dwmapi.dll) ---------------------------------------------------------------------------
+DwmSetWindowAttribute
 // ------------------------------------------------------------------------------------------------

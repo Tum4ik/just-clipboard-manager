@@ -10,14 +10,14 @@
            xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Settings"
            mc:Ignorable="d"
            d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
-  <controls:NavigationPanel DockPanel.Dock="Left" Width="246" Margin="0, 30, 0, 0">
+  <controls:NavigationPanel DockPanel.Dock="Left" Width="246" Padding="0, 2">
     <controls:NavigationPanel.Resources>
       <Style TargetType="controls:NavigationButton" BasedOn="{StaticResource {x:Type controls:NavigationButton}}">
         <Setter Property="Margin" Value="4, 2"/>
         <Setter Property="Command" Value="{Binding NavigateCommand}"/>
       </Style>
     </controls:NavigationPanel.Resources>
-    <controls:NavigationButton Icon="Settings" Text="{Binding Translate[General]}"
+    <controls:NavigationButton Icon="Tune" Text="{Binding Translate[General]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsGeneralView}"
                                IsChecked="True"/>
     <controls:NavigationButton Icon="DisplaySettings" Text="{Binding Translate[Interface]}"
@@ -27,11 +27,10 @@
     <controls:NavigationButton Icon="Keyboard" Text="{Binding Translate[Hotkeys]}"
                                CommandParameter="{x:Static const:ViewNames.SettingsHotkeysView}"/>
   </controls:NavigationPanel>
-  <Border CornerRadius="8, 4, 4, 8"
-          BorderThickness="1"
+  <Border CornerRadius="0, 4, 4, 0"
+          BorderThickness="1, 0, 0, 0"
           BorderBrush="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
           Background="{DynamicResource {x:Static theming:AppColors.ViewContentAreaBackgroundBrush}}"
-          Margin="0, 32, 4, 4"
           Padding="8">
     <ContentControl prism:RegionManager.RegionName="{x:Static const:RegionNames.MainDialogSettingsViewContent}"/>
   </Border>

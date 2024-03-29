@@ -73,12 +73,28 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4.0.0
+      uses: actions/checkout@v4.1.1
       with:
         fetch-depth: 0
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3.1
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Test
+      run: |
+        $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsInstallationPath = & $vswherePath `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.Workload.ManagedDesktop Microsoft.VisualStudio.Workload.Web `
+          -requiresAny `
+          -property installationPath
+        $vstestPath = Join-Path $vsInstallationPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+        msbuild /t:Restore /t:Build /p:Configuration=Release
+        & $vstestPath .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
+          /Parallel `
+          /Enablecodecoverage `
+          /Collect:"Code Coverage;Format=Cobertura"
 
     - name: Define version
       id: define-version
@@ -104,19 +120,8 @@ jobs:
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x86 -Version $version
         ${{ env.Scripts }}\MSBuildPublish.ps1 -Architecture x64 -Version $version
 
-    - name: Setup VSTest.console.exe
-      uses: darenm/Setup-VSTest@v1.2
-
-    - name: Test
-      run: |
-        msbuild /t:Restore /t:Build /p:Configuration=Release
-        vstest.console.exe .\Tests\*.UnitTests\bin\Release\*\*.UnitTests.dll `
-          /Parallel `
-          /Enablecodecoverage `
-          /Collect:"Code Coverage;Format=Cobertura"
-
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4.0.1
 
     - name: Prepare PFX fil for code signing
       run: |
@@ -159,7 +164,7 @@ jobs:
       run: Remove-Item -Path ${{ env.TemporaryPfxFilePath }}
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v4.3.1
       with:
         if-no-files-found: error
         name: BuildFiles
@@ -177,13 +182,21 @@ jobs:
     
     steps:
     - name: Download build artifacts
-      uses: actions/download-artifact@v3.0.2
+      uses: actions/download-artifact@v4.1.2
 
     - name: GitHub release
-      uses: softprops/action-gh-release@v0.1.15
-      with:
-        tag_name: ${{ needs.build.outputs.version }}
-        draft: true
-        files: '**/*.exe'
-        body_path: BuildFiles/ReleaseNotes.md
-        fail_on_unmatched_files: true
+      env:
+        GH_REPO: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release create ${{ needs.build.outputs.version }} '**/*.exe' `
+          --draft `
+          --title ${{ needs.build.outputs.version }} `
+          --notes-file BuildFiles/ReleaseNotes.md
+      # uses: softprops/action-gh-release@v0.1.15
+      # with:
+      #   tag_name: ${{ needs.build.outputs.version }}
+      #   draft: true
+      #   files: '**/*.exe'
+      #   body_path: BuildFiles/ReleaseNotes.md
+      #   fail_on_unmatched_files: true

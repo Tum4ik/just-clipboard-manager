@@ -1,0 +1,48 @@
+<Window x:Class="Tum4ik.JustClipboardManager.Views.Main.MainDialogBefore11Window"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
+        xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainDialogViewModel}}"
+        Title="{Binding Title}"
+        WindowStartupLocation="CenterScreen"
+        Width="930" Height="632"
+        Icon="/Resources/Icons/tray.ico"
+        ResizeMode="NoResize"
+        Style="{StaticResource WindowBefore11Style}"
+        MouseDown="Window_MouseDown"
+        Deactivated="Window_Deactivated">
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="32" ResizeBorderThickness="0"/>
+  </WindowChrome.WindowChrome>
+  <Window.Template>
+    <ControlTemplate TargetType="Window">
+      <Border>
+        <Border x:Name="_border"
+                CornerRadius="8"
+                Margin="{TemplateBinding Margin}"
+                Background="{TemplateBinding Background}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                Effect="{TemplateBinding Effect}"
+                SizeChanged="Border_SizeChanged">
+          <DockPanel>
+            <controls:WindowTitleBar DockPanel.Dock="Top" />
+            <ContentPresenter />
+          </DockPanel>
+        </Border>
+      </Border>
+      <ControlTemplate.Triggers>
+        <Trigger Property="WindowState" Value="Maximized">
+          <Setter TargetName="_border" Property="CornerRadius" Value="0"/>
+          <Setter Property="Effect" Value="{x:Null}"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Trigger>
+      </ControlTemplate.Triggers>
+    </ControlTemplate>
+  </Window.Template>
+</Window>

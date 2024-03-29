@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
 		Microsoft ResX Schema
@@ -309,5 +309,41 @@
   </data>
   <data name="Snapping" xml:space="preserve">
     <value>Snapping</value>
+  </data>
+  <data name="AutoStartApplication_Description" xml:space="preserve">
+    <value>Starts automatically when you sign in</value>
+  </data>
+  <data name="DeleteClipsOlderThan_Description" xml:space="preserve">
+    <value>Automatically deletes clips that are older than a specified number of days/months/years</value>
+  </data>
+  <data name="Language_Description" xml:space="preserve">
+    <value>The language for the user interface</value>
+  </data>
+  <data name="Theme_Description" xml:space="preserve">
+    <value>The visual appearance of the user interface</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Snapping_Description" xml:space="preserve">
+    <value>Allows you to automatically position the paste window based on the selected option</value>
+  </data>
+  <data name="Size_Description" xml:space="preserve">
+    <value>Allows you to specify the size of the paste window</value>
+  </data>
+  <data name="Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="Opacity_Description" xml:space="preserve">
+    <value>Allows you to control the degree of transparency of the paste window</value>
   </data>
 </root>
