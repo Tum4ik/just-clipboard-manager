@@ -27,7 +27,7 @@ jobs:
     env:
       Scripts: .\.github\workflows\scripts
       TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
-      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\net7.0-windows
+      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\net8.0-windows
       PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\pack
 
     steps:
