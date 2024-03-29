@@ -6,13 +6,13 @@ on:
     branches:
       - 'release/**'
     paths:
-      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginDevKit/**'
   pull_request:
     branches:
       - 'main'
       - 'release/**'
     paths:
-      - 'Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/**'
+      - 'Plugins/Tum4ik.JustClipboardManager.PluginDevKit/**'
 
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
     env:
       Scripts: .\.github\workflows\scripts
       TemporaryPfxFilePath: .\GitHubActionsWorkflow.pfx
-      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\net7.0-windows
-      PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginsDevKit\bin\Release\pack
+      BuildOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\net7.0-windows
+      PackOutputPath: .\Plugins\Tum4ik.JustClipboardManager.PluginDevKit\bin\Release\pack
 
     steps:
     - name: Checkout
@@ -54,7 +54,7 @@ jobs:
     - name: Build
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+        dotnet build ./Plugins/Tum4ik.JustClipboardManager.PluginDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
           /p:PackageVersion=$version `
@@ -78,7 +78,7 @@ jobs:
     - name: Pack
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
-        dotnet pack ./Plugins/Tum4ik.JustClipboardManager.PluginsDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
+        dotnet pack ./Plugins/Tum4ik.JustClipboardManager.PluginDevKit/Tum4ik.JustClipboardManager.PluginDevKit.csproj `
           -c Release `
           --nologo `
           --no-build `
