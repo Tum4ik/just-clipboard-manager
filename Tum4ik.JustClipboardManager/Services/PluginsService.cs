@@ -178,11 +178,11 @@ internal class PluginsService : IPluginsService
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
 
     _moduleCatalog.Load();
+    await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
     foreach (var module in _moduleCatalog.Modules)
     {
       if (module.State == ModuleState.NotStarted)
       {
-        await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
         _moduleManager.LoadModule(module.ModuleName);
         EnablePlugin(pluginId);
         progress?.Report(100);
