@@ -134,10 +134,10 @@ internal class ClipboardService : IClipboardService
       {
         var format = formats[i];
         if (new[] {
-            DataFormats.EnhancedMetafile, DataFormats.MetafilePicture, "FileContents"
+            DataFormats.EnhancedMetafile, DataFormats.MetafilePicture, "FileContents", "AsyncFlag"
           }.Contains(format))
         {
-          // ignore unsupported formats
+          // ignore unsupported or problematic formats
           continue;
         }
 
