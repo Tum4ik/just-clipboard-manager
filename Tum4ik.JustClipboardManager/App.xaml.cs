@@ -149,10 +149,19 @@ public partial class App : ISingleInstance
 
   protected override void OnStartup(StartupEventArgs e)
   {
-    // Important to call before base.OnStartup(e).
-    // Otherwise the plugins will be initialized and it will not be possible to remove files.
-    RemoveFilesOfDeletedPlugins();
-    RemoveFilesOfInstalledPluginsIfForced();
+    try
+    {
+      // Important to call before base.OnStartup(e).
+      // Otherwise the plugins will be initialized and it will not be possible to remove files.
+      RemoveFilesOfDeletedPlugins();
+      UpdatePluginsIfForced();
+    }
+    catch (Exception ex)
+    {
+      Crashes.TrackError(ex, new Dictionary<string, string> {
+        { "Message", "Error during removing files before startup." }
+      });
+    }
 
     try
     {
@@ -252,7 +261,7 @@ public partial class App : ISingleInstance
   }
 
 
-  private static void RemoveFilesOfInstalledPluginsIfForced()
+  private static void UpdatePluginsIfForced()
   {
     // todo: optimize
     if (!System.IO.File.Exists("force-plugins-update"))
@@ -260,27 +269,36 @@ public partial class App : ISingleInstance
       return;
     }
 
-    using (var pluginFilesStream = new FileStream(PluginsService.PluginsJsonFileName, System.IO.FileMode.OpenOrCreate))
+    try
     {
-      var pluginIdToPluginFiles = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(pluginFilesStream);
-      if (pluginIdToPluginFiles is null)
+      using (var pluginFilesStream = new FileStream(PluginsService.PluginsJsonFileName, System.IO.FileMode.OpenOrCreate))
       {
-        return;
-      }
-
-      using var preInstalledPluginsWriter = System.IO.File.AppendText("pre-install-plugins");
-      foreach (var (pluginId, pluginFiles) in pluginIdToPluginFiles)
-      {
-        preInstalledPluginsWriter.WriteLine(pluginId);
-        foreach (var pluginFile in pluginFiles)
+        var pluginIdToPluginFiles = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(pluginFilesStream);
+        if (pluginIdToPluginFiles is null)
         {
-          System.IO.File.Delete(pluginFile);
+          return;
+        }
+
+        using var preInstalledPluginsWriter = System.IO.File.AppendText("pre-install-plugins");
+        foreach (var (pluginId, pluginFiles) in pluginIdToPluginFiles)
+        {
+          preInstalledPluginsWriter.WriteLine(pluginId);
+          foreach (var pluginFile in pluginFiles)
+          {
+            System.IO.File.Delete(pluginFile);
+          }
         }
       }
     }
-
-    System.IO.File.Delete("force-plugins-update");
-    System.IO.File.Delete(PluginsService.PluginsJsonFileName);
+    catch (JsonException)
+    {
+      // suppress
+    }
+    finally
+    {
+      System.IO.File.Delete("force-plugins-update");
+      System.IO.File.Delete(PluginsService.PluginsJsonFileName);
+    }
   }
 
 

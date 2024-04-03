@@ -179,15 +179,13 @@ internal class PluginsService : IPluginsService
 
     _moduleCatalog.Load();
     await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
-    foreach (var module in _moduleCatalog.Modules)
+    var moduleToLoad = _moduleCatalog.Modules.FirstOrDefault(m => m.ModuleName == pluginId && m.State == ModuleState.NotStarted);
+    if (moduleToLoad is not null)
     {
-      if (module.State == ModuleState.NotStarted)
-      {
-        _moduleManager.LoadModule(module.ModuleName);
-        EnablePlugin(pluginId);
-        progress?.Report(100);
-      }
+      _moduleManager.LoadModule(moduleToLoad.ModuleName);
+      EnablePlugin(pluginId);
     }
+    progress?.Report(100);
   }
 
 
