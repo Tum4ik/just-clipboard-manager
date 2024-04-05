@@ -196,25 +196,38 @@ end;
 function InitializeSetup(): Boolean;
 var
   RegistryUninstallPath, InstalledVersion: String;
-  PackedPreviousVersion, PackedCurrentVersion: Int64;
+  PackedInstalledVersion, PackedNextVersion: Int64;
+  MajorInstalledVersion, MajorNextVersion: LongInt;
+  InstalledVersionArray, NextVersionArray: TArrayOfString;
   ResultCode: Integer;
 begin
   MustOpenAppAfterInstall := False;
   Result := True;
   RegistryUninstallPath := ExpandConstant('SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#SetupSetting("AppId")}_is1');
   if RegQueryStringValue(HKCU, RegistryUninstallPath, 'DisplayVersion', InstalledVersion) then begin
-    PackedPreviousVersion := GetPackedVersionComponents(InstalledVersion);
-    PackedCurrentVersion := GetPackedVersionComponents(ExpandConstant('{#MyAppVersion}'));
-    if PackedPreviousVersion > PackedCurrentVersion then begin
+    PackedInstalledVersion := GetPackedVersionComponents(InstalledVersion);
+    PackedNextVersion := GetPackedVersionComponents(ExpandConstant('{#MyAppVersion}'));
+    if PackedInstalledVersion > PackedNextVersion then begin
       MsgBox(FmtMessage(CustomMessage('YouHaveNewerVersion'), [InstalledVersion]), mbInformation, MB_OK);
       Result := False;
-    end else if PackedPreviousVersion = PackedCurrentVersion then begin
+    end else if PackedInstalledVersion = PackedNextVersion then begin
       MsgBox(FmtMessage(CustomMessage('YouHaveThisVersion'), [InstalledVersion]), mbInformation, MB_OK);
       Result := False;
     end else begin
       IsUpgrade := True;
-      ShouldInstallImagesPlugin := True;
-      ShouldInstallFilesPlugin := True;
+      InstalledVersionArray := StrSplit(InstalledVersion, '.');
+      NextVersionArray := StrSplit(ExpandConstant('{#MyAppVersion}'), '.');
+      MajorInstalledVersion := StrToInt(InstalledVersionArray[0]);
+      MajorNextVersion := StrToInt(NextVersionArray[0]);
+      if MajorInstalledVersion <= 1 then begin
+        { if ugrade from version 1.x.x.x or lower }
+        ShouldInstallImagesPlugin := True;
+        ShouldInstallFilesPlugin := True;
+      end;
+      if (MajorNextVersion >= 3) and (MajorNextVersion > MajorInstalledVersion) then begin
+        { force plugins update }
+        SaveStringToFile(ExpandConstant('{app}\force-plugins-update'), '', False);
+      end;
     end;
   end;
   if Result and IsAppRunning(ExpandConstant('{#MyAppExeName}')) then begin

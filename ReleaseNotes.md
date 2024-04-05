@@ -7,3 +7,4 @@
 ### Fixes
 * Fixed problem when remove clipboard listener operation fails.
 * Fixed accent button strange margin.
+* Fixed hanging of files explorer when file is pasted.
