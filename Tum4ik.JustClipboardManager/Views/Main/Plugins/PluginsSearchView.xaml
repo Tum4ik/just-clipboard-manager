@@ -48,10 +48,10 @@
                     </i:DataTrigger>
                   </i:Interaction.Triggers>
                   <ProgressBar Grid.Column="0"
-                               Margin="0, 0, 14, 0"
                                VerticalAlignment="Center"
                                Value="{Binding DataContext.PluginInstallationProgress, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                   <controls:WinUiButton Grid.Column="1"
+                                        Margin="14, 0, 4, 0"
                                         Text="{Binding DataContext.Translate[Cancel], RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         Command="{Binding DataContext.CancelInstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                 </Grid>

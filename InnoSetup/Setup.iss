@@ -198,6 +198,7 @@ var
   RegistryUninstallPath, InstalledVersion: String;
   PackedInstalledVersion, PackedNextVersion: Int64;
   MajorInstalledVersion, MajorNextVersion: LongInt;
+  InstalledVersionArray, NextVersionArray: TArrayOfString;
   ResultCode: Integer;
 begin
   MustOpenAppAfterInstall := False;
@@ -214,8 +215,10 @@ begin
       Result := False;
     end else begin
       IsUpgrade := True;
-      MajorInstalledVersion := StrToInt(StrSplit(InstalledVersion, '.')[0]);
-      MajorNextVersion := StrToInt(StrSplit(ExpandConstant('{#MyAppVersion}'), '.')[0]);
+      InstalledVersionArray := StrSplit(InstalledVersion, '.');
+      NextVersionArray := StrSplit(ExpandConstant('{#MyAppVersion}'), '.');
+      MajorInstalledVersion := StrToInt(InstalledVersionArray[0]);
+      MajorNextVersion := StrToInt(NextVersionArray[0]);
       if MajorInstalledVersion <= 1 then begin
         { if ugrade from version 1.x.x.x or lower }
         ShouldInstallImagesPlugin := True;
