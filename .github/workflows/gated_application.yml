@@ -189,7 +189,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
         GITHUB_TOKEN: ${{ github.token }}
       run: |
-        gh release create ${{ needs.build.outputs.version }} '**/*.exe' `
+        gh release create ${{ needs.build.outputs.version }} (Get-Item **/*.exe) `
           --draft `
           --title ${{ needs.build.outputs.version }} `
           --notes-file BuildFiles/ReleaseNotes.md
