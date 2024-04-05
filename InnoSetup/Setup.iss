@@ -224,7 +224,7 @@ begin
         ShouldInstallImagesPlugin := True;
         ShouldInstallFilesPlugin := True;
       end;
-      if MajorNextVersion >= 3 and MajorNextVersion > MajorInstalledVersion then begin
+      if (MajorNextVersion >= 3) and (MajorNextVersion > MajorInstalledVersion) then begin
         { force plugins update }
         SaveStringToFile(ExpandConstant('{app}\force-plugins-update'), '', False);
       end;
