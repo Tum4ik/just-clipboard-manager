@@ -122,6 +122,7 @@ var
   IsUpgrade: Boolean;
   ShouldInstallImagesPlugin: Boolean;
   ShouldInstallFilesPlugin: Boolean;
+  ForcePluginsUpdate: Boolean;
 
 
 function ShowPostinstallLaunchOption(): Boolean;
@@ -226,7 +227,7 @@ begin
       end;
       if (MajorNextVersion >= 3) and (MajorNextVersion > MajorInstalledVersion) then begin
         { force plugins update }
-        SaveStringToFile(ExpandConstant('{app}\force-plugins-update'), '', False);
+        ForcePluginsUpdate := True;
       end;
     end;
   end;
@@ -276,6 +277,9 @@ begin
       end;
       if ShouldInstallFilesPlugin then begin
         SaveStringToFile(ExpandConstant('{app}\pre-install-plugins'), 'D2D7663B-39C5-488A-B323-8063963D47F5' + #13#10, True);
+      end;
+      if ForcePluginsUpdate then begin
+        SaveStringToFile(ExpandConstant('{app}\force-plugins-update'), '', False);
       end;
       if MustOpenAppAfterInstall then begin
         LaunchApplication();
