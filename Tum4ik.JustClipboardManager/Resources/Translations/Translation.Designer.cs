@@ -196,7 +196,7 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © 2022-2023 Yevheniy Tymchishin. All rights reserved..
+        ///   Looks up a localized string similar to © 2022-2024 Yevheniy Tymchishin. All rights reserved..
         /// </summary>
         internal static string Copyright {
             get {
