@@ -5,7 +5,7 @@
 #define MyAppPublisher "Yevheniy Tymchishin"
 #define MyAppURL "https://github.com/Tum4ik/just-clipboard-manager"
 #define MyAppExeName "JustClipboardManager.exe"
-#define MyAppCopyright "© 2022-2023 Yevheniy Tymchishin. All rights reserved."
+#define MyAppCopyright "© 2022-2024 Yevheniy Tymchishin. All rights reserved."
 #include "version.iss"
 #include "architecture.iss"
 
