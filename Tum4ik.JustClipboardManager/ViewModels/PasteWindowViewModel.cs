@@ -38,6 +38,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private const int ClipsLoadInitialSize = 15;
   private const int ClipsLoadBatchSize = 10;
   private int _loadedClipsCount;
+  private Visibility _currentVisibility = Visibility.Hidden;
 
   private bool _windowDeactivationTriggeredByDataPasting;
 
@@ -74,7 +75,10 @@ internal partial class PasteWindowViewModel : TranslationViewModel
         _dbClips.Clear();
         Clips.Clear();
         _loadedClipsCount = 0;
-        LoadNextClipsBatchAsync().Await(e => throw e);
+        if (_currentVisibility == Visibility.Visible)
+        {
+          LoadNextClipsBatchAsync().Await(e => throw e);
+        }
       }
     }
   }
@@ -97,6 +101,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   [RelayCommand]
   private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
+    _currentVisibility = visibility;
     if (visibility == Visibility.Visible)
     {
       ApplySettings();
@@ -164,7 +169,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     }
   }
 
-  
+
   private void SetInputResult(PasteWindowResult? result)
   {
     _showPasteWindowTcs?.SetResult(result);
