@@ -193,6 +193,24 @@ begin
 end;
 
 
+procedure LaunchApplication();
+var
+  ResultCode: Integer;
+begin
+  Exec(ExpandConstant('{app}\{#MyAppExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
+end;
+
+
+procedure ExitApplication();
+var
+  ResultCode: Integer;
+begin
+  Exec(ExpandConstant('{#MyAppExeName}'), '--shutdown', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  { to support versions which does not react on --shutdown argument }
+  Exec(ExpandConstant('{sys}\taskkill.exe'), ExpandConstant('/f /im {#MyAppExeName}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+end;
+
+
 function InitializeSetup(): Boolean;
 var
   RegistryUninstallPath, InstalledVersion: String;
@@ -234,24 +252,6 @@ begin
     MustOpenAppAfterInstall := True;
     ExitApplication();
   end;
-end;
-
-
-procedure LaunchApplication();
-var
-  ResultCode: Integer;
-begin
-  Exec(ExpandConstant('{app}\{#MyAppExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
-end;
-
-
-procedure ExitApplication();
-var
-  ResultCode: Integer;
-begin
-  Exec(ExpandConstant('{#MyAppExeName}'), '--shutdown', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
-  { to support versions which does not react on --shutdown argument }
-  Exec(ExpandConstant('{sys}\taskkill.exe'), ExpandConstant('/f /im {#MyAppExeName}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
 
