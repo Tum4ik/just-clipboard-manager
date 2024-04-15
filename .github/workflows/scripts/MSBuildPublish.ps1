@@ -12,7 +12,11 @@ msbuild /t:Restore /t:Build /t:Publish `
   /p:RuntimeIdentifier=win-$Architecture `
   /p:PublishSingleFile=false `
   /p:PublishReadyToRun=false `
-  /p:Version=$Version
+  /p:Version=$Version `
+  /p:SentryOrg=tum4ik `
+  /p:SentryProject=just-clipboard-manager `
+  /p:SentryUploadSymbols=true `
+  /p:SentryUploadSources=true
 
 if ($LastExitCode -ne 0) {
   throw

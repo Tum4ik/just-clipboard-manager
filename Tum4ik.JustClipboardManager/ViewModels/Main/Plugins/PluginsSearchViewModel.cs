@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
@@ -18,15 +17,18 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
 {
   private readonly IPluginsService _pluginsService;
   private readonly IInfoBarService _infoBarService;
+  private readonly Lazy<IHub> _sentryHub;
 
   public PluginsSearchViewModel(ITranslationService translationService,
                                 IEventAggregator eventAggregator,
                                 IPluginsService pluginsService,
-                                IInfoBarService infoBarService)
+                                IInfoBarService infoBarService,
+                                Lazy<IHub> sentryHub)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
     _infoBarService = infoBarService;
+    _sentryHub = sentryHub;
   }
 
 
@@ -65,10 +67,10 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     }
     catch (JsonException e)
     {
-      Crashes.TrackError(e, new Dictionary<string, string>
-      {
-        { "Info", "JSON parse exception when loading available plugins from the server" }
-      });
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "JSON parse exception when loading available plugins from the server",
+        type: "info"
+      ));
       _infoBarService.ShowCritical("AvailablePluginsInfoLoadProblem_Body", "AvailablePluginsInfoLoadProblem_Title");
     }
   }
@@ -115,15 +117,15 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     }
     catch (PluginZipSecurityException e)
     {
-      Crashes.TrackError(e);
+      _sentryHub.Value.CaptureException(e);
       _infoBarService.ShowCritical("PluginSecurityViolation_Body", "PluginSecurityViolation_Title");
     }
     catch (Exception e)
     {
-      Crashes.TrackError(e, new Dictionary<string, string>
-      {
-        { "Info", "Unpredictable error when installing plugin" }
-      });
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "Unpredictable error when installing plugin",
+        type: "info"
+      ));
       _infoBarService.ShowCritical("PluginInstallationProblem_Body", "PluginInstallationProblem_Title");
     }
     finally 

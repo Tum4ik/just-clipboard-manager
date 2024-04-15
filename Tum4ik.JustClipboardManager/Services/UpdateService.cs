@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
-using Microsoft.AppCenter.Crashes;
 using Octokit;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using FileMode = System.IO.FileMode;
@@ -12,14 +11,17 @@ internal class UpdateService : IUpdateService
   private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
   private readonly IEnvironment _environment;
+  private readonly Lazy<IHub> _sentryHub;
 
   public UpdateService(IInfoService infoService,
                        IGitHubClient gitHubClient,
-                       IEnvironment environment)
+                       IEnvironment environment,
+                       Lazy<IHub> sentryHub)
   {
     _infoService = infoService;
     _gitHubClient = gitHubClient;
     _environment = environment;
+    _sentryHub = sentryHub;
   }
 
 
@@ -50,25 +52,35 @@ internal class UpdateService : IUpdateService
       }
       else
       {
-        Crashes.TrackError(
-          new ArgumentException("Parse version problem when check for updates."), new Dictionary<string, string>()
-          {
-            { "Lates release tag", latestRelease.TagName }
-          }
+        _sentryHub.Value.CaptureMessage(
+          "Parse version problem when check for updates.",
+          scope => scope.AddBreadcrumb(
+            message: "",
+            category: "info",
+            type: "info",
+            dataPair: ("Lates release tag", latestRelease.TagName)
+          ),
+          SentryLevel.Error
         );
       }
     }
-    catch (TaskCanceledException)
+    catch (TaskCanceledException e)
     {
-      // TODO
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "When checking for updates",
+        type: "info"
+      ));
     }
     catch (HttpRequestException)
     {
       // TODO: log request problem
     }
-    catch (ApiException)
+    catch (ApiException e)
     {
-      // TODO: log github api exception
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "When checking for updates via GitHub API",
+        type: "info"
+      ));
     }
 
     return new(false);

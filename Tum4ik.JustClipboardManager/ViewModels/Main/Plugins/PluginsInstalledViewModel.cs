@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
@@ -15,13 +14,16 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsInstalledViewModel : TranslationViewModel, INavigationAware
 {
   private readonly IPluginsService _pluginsService;
+  private readonly Lazy<IHub> _sentryHub;
 
   public PluginsInstalledViewModel(ITranslationService translationService,
                                    IEventAggregator eventAggregator,
-                                   IPluginsService pluginsService)
+                                   IPluginsService pluginsService,
+                                   Lazy<IHub> sentryHub)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
+    _sentryHub = sentryHub;
   }
 
 
@@ -110,10 +112,10 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
          || e is FormatException
          || e is OverflowException)
       {
-        Crashes.TrackError(e, new Dictionary<string, string>
-        {
-          { "Info", "Plugin version parsing problem" }
-        });
+        _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+          message: "Plugin version parsing problem",
+          type: "info"
+        ));
         return null;
       }
 

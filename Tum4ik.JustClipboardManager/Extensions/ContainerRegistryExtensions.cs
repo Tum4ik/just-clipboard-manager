@@ -1,7 +1,5 @@
-using System.Reflection;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
@@ -44,25 +42,6 @@ internal static class ContainerRegistryExtensions
   {
     SingleInstanceDialogsProvider.RegisterSingleInstanceDialog(name);
     services.RegisterDialog<TView, TViewModel>(name);
-  }
-
-
-  public static IContainerRegistry RegisterConfiguration(this IContainerRegistry services)
-  {
-    var assembly = Assembly.GetExecutingAssembly();
-    var appsettingsResourceName = assembly.GetManifestResourceNames()
-      .Single(n => n.EndsWith("appsettings.json", StringComparison.OrdinalIgnoreCase));
-    // Don't use "using" keyword for appsettingsStream here - it will break the settings reading process.
-    // The stream will be disposed by StreamReader internally anyway.
-    var appsettingsStream = assembly.GetManifestResourceStream(appsettingsResourceName);
-    var configuration = new ConfigurationBuilder()
-      .SetBasePath(AppContext.BaseDirectory)
-      .AddJsonStream(appsettingsStream!)
-#if DEBUG
-      .AddUserSecrets(Assembly.GetExecutingAssembly())
-#endif
-      .Build();
-    return services.RegisterInstance<IConfiguration>(configuration);
   }
 
 

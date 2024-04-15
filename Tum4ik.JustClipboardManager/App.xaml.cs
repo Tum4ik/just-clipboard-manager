@@ -4,9 +4,6 @@ using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
 using IWshRuntimeLibrary;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,11 +12,13 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Services.Dialogs;
+using Sentry.Extensibility;
 using SingleInstanceCore;
 using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Helpers;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Properties;
@@ -82,17 +81,26 @@ public partial class App : ISingleInstance
   }
 
 
+  private readonly IConfiguration _configuration;
+
+
+  public App()
+  {
+    _configuration = ConfigurationHelper.CreateConfiguration();
+    SentrySdk.Init(o =>
+    {
+      o.Dsn = _configuration["SentryDsn"];
+      o.AutoSessionTracking = true;
+      o.IsGlobalModeEnabled = true;
+      o.Environment = _configuration["SentryEnvironment"];
+    });
+  }
+
+
   private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
     // TODO: notify user about the problem anyway
-    Crashes.TrackError(e.Exception, new Dictionary<string, string>
-    {
-      { "Message", "Unhandled Exception" },
-      { "OS Architecture", Environment.Is64BitOperatingSystem ? "x64" : "x86" },
-      { "App Architecture", Environment.Is64BitProcess ? "x64" : "x86" },
-      { "OS Version", Environment.OSVersion.Version.ToString() }
-    });
-    Task.Delay(10000).Wait(); // Give Crashes some time to be able to record exception properly
+    SentrySdk.CaptureException(e.Exception, scope => scope.AddBreadcrumb("Unhandled Exception"));
     e.Handled = true;
     RestartApp();
     Current.Shutdown();
@@ -158,9 +166,7 @@ public partial class App : ISingleInstance
     }
     catch (Exception ex)
     {
-      Crashes.TrackError(ex, new Dictionary<string, string> {
-        { "Message", "Error during removing files before startup." }
-      });
+      SentrySdk.CaptureException(ex, scope => scope.AddBreadcrumb("Error during removing files before startup."));
     }
 
     try
@@ -169,15 +175,9 @@ public partial class App : ISingleInstance
     }
     catch (ModuleInitializeException ex)
     {
-      Crashes.TrackError(ex);
+      SentrySdk.CaptureException(ex);
     }
-
-    var configuration = Container.Resolve<IConfiguration>();
-    AppCenter.Start(configuration["MicrosoftAppCenterSecret"], typeof(Crashes), typeof(Analytics));
-#if DEBUG
-    _ = AppCenter.SetEnabledAsync(false);
-#endif
-
+    
     var updateService = Container.Resolve<IUpdateService>();
     updateService.SilentUpdate();
 
@@ -195,9 +195,10 @@ public partial class App : ISingleInstance
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
     var pluginsService = Container.Resolve<IPluginsService>();
+    var sentryHub = Container.Resolve<Lazy<IHub>>();
 
-    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => Crashes.TrackError(e));
-    PreInstallPluginsAsync(pluginsService).Await(e => Crashes.TrackError(e));
+    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.Value.CaptureException(e));
+    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.Value.CaptureException(e));
     var trayIcon = Container.Resolve<TrayIcon>();
     var hookService = Container.Resolve<GeneralHookService>();
   }
@@ -305,10 +306,11 @@ public partial class App : ISingleInstance
   protected override void RegisterTypes(IContainerRegistry containerRegistry)
   {
     containerRegistry
-      .RegisterConfiguration()
       .RegisterGeneratedWrappers()
       .RegisterDatabase()
       .RegisterThreadSwitching()
+      .RegisterInstance(_configuration)
+      .RegisterSingleton<IHub>(() => HubAdapter.Instance)
       .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
       .RegisterSingleton<IUser32DllService, User32DllService>()
