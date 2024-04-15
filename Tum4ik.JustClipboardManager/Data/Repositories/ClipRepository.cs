@@ -32,7 +32,8 @@ internal class ClipRepository : IClipRepository
       .Skip(skip)
       .Take(take)
       .Include(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
-      .AsAsyncEnumerable();
+      .AsAsyncEnumerable()
+      .ConfigureAwait(false);
     await foreach (var clip in clips)
     {
       yield return clip;

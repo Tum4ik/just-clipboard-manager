@@ -7,6 +7,7 @@ using IWshRuntimeLibrary;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.VisualStudio.Threading;
 using Octokit;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -43,7 +44,7 @@ namespace Tum4ik.JustClipboardManager;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : ISingleInstance
+public partial class App : ISingleInstance, IApplicationLifetime
 {
   private const string RestartAfterCrashArg = "--restart-after-crash";
   private const string RestartAfterCrashDelimiter = ":";
@@ -149,9 +150,22 @@ public partial class App : ISingleInstance
   }
 
 
-  public void OnInstanceInvoked(string[] args)
+  public async void OnInstanceInvoked(string[] args)
   {
     // TODO: maybe show "already started" notification
+
+    if (args.Contains("--shutdown"))
+    {
+      var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
+      await joinableTaskFactory.SwitchToMainThreadAsync();
+      Shutdown();
+    }
+  }
+
+
+  public void ExitApplication()
+  {
+    Shutdown();
   }
 
 
@@ -179,7 +193,14 @@ public partial class App : ISingleInstance
     }
     
     var updateService = Container.Resolve<IUpdateService>();
-    updateService.SilentUpdate();
+    var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
+    var result = joinableTaskFactory.Run(updateService.SilentUpdateAsync);
+    if (result == UpdateResult.Started)
+    {
+#if !DEBUG
+      return;
+#endif
+    }
 
     using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
     try
@@ -310,6 +331,7 @@ public partial class App : ISingleInstance
       .RegisterDatabase()
       .RegisterThreadSwitching()
       .RegisterInstance(_configuration)
+      .RegisterInstance<IApplicationLifetime>(this)
       .RegisterSingleton<IHub>(() => HubAdapter.Instance)
       .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()

@@ -112,9 +112,6 @@ Filename: "{app}\{#MyAppExeName}"; \
   Check: ShowPostinstallLaunchOption; \
   Flags: nowait postinstall skipifsilent
 
-[UninstallRun]
-Filename: "{sys}\taskkill.exe"; Parameters: "/f /im {#MyAppExeName}"; Flags: skipifdoesntexist runhidden
-
 
 [Code]
 var
@@ -177,20 +174,40 @@ begin
 end;
 
 
-function IsAppRunning(const FileName: String): Boolean;
+function IsAppRunning(): Boolean;
 var
+  ExeName: String;
   FSWbemLocator: Variant;
   FWMIService: Variant;
   FWbemObjectSet: Variant;
 begin
   Result := false;
+  ExeName := ExpandConstant('{#MyAppExeName}');
   FSWbemLocator := CreateOleObject('WBEMScripting.SWBEMLocator');
   FWMIService := FSWbemLocator.ConnectServer('', 'root\CIMV2', '', '');
-  FWbemObjectSet := FWMIService.ExecQuery(Format('SELECT Name FROM Win32_Process Where Name="%s"', [FileName]));
+  FWbemObjectSet := FWMIService.ExecQuery(Format('SELECT Name FROM Win32_Process Where Name="%s"', [ExeName]));
   Result := (FWbemObjectSet.Count > 0);
   FWbemObjectSet := Unassigned;
   FWMIService := Unassigned;
   FSWbemLocator := Unassigned;
+end;
+
+
+procedure LaunchApplication();
+var
+  ResultCode: Integer;
+begin
+  Exec(ExpandConstant('{app}\{#MyAppExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
+end;
+
+
+procedure ExitApplication();
+var
+  ResultCode: Integer;
+begin
+  Exec(ExpandConstant('{#MyAppExeName}'), '--shutdown', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  { to support versions which does not react on --shutdown argument }
+  Exec(ExpandConstant('{sys}\taskkill.exe'), ExpandConstant('/f /im {#MyAppExeName}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
 
@@ -231,18 +248,10 @@ begin
       end;
     end;
   end;
-  if Result and IsAppRunning(ExpandConstant('{#MyAppExeName}')) then begin
+  if Result and IsAppRunning() then begin
     MustOpenAppAfterInstall := True;
-    Exec(ExpandConstant('{sys}\taskkill.exe'), ExpandConstant('/f /im {#MyAppExeName}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    ExitApplication();
   end;
-end;
-
-
-procedure LaunchApplication();
-var
-  ResultCode: Integer;
-begin
-  Exec(ExpandConstant('{app}\{#MyAppExeName}'), '', '', SW_HIDE, ewNoWait, ResultCode);
 end;
 
 
@@ -296,6 +305,11 @@ var
   FoundRecord: TFindRec;
 begin
   case CurUninstallStep of
+    usUninstall: begin
+      if IsAppRunning() then begin
+        ExitApplication();
+      end;
+    end;
     usPostUninstall: begin
       DialogResult := MsgBox(CustomMessage('DoYouWantRemoveAppSettingsAndClips'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
       if DialogResult = IDYES then begin

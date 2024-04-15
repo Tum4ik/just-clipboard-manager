@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,20 +21,22 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private readonly IDialogService _dialogService;
   private readonly IThemeService _themeService;
   private readonly ISettingsService _settingsService;
+  private readonly IApplicationLifetime _applicationLifetime;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
                            ISettingsService settingsService,
-                           IEventAggregator eventAggregator)
+                           IEventAggregator eventAggregator,
+                           IApplicationLifetime applicationLifetime)
     : base(translationService, eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
     _dialogService = dialogService;
     _themeService = themeService;
     _settingsService = settingsService;
-
+    _applicationLifetime = applicationLifetime;
     SetupHotkeys();
     eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
@@ -103,8 +104,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
 
 
   [RelayCommand]
-  private static void Exit()
+  private void Exit()
   {
-    Application.Current.Shutdown();
+    _applicationLifetime.ExitApplication();
   }
 }

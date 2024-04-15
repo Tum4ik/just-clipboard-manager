@@ -10,12 +10,12 @@ internal class UpdateService : IUpdateService
 {
   private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
-  private readonly IEnvironment _environment;
+  private readonly Lazy<IEnvironment> _environment;
   private readonly Lazy<IHub> _sentryHub;
 
   public UpdateService(IInfoService infoService,
                        IGitHubClient gitHubClient,
-                       IEnvironment environment,
+                       Lazy<IEnvironment> environment,
                        Lazy<IHub> sentryHub)
   {
     _infoService = infoService;
@@ -37,7 +37,7 @@ internal class UpdateService : IUpdateService
       {
         if (latestReleaseVersion > _infoService.Version)
         {
-          var osArchitecture = _environment.Is64BitOperatingSystem ? "x64" : "x86";
+          var osArchitecture = _environment.Value.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets
             .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
                       && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))
@@ -159,19 +159,7 @@ internal class UpdateService : IUpdateService
   }
 
 
-  [ExcludeFromCodeCoverage]
-  public void InstallUpdates(FileInfo exeFile)
-  {
-#if !DEBUG
-    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exeFile.FullName, "/SILENT")
-    {
-      UseShellExecute = true
-    });
-#endif
-  }
-
-
-  public async void SilentUpdate()
+  public async Task<UpdateResult> SilentUpdateAsync()
   {
     var checkUpdatesResult = await CheckForUpdatesAsync().ConfigureAwait(false);
     if (checkUpdatesResult.NewVersionIsAvailable
@@ -182,13 +170,28 @@ internal class UpdateService : IUpdateService
       if (exe is not null)
       {
         InstallUpdates(exe);
+        return UpdateResult.Started;
       }
     }
+
+    return UpdateResult.NotRequired;
   }
 
 
   private static int GetDownloadPercentage(long totalSize, long downloadedSize)
   {
     return (int) ((double) downloadedSize / totalSize * 100);
+  }
+
+
+  [ExcludeFromCodeCoverage]
+  private static void InstallUpdates(FileInfo exeFile)
+  {
+#if !DEBUG
+    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exeFile.FullName, "/SILENT")
+    {
+      UseShellExecute = true
+    });
+#endif
   }
 }
