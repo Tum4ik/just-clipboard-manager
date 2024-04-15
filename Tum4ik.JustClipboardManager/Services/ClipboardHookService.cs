@@ -24,6 +24,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
     if (!isClipboardListenerAdded)
     {
       _sentryHub.Value.CaptureMessage("AddClipboardFormatListener operation failed", SentryLevel.Fatal);
+      // todo: show message to user and close app
     }
 
     _timer.Elapsed += (s, e) => OnClipboardChanged();
