@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -20,18 +19,21 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
   private readonly ISettingsService _settingsService;
+  private readonly Lazy<IHub> _sentryHub;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
                               ITranslationService translationService,
                               IPluginsService pluginsService,
-                              ISettingsService settingsService)
+                              ISettingsService settingsService,
+                              Lazy<IHub> sentryHub)
     : base(translationService, eventAggregator)
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
     _settingsService = settingsService;
+    _sentryHub = sentryHub;
   }
 
 
@@ -204,11 +206,12 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
       catch (Exception e)
       {
-        Crashes.TrackError(e, new Dictionary<string, string>
-        {
-          { "Info", "Exception when restore representation data for plugin" },
-          { "PluginId", plugin.Id }
-        });
+        _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+          message: "Exception when restore representation data for plugin",
+          category: "info",
+          type: "info",
+          dataPair: ("PluginId", plugin.Id)
+        ));
       }
     }
     return loadedCount;

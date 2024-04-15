@@ -59,8 +59,7 @@ jobs:
   build:
 
     name: Gated Build
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest
 
     outputs:
       version: ${{ steps.define-version.outputs.version }}
@@ -107,13 +106,16 @@ jobs:
         "#define MyAppVersion `"$version`"" | Set-Content -Path .\InnoSetup\version.iss
         echo "version=$version" >> $env:GITHUB_OUTPUT
 
-    - name: Set Microsoft AppCenter secret
+    - name: Configure appsettings
       run: |
         $appsettings = Get-Content .\Tum4ik.JustClipboardManager\appsettings.json -Raw | ConvertFrom-Json
-        $appsettings.MicrosoftAppCenterSecret = "${{ secrets.MICROSOFT_APP_CENTER_SECRET }}"
+        $appsettings.SentryDsn = "${{ secrets.SENTRY_DSN }}"
+        $appsettings.SentryEnvironment = "production"
         $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
 
     - name: Publish
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       run: |
         $version = "${{ steps.define-version.outputs.version }}"
         Write-Host "Build version: $version" -ForegroundColor green
@@ -193,10 +195,3 @@ jobs:
           --draft `
           --title ${{ needs.build.outputs.version }} `
           --notes-file BuildFiles/ReleaseNotes.md
-      # uses: softprops/action-gh-release@v0.1.15
-      # with:
-      #   tag_name: ${{ needs.build.outputs.version }}
-      #   draft: true
-      #   files: '**/*.exe'
-      #   body_path: BuildFiles/ReleaseNotes.md
-      #   fail_on_unmatched_files: true

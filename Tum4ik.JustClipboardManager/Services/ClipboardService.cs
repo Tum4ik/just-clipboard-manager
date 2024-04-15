@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -21,13 +19,16 @@ internal class ClipboardService : IClipboardService
 {
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
+  private readonly Lazy<IHub> _sentryHub;
 
   public ClipboardService(IEventAggregator eventAggregator,
                           IClipRepository clipRepository,
-                          IPluginsService pluginsService)
+                          IPluginsService pluginsService,
+                          Lazy<IHub> sentryHub)
   {
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
+    _sentryHub = sentryHub;
 
     OnPluginsChainUpdated();
 
@@ -66,14 +67,17 @@ internal class ClipboardService : IClipboardService
         }
         catch (Exception e)
         {
-          Crashes.TrackError(e, new Dictionary<string, string>
+          _sentryHub.Value.CaptureException(e, scope =>
           {
-            { "Info", "Exception when restore data for plugin on paste operation" },
-            { "PluginId", plugin.Id! }
+            scope.AddBreadcrumb(
+              message: "Exception when restore data for plugin on paste operation",
+              category: "info",
+              type: "info",
+              dataPair: ("Plugin Id", plugin.Id!)
+            );
           });
           data = GetDataFromBytes(formattedDataObject);
         }
-        
       }
       else
       {
@@ -148,11 +152,12 @@ internal class ClipboardService : IClipboardService
         }
         catch (COMException e)
         {
-          Analytics.TrackEvent("Get Data Problem", new Dictionary<string, string>
-          {
-            { "DataFormat", format },
-            { "Message", e.Message }
-          });
+          _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+            message: "Get Data Problem",
+            category: "info",
+            type: "info",
+            dataPair: ("DataFormat", format)
+          ));
           continue;
         }
 
@@ -212,23 +217,29 @@ internal class ClipboardService : IClipboardService
     }
     catch (COMException e)
     {
-      Crashes.TrackError(e, new Dictionary<string, string>
-      {
-        { "Info", "COM exception when saving clip" },
-        { "ErrorCode", e.ErrorCode.ToString(CultureInfo.InvariantCulture) },
-        { "HResult", e.HResult.ToString(CultureInfo.InvariantCulture) }
-      });
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "COM exception when saving clip",
+        category: "info",
+        type: "info",
+        data: new Dictionary<string, string>
+        {
+          { "ErrorCode", e.ErrorCode.ToString(CultureInfo.InvariantCulture) },
+          { "HResult", e.HResult.ToString(CultureInfo.InvariantCulture) }
+        }
+      ));
     }
     catch (Exception e)
     {
-      Crashes.TrackError(e, new Dictionary<string, string>
-      {
-        { "Info", "Unpredictable exception when saving clip" }
-      });
+      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "Unpredictable exception when saving clip",
+        category: "info",
+        type: "info",
+        data: null
+      ));
     }
   }
 
-  private static byte[] GetDataBytes(object data)
+  private byte[] GetDataBytes(object data)
   {
     return data switch
     {
@@ -242,7 +253,7 @@ internal class ClipboardService : IClipboardService
     };
   }
 
-  private static object? GetDataFromBytes(FormattedDataObject formattedDataObject)
+  private object? GetDataFromBytes(FormattedDataObject formattedDataObject)
   {
     var data = formattedDataObject.Data;
     return formattedDataObject.DataDotnetType switch
@@ -336,21 +347,25 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private static byte[] UnrecognizedTypeBytes(object data)
+  private byte[] UnrecognizedTypeBytes(object data)
   {
-    Analytics.TrackEvent("Unable to save data", new Dictionary<string, string>
-    {
-      { "Data Type", data.GetType().ToString() }
-    });
+    _sentryHub.Value.CaptureMessage("Unable to save data", scope => scope.AddBreadcrumb(
+      message: "",
+      category: "info",
+      type: "info",
+      dataPair: ("Data Type", data.GetType().ToString())
+    ));
     return Array.Empty<byte>();
   }
 
-  private static object? UnrecognizedDotnetType(string name)
+  private object? UnrecognizedDotnetType(string name)
   {
-    Analytics.TrackEvent("Unable to load data", new Dictionary<string, string>
-    {
-      { ".NET Type", name }
-    });
+    _sentryHub.Value.CaptureMessage("Unable to load data", scope => scope.AddBreadcrumb(
+      message: "",
+      category: "info",
+      type: "info",
+      dataPair: (".NET Type", name)
+    ));
     return null;
   }
 }
