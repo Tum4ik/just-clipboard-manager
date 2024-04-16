@@ -22,6 +22,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private readonly IThemeService _themeService;
   private readonly ISettingsService _settingsService;
   private readonly IApplicationLifetime _applicationLifetime;
+  private readonly IInfoService _infoService;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
                            IDialogService dialogService,
@@ -29,7 +30,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
                            IThemeService themeService,
                            ISettingsService settingsService,
                            IEventAggregator eventAggregator,
-                           IApplicationLifetime applicationLifetime)
+                           IApplicationLifetime applicationLifetime,
+                           IInfoService infoService)
     : base(translationService, eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
@@ -37,10 +39,14 @@ internal partial class TrayIconViewModel : TranslationViewModel
     _themeService = themeService;
     _settingsService = settingsService;
     _applicationLifetime = applicationLifetime;
+    _infoService = infoService;
+
     SetupHotkeys();
     eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
 
+
+  public string ProductName => _infoService.ProductName;
 
   [ObservableProperty]
   private string _trayIcon

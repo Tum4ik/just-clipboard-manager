@@ -220,6 +220,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     RemoveOldClipsAsync(settingsService, clipRepository).Await(e => Crashes.TrackError(e));
     PreInstallPluginsAsync(pluginsService).Await(e => Crashes.TrackError(e));
     var trayIcon = Container.Resolve<TrayIcon>();
+    trayIcon.ForceCreate();
     var hookService = Container.Resolve<GeneralHookService>();
   }
 
