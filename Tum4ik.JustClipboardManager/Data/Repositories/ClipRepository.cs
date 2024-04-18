@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Tum4ik.JustClipboardManager.Data.Models;
 
@@ -49,6 +50,9 @@ internal class ClipRepository : IClipRepository
   }
 
 
+  [SuppressMessage("Security", "EF1002:Risk of vulnerability to SQL injection.",
+    Justification = "There is no user input."
+  )]
   public async Task DeleteBeforeDateAsync(DateTime date)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
@@ -57,7 +61,9 @@ internal class ClipRepository : IClipRepository
       .Select(c => c.Id);
     var clipIdsCommaSeparated = string.Join(",", clipIdsToRemove);
     await dbContext.Database
-      .ExecuteSqlRawAsync($"DELETE FROM Clips WHERE Id IN ({clipIdsCommaSeparated})")
+      .ExecuteSqlRawAsync(
+        $"DELETE FROM {nameof(AppDbContext.Clips)} WHERE {nameof(Clip.Id)} IN ({clipIdsCommaSeparated})"
+      )
       .ConfigureAwait(false);
   }
 

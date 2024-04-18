@@ -10,12 +10,12 @@ internal class UpdateService : IUpdateService
 {
   private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
-  private readonly Lazy<IEnvironment> _environment;
+  private readonly IEnvironment _environment;
   private readonly Lazy<IHub> _sentryHub;
 
   public UpdateService(IInfoService infoService,
                        IGitHubClient gitHubClient,
-                       Lazy<IEnvironment> environment,
+                       IEnvironment environment,
                        Lazy<IHub> sentryHub)
   {
     _infoService = infoService;
@@ -37,7 +37,7 @@ internal class UpdateService : IUpdateService
       {
         if (latestReleaseVersion > _infoService.Version)
         {
-          var osArchitecture = _environment.Value.Is64BitOperatingSystem ? "x64" : "x86";
+          var osArchitecture = _environment.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets
             .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
                       && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))

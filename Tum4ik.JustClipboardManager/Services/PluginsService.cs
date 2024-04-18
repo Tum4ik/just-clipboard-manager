@@ -23,19 +23,19 @@ internal class PluginsService : IPluginsService
 
   private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
-  private readonly IGitHubClient _gitHubClient;
-  private readonly IHttpClientFactory _httpClientFactory;
-  private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
-  private readonly IModuleManager _moduleManager;
-  private readonly JoinableTaskFactory _joinableTaskFactory;
+  private readonly Lazy<IGitHubClient> _gitHubClient;
+  private readonly Lazy<IHttpClientFactory> _httpClientFactory;
+  private readonly Lazy<ILoadableDirectoryModuleCatalog> _moduleCatalog;
+  private readonly Lazy<IModuleManager> _moduleManager;
+  private readonly Lazy<JoinableTaskFactory> _joinableTaskFactory;
 
   public PluginsService(IContainerProvider containerProvider,
                         IEventAggregator eventAggregator,
-                        IGitHubClient gitHubClient,
-                        IHttpClientFactory httpClientFactory,
-                        ILoadableDirectoryModuleCatalog moduleCatalog,
-                        IModuleManager moduleManager,
-                        JoinableTaskFactory joinableTaskFactory)
+                        Lazy<IGitHubClient> gitHubClient,
+                        Lazy<IHttpClientFactory> httpClientFactory,
+                        Lazy<ILoadableDirectoryModuleCatalog> moduleCatalog,
+                        Lazy<IModuleManager> moduleManager,
+                        Lazy<JoinableTaskFactory> joinableTaskFactory)
   {
     _containerProvider = containerProvider;
     _eventAggregator = eventAggregator;
@@ -69,7 +69,7 @@ internal class PluginsService : IPluginsService
 
   public async IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync()
   {
-    var pluginsListJsonBytes = await _gitHubClient.Repository
+    var pluginsListJsonBytes = await _gitHubClient.Value.Repository
       .Content
       .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
       .ConfigureAwait(false);
@@ -114,7 +114,7 @@ internal class PluginsService : IPluginsService
     pluginFiles.Remove(id);
     await WritePluginsFilesAsync(pluginFiles, default).ConfigureAwait(false);
 
-    _moduleCatalog.Modules.First(m => m.ModuleName == id).State = ModuleState.NotStarted;
+    _moduleCatalog.Value.Modules.First(m => m.ModuleName == id).State = ModuleState.NotStarted;
 
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }
@@ -177,12 +177,12 @@ internal class PluginsService : IPluginsService
     using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
 
-    _moduleCatalog.Load();
-    await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
-    var moduleToLoad = _moduleCatalog.Modules.FirstOrDefault(m => m.ModuleName == pluginId && m.State == ModuleState.NotStarted);
+    _moduleCatalog.Value.Load();
+    await _joinableTaskFactory.Value.SwitchToMainThreadAsync(cancellationToken);
+    var moduleToLoad = _moduleCatalog.Value.Modules.FirstOrDefault(m => m.ModuleName == pluginId && m.State == ModuleState.NotStarted);
     if (moduleToLoad is not null)
     {
-      _moduleManager.LoadModule(moduleToLoad.ModuleName);
+      _moduleManager.Value.LoadModule(moduleToLoad.ModuleName);
       EnablePlugin(pluginId);
     }
     progress?.Report(100);
@@ -203,7 +203,7 @@ internal class PluginsService : IPluginsService
                                                           CancellationToken cancellationToken = default)
   {
     var memoryStream = new MemoryStream();
-    using var httpClient = _httpClientFactory.CreateHttpClient();
+    using var httpClient = _httpClientFactory.Value.CreateHttpClient();
     using var response = await httpClient.GetAsync(downloadLink, cancellationToken).ConfigureAwait(false);
     var contentLength = response.Content.Headers.ContentLength;
     using var downloadStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);

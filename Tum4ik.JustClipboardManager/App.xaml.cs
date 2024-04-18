@@ -202,15 +202,17 @@ public partial class App : ISingleInstance, IApplicationLifetime
 #endif
     }
 
-    using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
-    try
+    using (var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext())
     {
-      dbContext.Database.Migrate();
-    }
-    catch (SqliteException)
-    {
-      dbContext.Database.EnsureDeleted();
-      dbContext.Database.Migrate();
+      try
+      {
+        dbContext.Database.Migrate();
+      }
+      catch (SqliteException)
+      {
+        dbContext.Database.EnsureDeleted();
+        dbContext.Database.Migrate();
+      }
     }
 
     var settingsService = Container.Resolve<ISettingsService>();
@@ -356,8 +358,8 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<InfoBarService>()
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
+      .RegisterSingleton<IClipRepository, ClipRepository>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
-      .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()
       .Register<IUpdateService, UpdateService>()
       .Register<IGitHubClient>(cp =>

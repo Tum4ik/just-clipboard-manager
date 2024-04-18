@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using static Windows.Win32.PInvoke;
@@ -31,11 +32,17 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
 
-  public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor descriptor)
+  public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor? descriptor = null)
   {
-    return RegisterHotKey(
+    descriptor ??= _settingsService.HotkeyShowPasteWindow;
+    var success = RegisterHotKey(
       descriptor, HandleShowPasteWindowHotkeyAsync, () => _settingsService.HotkeyShowPasteWindow = descriptor
     );
+    if (!success)
+    {
+      _settingsService.HotkeyShowPasteWindow = new(ModifierKeys.None, Key.None);
+    }
+    return success;
   }
 
 
