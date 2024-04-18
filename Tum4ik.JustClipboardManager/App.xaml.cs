@@ -359,8 +359,8 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IClipRepository, ClipRepository>()
+      .RegisterSingleton<IInfoService, InfoService>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
-      .Register<IInfoService, InfoService>()
       .Register<IUpdateService, UpdateService>()
       .Register<IGitHubClient>(cp =>
       {
