@@ -1,0 +1,51 @@
+using Microsoft.EntityFrameworkCore;
+using Tum4ik.JustClipboardManager.Data.Models;
+
+namespace Tum4ik.JustClipboardManager.Data.Repositories;
+// todo: unify common code with ClipRepository
+internal class PinnedClipRepository : IPinnedClipRepository
+{
+  private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+
+  public PinnedClipRepository(IDbContextFactory<AppDbContext> dbContextFactory)
+  {
+    _dbContextFactory = dbContextFactory;
+  }
+
+
+  public async Task AddAsync(PinnedClip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    await dbContext.PinnedClips.AddAsync(clip).ConfigureAwait(false);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+
+
+  public async IAsyncEnumerable<PinnedClip> GetAllOrderedAscAsync()
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    var clips = dbContext.PinnedClips
+      .OrderBy(c => c.Order)
+      .AsAsyncEnumerable();
+    await foreach (var clip in clips.ConfigureAwait(false))
+    {
+      yield return clip;
+    }
+  }
+
+
+  public async Task UpdateAsync(PinnedClip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.PinnedClips.Update(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+
+
+  public async Task DeleteAsync(PinnedClip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.PinnedClips.Remove(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+}

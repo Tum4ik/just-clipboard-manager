@@ -20,10 +20,14 @@ internal class ClipRepository : IClipRepository
   }
 
 
-  public async IAsyncEnumerable<Clip> GetAsync(int skip = 0, int take = int.MaxValue, string? search = null)
+  public async IAsyncEnumerable<Clip> GetAsync(int skip = 0,
+                                               int take = int.MaxValue,
+                                               string? search = null,
+                                               IEnumerable<int>? ignoreIds = null)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clips = dbContext.Clips
+      .Where(c => ignoreIds == null || !ignoreIds.Contains(c.Id))
       .Where(c =>
         string.IsNullOrEmpty(search)
         || (!string.IsNullOrEmpty(c.SearchLabel) && EF.Functions.Like(c.SearchLabel, $"%{search}%"))
@@ -48,6 +52,14 @@ internal class ClipRepository : IClipRepository
   }
 
 
+  public async Task DeleteAsync(Clip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.Clips.Remove(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+
+
   public async Task DeleteBeforeDateAsync(DateTime date)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
@@ -58,13 +70,5 @@ internal class ClipRepository : IClipRepository
     await dbContext.Database
       .ExecuteSqlRawAsync($"DELETE FROM Clips WHERE Id IN ({clipIdsCommaSeparated})")
       .ConfigureAwait(false);
-  }
-
-
-  public async Task DeleteAsync(Clip clip)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    dbContext.Clips.Remove(clip);
-    await dbContext.SaveChangesAsync().ConfigureAwait(false);
   }
 }

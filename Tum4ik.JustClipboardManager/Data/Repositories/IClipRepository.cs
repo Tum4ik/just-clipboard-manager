@@ -4,8 +4,8 @@ namespace Tum4ik.JustClipboardManager.Data.Repositories;
 internal interface IClipRepository
 {
   Task AddAsync(Clip clip);
-  IAsyncEnumerable<Clip> GetAsync(int skip = 0, int take = int.MaxValue, string? search = null);
+  IAsyncEnumerable<Clip> GetAsync(int skip = 0, int take = int.MaxValue, string? search = null, IEnumerable<int>? ignoreIds = null);
   Task UpdateAsync(Clip clip);
-  Task DeleteBeforeDateAsync(DateTime date);
   Task DeleteAsync(Clip clip);
+  Task DeleteBeforeDateAsync(DateTime date);
 }
