@@ -16,16 +16,16 @@ namespace Tum4ik.JustClipboardManager.ViewModels;
 internal partial class TrayIconViewModel : TranslationViewModel
 {
   private readonly IKeyboardHookService _keyboardHookService;
-  private readonly Lazy<IDialogService> _dialogService;
+  private readonly IDialogService _dialogService;
   private readonly IThemeService _themeService;
-  private readonly Lazy<IApplicationLifetime> _applicationLifetime;
+  private readonly IApplicationLifetime _applicationLifetime;
 
   public TrayIconViewModel(IKeyboardHookService keyboardHookService,
-                           Lazy<IDialogService> dialogService,
+                           IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
                            IEventAggregator eventAggregator,
-                           Lazy<IApplicationLifetime> applicationLifetime)
+                           IApplicationLifetime applicationLifetime)
     : base(translationService, eventAggregator)
   {
     _keyboardHookService = keyboardHookService;
@@ -65,8 +65,8 @@ internal partial class TrayIconViewModel : TranslationViewModel
       {
         { DialogParameterNames.ViewToShow, ViewNames.SettingsView }
       };
-      _dialogService.Value.ShowMainAppDialog(parameters);
-      _dialogService.Value.Show(DialogNames.UnregisteredHotkeysDialog);
+      _dialogService.ShowMainAppDialog(parameters);
+      _dialogService.Show(DialogNames.UnregisteredHotkeysDialog);
     }
   }
 
@@ -78,7 +78,7 @@ internal partial class TrayIconViewModel : TranslationViewModel
     {
       { DialogParameterNames.ViewToShow, viewName }
     };
-    _dialogService.Value.ShowMainAppDialog(parameters);
+    _dialogService.ShowMainAppDialog(parameters);
   }
 
 
@@ -99,6 +99,6 @@ internal partial class TrayIconViewModel : TranslationViewModel
   [RelayCommand]
   private void Exit()
   {
-    _applicationLifetime.Value.ExitApplication();
+    _applicationLifetime.ExitApplication();
   }
 }
