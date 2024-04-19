@@ -15,25 +15,21 @@ namespace Tum4ik.JustClipboardManager.ViewModels;
 
 internal partial class TrayIconViewModel : TranslationViewModel
 {
-  private readonly IKeyboardHookService _keyboardHookService;
   private readonly IDialogService _dialogService;
   private readonly IThemeService _themeService;
   private readonly IApplicationLifetime _applicationLifetime;
 
-  public TrayIconViewModel(IKeyboardHookService keyboardHookService,
-                           IDialogService dialogService,
+  public TrayIconViewModel(IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
                            IEventAggregator eventAggregator,
                            IApplicationLifetime applicationLifetime)
     : base(translationService, eventAggregator)
   {
-    _keyboardHookService = keyboardHookService;
     _dialogService = dialogService;
     _themeService = themeService;
     _applicationLifetime = applicationLifetime;
 
-    SetupHotkeys();
     eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
 
@@ -54,20 +50,6 @@ internal partial class TrayIconViewModel : TranslationViewModel
   {
     get => _themeService.SelectedTheme;
     set => _themeService.SelectedTheme = value;
-  }
-
-
-  private void SetupHotkeys()
-  {
-    if (!_keyboardHookService.RegisterShowPasteWindowHotkey())
-    {
-      var parameters = new DialogParameters
-      {
-        { DialogParameterNames.ViewToShow, ViewNames.SettingsView }
-      };
-      _dialogService.ShowMainAppDialog(parameters);
-      _dialogService.Show(DialogNames.UnregisteredHotkeysDialog);
-    }
   }
 
 
