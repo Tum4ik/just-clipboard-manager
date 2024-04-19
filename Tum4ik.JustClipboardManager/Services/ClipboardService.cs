@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Microsoft.Data.Sqlite;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -19,12 +20,12 @@ internal class ClipboardService : IClipboardService
 {
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IHub _sentryHub;
 
   public ClipboardService(IEventAggregator eventAggregator,
                           IClipRepository clipRepository,
                           IPluginsService pluginsService,
-                          Lazy<IHub> sentryHub)
+                          IHub sentryHub)
   {
     _clipRepository = clipRepository;
     _pluginsService = pluginsService;
@@ -67,7 +68,7 @@ internal class ClipboardService : IClipboardService
         }
         catch (Exception e)
         {
-          _sentryHub.Value.CaptureException(e, scope =>
+          _sentryHub.CaptureException(e, scope =>
           {
             scope.AddBreadcrumb(
               message: "Exception when restore data for plugin on paste operation",
@@ -130,6 +131,16 @@ internal class ClipboardService : IClipboardService
         return;
       }
 
+      _sentryHub.AddBreadcrumb(
+        message: "Track plugin id",
+        category: "info",
+        type: "info",
+        data: new Dictionary<string, string>
+        {
+          { "Plugin id", plugin.Id }
+        }
+      );
+      
       var formattedDataObjects = new List<FormattedDataObject>();
       string? searchLabel = null;
       var representationData = Array.Empty<byte>();
@@ -152,7 +163,7 @@ internal class ClipboardService : IClipboardService
         }
         catch (COMException e)
         {
-          _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+          _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
             message: "Get Data Problem",
             category: "info",
             type: "info",
@@ -217,7 +228,7 @@ internal class ClipboardService : IClipboardService
     }
     catch (COMException e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "COM exception when saving clip",
         category: "info",
         type: "info",
@@ -228,13 +239,24 @@ internal class ClipboardService : IClipboardService
         }
       ));
     }
-    catch (Exception e)
+    catch (SqliteException e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
-        message: "Unpredictable exception when saving clip",
+      var dbFilePath = AppDbContext.DbFilePath;
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "SQLite exception when saving clip",
         category: "info",
         type: "info",
-        data: null
+        data: new Dictionary<string, string>
+        {
+          { "DB file exists", File.Exists(dbFilePath).ToString() }
+        }
+      ));
+    }
+    catch (Exception e)
+    {
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "Unpredictable exception when saving clip",
+        type: "info"
       ));
     }
   }
@@ -349,7 +371,7 @@ internal class ClipboardService : IClipboardService
 
   private byte[] UnrecognizedTypeBytes(object data)
   {
-    _sentryHub.Value.CaptureMessage("Unable to save data", scope => scope.AddBreadcrumb(
+    _sentryHub.CaptureMessage("Unable to save data", scope => scope.AddBreadcrumb(
       message: "",
       category: "info",
       type: "info",
@@ -360,7 +382,7 @@ internal class ClipboardService : IClipboardService
 
   private object? UnrecognizedDotnetType(string name)
   {
-    _sentryHub.Value.CaptureMessage("Unable to load data", scope => scope.AddBreadcrumb(
+    _sentryHub.CaptureMessage("Unable to load data", scope => scope.AddBreadcrumb(
       message: "",
       category: "info",
       type: "info",
