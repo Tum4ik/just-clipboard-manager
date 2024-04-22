@@ -24,6 +24,73 @@
     <controls:ClipTypeDataTemplateSelector x:Key="ClipTypeDataTemplateSelector"/>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    <converters:SizeToRectConverter x:Key="SizeToRectConverter"/>
+
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Button Command="{Binding DataContext.PasteDataCommand, ElementName=This}" CommandParameter="{Binding}">
+              <ContentPresenter/>
+              <Button.Template>
+                <ControlTemplate TargetType="Button">
+                  <Border x:Name="_border"
+                          CornerRadius="4" MinHeight="36"
+                          Background="Transparent">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                      </Grid.ColumnDefinitions>
+                      <Grid.Clip>
+                        <RectangleGeometry RadiusX="4" RadiusY="4">
+                          <RectangleGeometry.Rect>
+                            <MultiBinding Converter="{StaticResource SizeToRectConverter}">
+                              <Binding Path="ActualWidth" ElementName="_border"/>
+                              <Binding Path="ActualHeight" ElementName="_border"/>
+                            </MultiBinding>
+                          </RectangleGeometry.Rect>
+                        </RectangleGeometry>
+                      </Grid.Clip>
+                      <ContentPresenter Grid.Column="0"/>
+                      <StackPanel x:Name="_actionButtons"
+                                  Grid.Column="1"
+                                  Orientation="Horizontal"
+                                  Visibility="Collapsed">
+                        <controls:InputFieldButton Icon="PushPin"
+                                                   Command="{Binding DataContext.PinClipCommand, ElementName=This}"
+                                                   CommandParameter="{Binding}"
+                                                   ToolTip="{Binding DataContext.Translate[Pin], ElementName=This}"/>
+                        <controls:InputFieldButton Icon="Delete" Margin="3, 0"
+                                                   Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
+                                                   CommandParameter="{Binding}"
+                                                   ToolTip="{Binding DataContext.Translate[Delete], ElementName=This}"/>
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter TargetName="_border"
+                              Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
+                      <Setter TargetName="_actionButtons" Property="Visibility" Value="Visible"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                      <Setter TargetName="_border"
+                              Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
+                    </Trigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                      <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
   </Window.Resources>
   <i:Interaction.Triggers>
     <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=This}">
@@ -55,6 +122,7 @@
   </Window.Template>
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition/>
       <RowDefinition Height="Auto"/>
@@ -88,8 +156,22 @@
         </i:Interaction.Triggers>
       </controls:WinUiButton>
     </Grid>
+    <ListBox Grid.Row="1" Grid.Column="0"
+             Margin="0, 4, 0, 0"
+             ItemsSource="{Binding PinnedClips}"
+             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
+             IsEnabled="{Binding IsSettingsMode, Converter={StaticResource InvertedBoolConverter}}">
+      <ListBox.Template>
+        <ControlTemplate TargetType="ListBox">
+          <Border CornerRadius="4"
+                  BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderGradientBrush}}">
+            <ItemsPresenter/>
+          </Border>
+        </ControlTemplate>
+      </ListBox.Template>
+    </ListBox>
     <ListBox x:Name="_listBox"
-             Grid.Row="1" Grid.Column="0"
+             Grid.Row="2" Grid.Column="0"
              Margin="0, 4, 0, 0"
              ItemsSource="{Binding Clips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
@@ -97,55 +179,6 @@
              ScrollViewer.CanContentScroll="False"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              IsEnabled="{Binding IsSettingsMode, Converter={StaticResource InvertedBoolConverter}}">
-      <ListBox.Resources>
-        <Style TargetType="ListBoxItem">
-          <Setter Property="Cursor" Value="Hand"/>
-          <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-          <Setter Property="Template">
-            <Setter.Value>
-              <ControlTemplate TargetType="ListBoxItem">
-                <Button Command="{Binding DataContext.PasteDataCommand, ElementName=This}" CommandParameter="{Binding}">
-                  <ContentPresenter/>
-                  <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                      <Border x:Name="_border"
-                              CornerRadius="4" MinHeight="36"
-                              Background="Transparent">
-                        <Grid>
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                          </Grid.ColumnDefinitions>
-                          <ContentPresenter Grid.Column="0" Margin="12, 0" />
-                          <controls:InputFieldButton x:Name="_deleteButton"
-                                                     Grid.Column="1" Icon="Delete" Margin="3, 0"
-                                                     Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
-                                                     CommandParameter="{Binding}"
-                                                     Visibility="Collapsed"/>
-                        </Grid>
-                      </Border>
-                      <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                          <Setter TargetName="_border"
-                                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemHoverBackgroundBrush}}"/>
-                          <Setter TargetName="_deleteButton" Property="Visibility" Value="Visible"/>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                          <Setter TargetName="_border"
-                                  Property="Background" Value="{DynamicResource {x:Static theming:AppColors.ItemPressedBackgroundBrush}}"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                          <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-                        </Trigger>
-                      </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                  </Button.Template>
-                </Button>
-              </ControlTemplate>
-            </Setter.Value>
-          </Setter>
-        </Style>
-      </ListBox.Resources>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
@@ -158,7 +191,7 @@
         </ControlTemplate>
       </ListBox.Template>
     </ListBox>
-    <Grid Grid.Row="2" Grid.Column="0"
+    <Grid Grid.Row="3" Grid.Column="0"
           Visibility="{Binding DataContext.IsSettingsMode, ElementName=This, Converter={StaticResource BooleanToVisibilityConverter}}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"/>
@@ -172,7 +205,7 @@
                             Minimum="0" Maximum="1"
                             Value="{Binding WindowOpacity}"/>
     </Grid>
-    <Thumb Grid.Row="3" Grid.Column="0"
+    <Thumb Grid.Row="4" Grid.Column="0"
            Cursor="SizeNS" DragDelta="Thumb_VerticalDragDelta"
            Visibility="{Binding DataContext.IsSettingsMode, ElementName=This, Converter={StaticResource BooleanToVisibilityConverter}}">
       <Thumb.Template>
@@ -184,7 +217,7 @@
         </ControlTemplate>
       </Thumb.Template>
     </Thumb>
-    <Thumb Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+    <Thumb Grid.Row="1" Grid.Column="1" Grid.RowSpan="3"
            Cursor="SizeWE" DragDelta="Thumb_HorizontalDragDelta"
            Visibility="{Binding DataContext.IsSettingsMode, ElementName=This, Converter={StaticResource BooleanToVisibilityConverter}}">
       <Thumb.Template>

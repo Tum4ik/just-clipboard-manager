@@ -346,4 +346,10 @@
   <data name="Opacity_Description" xml:space="preserve">
     <value>Allows you to control the degree of transparency of the paste window</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
 </root>

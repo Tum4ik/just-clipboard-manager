@@ -18,11 +18,13 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IClipRepository _clipRepository;
+  private readonly IPinnedClipRepository _pinnedClipRepository;
   private readonly IPluginsService _pluginsService;
   private readonly ISettingsService _settingsService;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
+                              IPinnedClipRepository pinnedClipRepository,
                               ITranslationService translationService,
                               IPluginsService pluginsService,
                               ISettingsService settingsService)
@@ -30,8 +32,11 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   {
     _eventAggregator = eventAggregator;
     _clipRepository = clipRepository;
+    _pinnedClipRepository = pinnedClipRepository;
     _pluginsService = pluginsService;
     _settingsService = settingsService;
+
+    LoadPinnedClipsAsync().Await(e => throw e);
   }
 
 
@@ -44,7 +49,9 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   private TaskCompletionSource<PasteWindowResult?>? _showPasteWindowTcs;
 
+  private readonly Dictionary<int, Clip> _pinnedDbClips = [];
   private readonly Dictionary<int, Clip> _dbClips = [];
+  public ObservableCollection<ClipDto> PinnedClips { get; } = [];
   public ObservableCollection<ClipDto> Clips { get; } = [];
 
   [ObservableProperty] private bool _isSettingsMode;
@@ -86,8 +93,12 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   public async Task LoadNextClipsBatchAsync()
   {
-    _loadedClipsCount += await LoadClipsAsync(skip: _loadedClipsCount, take: ClipsLoadBatchSize, search: _search)
-      .ConfigureAwait(false);
+    _loadedClipsCount += await LoadClipsAsync(
+      skip: _loadedClipsCount,
+      take: ClipsLoadBatchSize,
+      search: _search,
+      idsToIgnore: _pinnedDbClips.Keys
+    ).ConfigureAwait(false);
   }
 
 
@@ -106,7 +117,10 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     {
       ApplySettings();
       _windowDeactivationTriggeredByDataPasting = false;
-      _loadedClipsCount = await LoadClipsAsync(take: ClipsLoadInitialSize).ConfigureAwait(false);
+      _loadedClipsCount = await LoadClipsAsync(
+        take: ClipsLoadInitialSize,
+        idsToIgnore: _pinnedDbClips.Keys
+      ).ConfigureAwait(false);
     }
     else
     {
@@ -159,6 +173,26 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
 
   [RelayCommand]
+  private async Task PinClipAsync(ClipDto? clipDto)
+  {
+    if (clipDto is null)
+    {
+      return;
+    }
+
+    _pinnedDbClips.Add(clipDto.Id, _dbClips[clipDto.Id]);
+    PinnedClips.Add(clipDto);
+    _dbClips.Remove(clipDto.Id);
+    Clips.Remove(clipDto);
+    await _pinnedClipRepository.AddAsync(new()
+    {
+      Clip = _pinnedDbClips[clipDto.Id],
+      Order = PinnedClips.Count - 1
+    }).ConfigureAwait(false);
+  }
+
+
+  [RelayCommand]
   private async Task DeleteClipAsync(ClipDto? clipDto)
   {
     if (clipDto is not null && _dbClips.TryGetValue(clipDto.Id, out var clip))
@@ -170,6 +204,22 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   }
 
 
+  private async Task LoadPinnedClipsAsync()
+  {
+    await foreach (var pinnedClip in _pinnedClipRepository.GetAllOrderedAscAsync().ConfigureAwait(true))
+    {
+      var clip = pinnedClip.Clip;
+      _pinnedDbClips[clip.Id] = clip;
+      var clipDto = DbClipToClipDto(clip);
+      if (clipDto is null)
+      {
+        continue;
+      }
+      PinnedClips.Add(clipDto);
+    }
+  }
+
+
   private void SetInputResult(PasteWindowResult? result)
   {
     _showPasteWindowTcs?.SetResult(result);
@@ -177,41 +227,56 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   }
 
 
-  private async Task<int> LoadClipsAsync(int skip = 0, int take = int.MaxValue, string? search = null)
+  private async Task<int> LoadClipsAsync(int skip = 0,
+                                         int take = int.MaxValue,
+                                         string? search = null,
+                                         IEnumerable<int>? idsToIgnore = null)
   {
-    var clips = _clipRepository.GetAsync(skip, take, search);
+    var clips = _clipRepository.GetAsync(skip, take, search, idsToIgnore);
     var loadedCount = 0;
     await foreach (var clip in clips)
     {
-      var plugin = _pluginsService.GetPlugin(clip.PluginId);
-      if (plugin?.Id is null || !_pluginsService.IsPluginEnabled(plugin.Id))
+      var clipDto = DbClipToClipDto(clip);
+      if (clipDto is null)
       {
         continue;
       }
+      Clips.Add(clipDto);
+      loadedCount++;
+    }
+    return loadedCount;
+  }
 
-      _dbClips[clip.Id] = clip;
-      try
+
+  private ClipDto? DbClipToClipDto(Clip clip)
+  {
+    var plugin = _pluginsService.GetPlugin(clip.PluginId);
+    if (plugin?.Id is null || !_pluginsService.IsPluginEnabled(plugin.Id))
+    {
+      return null;
+    }
+
+    _dbClips[clip.Id] = clip;
+    try
+    {
+      var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
+      return new()
       {
-        var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
-        Clips.Add(new()
-        {
-          Id = clip.Id,
-          PluginId = clip.PluginId,
-          RepresentationData = representationData,
-          SearchLabel = clip.SearchLabel
-        });
-        loadedCount++;
-      }
-      catch (Exception e)
-      {
-        Crashes.TrackError(e, new Dictionary<string, string>
+        Id = clip.Id,
+        PluginId = clip.PluginId,
+        RepresentationData = representationData,
+        SearchLabel = clip.SearchLabel
+      };
+    }
+    catch (Exception e)
+    {
+      Crashes.TrackError(e, new Dictionary<string, string>
         {
           { "Info", "Exception when restore representation data for plugin" },
           { "PluginId", plugin.Id }
         });
-      }
     }
-    return loadedCount;
+    return null;
   }
 
 

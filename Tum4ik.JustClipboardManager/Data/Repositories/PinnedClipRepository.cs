@@ -16,6 +16,7 @@ internal class PinnedClipRepository : IPinnedClipRepository
   public async Task AddAsync(PinnedClip clip)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.Attach(clip.Clip);
     await dbContext.PinnedClips.AddAsync(clip).ConfigureAwait(false);
     await dbContext.SaveChangesAsync().ConfigureAwait(false);
   }

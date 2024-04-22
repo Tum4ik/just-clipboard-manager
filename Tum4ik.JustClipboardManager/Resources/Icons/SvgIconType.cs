@@ -48,6 +48,7 @@ public enum SvgIconType
   [SvgIconResource("opacity")] Opacity,
   [SvgIconResource("palette")] Palette,
   [SvgIconResource("paste-window")] PasteWindow,
+  [SvgIconResource("push-pin")] PushPin,
   [SvgIconResource("restore")] Restore,
   [SvgIconResource("scroll-left-arrow")] ScrollLeftArrow,
   [SvgIconResource("scroll-right-arrow")] ScrollRightArrow,

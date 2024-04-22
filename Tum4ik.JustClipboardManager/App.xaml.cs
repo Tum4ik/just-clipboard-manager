@@ -355,6 +355,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<InfoBarService>()
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
+      .RegisterSingleton<IPinnedClipRepository, PinnedClipRepository>()
       .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
       .Register<IClipRepository, ClipRepository>()
       .Register<IInfoService, InfoService>()

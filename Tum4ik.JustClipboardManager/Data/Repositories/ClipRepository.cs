@@ -23,11 +23,11 @@ internal class ClipRepository : IClipRepository
   public async IAsyncEnumerable<Clip> GetAsync(int skip = 0,
                                                int take = int.MaxValue,
                                                string? search = null,
-                                               IEnumerable<int>? ignoreIds = null)
+                                               IEnumerable<int>? idsToIgnore = null)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clips = dbContext.Clips
-      .Where(c => ignoreIds == null || !ignoreIds.Contains(c.Id))
+      .Where(c => idsToIgnore == null || !idsToIgnore.Contains(c.Id))
       .Where(c =>
         string.IsNullOrEmpty(search)
         || (!string.IsNullOrEmpty(c.SearchLabel) && EF.Functions.Like(c.SearchLabel, $"%{search}%"))

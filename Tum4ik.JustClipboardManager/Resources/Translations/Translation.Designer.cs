@@ -250,6 +250,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete clips older than.
         /// </summary>
         internal static string DeleteClipsOlderThan {
@@ -507,6 +516,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string PasteWindow {
             get {
                 return ResourceManager.GetString("PasteWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pin.
+        /// </summary>
+        internal static string Pin {
+            get {
+                return ResourceManager.GetString("Pin", resourceCulture);
             }
         }
         

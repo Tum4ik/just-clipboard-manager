@@ -110,6 +110,7 @@
     <None Remove="Resources\Icons\opacity.svg" />
     <None Remove="Resources\Icons\palette.svg" />
     <None Remove="Resources\Icons\paste-window.svg" />
+    <None Remove="Resources\Icons\push-pin.svg" />
     <None Remove="Resources\Icons\restore.svg" />
     <None Remove="Resources\Icons\scroll-left-arrow.svg" />
     <None Remove="Resources\Icons\scroll-right-arrow.svg" />
@@ -203,6 +204,7 @@
     <Resource Include="Resources\Icons\opacity.svg" />
     <Resource Include="Resources\Icons\palette.svg" />
     <Resource Include="Resources\Icons\paste-window.svg" />
+    <Resource Include="Resources\Icons\push-pin.svg" />
     <Resource Include="Resources\Icons\restore.svg" />
     <Resource Include="Resources\Icons\scroll-left-arrow.svg" />
     <Resource Include="Resources\Icons\scroll-right-arrow.svg" />
