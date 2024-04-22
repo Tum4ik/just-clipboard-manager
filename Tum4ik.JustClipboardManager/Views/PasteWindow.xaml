@@ -159,14 +159,19 @@
     <ListBox Grid.Row="1" Grid.Column="0"
              Margin="0, 4, 0, 0"
              ItemsSource="{Binding PinnedClips}"
-             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
-             IsEnabled="{Binding IsSettingsMode, Converter={StaticResource InvertedBoolConverter}}">
+             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}">
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
                   BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderGradientBrush}}">
             <ItemsPresenter/>
           </Border>
+          <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsSettingsMode}" Value="True">
+              <Setter Property="Opacity" Value="0.6"/>
+              <Setter Property="IsHitTestVisible" Value="False"/>
+            </DataTrigger>
+          </ControlTemplate.Triggers>
         </ControlTemplate>
       </ListBox.Template>
     </ListBox>
@@ -177,8 +182,7 @@
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
              ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
              ScrollViewer.CanContentScroll="False"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             IsEnabled="{Binding IsSettingsMode, Converter={StaticResource InvertedBoolConverter}}">
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
@@ -188,6 +192,12 @@
               <ItemsPresenter/>
             </ScrollViewer>
           </Border>
+          <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsSettingsMode}" Value="True">
+              <Setter Property="Opacity" Value="0.6"/>
+              <Setter Property="IsHitTestVisible" Value="False"/>
+            </DataTrigger>
+          </ControlTemplate.Triggers>
         </ControlTemplate>
       </ListBox.Template>
     </ListBox>
