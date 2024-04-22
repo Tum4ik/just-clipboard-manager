@@ -155,7 +155,9 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private async Task PasteDataAsync(ClipDto? clipDto)
   {
     _windowDeactivationTriggeredByDataPasting = true;
-    if (clipDto is null || !_dbClips.TryGetValue(clipDto.Id, out var clip))
+    if (clipDto is null
+        || (!_dbClips.TryGetValue(clipDto.Id, out var clip) && !_pinnedDbClips.TryGetValue(clipDto.Id, out clip))
+    )
     {
       return;
     }

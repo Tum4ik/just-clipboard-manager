@@ -27,6 +27,7 @@ internal class PinnedClipRepository : IPinnedClipRepository
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clips = dbContext.PinnedClips
       .OrderBy(c => c.Order)
+      .Include(c => c.Clip).ThenInclude(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
       .AsAsyncEnumerable();
     await foreach (var clip in clips.ConfigureAwait(false))
     {
