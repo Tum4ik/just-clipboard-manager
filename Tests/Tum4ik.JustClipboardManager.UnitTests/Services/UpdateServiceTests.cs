@@ -16,7 +16,7 @@ public class UpdateServiceTests
     var repositoriesClient = Substitute.For<IRepositoriesClient>();
     gitHubClient.Repository.Returns(repositoriesClient);
     repositoriesClient.Release.Returns(_releasesClient);
-    _testeeService = new(_infoService, gitHubClient, new(_environment));
+    _testeeService = new(_infoService, gitHubClient, new(_environment), new(Substitute.For<IHub>()));
   }
 
 

@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using Microsoft.AppCenter.Crashes;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
@@ -10,24 +8,23 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IUser32DllService _user32Dll;
+  private readonly Lazy<IHub> _sentryHub;
 
   public ClipboardHookService(IPasteWindowService pasteWindowService,
                               IEventAggregator eventAggregator,
-                              IUser32DllService user32Dll)
+                              IUser32DllService user32Dll,
+                              Lazy<IHub> sentryHub)
   {
     _eventAggregator = eventAggregator;
     _user32Dll = user32Dll;
+    _sentryHub = sentryHub;
 
     _pasteWindowHandle = pasteWindowService.WindowHandle;
     var isClipboardListenerAdded = user32Dll.AddClipboardFormatListener(_pasteWindowHandle);
     if (!isClipboardListenerAdded)
     {
-      var ex = new Win32Exception();
-      Crashes.TrackError(ex, new Dictionary<string, string>
-      {
-        { "Description", "AddClipboardFormatListener operation failed" }
-      });
-      throw ex;
+      _sentryHub.Value.CaptureMessage("AddClipboardFormatListener operation failed", SentryLevel.Fatal);
+      // todo: show message to user and close app
     }
 
     _timer.Elapsed += (s, e) => OnClipboardChanged();
@@ -63,10 +60,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
         var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_pasteWindowHandle);
         if (!isClipboardListenerRemoved)
         {
-          Crashes.TrackError(new Win32Exception(), new Dictionary<string, string>
-          {
-            { "Description", "RemoveClipboardFormatListener operation failed" }
-          });
+          _sentryHub.Value.CaptureMessage("RemoveClipboardFormatListener operation failed", SentryLevel.Error);
         }
         break;
     }
