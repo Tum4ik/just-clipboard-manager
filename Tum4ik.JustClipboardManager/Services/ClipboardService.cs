@@ -141,7 +141,7 @@ internal class ClipboardService : IClipboardService
           continue;
         }
 
-        object data;
+        object? data;
         try
         {
           data = dataObject.GetData(format);
@@ -153,6 +153,11 @@ internal class ClipboardService : IClipboardService
             { "DataFormat", format },
             { "Message", e.Message }
           });
+          continue;
+        }
+
+        if (data is null)
+        {
           continue;
         }
 
