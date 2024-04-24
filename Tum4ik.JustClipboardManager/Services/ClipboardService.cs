@@ -163,6 +163,10 @@ internal class ClipboardService : IClipboardService
 
         if (data is null)
         {
+          _sentryHub.Value.CaptureMessage(
+            $"Data is not available in the specified format: {format}.",
+            SentryLevel.Warning
+          );
           continue;
         }
 
