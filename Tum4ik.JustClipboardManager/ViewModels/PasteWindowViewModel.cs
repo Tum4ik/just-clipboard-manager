@@ -19,14 +19,14 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private readonly IClipRepository _clipRepository;
   private readonly IPluginsService _pluginsService;
   private readonly ISettingsService _settingsService;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IHub _sentryHub;
 
   public PasteWindowViewModel(IEventAggregator eventAggregator,
                               IClipRepository clipRepository,
                               ITranslationService translationService,
                               IPluginsService pluginsService,
                               ISettingsService settingsService,
-                              Lazy<IHub> sentryHub)
+                              IHub sentryHub)
     : base(translationService, eventAggregator)
   {
     _eventAggregator = eventAggregator;
@@ -206,7 +206,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       }
       catch (Exception e)
       {
-        _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
           message: "Exception when restore representation data for plugin",
           category: "info",
           type: "info",

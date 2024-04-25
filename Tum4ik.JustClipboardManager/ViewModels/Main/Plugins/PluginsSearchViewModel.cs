@@ -17,13 +17,13 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
 {
   private readonly IPluginsService _pluginsService;
   private readonly IInfoBarService _infoBarService;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IHub _sentryHub;
 
   public PluginsSearchViewModel(ITranslationService translationService,
                                 IEventAggregator eventAggregator,
                                 IPluginsService pluginsService,
                                 IInfoBarService infoBarService,
-                                Lazy<IHub> sentryHub)
+                                IHub sentryHub)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
@@ -67,7 +67,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     }
     catch (JsonException e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "JSON parse exception when loading available plugins from the server",
         type: "info"
       ));
@@ -117,12 +117,12 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     }
     catch (PluginZipSecurityException e)
     {
-      _sentryHub.Value.CaptureException(e);
+      _sentryHub.CaptureException(e);
       _infoBarService.ShowCritical("PluginSecurityViolation_Body", "PluginSecurityViolation_Title");
     }
     catch (Exception e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "Unpredictable error when installing plugin",
         type: "info"
       ));

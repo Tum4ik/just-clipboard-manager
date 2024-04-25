@@ -1,4 +1,8 @@
+using System.Windows.Input;
+using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using Tum4ik.JustClipboardManager.Data.Models;
+using Tum4ik.JustClipboardManager.Extensions;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
 using static Windows.Win32.PInvoke;
 
@@ -10,12 +14,14 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly IKernel32DllService _kernel32Dll;
   private readonly IPasteService _pasteService;
   private readonly ISettingsService _settingsService;
+  private readonly IDialogService _dialogService;
 
   public KeyboardHookService(IPasteWindowService pasteWindowService,
                              IUser32DllService user32Dll,
                              IKernel32DllService kernel32Dll,
                              IPasteService pasteService,
-                             ISettingsService settingsService)
+                             ISettingsService settingsService,
+                             IDialogService dialogService)
   {
     _windowHandle = pasteWindowService.WindowHandle;
     _pasteWindowService = pasteWindowService;
@@ -23,6 +29,8 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     _kernel32Dll = kernel32Dll;
     _pasteService = pasteService;
     _settingsService = settingsService;
+    _dialogService = dialogService;
+    SetupHotkeys();
   }
 
 
@@ -31,11 +39,17 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
   private readonly Dictionary<int, Delegate> _registeredActionCallbacks = new();
 
 
-  public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor descriptor)
+  public bool RegisterShowPasteWindowHotkey(KeyBindingDescriptor? descriptor = null)
   {
-    return RegisterHotKey(
+    descriptor ??= _settingsService.HotkeyShowPasteWindow;
+    var success = RegisterHotKey(
       descriptor, HandleShowPasteWindowHotkeyAsync, () => _settingsService.HotkeyShowPasteWindow = descriptor
     );
+    if (!success)
+    {
+      _settingsService.HotkeyShowPasteWindow = new(ModifierKeys.None, Key.None);
+    }
+    return success;
   }
 
 
@@ -61,6 +75,20 @@ internal sealed class KeyboardHookService : IKeyboardHookService, IDisposable
     }
     _registeredAtoms.Clear();
     _registeredActionCallbacks.Clear();
+  }
+
+
+  private void SetupHotkeys()
+  {
+    if (!RegisterShowPasteWindowHotkey())
+    {
+      var parameters = new DialogParameters
+      {
+        { DialogParameterNames.ViewToShow, ViewNames.SettingsView }
+      };
+      _dialogService.ShowMainAppDialog(parameters);
+      _dialogService.Show(DialogNames.UnregisteredHotkeysDialog);
+    }
   }
 
 
