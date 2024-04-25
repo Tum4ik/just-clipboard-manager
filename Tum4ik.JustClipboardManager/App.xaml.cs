@@ -218,10 +218,10 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
     var pluginsService = Container.Resolve<IPluginsService>();
-    var sentryHub = Container.Resolve<Lazy<IHub>>();
+    var sentryHub = Container.Resolve<IHub>();
 
-    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.Value.CaptureException(e));
-    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.Value.CaptureException(e));
+    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.CaptureException(e));
+    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.CaptureException(e));
     var trayIcon = Container.Resolve<TrayIcon>();
     var hookService = Container.Resolve<GeneralHookService>();
   }
