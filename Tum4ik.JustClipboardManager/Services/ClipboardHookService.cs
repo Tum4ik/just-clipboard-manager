@@ -8,12 +8,12 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
 {
   private readonly IEventAggregator _eventAggregator;
   private readonly IUser32DllService _user32Dll;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IHub _sentryHub;
 
   public ClipboardHookService(IPasteWindowService pasteWindowService,
                               IEventAggregator eventAggregator,
                               IUser32DllService user32Dll,
-                              Lazy<IHub> sentryHub)
+                              IHub sentryHub)
   {
     _eventAggregator = eventAggregator;
     _user32Dll = user32Dll;
@@ -23,7 +23,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
     var isClipboardListenerAdded = user32Dll.AddClipboardFormatListener(_pasteWindowHandle);
     if (!isClipboardListenerAdded)
     {
-      _sentryHub.Value.CaptureMessage("AddClipboardFormatListener operation failed", SentryLevel.Fatal);
+      _sentryHub.CaptureMessage("AddClipboardFormatListener operation failed", SentryLevel.Fatal);
       // todo: show message to user and close app
     }
 
@@ -60,7 +60,7 @@ internal sealed class ClipboardHookService : IClipboardHookService, IDisposable
         var isClipboardListenerRemoved = _user32Dll.RemoveClipboardFormatListener(_pasteWindowHandle);
         if (!isClipboardListenerRemoved)
         {
-          _sentryHub.Value.CaptureMessage("RemoveClipboardFormatListener operation failed", SentryLevel.Error);
+          _sentryHub.CaptureMessage("RemoveClipboardFormatListener operation failed", SentryLevel.Error);
         }
         break;
     }

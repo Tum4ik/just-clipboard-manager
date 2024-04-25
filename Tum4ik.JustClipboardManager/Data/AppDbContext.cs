@@ -18,13 +18,26 @@ internal class AppDbContext : DbContext
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-    modelBuilder.Entity<Clip>()
+    modelBuilder
+      .Entity<Clip>()
       .Property(c => c.ClippedAt)
       .HasDefaultValueSql("datetime('now', 'localtime')");
   }
 
 
   public static void Configure(DbContextOptionsBuilder builder)
+  {
+    builder
+      .UseSqlite($"Data Source={DbFilePath}")
+      .UseLazyLoadingProxies();
+  }
+
+
+  private static string? _dbFilePath;
+  public static string DbFilePath => _dbFilePath ??= GetDbFilePath();
+
+
+  private static string GetDbFilePath()
   {
     var companyName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>()!.Company;
     var dbFileDir = Path.Combine(
@@ -42,7 +55,6 @@ internal class AppDbContext : DbContext
 #endif
     Directory.CreateDirectory(dbFileDir);
     var dbFilePath = Path.Combine(dbFileDir, DbName);
-    builder.UseSqlite($"Data Source={dbFilePath}")
-           .UseLazyLoadingProxies();
+    return dbFilePath;
   }
 }

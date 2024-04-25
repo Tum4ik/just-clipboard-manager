@@ -202,24 +202,26 @@ public partial class App : ISingleInstance, IApplicationLifetime
 #endif
     }
 
-    using var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext();
-    try
+    using (var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext())
     {
-      dbContext.Database.Migrate();
-    }
-    catch (SqliteException)
-    {
-      dbContext.Database.EnsureDeleted();
-      dbContext.Database.Migrate();
+      try
+      {
+        dbContext.Database.Migrate();
+      }
+      catch (SqliteException)
+      {
+        dbContext.Database.EnsureDeleted();
+        dbContext.Database.Migrate();
+      }
     }
 
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
     var pluginsService = Container.Resolve<IPluginsService>();
-    var sentryHub = Container.Resolve<Lazy<IHub>>();
+    var sentryHub = Container.Resolve<IHub>();
 
-    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.Value.CaptureException(e));
-    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.Value.CaptureException(e));
+    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.CaptureException(e));
+    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.CaptureException(e));
     var trayIcon = Container.Resolve<TrayIcon>();
     trayIcon.ForceCreate();
     var hookService = Container.Resolve<GeneralHookService>();
@@ -358,15 +360,15 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IPinnedClipRepository, PinnedClipRepository>()
-      .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
-      .Register<IClipRepository, ClipRepository>()
-      .Register<IInfoService, InfoService>()
-      .Register<IUpdateService, UpdateService>()
-      .Register<IGitHubClient>(cp =>
+      .RegisterSingleton<IClipRepository, ClipRepository>()
+      .RegisterSingleton<IInfoService, InfoService>()
+      .RegisterSingleton<IGitHubClient>(cp =>
       {
         var infoService = cp.Resolve<IInfoService>();
         return new GitHubClient(new ProductHeaderValue("JustClipboardManager", infoService.InformationalVersion));
       })
+      .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
+      .Register<IUpdateService, UpdateService>()
       .Register<WshShell, WshShellWrapper>()
       .Register<IShortcutService, ShortcutService>()
       .RegisterShell<TrayIcon, TrayIconViewModel>()

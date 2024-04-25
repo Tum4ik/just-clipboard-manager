@@ -14,12 +14,12 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsInstalledViewModel : TranslationViewModel, INavigationAware
 {
   private readonly IPluginsService _pluginsService;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IHub _sentryHub;
 
   public PluginsInstalledViewModel(ITranslationService translationService,
                                    IEventAggregator eventAggregator,
                                    IPluginsService pluginsService,
-                                   Lazy<IHub> sentryHub)
+                                   IHub sentryHub)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
@@ -112,7 +112,7 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
          || e is FormatException
          || e is OverflowException)
       {
-        _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+        _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
           message: "Plugin version parsing problem",
           type: "info"
         ));

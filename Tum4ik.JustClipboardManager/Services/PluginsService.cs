@@ -178,7 +178,7 @@ internal class PluginsService : IPluginsService
     await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
 
     _moduleCatalog.Load();
-    await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken: default);
+    await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
     var moduleToLoad = _moduleCatalog.Modules.FirstOrDefault(m => m.ModuleName == pluginId && m.State == ModuleState.NotStarted);
     if (moduleToLoad is not null)
     {

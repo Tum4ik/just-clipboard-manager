@@ -10,13 +10,13 @@ internal class UpdateService : IUpdateService
 {
   private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
-  private readonly Lazy<IEnvironment> _environment;
-  private readonly Lazy<IHub> _sentryHub;
+  private readonly IEnvironment _environment;
+  private readonly IHub _sentryHub;
 
   public UpdateService(IInfoService infoService,
                        IGitHubClient gitHubClient,
-                       Lazy<IEnvironment> environment,
-                       Lazy<IHub> sentryHub)
+                       IEnvironment environment,
+                       IHub sentryHub)
   {
     _infoService = infoService;
     _gitHubClient = gitHubClient;
@@ -37,7 +37,7 @@ internal class UpdateService : IUpdateService
       {
         if (latestReleaseVersion > _infoService.Version)
         {
-          var osArchitecture = _environment.Value.Is64BitOperatingSystem ? "x64" : "x86";
+          var osArchitecture = _environment.Is64BitOperatingSystem ? "x64" : "x86";
           var downloadLink = latestRelease.Assets
             .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
                       && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))
@@ -52,7 +52,7 @@ internal class UpdateService : IUpdateService
       }
       else
       {
-        _sentryHub.Value.CaptureMessage(
+        _sentryHub.CaptureMessage(
           "Parse version problem when check for updates.",
           scope => scope.AddBreadcrumb(
             message: "",
@@ -66,7 +66,7 @@ internal class UpdateService : IUpdateService
     }
     catch (TaskCanceledException e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "When checking for updates",
         type: "info"
       ));
@@ -77,7 +77,7 @@ internal class UpdateService : IUpdateService
     }
     catch (ApiException e)
     {
-      _sentryHub.Value.CaptureException(e, scope => scope.AddBreadcrumb(
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "When checking for updates via GitHub API",
         type: "info"
       ));
