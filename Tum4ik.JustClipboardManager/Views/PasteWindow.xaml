@@ -75,6 +75,7 @@
                                   Orientation="Horizontal"
                                   Visibility="Collapsed">
                         <controls:InputFieldButton Icon="PushPin"
+                                                   IconRotation="45"
                                                    Command="{Binding DataContext.PinClipCommand, ElementName=This}"
                                                    CommandParameter="{Binding}"
                                                    ToolTip="{Binding DataContext.Translate[Pin], ElementName=This}">
@@ -198,15 +199,8 @@
     <ListBox Grid.Row="1" Grid.Column="0"
              Margin="0, 4, 0, 0"
              ItemsSource="{Binding PinnedClips}"
-             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}">
-      <i:Interaction.Triggers>
-        <i:DataTrigger Binding="{Binding PinnedClips.Count}" Value="0">
-          <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
-        </i:DataTrigger>
-        <i:DataTrigger Binding="{Binding PinnedClips.Count}" Comparison="NotEqual" Value="0">
-          <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
-        </i:DataTrigger>
-      </i:Interaction.Triggers>
+             ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
+             Visibility="{Binding PinnedClipsListVisibility}">
       <ListBox.Resources>
         <Style TargetType="ListBoxItem" BasedOn="{StaticResource BaseListBoxItem}">
           <Setter Property="ap:ClipInfo.IsPinned" Value="True"/>

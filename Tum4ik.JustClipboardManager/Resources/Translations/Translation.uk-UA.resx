@@ -352,4 +352,7 @@
   <data name="Pin" xml:space="preserve">
     <value>Закріпити</value>
   </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Відкріпити</value>
+  </data>
 </root>

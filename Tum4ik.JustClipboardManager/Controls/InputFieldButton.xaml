@@ -15,7 +15,12 @@
         <controls:SvgIcon x:Name="_icon"
                           Width="12" Height="12"
                           Icon="{TemplateBinding Icon}"
-                          Color="{TemplateBinding IconColor}"/>
+                          Color="{TemplateBinding IconColor}"
+                          RenderTransformOrigin="0.5, 0.5">
+          <controls:SvgIcon.RenderTransform>
+            <RotateTransform Angle="{Binding IconRotation, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+          </controls:SvgIcon.RenderTransform>
+        </controls:SvgIcon>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="True">

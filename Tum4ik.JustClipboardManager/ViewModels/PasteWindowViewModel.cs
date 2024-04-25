@@ -38,6 +38,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     _settingsService = settingsService;
     _sentryHub = sentryHub;
 
+    PinnedClips.CollectionChanged += (s, e) => OnPropertyChanged(nameof(PinnedClipsListVisibility));
     LoadPinnedClipsAsync().Await(e => throw e);
   }
 
@@ -45,7 +46,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   private const int ClipsLoadInitialSize = 15;
   private const int ClipsLoadBatchSize = 10;
   private int _loadedClipsCount;
-  private Visibility _currentVisibility = Visibility.Hidden;
+  private Visibility _currentWindowVisibility = Visibility.Hidden;
 
   private bool _windowDeactivationTriggeredByDataPasting;
 
@@ -69,26 +70,32 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   [ObservableProperty] private int _windowHeight;
   [ObservableProperty] private double _windowOpacity;
 
+  [ObservableProperty] private string? _search;
+  partial void OnSearchChanged(string? value)
+  {
+    _dbClips.Clear();
+    Clips.Clear();
+    _loadedClipsCount = 0;
+    if (_currentWindowVisibility == Visibility.Visible)
+    {
+      LoadNextClipsBatchAsync().Await(e => throw e);
+    }
+
+    OnPropertyChanged(nameof(PinnedClipsListVisibility));
+  }
+
   public int WindowMinWidth => _settingsService.PasteWindowMinWidth;
   public int WindowMinHeight => _settingsService.PasteWindowMinHeight;
 
-
-  private string? _search;
-  public string? Search
+  public Visibility PinnedClipsListVisibility
   {
-    get => _search;
-    set
+    get
     {
-      if (SetProperty(ref _search, value))
+      if (string.IsNullOrEmpty(Search) && PinnedClips.Count > 0)
       {
-        _dbClips.Clear();
-        Clips.Clear();
-        _loadedClipsCount = 0;
-        if (_currentVisibility == Visibility.Visible)
-        {
-          LoadNextClipsBatchAsync().Await(e => throw e);
-        }
+        return Visibility.Visible;
       }
+      return Visibility.Collapsed;
     }
   }
 
@@ -114,7 +121,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
   [RelayCommand]
   private async Task WindowVisibilityChangedAsync(Visibility visibility)
   {
-    _currentVisibility = visibility;
+    _currentWindowVisibility = visibility;
     if (visibility == Visibility.Visible)
     {
       ApplySettings();

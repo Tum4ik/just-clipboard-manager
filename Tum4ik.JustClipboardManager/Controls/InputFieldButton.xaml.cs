@@ -5,6 +5,7 @@ namespace Tum4ik.JustClipboardManager.Controls;
 
 [DependencyProperty<SvgIconType?>("Icon")]
 [DependencyProperty<Brush>("IconColor")]
+[DependencyProperty<double>("IconRotation")]
 public partial class InputFieldButton
 {
   public InputFieldButton()
