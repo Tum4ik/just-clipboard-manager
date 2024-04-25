@@ -417,4 +417,8 @@
     </Setter>
   </Style>
 
+  <Style TargetType="controls:InputFieldButton">
+    <Setter Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+  </Style>
+
 </ResourceDictionary>

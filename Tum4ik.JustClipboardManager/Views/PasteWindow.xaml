@@ -10,6 +10,7 @@
         xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
+        xmlns:ap="clr-namespace:Tum4ik.JustClipboardManager.AttachedProperties"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         Activated="This_Activated"
@@ -26,7 +27,7 @@
     <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
     <converters:SizeToRectConverter x:Key="SizeToRectConverter"/>
 
-    <Style TargetType="ListBoxItem">
+    <Style x:Key="BaseListBoxItem" TargetType="ListBoxItem">
       <Setter Property="Cursor" Value="Hand"/>
       <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
       <Setter Property="Template">
@@ -43,6 +44,7 @@
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                       </Grid.ColumnDefinitions>
                       <Grid.Clip>
                         <RectangleGeometry RadiusX="4" RadiusY="4">
@@ -55,18 +57,55 @@
                         </RectangleGeometry>
                       </Grid.Clip>
                       <ContentPresenter Grid.Column="0"/>
+                      <controls:InputFieldButton Grid.Column="1"
+                                                 Icon="PushPin"
+                                                 IconColor="{DynamicResource {x:Static theming:AppColors.AccentDefaultBrush}}"
+                                                 Margin="3, 0"
+                                                 Command="{Binding DataContext.UnpinClipCommand, ElementName=This}"
+                                                 CommandParameter="{Binding}"
+                                                 ToolTip="{Binding DataContext.Translate[Unpin], ElementName=This}">
+                        <controls:InputFieldButton.Visibility>
+                          <Binding Path="(ap:ClipInfo.IsPinned)"
+                                   RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"
+                                   Converter="{StaticResource BooleanToVisibilityConverter}"/>
+                        </controls:InputFieldButton.Visibility>
+                      </controls:InputFieldButton>
                       <StackPanel x:Name="_actionButtons"
-                                  Grid.Column="1"
+                                  Grid.Column="2"
                                   Orientation="Horizontal"
                                   Visibility="Collapsed">
                         <controls:InputFieldButton Icon="PushPin"
                                                    Command="{Binding DataContext.PinClipCommand, ElementName=This}"
                                                    CommandParameter="{Binding}"
-                                                   ToolTip="{Binding DataContext.Translate[Pin], ElementName=This}"/>
+                                                   ToolTip="{Binding DataContext.Translate[Pin], ElementName=This}">
+                          <controls:InputFieldButton.Visibility>
+                            <Binding Path="(ap:ClipInfo.IsPinned)"
+                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}">
+                              <Binding.Converter>
+                                <converters:ValueConverterGroup>
+                                  <converters:InvertedBoolConverter/>
+                                  <BooleanToVisibilityConverter/>
+                                </converters:ValueConverterGroup>
+                              </Binding.Converter>
+                            </Binding>
+                          </controls:InputFieldButton.Visibility>
+                        </controls:InputFieldButton>
                         <controls:InputFieldButton Icon="Delete" Margin="3, 0"
                                                    Command="{Binding DataContext.DeleteClipCommand, ElementName=This}"
                                                    CommandParameter="{Binding}"
-                                                   ToolTip="{Binding DataContext.Translate[Delete], ElementName=This}"/>
+                                                   ToolTip="{Binding DataContext.Translate[Delete], ElementName=This}">
+                          <controls:InputFieldButton.Visibility>
+                            <Binding Path="(ap:ClipInfo.IsPinned)"
+                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}">
+                              <Binding.Converter>
+                                <converters:ValueConverterGroup>
+                                  <converters:InvertedBoolConverter/>
+                                  <BooleanToVisibilityConverter/>
+                                </converters:ValueConverterGroup>
+                              </Binding.Converter>
+                            </Binding>
+                          </controls:InputFieldButton.Visibility>
+                        </controls:InputFieldButton>
                       </StackPanel>
                     </Grid>
                   </Border>
@@ -160,6 +199,11 @@
              Margin="0, 4, 0, 0"
              ItemsSource="{Binding PinnedClips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}">
+      <ListBox.Resources>
+        <Style TargetType="ListBoxItem" BasedOn="{StaticResource BaseListBoxItem}">
+          <Setter Property="ap:ClipInfo.IsPinned" Value="True"/>
+        </Style>
+      </ListBox.Resources>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
@@ -183,6 +227,11 @@
              ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
              ScrollViewer.CanContentScroll="False"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.Resources>
+        <Style TargetType="ListBoxItem" BasedOn="{StaticResource BaseListBoxItem}">
+          <Setter Property="ap:ClipInfo.IsPinned" Value="False"/>
+        </Style>
+      </ListBox.Resources>
       <ListBox.Template>
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"

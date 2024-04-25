@@ -6,5 +6,5 @@ internal interface IPinnedClipRepository
   Task AddAsync(PinnedClip clip);
   IAsyncEnumerable<PinnedClip> GetAllOrderedAscAsync();
   Task UpdateAsync(PinnedClip clip);
-  Task DeleteAsync(PinnedClip clip);
+  Task DeleteByIdAsync(int id);
 }

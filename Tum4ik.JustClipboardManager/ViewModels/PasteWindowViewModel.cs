@@ -190,9 +190,29 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     Clips.Remove(clipDto);
     await _pinnedClipRepository.AddAsync(new()
     {
+      Id = clipDto.Id,
       Clip = _pinnedDbClips[clipDto.Id],
       Order = PinnedClips.Count - 1
     }).ConfigureAwait(false);
+  }
+
+
+  [RelayCommand]
+  private async Task UnpinClipAsync(ClipDto? clipDto)
+  {
+    if (clipDto is null)
+    {
+      return;
+    }
+
+    var dbClip = _pinnedDbClips[clipDto.Id];
+    dbClip.ClippedAt = DateTime.Now;
+    _dbClips.Add(clipDto.Id, dbClip);
+    Clips.Insert(0, clipDto);
+    _pinnedDbClips.Remove(clipDto.Id);
+    PinnedClips.Remove(clipDto);
+    await _clipRepository.UpdateAsync(dbClip).ConfigureAwait(false);
+    await _pinnedClipRepository.DeleteByIdAsync(clipDto.Id).ConfigureAwait(false);
   }
 
 
@@ -240,6 +260,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
     var loadedCount = 0;
     await foreach (var clip in clips)
     {
+      _dbClips[clip.Id] = clip;
       var clipDto = DbClipToClipDto(clip);
       if (clipDto is null)
       {
@@ -260,7 +281,6 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       return null;
     }
 
-    _dbClips[clip.Id] = clip;
     try
     {
       var representationData = plugin.RestoreRepresentationData(clip.RepresentationData, clip.AdditionalInfo);
