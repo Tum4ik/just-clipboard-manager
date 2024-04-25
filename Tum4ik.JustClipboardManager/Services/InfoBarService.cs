@@ -3,6 +3,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
 namespace Tum4ik.JustClipboardManager.Services;
 
+// todo: re-implement using IEventAggregator
 internal class InfoBarService : IInfoBarSubscriber, IInfoBarService
 {
   public event Action<InfoBarPayload>? InfoReceived;

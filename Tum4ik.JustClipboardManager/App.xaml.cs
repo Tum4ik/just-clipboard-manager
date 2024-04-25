@@ -360,13 +360,13 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IClipRepository, ClipRepository>()
       .RegisterSingleton<IInfoService, InfoService>()
-      .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
-      .Register<IUpdateService, UpdateService>()
-      .Register<IGitHubClient>(cp =>
+      .RegisterSingleton<IGitHubClient>(cp =>
       {
         var infoService = cp.Resolve<IInfoService>();
         return new GitHubClient(new ProductHeaderValue("JustClipboardManager", infoService.InformationalVersion));
       })
+      .Register<IKeyBindingRecordingService, KeyBindingRecordingService>()
+      .Register<IUpdateService, UpdateService>()
       .Register<WshShell, WshShellWrapper>()
       .Register<IShortcutService, ShortcutService>()
       .RegisterShell<TrayIcon, TrayIconViewModel>()
