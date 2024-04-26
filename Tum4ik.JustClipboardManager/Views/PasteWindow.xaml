@@ -11,6 +11,7 @@
         xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
         xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
         xmlns:ap="clr-namespace:Tum4ik.JustClipboardManager.AttachedProperties"
+        xmlns:math="http://hexinnovation.com/math"
         d:DataContext="{d:DesignInstance vm:PasteWindowViewModel}"
         mc:Ignorable="d"
         Activated="This_Activated"
@@ -26,6 +27,7 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
     <converters:SizeToRectConverter x:Key="SizeToRectConverter"/>
+    <math:MathConverter x:Key="MathConverter"/>
 
     <Style x:Key="BaseListBoxItem" TargetType="ListBoxItem">
       <Setter Property="Cursor" Value="Hand"/>
@@ -200,7 +202,13 @@
              Margin="0, 4, 0, 0"
              ItemsSource="{Binding PinnedClips}"
              ItemTemplateSelector="{StaticResource ClipTypeDataTemplateSelector}"
-             Visibility="{Binding PinnedClipsListVisibility}">
+             Visibility="{Binding PinnedClipsListVisibility}"
+             ScrollViewer.CanContentScroll="False"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.MaxHeight>
+        <Binding Path="ActualHeight" ElementName="This"
+                 Converter="{StaticResource MathConverter}" ConverterParameter="x/3"/>
+      </ListBox.MaxHeight>
       <ListBox.Resources>
         <Style TargetType="ListBoxItem" BasedOn="{StaticResource BaseListBoxItem}">
           <Setter Property="ap:ClipInfo.IsPinned" Value="True"/>
@@ -210,7 +218,9 @@
         <ControlTemplate TargetType="ListBox">
           <Border CornerRadius="4"
                   BorderThickness="1" BorderBrush="{DynamicResource {x:Static theming:AppColors.ControlBorderGradientBrush}}">
-            <ItemsPresenter/>
+            <ScrollViewer Padding="1">
+              <ItemsPresenter/>
+            </ScrollViewer>
           </Border>
           <ControlTemplate.Triggers>
             <DataTrigger Binding="{Binding IsSettingsMode}" Value="True">
