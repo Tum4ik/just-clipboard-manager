@@ -9,10 +9,10 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Width" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">420</Value>
+      <Value Profile="(Default)">400</Value>
     </Setting>
     <Setting Name="Height" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">300</Value>
+      <Value Profile="(Default)">400</Value>
     </Setting>
     <Setting Name="MinWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
