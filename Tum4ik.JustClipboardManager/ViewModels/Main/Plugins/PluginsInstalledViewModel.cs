@@ -90,9 +90,9 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   }
 
 
-  private async Task<InstalledPluginInfoDto?> PluginToDtoAsync(IPlugin plugin)
+  private Task<InstalledPluginInfoDto?> PluginToDtoAsync(IPlugin plugin)
   {
-    return await Task.Run(() =>
+    return Task.Run(() =>
     {
       var pluginAttribute = plugin.GetType().GetCustomAttribute<PluginAttribute>();
       if (pluginAttribute is null)
@@ -128,6 +128,6 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
         Description = pluginAttribute.Description,
         IsEnabled = _pluginsService.IsPluginEnabled(pluginAttribute.Id)
       };
-    }).ConfigureAwait(false);
+    });
   }
 }

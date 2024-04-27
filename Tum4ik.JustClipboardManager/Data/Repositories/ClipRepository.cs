@@ -21,10 +21,14 @@ internal class ClipRepository : IClipRepository
   }
 
 
-  public async IAsyncEnumerable<Clip> GetAsync(int skip = 0, int take = int.MaxValue, string? search = null)
+  public async IAsyncEnumerable<Clip> GetAsync(int skip = 0,
+                                               int take = int.MaxValue,
+                                               string? search = null,
+                                               IEnumerable<int>? idsToIgnore = null)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clips = dbContext.Clips
+      .Where(c => idsToIgnore == null || !idsToIgnore.Contains(c.Id))
       .Where(c =>
         string.IsNullOrEmpty(search)
         || (!string.IsNullOrEmpty(c.SearchLabel) && EF.Functions.Like(c.SearchLabel, $"%{search}%"))
@@ -33,9 +37,8 @@ internal class ClipRepository : IClipRepository
       .Skip(skip)
       .Take(take)
       .Include(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
-      .AsAsyncEnumerable()
-      .ConfigureAwait(false);
-    await foreach (var clip in clips)
+      .AsAsyncEnumerable();
+    await foreach (var clip in clips.ConfigureAwait(false))
     {
       yield return clip;
     }
@@ -46,6 +49,14 @@ internal class ClipRepository : IClipRepository
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     dbContext.Clips.Update(clip);
+    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+  }
+
+
+  public async Task DeleteAsync(Clip clip)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    dbContext.Clips.Remove(clip);
     await dbContext.SaveChangesAsync().ConfigureAwait(false);
   }
 
@@ -65,13 +76,5 @@ internal class ClipRepository : IClipRepository
         $"DELETE FROM {nameof(AppDbContext.Clips)} WHERE {nameof(Clip.Id)} IN ({clipIdsCommaSeparated})"
       )
       .ConfigureAwait(false);
-  }
-
-
-  public async Task DeleteAsync(Clip clip)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    dbContext.Clips.Remove(clip);
-    await dbContext.SaveChangesAsync().ConfigureAwait(false);
   }
 }

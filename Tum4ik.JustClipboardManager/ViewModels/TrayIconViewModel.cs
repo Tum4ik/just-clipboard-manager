@@ -18,21 +18,26 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private readonly IDialogService _dialogService;
   private readonly IThemeService _themeService;
   private readonly IApplicationLifetime _applicationLifetime;
+  private readonly IInfoService _infoService;
 
   public TrayIconViewModel(IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
                            IEventAggregator eventAggregator,
-                           IApplicationLifetime applicationLifetime)
+                           IApplicationLifetime applicationLifetime,
+                           IInfoService infoService)
     : base(translationService, eventAggregator)
   {
     _dialogService = dialogService;
     _themeService = themeService;
     _applicationLifetime = applicationLifetime;
+    _infoService = infoService;
 
     eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
 
+
+  public string ProductName => _infoService.ProductName;
 
   [ObservableProperty]
   private string _trayIcon

@@ -223,6 +223,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.CaptureException(e));
     PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.CaptureException(e));
     var trayIcon = Container.Resolve<TrayIcon>();
+    trayIcon.ForceCreate();
     var hookService = Container.Resolve<GeneralHookService>();
   }
 
@@ -358,6 +359,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<InfoBarService>()
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
+      .RegisterSingleton<IPinnedClipRepository, PinnedClipRepository>()
       .RegisterSingleton<IClipRepository, ClipRepository>()
       .RegisterSingleton<IInfoService, InfoService>()
       .RegisterSingleton<IGitHubClient>(cp =>

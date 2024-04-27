@@ -156,7 +156,7 @@ internal class ClipboardService : IClipboardService
           continue;
         }
 
-        object data;
+        object? data;
         try
         {
           data = dataObject.GetData(format);
@@ -169,6 +169,15 @@ internal class ClipboardService : IClipboardService
             type: "info",
             dataPair: ("DataFormat", format)
           ));
+          continue;
+        }
+
+        if (data is null)
+        {
+          _sentryHub.CaptureMessage(
+            $"Data is not available in the specified format: {format}.",
+            SentryLevel.Warning
+          );
           continue;
         }
 

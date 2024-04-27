@@ -346,4 +346,13 @@
   <data name="Opacity_Description" xml:space="preserve">
     <value>Дозволяє контролювати ступінь прозорості вікна вставки</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Закріпити</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Відкріпити</value>
+  </data>
 </root>

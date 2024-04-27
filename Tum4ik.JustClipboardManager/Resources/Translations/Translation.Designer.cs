@@ -250,6 +250,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete clips older than.
         /// </summary>
         internal static string DeleteClipsOlderThan {
@@ -511,6 +520,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pin.
+        /// </summary>
+        internal static string Pin {
+            get {
+                return ResourceManager.GetString("Pin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin download problem.
         /// </summary>
         internal static string PluginDownloadProblem_Title {
@@ -759,6 +777,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Uninstall {
             get {
                 return ResourceManager.GetString("Uninstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpin.
+        /// </summary>
+        internal static string Unpin {
+            get {
+                return ResourceManager.GetString("Unpin", resourceCulture);
             }
         }
         

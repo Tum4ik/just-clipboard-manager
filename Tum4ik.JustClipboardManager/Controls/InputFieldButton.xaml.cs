@@ -1,24 +1,15 @@
-using System.Windows;
+using System.Windows.Media;
 using Tum4ik.JustClipboardManager.Resources.Icons;
 
 namespace Tum4ik.JustClipboardManager.Controls;
-/// <summary>
-/// Interaction logic for InputFieldButton.xaml
-/// </summary>
+
+[DependencyProperty<SvgIconType?>("Icon")]
+[DependencyProperty<Brush>("IconColor")]
+[DependencyProperty<double>("IconRotation")]
 public partial class InputFieldButton
 {
   public InputFieldButton()
   {
     InitializeComponent();
-  }
-
-
-  public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-    nameof(Icon), typeof(SvgIconType?), typeof(InputFieldButton)
-  );
-  public SvgIconType? Icon
-  {
-    get => (SvgIconType?) GetValue(IconProperty);
-    set => SetValue(IconProperty, value);
   }
 }
