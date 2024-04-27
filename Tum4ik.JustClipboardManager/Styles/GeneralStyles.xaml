@@ -21,6 +21,14 @@
                     ShadowDepth="8"
                     RenderingBias="Quality"/>
 
+  <DropShadowEffect x:Key="ToolTipDropShadowEffect"
+                    Color="Black"
+                    Direction="270"
+                    Opacity="{DynamicResource ShadowOpacity}"
+                    BlurRadius="8"
+                    ShadowDepth="4"
+                    RenderingBias="Quality"/>
+
 
   <Style x:Key="WindowBefore11Style" TargetType="Window">
     <Setter Property="UseLayoutRounding" Value="True"/>
@@ -419,6 +427,26 @@
 
   <Style TargetType="controls:InputFieldButton">
     <Setter Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"/>
+  </Style>
+
+  <Style TargetType="ToolTip">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextPrimaryBrush}}"/>
+    <Setter Property="VerticalOffset" Value="-12"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToolTip">
+          <Border BorderThickness="1"
+                  BorderBrush="{DynamicResource {x:Static theming:AppColors.ContextMenuBorderBrush}}"
+                  Background="{DynamicResource {x:Static theming:AppColors.AcrylicBackgroundBrush}}"
+                  CornerRadius="4"
+                  Padding="7, 4, 7, 5"
+                  Effect="{StaticResource ToolTipDropShadowEffect}"
+                  Margin="12">
+            <ContentPresenter/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
   </Style>
 
 </ResourceDictionary>
