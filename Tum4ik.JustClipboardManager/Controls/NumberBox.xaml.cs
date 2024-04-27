@@ -82,7 +82,7 @@ public partial class NumberBox
       resultText = resultText.Insert(CaretIndex, e.Text);
     }
 
-    e.Handled = !(int.TryParse(resultText, out var value) && value >= MinValue && value <= MaxValue);
+    e.Handled = !(int.TryParse(resultText, out _));
   }
 
 

@@ -46,8 +46,11 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
   {
     get => _settingsService.PasteWindowWidth;
     set {
-      _settingsService.PasteWindowWidth = value;
-      SetDefaultWidthCommand.NotifyCanExecuteChanged();
+      if (value >= WindowMinWidth)
+      {
+        _settingsService.PasteWindowWidth = value;
+        SetDefaultWidthCommand.NotifyCanExecuteChanged();
+      }
     }
   }
 
@@ -59,8 +62,11 @@ internal partial class SettingsPasteWindowViewModel : TranslationViewModel
     get => _settingsService.PasteWindowHeight;
     set
     {
-      _settingsService.PasteWindowHeight = value;
-      SetDefaultHeightCommand.NotifyCanExecuteChanged();
+      if (value >= WindowMinHeight)
+      {
+        _settingsService.PasteWindowHeight = value;
+        SetDefaultHeightCommand.NotifyCanExecuteChanged();
+      }
     }
   }
 

@@ -80,14 +80,14 @@
         </Grid.Resources>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Translate[Width]}"/>
         <controls:NumberBox Grid.Row="0" Grid.Column="1"
-                            Text="{Binding WindowWidth, UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding WindowWidth}"
                             MinValue="{Binding WindowMinWidth}"/>
         <controls:WinUiButton Grid.Row="0" Grid.Column="2"
                               Icon="Restore" ToolTip="{Binding Translate[Default]}"
                               Command="{Binding SetDefaultWidthCommand}"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Translate[Height]}"/>
         <controls:NumberBox Grid.Row="2" Grid.Column="1"
-                            Text="{Binding WindowHeight, UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding WindowHeight}"
                             MinValue="{Binding WindowMinHeight}"/>
         <controls:WinUiButton Grid.Row="2" Grid.Column="2"
                               Icon="Restore" ToolTip="{Binding Translate[Default]}"
