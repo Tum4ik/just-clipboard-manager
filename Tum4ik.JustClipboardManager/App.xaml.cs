@@ -101,7 +101,9 @@ public partial class App : ISingleInstance, IApplicationLifetime
   private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
     // TODO: notify user about the problem anyway
-    SentrySdk.CaptureException(e.Exception, scope => scope.AddBreadcrumb("Unhandled Exception"));
+    SentrySdk.CaptureException(e.Exception, scope =>
+      scope.AddBreadcrumb("Unhandled Exception", "info", "info", dataPair: null)
+    );
     e.Handled = true;
     RestartApp();
     Current.Shutdown();
