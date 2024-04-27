@@ -15,6 +15,9 @@ internal class AppDbContext : DbContext
   public DbSet<PinnedClip> PinnedClips { get; set; }
   public DbSet<FormattedDataObject> FormattedDataObjects { get; set; }
 
+  public DbSet<Plugin> Plugins { get; set; }
+  public DbSet<PluginFile> PluginFiles { get; set; }
+
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
