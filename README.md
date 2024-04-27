@@ -24,6 +24,3 @@
   <br/>
   <img src="https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graphs/sunburst.svg?token=ISPY8ADZZ8" />
 </h1>
-
-##### Unknown formats:
-- CF_VSREFPROJECTITEMS
