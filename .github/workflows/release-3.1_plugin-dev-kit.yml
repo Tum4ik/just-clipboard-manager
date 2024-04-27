@@ -1,4 +1,4 @@
-name: Gated (Plugin Dev Kit)
+name: Release 3.1 (Plugin Dev Kit)
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
 
   build:
     
-    name: Gated Build
+    name: Build 3.1
     runs-on: windows-latest
     outputs:
       version: ${{ steps.define-version.outputs.version }}

@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: Gated (Application)
+name: Release 3.1 (Application)
 
 on:
   workflow_dispatch:
@@ -58,7 +58,7 @@ jobs:
 
   build:
 
-    name: Gated Build
+    name: Build 3.1
     runs-on: windows-latest
 
     outputs:
