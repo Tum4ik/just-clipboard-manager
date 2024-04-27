@@ -4,8 +4,8 @@
   Just Clipboard Manager
 </h1>
 <h1 align="center">
-  <img src=".attachments/paste-window-light.png" alt="Paste Window Light" />
-  <img src=".attachments/paste-window-dark.png" alt="Paste Window Dark" />
+  <img src=".attachments/paste-window-light.png" alt="Paste Window Light" width="400" />
+  <img src=".attachments/paste-window-dark.png" alt="Paste Window Dark" width="400" />
 </h1>
 <h1 align="center">
 
