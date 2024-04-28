@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Threading;
 using DryIoc;
+using HarmonyLib;
 using IWshRuntimeLibrary;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -337,6 +338,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterThreadSwitching()
       .RegisterInstance(_configuration)
       .RegisterInstance<IApplicationLifetime>(this)
+      .RegisterInstance(new Harmony("just.clipboard.manager"))
       .RegisterSingleton<IHub>(() => HubAdapter.Instance)
       .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
