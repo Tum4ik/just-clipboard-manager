@@ -11,7 +11,7 @@ using Tum4ik.JustClipboardManager.Data;
 namespace Tum4ik.JustClipboardManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240427203539_AddedPluginEntity")]
+    [Migration("20240428205518_AddedPluginEntity")]
     partial class AddedPluginEntity
     {
         /// <inheritdoc />
@@ -111,6 +111,9 @@ namespace Tum4ik.JustClipboardManager.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsInstalled")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()

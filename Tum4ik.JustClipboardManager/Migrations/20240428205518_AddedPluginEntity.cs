@@ -17,7 +17,8 @@ namespace Tum4ik.JustClipboardManager.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Version = table.Column<string>(type: "TEXT", nullable: false)
+                    Version = table.Column<string>(type: "TEXT", nullable: false),
+                    IsInstalled = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

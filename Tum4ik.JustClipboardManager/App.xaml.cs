@@ -84,11 +84,13 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
 
   private readonly IConfiguration _configuration;
+  private readonly Harmony _harmony;
 
 
   public App()
   {
     _configuration = ConfigurationHelper.CreateConfiguration();
+    _harmony = new Harmony("just.clipboard.manager");
     SentrySdk.Init(o =>
     {
       o.Dsn = _configuration["SentryDsn"];
@@ -338,7 +340,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterThreadSwitching()
       .RegisterInstance(_configuration)
       .RegisterInstance<IApplicationLifetime>(this)
-      .RegisterInstance(new Harmony("just.clipboard.manager"))
+      .RegisterInstance(_harmony)
       .RegisterSingleton<IHub>(() => HubAdapter.Instance)
       .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
@@ -414,6 +416,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
   protected override IModuleCatalog CreateModuleCatalog()
   {
-    return new LoadableDirectoryModuleCatalog { ModulePath = "./" };
+    return new LoadableDirectoryModuleCatalog(_harmony) { ModulePath = "./" };
   }
 }
