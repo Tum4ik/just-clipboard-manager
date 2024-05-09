@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Data.Dto;
-using Tum4ik.JustClipboardManager.PluginDevKit.Extensions;
+using Tum4ik.JustClipboardManager.Services;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 internal class ClipTypeDataTemplateSelector : DataTemplateSelector
@@ -10,7 +10,8 @@ internal class ClipTypeDataTemplateSelector : DataTemplateSelector
   public override DataTemplate? SelectTemplate(object item, DependencyObject container)
   {
     var clipDto = (ClipDto) item;
-    var plugin = ContainerLocator.Container.ResolvePlugin(clipDto.PluginId);
-    return plugin.RepresentationDataDataTemplate;
+    var pluginsService = ContainerLocator.Container.Resolve<IPluginsService>();
+    var plugin = pluginsService.GetPlugin(clipDto.PluginId);
+    return plugin?.RepresentationDataDataTemplate;
   }
 }

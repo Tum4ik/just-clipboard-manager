@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
-using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
@@ -44,7 +43,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
 
     try
     {
-      await foreach (var pluginDto in _pluginsService.SearchPluginsAsync())
+      await foreach (var pluginDto in _pluginsService.SearchPluginsAsync().ConfigureAwait(true))
       {
         Plugins.Add(pluginDto);
       }
@@ -73,6 +72,11 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
       ));
       _infoBarService.ShowCritical("AvailablePluginsInfoLoadProblem_Body", "AvailablePluginsInfoLoadProblem_Title");
     }
+    catch (Octokit.NotFoundException e)
+    {
+      _sentryHub.CaptureException(e);
+      _infoBarService.ShowCritical("PluginsListFileMissing_Body");
+    }
   }
 
 
@@ -89,7 +93,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
   public ObservableCollection<SearchPluginInfoDto> Plugins { get; } = new();
 
   [ObservableProperty] private int _pluginInstallationProgress;
-  [ObservableProperty] private string? _installingPluginId;
+  [ObservableProperty] private Guid _installingPluginId;
 
   private CancellationTokenSource? _installPluginCancellationTokenSource;
 
@@ -100,41 +104,39 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     _installPluginCancellationTokenSource = new();
     InstallingPluginId = plugin.Id;
     var progress = new Progress<int>(p => PluginInstallationProgress = p);
-    try
+    var (success, reason) = await _pluginsService.InstallPluginAsync(
+      plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
+    ).ConfigureAwait(true);
+
+    if (success)
     {
-      await _pluginsService.InstallPluginAsync(
-        plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
-      ).ConfigureAwait(true);
       plugin.IsInstalled = true;
     }
-    catch (TaskCanceledException)
+    else
     {
-      // installation cancelled by user
+      var (body, title, severity) = reason switch
+      {
+        PluginInstallationFailReason.Incompatibility
+          => ("PluginIncompatibility_Body", "PluginIncompatibility_Title", InfoBarSeverity.Warning),
+        PluginInstallationFailReason.CancelledByUser
+          => ("PluginInstallationCancelled", null, InfoBarSeverity.Informational),
+        PluginInstallationFailReason.InternetConnectionProblem
+          => ("ServerConnectionProblem_Body", "PluginDownloadProblem_Title", InfoBarSeverity.Warning),
+        PluginInstallationFailReason.SecurityViolation
+          => ("PluginSecurityViolation_Body", "PluginSecurityViolation_Title", InfoBarSeverity.Critical),
+        PluginInstallationFailReason.EmptyPluginArchive
+          => ("EmptyPluginArchive_Body", null, InfoBarSeverity.Warning),
+        PluginInstallationFailReason.PluginLoadProblem
+          => ("ImpossibleToLoadPlugin_Body", null, InfoBarSeverity.Warning),
+        _ => ("PluginInstallationProblem_Body", "PluginInstallationProblem_Title", InfoBarSeverity.Critical),
+      };
+      _infoBarService.Show(body, title, severity);
     }
-    catch (HttpRequestException)
-    {
-      _infoBarService.ShowWarning("ServerConnectionProblem_Body", "PluginDownloadProblem_Title");
-    }
-    catch (PluginZipSecurityException e)
-    {
-      _sentryHub.CaptureException(e);
-      _infoBarService.ShowCritical("PluginSecurityViolation_Body", "PluginSecurityViolation_Title");
-    }
-    catch (Exception e)
-    {
-      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
-        message: "Unpredictable error when installing plugin",
-        type: "info"
-      ));
-      _infoBarService.ShowCritical("PluginInstallationProblem_Body", "PluginInstallationProblem_Title");
-    }
-    finally 
-    {
-      _installPluginCancellationTokenSource.Dispose();
-      _installPluginCancellationTokenSource = null;
-      PluginInstallationProgress = 0;
-      InstallingPluginId = null;
-    }
+
+    _installPluginCancellationTokenSource.Dispose();
+    _installPluginCancellationTokenSource = null;
+    PluginInstallationProgress = 0;
+    InstallingPluginId = Guid.Empty;
   }
 
 

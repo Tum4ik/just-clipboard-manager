@@ -109,8 +109,8 @@ jobs:
     - name: Configure appsettings
       run: |
         $appsettings = Get-Content .\Tum4ik.JustClipboardManager\appsettings.json -Raw | ConvertFrom-Json
-        $appsettings.SentryDsn = "${{ secrets.SENTRY_DSN }}"
-        $appsettings.SentryEnvironment = "production"
+        $appsettings.SentryTracking.Dsn = "${{ secrets.SENTRY_DSN }}"
+        $appsettings.SentryTracking.Environment = "production"
         $appsettings | ConvertTo-Json -Depth 32 | Set-Content .\Tum4ik.JustClipboardManager\appsettings.json
 
     - name: Publish

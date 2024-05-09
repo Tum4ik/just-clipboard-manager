@@ -305,7 +305,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
         message: "Exception when restore representation data for plugin",
         category: "info",
         type: "info",
-        dataPair: ("PluginId", plugin.Id)
+        dataPair: ("PluginId", plugin.Id.ToString())
       ));
     }
     return null;

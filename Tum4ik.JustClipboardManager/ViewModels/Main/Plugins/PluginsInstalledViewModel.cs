@@ -1,11 +1,9 @@
 using System.Collections.ObjectModel;
-using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.PluginDevKit;
-using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -14,31 +12,31 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsInstalledViewModel : TranslationViewModel, INavigationAware
 {
   private readonly IPluginsService _pluginsService;
-  private readonly IHub _sentryHub;
+  private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
 
   public PluginsInstalledViewModel(ITranslationService translationService,
                                    IEventAggregator eventAggregator,
                                    IPluginsService pluginsService,
-                                   IHub sentryHub)
+                                   ILoadableDirectoryModuleCatalog moduleCatalog)
     : base(translationService, eventAggregator)
   {
     _pluginsService = pluginsService;
-    _sentryHub = sentryHub;
+    _moduleCatalog = moduleCatalog;
   }
 
 
   public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
-  public async void OnNavigatedTo(NavigationContext navigationContext)
+  public void OnNavigatedTo(NavigationContext navigationContext)
   {
-    await LoadPluginsAsync().ConfigureAwait(false);
+    LoadPlugins();
   }
 
 
-  private async Task LoadPluginsAsync()
+  private void LoadPlugins()
   {
     Plugins.Clear();
-    await foreach (var installedPluginDto in CreatePluginsDtoAsync(_pluginsService.InstalledPlugins))
+    foreach (var installedPluginDto in CreatePluginsDto(_pluginsService.InstalledPlugins))
     {
       Plugins.Add(installedPluginDto);
     }
@@ -50,7 +48,7 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   }
 
 
-  public ObservableCollection<InstalledPluginInfoDto> Plugins { get; } = new();
+  public ObservableCollection<InstalledPluginInfoDto> Plugins { get; } = [];
 
 
   [RelayCommand]
@@ -73,15 +71,15 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   private async Task UninstallPluginAsync(InstalledPluginInfoDto plugin)
   {
     await _pluginsService.UninstallPluginAsync(plugin.Id).ConfigureAwait(true);
-    await LoadPluginsAsync().ConfigureAwait(false);
+    LoadPlugins();
   }
 
 
-  private async IAsyncEnumerable<InstalledPluginInfoDto> CreatePluginsDtoAsync(IEnumerable<IPlugin> plugins)
+  private IEnumerable<InstalledPluginInfoDto> CreatePluginsDto(IEnumerable<IPlugin> plugins)
   {
     foreach (var plugin in plugins)
     {
-      var dto = await PluginToDtoAsync(plugin).ConfigureAwait(false);
+      var dto = PluginToDto(plugin);
       if (dto is not null)
       {
         yield return dto;
@@ -90,44 +88,22 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   }
 
 
-  private Task<InstalledPluginInfoDto?> PluginToDtoAsync(IPlugin plugin)
+  private InstalledPluginInfoDto? PluginToDto(IPlugin plugin)
   {
-    return Task.Run(() =>
+    var pluginInfo = _moduleCatalog.GetPluginInfo(plugin.Id);
+    if (pluginInfo is null)
     {
-      var pluginAttribute = plugin.GetType().GetCustomAttribute<PluginAttribute>();
-      if (pluginAttribute is null)
-      {
-        return null;
-      }
+      return null;
+    }
 
-      Version version;
-      try
-      {
-        version = Version.Parse(pluginAttribute.Version);
-      }
-      catch (Exception e)
-      when (e is ArgumentNullException
-         || e is ArgumentException
-         || e is ArgumentOutOfRangeException
-         || e is FormatException
-         || e is OverflowException)
-      {
-        _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
-          message: "Plugin version parsing problem",
-          type: "info"
-        ));
-        return null;
-      }
-
-      return new InstalledPluginInfoDto
-      {
-        Id = pluginAttribute.Id,
-        Name = pluginAttribute.Name,
-        Version = version,
-        Author = pluginAttribute.Author,
-        Description = pluginAttribute.Description,
-        IsEnabled = _pluginsService.IsPluginEnabled(pluginAttribute.Id)
-      };
-    });
+    return new InstalledPluginInfoDto
+    {
+      Id = plugin.Id,
+      Name = pluginInfo.Name,
+      Version = pluginInfo.Version,
+      Author = pluginInfo.Author,
+      Description = pluginInfo.Description,
+      IsEnabled = _pluginsService.IsPluginEnabled(plugin.Id)
+    };
   }
 }

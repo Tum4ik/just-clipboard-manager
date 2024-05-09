@@ -1,4 +1,4 @@
-using Tum4ik.JustClipboardManager.Controls;
+using Microsoft.VisualStudio.Threading;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 
 namespace Tum4ik.JustClipboardManager.Services;
@@ -6,6 +6,14 @@ namespace Tum4ik.JustClipboardManager.Services;
 // todo: re-implement using IEventAggregator
 internal class InfoBarService : IInfoBarSubscriber, IInfoBarService
 {
+  private readonly JoinableTaskFactory _joinableTaskFactory;
+
+  public InfoBarService(JoinableTaskFactory joinableTaskFactory)
+  {
+    _joinableTaskFactory = joinableTaskFactory;
+  }
+
+
   public event Action<InfoBarPayload>? InfoReceived;
 
 
@@ -50,12 +58,12 @@ internal class InfoBarService : IInfoBarSubscriber, IInfoBarService
   }
 
 
-  private void Show(string body,
-                    string? title,
-                    InfoBarSeverity severity,
-                    InfoBarActionType actionType,
-                    string? actionText,
-                    Action<InfoBarResult>? callback)
+  public void Show(string body,
+                   string? title,
+                   InfoBarSeverity severity = InfoBarSeverity.Informational,
+                   InfoBarActionType actionType = InfoBarActionType.None,
+                   string? actionText = null,
+                   Action<InfoBarResult>? callback = null)
   {
     var payload = new InfoBarPayload
     {
@@ -66,6 +74,10 @@ internal class InfoBarService : IInfoBarSubscriber, IInfoBarService
       ActionText = actionText,
       Callback = callback
     };
-    InfoReceived?.Invoke(payload);
+    _joinableTaskFactory.Run(async () =>
+    {
+      await _joinableTaskFactory.SwitchToMainThreadAsync();
+      InfoReceived?.Invoke(payload);
+    });
   }
 }

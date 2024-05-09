@@ -9,6 +9,19 @@ public interface IInfoBarService
   void ShowWarning(string body, InfoBarActionType actionType, string actionText, string? title = null, Action<InfoBarResult>? callback = null);
   void ShowCritical(string body, string? title = null, Action<InfoBarResult>? callback = null);
   void ShowCritical(string body, InfoBarActionType actionType, string actionText, string? title = null, Action<InfoBarResult>? callback = null);
+
+  void Show(string body,
+            string? title,
+            InfoBarSeverity severity = InfoBarSeverity.Informational,
+            InfoBarActionType actionType = InfoBarActionType.None,
+            string? actionText = null,
+            Action<InfoBarResult>? callback = null);
+}
+
+
+public enum InfoBarSeverity
+{
+  Informational, Success, Warning, Critical
 }
 
 

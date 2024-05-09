@@ -355,4 +355,22 @@
   <data name="Unpin" xml:space="preserve">
     <value>Відкріпити</value>
   </data>
+  <data name="PluginInstallationCancelled" xml:space="preserve">
+    <value>Встановлення плагіна скасовано.</value>
+  </data>
+  <data name="PluginIncompatibility_Body" xml:space="preserve">
+    <value>Плагін несумісний із поточною версією програми.</value>
+  </data>
+  <data name="PluginIncompatibility_Title" xml:space="preserve">
+    <value>Несумісність плагіна</value>
+  </data>
+  <data name="EmptyPluginArchive_Body" xml:space="preserve">
+    <value>Архів встановлюваного плагіна порожній.</value>
+  </data>
+  <data name="ImpossibleToLoadPlugin_Body" xml:space="preserve">
+    <value>Неможливо імпортувати плагін.</value>
+  </data>
+  <data name="PluginsListFileMissing_Body" xml:space="preserve">
+    <value>Файл списку плагінів відсутній на сервері.</value>
+  </data>
 </root>

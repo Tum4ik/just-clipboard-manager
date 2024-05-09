@@ -1,7 +1,6 @@
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Threading;
+using DeviceId;
 using DryIoc;
 using HarmonyLib;
 using IWshRuntimeLibrary;
@@ -76,7 +75,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
 #if !DEBUG
     app.DispatcherUnhandledException += OnUnhandledException;
 #endif
-    UpgradeSettings();
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
@@ -89,52 +87,48 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
   public App()
   {
+    UpgradeSettings();
     _configuration = ConfigurationHelper.CreateConfiguration();
     _harmony = new Harmony("just.clipboard.manager");
+    var deviceId = InternalSettings.Default.DeviceId;
+    if (string.IsNullOrEmpty(deviceId))
+    {
+      deviceId = new DeviceIdBuilder()
+        .OnWindows(
+          w => w
+            .AddWindowsDeviceId()
+            .AddWindowsProductId()
+            .AddMachineGuid()
+        )
+        .ToString();
+      InternalSettings.Default.DeviceId = deviceId;
+      InternalSettings.Default.Save();
+    }
     SentrySdk.Init(o =>
     {
-      o.Dsn = _configuration["SentryDsn"];
+      o.Dsn = _configuration["SentryTracking:Dsn"];
       o.AutoSessionTracking = true;
       o.IsGlobalModeEnabled = true;
-      o.Environment = _configuration["SentryEnvironment"];
+      o.Environment = _configuration["SentryTracking:Environment"];
+    });
+    SentrySdk.ConfigureScope(scope =>
+    {
+      scope.User = new()
+      {
+        Id = deviceId,
+      };
     });
   }
 
 
   private static void OnUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
   {
-    // TODO: notify user about the problem anyway
     SentrySdk.CaptureException(e.Exception, scope =>
       scope.AddBreadcrumb("Unhandled Exception", "info", "info", dataPair: null)
     );
     e.Handled = true;
     RestartApp();
     Current.Shutdown();
-  }
-
-
-  private static void RestartApp()
-  {
-    var processPath = Environment.ProcessPath;
-    if (processPath is not null && RestartAfterCrashCount < 5)
-    {
-#if !DEBUG
-      System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
-      {
-        Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
-        UseShellExecute = true
-      });
-#endif
-    }
-  }
-
-
-  private void OverrideDefaultProperties()
-  {
-    FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
-    {
-      DefaultValue = FindResource(typeof(Window))
-    });
   }
 
 
@@ -152,6 +146,35 @@ public partial class App : ISingleInstance, IApplicationLifetime
       InternalSettings.Default.IsSettingsUpgradeRequired = false;
       InternalSettings.Default.Save();
     }
+  }
+
+
+  private static void RestartApp()
+  {
+    var processPath = Environment.ProcessPath;
+    if (processPath is not null && RestartAfterCrashCount < 5)
+    {
+#if !DEBUG
+      System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
+      {
+        Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
+        UseShellExecute = true
+      });
+#endif
+    }
+    else
+    {
+      // TODO: notify user about the problem, log the impossibility to restart
+    }
+  }
+
+
+  private void OverrideDefaultProperties()
+  {
+    FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
+    {
+      DefaultValue = FindResource(typeof(Window))
+    });
   }
 
 
@@ -178,25 +201,13 @@ public partial class App : ISingleInstance, IApplicationLifetime
   {
     try
     {
-      // Important to call before base.OnStartup(e).
-      // Otherwise the plugins will be initialized and it will not be possible to remove files.
-      RemoveFilesOfDeletedPlugins();
-      UpdatePluginsIfForced();
-    }
-    catch (Exception ex)
-    {
-      SentrySdk.CaptureException(ex, scope => scope.AddBreadcrumb("Error during removing files before startup."));
-    }
-
-    try
-    {
       base.OnStartup(e);
     }
     catch (ModuleInitializeException ex)
     {
       SentrySdk.CaptureException(ex);
     }
-    
+
     var updateService = Container.Resolve<IUpdateService>();
     var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
     var result = joinableTaskFactory.Run(updateService.SilentUpdateAsync);
@@ -222,11 +233,26 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
+    var pluginRepository = Container.Resolve<IPluginRepository>();
     var pluginsService = Container.Resolve<IPluginsService>();
     var sentryHub = Container.Resolve<IHub>();
+    var moduleManager = Container.Resolve<IModuleManager>();
 
-    RemoveOldClipsAsync(settingsService, clipRepository).Await(e => sentryHub.CaptureException(e));
-    PreInstallPluginsAsync(pluginsService).Await(e => sentryHub.CaptureException(e));
+    joinableTaskFactory.Run(async () =>
+    {
+      try
+      {
+        await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(false);
+        moduleManager.Run();
+        await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
+        await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
+      }
+      catch (Exception e)
+      {
+        sentryHub.CaptureException(e);
+      }
+    });
+
     var trayIcon = Container.Resolve<TrayIcon>();
     trayIcon.ForceCreate();
     var hookService = Container.Resolve<GeneralHookService>();
@@ -242,6 +268,16 @@ public partial class App : ISingleInstance, IApplicationLifetime
   }
 
 
+  private static async Task RemoveUninstalledPluginsFilesAsync(IPluginRepository pluginRepository)
+  {
+    await foreach (var pluginFile in pluginRepository.GetUninstalledPluginsFilesAsync().ConfigureAwait(false))
+    {
+      System.IO.File.Delete(pluginFile.RelativePath);
+    }
+    await pluginRepository.DeleteUninstalledPluginsAsync().ConfigureAwait(false);
+  }
+
+
   private static async Task RemoveOldClipsAsync(ISettingsService settingsService, IClipRepository clipRepository)
   {
     var period = settingsService.RemoveClipsPeriod;
@@ -254,81 +290,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
       _ => DateTime.Now.AddMonths(-period)
     };
     await clipRepository.DeleteBeforeDateAsync(beforeDate).ConfigureAwait(false);
-  }
-
-
-  private static async Task PreInstallPluginsAsync(IPluginsService pluginsService)
-  {
-    const string FileName = "pre-install-plugins";
-    if (!System.IO.File.Exists(FileName))
-    {
-      return;
-    }
-
-    var pluginIdsToInstall = await System.IO.File.ReadAllLinesAsync(FileName).ConfigureAwait(false);
-    await foreach (var pluginDto in pluginsService.SearchPluginsAsync().ConfigureAwait(false))
-    {
-      if (pluginIdsToInstall.Contains(pluginDto.Id))
-      {
-        await pluginsService.InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id).ConfigureAwait(false);
-      }
-    }
-    System.IO.File.Delete(FileName);
-  }
-
-
-  private static void RemoveFilesOfDeletedPlugins()
-  {
-    const string FileName = PluginsService.PluginFilesToRemoveFileName;
-    if (System.IO.File.Exists(FileName))
-    {
-      foreach (var line in System.IO.File.ReadLines(FileName).Where(System.IO.File.Exists))
-      {
-        System.IO.File.Delete(line);
-      }
-      System.IO.File.Delete(FileName);
-    }
-  }
-
-
-  private static void UpdatePluginsIfForced()
-  {
-    // todo: optimize
-    if (!System.IO.File.Exists("force-plugins-update"))
-    {
-      return;
-    }
-
-    try
-    {
-      using (var pluginFilesStream = new FileStream(PluginsService.PluginsJsonFileName, System.IO.FileMode.OpenOrCreate))
-      {
-        var pluginIdToPluginFiles = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(pluginFilesStream);
-        if (pluginIdToPluginFiles is null)
-        {
-          return;
-        }
-
-        using var preInstalledPluginsWriter = System.IO.File.AppendText("pre-install-plugins");
-        foreach (var (pluginId, pluginFiles) in pluginIdToPluginFiles)
-        {
-          preInstalledPluginsWriter.WriteLine(pluginId);
-          foreach (var pluginFile in pluginFiles)
-          {
-            System.IO.File.Delete(pluginFile);
-          }
-        }
-      }
-    }
-    catch (JsonException)
-    {
-      // suppress
-    }
-    finally
-    {
-      System.IO.File.Delete("force-plugins-update");
-      System.IO.File.Delete(PluginsService.PluginsJsonFileName);
-    }
   }
 
 
@@ -367,6 +328,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<IInfoBarService>(p => p.Resolve<InfoBarService>())
       .RegisterSingleton<IPinnedClipRepository, PinnedClipRepository>()
       .RegisterSingleton<IClipRepository, ClipRepository>()
+      .RegisterSingleton<IPluginRepository, PluginRepository>()
       .RegisterSingleton<IInfoService, InfoService>()
       .RegisterSingleton<IGitHubClient>(cp =>
       {
@@ -417,5 +379,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
   protected override IModuleCatalog CreateModuleCatalog()
   {
     return new LoadableDirectoryModuleCatalog(_harmony) { ModulePath = "./" };
+  }
+
+
+  protected override void InitializeModules()
+  {
+    // prevent modules auto-initialization
   }
 }

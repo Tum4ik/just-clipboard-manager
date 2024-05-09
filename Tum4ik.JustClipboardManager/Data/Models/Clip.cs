@@ -7,7 +7,7 @@ internal class Clip
 {
   public int Id { get; set; }
 
-  public required string PluginId { get; set; }
+  public required Guid PluginId { get; set; }
   public required byte[] RepresentationData { get; set; }
   public string? AdditionalInfo { get; set; }
   public string? SearchLabel { get; set; }

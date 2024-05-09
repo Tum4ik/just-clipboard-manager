@@ -3,29 +3,29 @@ using System.Configuration;
 namespace Tum4ik.JustClipboardManager.Extensions;
 internal static class SettingsExtensions
 {
-  public static T Get<T>(this SettingsBase settings, string key, T defaultValue = default!)
+  public static T Get<T>(this SettingsBase settings, Guid key, T defaultValue = default!)
   {
-    key = $"{typeof(T)}_{key}";
-    settings.EnsureDynamicProperty<T>(key);
+    var keyStr = $"{typeof(T)}_{key}";
+    settings.EnsureDynamicProperty<T>(keyStr);
     try
     {
-      return (T) settings[key];
+      return (T) settings[keyStr];
     }
     catch (NotSupportedException)
     {
       // means the setting is touched first time ever
-      settings[key] = defaultValue;
+      settings[keyStr] = defaultValue;
       settings.Save();
       return defaultValue;
     }
   }
 
 
-  public static void Save<T>(this SettingsBase settings, string key, T value)
+  public static void Save<T>(this SettingsBase settings, Guid key, T value)
   {
-    key = $"{typeof(T)}_{key}";
-    settings.EnsureDynamicProperty<T>(key);
-    settings[key] = value;
+    var keyStr = $"{typeof(T)}_{key}";
+    settings.EnsureDynamicProperty<T>(keyStr);
+    settings[keyStr] = value;
     settings.Save();
   }
 

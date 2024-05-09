@@ -1,54 +1,63 @@
 using System.IO;
 using System.IO.Compression;
+using System.Net.Http;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.Threading;
 using Octokit;
 using Prism.Events;
-using Prism.Ioc;
 using Prism.Modularity;
 using Tum4ik.JustClipboardManager.Data.Dto;
+using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
 using Tum4ik.JustClipboardManager.Exceptions;
 using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.PluginDevKit;
-using Tum4ik.JustClipboardManager.PluginDevKit.Extensions;
 using Tum4ik.JustClipboardManager.Properties;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class PluginsService : IPluginsService
 {
-  internal const string PluginsJsonFileName = "Plugins.json";
-  internal const string PluginFilesToRemoveFileName = "plugin-files-to-remove";
-  internal const string DefaultTextPluginId = "D930D2CD-3FD9-4012-A363-120676E22AFA";
+  internal static readonly Guid DefaultTextPluginId = new("D930D2CD-3FD9-4012-A363-120676E22AFA");
 
-  private readonly IContainerProvider _containerProvider;
   private readonly IEventAggregator _eventAggregator;
   private readonly IGitHubClient _gitHubClient;
   private readonly IHttpClientFactory _httpClientFactory;
   private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
   private readonly IModuleManager _moduleManager;
   private readonly JoinableTaskFactory _joinableTaskFactory;
+  private readonly IFile _file;
+  private readonly IPluginRepository _pluginRepository;
+  private readonly IHub _sentryHub;
+  private readonly IConfiguration _configuration;
 
-  public PluginsService(IContainerProvider containerProvider,
-                        IEventAggregator eventAggregator,
+  public PluginsService(IEventAggregator eventAggregator,
                         IGitHubClient gitHubClient,
                         IHttpClientFactory httpClientFactory,
                         ILoadableDirectoryModuleCatalog moduleCatalog,
                         IModuleManager moduleManager,
-                        JoinableTaskFactory joinableTaskFactory)
+                        JoinableTaskFactory joinableTaskFactory,
+                        IFile file,
+                        IPluginRepository pluginRepository,
+                        IHub sentryHub,
+                        IConfiguration configuration)
   {
-    _containerProvider = containerProvider;
     _eventAggregator = eventAggregator;
     _gitHubClient = gitHubClient;
     _httpClientFactory = httpClientFactory;
     _moduleCatalog = moduleCatalog;
     _moduleManager = moduleManager;
     _joinableTaskFactory = joinableTaskFactory;
+    _file = file;
+    _pluginRepository = pluginRepository;
+    _sentryHub = sentryHub;
+    _configuration = configuration;
   }
 
 
-  private readonly Dictionary<string, IPlugin> _plugins = new();
-  private readonly Dictionary<string, bool> _enabledPlugins = new();
+  private readonly Dictionary<Guid, IPlugin> _plugins = new();
+  private readonly Dictionary<Guid, bool> _enabledPlugins = new();
 
 
   public IReadOnlyCollection<IPlugin> InstalledPlugins
@@ -67,11 +76,61 @@ internal class PluginsService : IPluginsService
   }
 
 
+  public async Task PreInstallPluginsAsync()
+  {
+    var builtInPlugins = _moduleCatalog.Modules.Where(m => m.InitializationMode == InitializationMode.WhenAvailable);
+    foreach (var builtInPlugin in builtInPlugins)
+    {
+      if (Guid.TryParse(builtInPlugin.ModuleName, out var pluginId)
+        && !await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
+      {
+        var pluginInfo = _moduleCatalog.GetPluginInfo(pluginId);
+        if (pluginInfo is not null)
+        {
+          await _pluginRepository.AddAsync(new()
+          {
+            Id = pluginId,
+            Name = pluginInfo.Name,
+            Version = pluginInfo.Version.ToString(),
+            IsInstalled = true
+          }).ConfigureAwait(false);
+        }
+      }
+    }
+
+    const string FileName = "pre-install-plugins";
+    if (!_file.Exists(FileName))
+    {
+      return;
+    }
+
+    var pluginIdsToInstall = (await _file.ReadAllLinesAsync(FileName).ConfigureAwait(false))
+      .Select(line => Guid.TryParse(line, out var guid) ? guid : Guid.Empty)
+      .Where(guid => guid != Guid.Empty)
+      .ToHashSet();
+    await foreach (var pluginDto in SearchPluginsAsync().ConfigureAwait(false))
+    {
+      if (pluginIdsToInstall.Contains(pluginDto.Id))
+      {
+        await InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id).ConfigureAwait(false);
+      }
+    }
+    _file.Delete(FileName);
+  }
+
+
   public async IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync()
   {
+    var devKitMinSupportedVersion = _configuration["Plugins:DevKitMinSupportedVersion"];
+    var pluginsListFileName = $"plugins-list-{devKitMinSupportedVersion}.json";
+    _sentryHub.AddBreadcrumb(
+      message: $"Plugins list file name: {pluginsListFileName}",
+      type: "info",
+      category: "info"
+    );
     var pluginsListJsonBytes = await _gitHubClient.Repository
       .Content
-      .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", "plugins-list.json")
+      .GetRawContent("Tum4ik", "just-clipboard-manager-plugins", pluginsListFileName)
       .ConfigureAwait(false);
     using var stream = new MemoryStream(pluginsListJsonBytes);
     await foreach (var pluginDto in JsonSerializer.DeserializeAsyncEnumerable<SearchPluginInfoDto>(stream).ConfigureAwait(false))
@@ -85,43 +144,29 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public void RegisterPlugin(string id)
+  public void RegisterPlugin(IPlugin plugin)
   {
-    _plugins[id] = _containerProvider.ResolvePlugin(id);
+    var id = plugin.Id;
+    _plugins[id] = plugin;
     _enabledPlugins[id] = PluginSettings.Default.Get(id, true);
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }
 
 
-  public async Task UninstallPluginAsync(string id)
+  public async Task UninstallPluginAsync(Guid id)
   {
     _plugins.Remove(id);
     _enabledPlugins.Remove(id);
 
-    Dictionary<string, List<string>> pluginFiles;
-    try
-    {
-      pluginFiles = await GetPluginsFilesAsync(default).ConfigureAwait(false);
-    }
-    catch (JsonException)
-    {
-      return;
-    }
-
-    var filesToRemove = pluginFiles[id];
-    await File.AppendAllLinesAsync(PluginFilesToRemoveFileName, filesToRemove).ConfigureAwait(false);
-
-    pluginFiles.Remove(id);
-    await WritePluginsFilesAsync(pluginFiles, default).ConfigureAwait(false);
-
-    _moduleCatalog.Modules.First(m => m.ModuleName == id).State = ModuleState.NotStarted;
+    _moduleCatalog.UnloadModule(id.ToString());
+    await _pluginRepository.UpdateIsInstalledAsync(id, false).ConfigureAwait(false);
 
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }
 
 
   // todo: maybe add option to get enabled/disabled plugins instead using IsPluginEnabled method
-  public IPlugin? GetPlugin(string id)
+  public IPlugin? GetPlugin(Guid id)
   {
     if (_plugins.TryGetValue(id, out var plugin))
     {
@@ -131,7 +176,7 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public void EnablePlugin(string id)
+  public void EnablePlugin(Guid id)
   {
     if (_enabledPlugins.TryGetValue(id, out var enabled) && !enabled)
     {
@@ -141,7 +186,7 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public void DisablePlugin(string id)
+  public void DisablePlugin(Guid id)
   {
     if (_enabledPlugins.TryGetValue(id, out var enabled) && enabled)
     {
@@ -151,13 +196,13 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public bool IsPluginInstalled(string id)
+  public bool IsPluginInstalled(Guid id)
   {
     return _plugins.ContainsKey(id);
   }
 
 
-  public bool IsPluginEnabled(string id)
+  public bool IsPluginEnabled(Guid id)
   {
     if (_enabledPlugins.TryGetValue(id, out var enabled))
     {
@@ -167,32 +212,107 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public async Task InstallPluginAsync(Uri downloadLink,
-                                       string pluginId,
-                                       IProgress<int>? progress = null,
-                                       CancellationToken cancellationToken = default)
+  public async Task<PluginInstallationResult> InstallPluginAsync(Uri downloadLink,
+                                                                 Guid pluginId,
+                                                                 IProgress<int>? progress = null,
+                                                                 CancellationToken cancellationToken = default)
   {
+    _sentryHub.AddBreadcrumb(
+      message: "Installing plugin",
+      category: "info",
+      type: "info",
+      data: new Dictionary<string, string> { { "Plugin id", pluginId.ToString() } }
+    );
     Progress<int>? progress1 = progress is null ? null : new(p => progress.Report(p / 2));
     Progress<int>? progress2 = progress is null ? null : new(p => progress.Report(p / 2 + 50));
-    using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
-    await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
-
-    _moduleCatalog.Load();
-    await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-    var moduleToLoad = _moduleCatalog.Modules.FirstOrDefault(m => m.ModuleName == pluginId && m.State == ModuleState.NotStarted);
-    if (moduleToLoad is not null)
+    List<string>? pluginFiles = null;
+    var success = false;
+    try
     {
-      _moduleManager.LoadModule(moduleToLoad.ModuleName);
-      EnablePlugin(pluginId);
+      using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
+      pluginFiles = await ExtractPluginFilesFromZipAsync(memoryStream, pluginId, progress2, cancellationToken).ConfigureAwait(false);
+
+      _moduleCatalog.Load();
+      await _joinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+      _moduleManager.LoadModule(pluginId.ToString());
+
+      if (pluginFiles.Count <= 0)
+      {
+        _sentryHub.CaptureMessage("Plugin archive is empty", SentryLevel.Warning);
+        return new(false, PluginInstallationFailReason.EmptyPluginArchive);
+      }
+      var pluginInfo = _moduleCatalog.GetPluginInfo(pluginId);
+      if (pluginInfo is null)
+      {
+        _sentryHub.CaptureMessage("Module catalog does not contain the plugin", SentryLevel.Warning);
+        return new(false, PluginInstallationFailReason.PluginLoadProblem);
+      }
+
+      if (await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
+      {
+        await _pluginRepository.UpdateIsInstalledAsync(pluginId, true).ConfigureAwait(false);
+      }
+      else
+      {
+        var plugin = new Data.Models.Plugin
+        {
+          Id = pluginId,
+          Name = pluginInfo.Name,
+          Version = pluginInfo.Version.ToString(),
+          IsInstalled = true,
+          Files = pluginFiles.Select(pf => new Data.Models.PluginFile { RelativePath = pf }).ToList()
+        };
+        await _pluginRepository.AddAsync(plugin).ConfigureAwait(false);
+        EnablePlugin(pluginId);
+      }
+
+      success = true;
+      return new(true);
     }
-    progress?.Report(100);
+    catch (ModuleNotFoundException e)
+    {
+      _sentryHub.CaptureException(e);
+      return new(false, PluginInstallationFailReason.Incompatibility);
+    }
+    catch (TaskCanceledException)
+    {
+      return new(false, PluginInstallationFailReason.CancelledByUser);
+    }
+    catch (HttpRequestException)
+    {
+      return new(false, PluginInstallationFailReason.InternetConnectionProblem);
+    }
+    catch (PluginZipSecurityException e)
+    {
+      _sentryHub.CaptureException(e);
+      return new(false, PluginInstallationFailReason.SecurityViolation);
+    }
+    catch (Exception e)
+    {
+      _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
+        message: "Unpredictable error when installing plugin",
+        type: "info"
+      ));
+      return new(false, PluginInstallationFailReason.OtherProblem);
+    }
+    finally
+    {
+      if (!success && pluginFiles is not null)
+      {
+        foreach (var pluginFile in pluginFiles)
+        {
+          _file.Delete(pluginFile);
+        }
+      }
+      progress?.Report(100);
+    }
   }
 
 
-  public Task InstallPluginAsync(FileInfo zipFile,
-                                 string pluginId,
-                                 IProgress<int>? progress = null,
-                                 CancellationToken cancellationToken = default)
+  public Task<PluginInstallationResult> InstallPluginAsync(FileInfo zipFile,
+                                                           Guid pluginId,
+                                                           IProgress<int>? progress = null,
+                                                           CancellationToken cancellationToken = default)
   {
     throw new NotImplementedException();
   }
@@ -224,28 +344,14 @@ internal class PluginsService : IPluginsService
   }
 
 
-  private static async Task ExtractPluginFilesFromZipAsync(Stream zipStream,
-                                                           string pluginId,
-                                                           IProgress<int>? progress = null,
-                                                           CancellationToken cancellationToken = default)
+  private static async Task<List<string>> ExtractPluginFilesFromZipAsync(
+    Stream zipStream,
+    Guid pluginId,
+    IProgress<int>? progress = null,
+    CancellationToken cancellationToken = default
+  )
   {
-    Dictionary<string, List<string>> pluginFiles;
-    try
-    {
-      pluginFiles = await GetPluginsFilesAsync(cancellationToken).ConfigureAwait(false);
-    }
-    catch (JsonException)
-    {
-      pluginFiles = new Dictionary<string, List<string>>();
-    }
     var filesList = new List<string>();
-    pluginFiles[pluginId] = filesList;
-
-    HashSet<string>? pluginsFilesToRemove = null;
-    if (File.Exists(PluginFilesToRemoveFileName))
-    {
-      pluginsFilesToRemove = (await File.ReadAllLinesAsync(PluginFilesToRemoveFileName, cancellationToken).ConfigureAwait(false)).ToHashSet();
-    }
 
     using var zipArchive = new ZipArchive(zipStream);
     var entriesCount = zipArchive.Entries.Count;
@@ -303,11 +409,6 @@ internal class PluginsService : IPluginsService
                     throw new PluginZipSecurityException("totalUncompressedArchiveSize > 1 GB");
                   }
                 }
-
-                if (pluginsFilesToRemove is not null && pluginsFilesToRemove.Count > 0)
-                {
-                  pluginsFilesToRemove.Remove(destinationPath);
-                }
               }
             }
           }
@@ -315,19 +416,6 @@ internal class PluginsService : IPluginsService
           progress?.Report((int) ((double) i / entriesCount * 100));
         }
       }, cancellationToken).ConfigureAwait(false);
-
-      await WritePluginsFilesAsync(pluginFiles, cancellationToken).ConfigureAwait(false);
-      if (pluginsFilesToRemove is not null)
-      {
-        if (pluginsFilesToRemove.Count <= 0)
-        {
-          File.Delete(PluginFilesToRemoveFileName);
-        }
-        else
-        {
-          await File.WriteAllLinesAsync(PluginFilesToRemoveFileName, pluginsFilesToRemove, CancellationToken.None).ConfigureAwait(false);
-        }
-      }
     }
     catch (TaskCanceledException)
     {
@@ -338,22 +426,7 @@ internal class PluginsService : IPluginsService
       }
       throw;
     }
-  }
 
-
-  private static async Task<Dictionary<string, List<string>>> GetPluginsFilesAsync(CancellationToken cancellationToken)
-  {
-    using var pluginFilesStream = new FileStream(PluginsJsonFileName, System.IO.FileMode.OpenOrCreate);
-    return await JsonSerializer
-      .DeserializeAsync<Dictionary<string, List<string>>>(pluginFilesStream, cancellationToken: cancellationToken)
-      .ConfigureAwait(false) ?? new();
-  }
-
-
-  private static async Task WritePluginsFilesAsync(Dictionary<string, List<string>> pluginsFiles,
-                                                   CancellationToken cancellationToken)
-  {
-    var serializedPluginFiles = JsonSerializer.Serialize(pluginsFiles);
-    await File.WriteAllTextAsync(PluginsJsonFileName, serializedPluginFiles, cancellationToken).ConfigureAwait(false);
+    return filesList;
   }
 }

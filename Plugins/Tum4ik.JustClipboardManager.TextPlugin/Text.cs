@@ -1,25 +1,14 @@
 using System.Text;
 using System.Windows;
-using Prism.Modularity;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 using Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
 namespace Tum4ik.JustClipboardManager.TextPlugin;
 
-[Plugin(
-  Id = PluginId,
-  Name = "Default Text Plugin",
-  Version = "3.0.0",
-  Author = "Yevheniy Tymchishin",
-  AuthorEmail = "timchishinevgeniy@gmail.com",
-  Description = "A simple plugin to deal with the text data"
-)]
-public sealed class Text : Plugin<TextVisualTree>
+public sealed class Text : Plugin
 {
-  internal const string PluginId = "D930D2CD-3FD9-4012-A363-120676E22AFA";
-
-  public override IReadOnlyCollection<string> Formats { get; } = new[] { DataFormats.UnicodeText, DataFormats.Text };
+  public override IReadOnlyCollection<string> Formats { get; } = [DataFormats.UnicodeText, DataFormats.Text];
 
 
   public override ClipData? ProcessData(IDataObject dataObject)
@@ -52,5 +41,12 @@ public sealed class Text : Plugin<TextVisualTree>
 }
 
 
-[Module(ModuleName = Text.PluginId)]
-public sealed class TextPlugin : PluginModule<Text> { }
+[Plugin(
+  Id = "D930D2CD-3FD9-4012-A363-120676E22AFA",
+  Name = "Default Text Plugin",
+  Version = "3.0.0",
+  Author = "Yevheniy Tymchishin",
+  AuthorEmail = "timchishinevgeniy@gmail.com",
+  Description = "A simple plugin to deal with the text data"
+)]
+public sealed class TextPlugin : PluginModule<Text, TextVisualTree> { }

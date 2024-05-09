@@ -205,9 +205,3 @@ public partial class InfoBar
     set => SetValue(CleanUpStartedProperty, value);
   }
 }
-
-
-public enum InfoBarSeverity
-{
-  Informational, Success, Warning, Critical
-}

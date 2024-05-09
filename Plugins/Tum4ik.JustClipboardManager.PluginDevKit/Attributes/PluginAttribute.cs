@@ -3,7 +3,7 @@ namespace Tum4ik.JustClipboardManager.PluginDevKit.Attributes;
 /// <summary>
 /// Indicates that the class should be considered a plugin.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public sealed class PluginAttribute : Attribute
 {
   /// <summary>

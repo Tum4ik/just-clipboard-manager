@@ -47,8 +47,6 @@ internal class PinnedClipRepository : IPinnedClipRepository
   public async Task DeleteByIdAsync(int id)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    var clip = new PinnedClip { Id = id };
-    dbContext.PinnedClips.Remove(clip);
-    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+    await dbContext.PinnedClips.Where(pc => pc.Id == id).ExecuteDeleteAsync().ConfigureAwait(false);
   }
 }

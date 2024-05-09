@@ -355,4 +355,22 @@
   <data name="Unpin" xml:space="preserve">
     <value>Unpin</value>
   </data>
+  <data name="PluginInstallationCancelled" xml:space="preserve">
+    <value>Plugin installation cancelled.</value>
+  </data>
+  <data name="PluginIncompatibility_Title" xml:space="preserve">
+    <value>Plugin incompatibility</value>
+  </data>
+  <data name="PluginIncompatibility_Body" xml:space="preserve">
+    <value>The plugin is incompatible with the current version of the application.</value>
+  </data>
+  <data name="EmptyPluginArchive_Body" xml:space="preserve">
+    <value>The installing plugin archive is empty.</value>
+  </data>
+  <data name="ImpossibleToLoadPlugin_Body" xml:space="preserve">
+    <value>Impossible to load plugin.</value>
+  </data>
+  <data name="PluginsListFileMissing_Body" xml:space="preserve">
+    <value>The plugins list file is missing on the server.</value>
+  </data>
 </root>

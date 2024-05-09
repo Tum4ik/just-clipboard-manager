@@ -74,7 +74,7 @@ internal class ClipboardService : IClipboardService
               message: "Exception when restore data for plugin on paste operation",
               category: "info",
               type: "info",
-              dataPair: ("Plugin Id", plugin.Id!)
+              dataPair: ("Plugin Id", plugin.Id!.ToString())
             );
           });
           data = GetDataFromBytes(formattedDataObject);
@@ -122,11 +122,10 @@ internal class ClipboardService : IClipboardService
       }
 
       var plugin = _plugins.FirstOrDefault(
-        p => p.Id is not null
-             && _pluginsService.IsPluginEnabled(p.Id)
+        p => _pluginsService.IsPluginEnabled(p.Id)
              && p.Formats.Contains(pluginFormat)
       );
-      if (plugin is null || string.IsNullOrEmpty(plugin.Id))
+      if (plugin is null)
       {
         return;
       }
@@ -137,7 +136,7 @@ internal class ClipboardService : IClipboardService
         type: "info",
         data: new Dictionary<string, string>
         {
-          { "Plugin id", plugin.Id }
+          { "Plugin id", plugin.Id.ToString() }
         }
       );
       

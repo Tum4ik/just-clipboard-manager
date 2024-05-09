@@ -322,6 +322,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The installing plugin archive is empty..
+        /// </summary>
+        internal static string EmptyPluginArchive_Body {
+            get {
+                return ResourceManager.GetString("EmptyPluginArchive_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
         internal static string Enabled {
@@ -381,6 +390,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Hotkeys {
             get {
                 return ResourceManager.GetString("Hotkeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible to load plugin..
+        /// </summary>
+        internal static string ImpossibleToLoadPlugin_Body {
+            get {
+                return ResourceManager.GetString("ImpossibleToLoadPlugin_Body", resourceCulture);
             }
         }
         
@@ -538,6 +556,33 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The plugin is incompatible with the current version of the application..
+        /// </summary>
+        internal static string PluginIncompatibility_Body {
+            get {
+                return ResourceManager.GetString("PluginIncompatibility_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin incompatibility.
+        /// </summary>
+        internal static string PluginIncompatibility_Title {
+            get {
+                return ResourceManager.GetString("PluginIncompatibility_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin installation cancelled..
+        /// </summary>
+        internal static string PluginInstallationCancelled {
+            get {
+                return ResourceManager.GetString("PluginInstallationCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In some reason the plugin installation failed..
         /// </summary>
         internal static string PluginInstallationProblem_Body {
@@ -579,6 +624,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string PluginSecurityViolation_Title {
             get {
                 return ResourceManager.GetString("PluginSecurityViolation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The plugins list file is missing on the server..
+        /// </summary>
+        internal static string PluginsListFileMissing_Body {
+            get {
+                return ResourceManager.GetString("PluginsListFileMissing_Body", resourceCulture);
             }
         }
         
