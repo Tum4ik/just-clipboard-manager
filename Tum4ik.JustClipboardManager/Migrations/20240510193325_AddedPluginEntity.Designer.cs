@@ -11,7 +11,7 @@ using Tum4ik.JustClipboardManager.Data;
 namespace Tum4ik.JustClipboardManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240428205518_AddedPluginEntity")]
+    [Migration("20240510193325_AddedPluginEntity")]
     partial class AddedPluginEntity
     {
         /// <inheritdoc />
@@ -38,8 +38,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("datetime('now', 'localtime')");
 
-                    b.Property<string>("PluginId")
-                        .IsRequired()
+                    b.Property<Guid>("PluginId")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("RepresentationData")
@@ -134,7 +133,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("PluginId")
+                    b.Property<Guid>("PluginId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RelativePath")
@@ -174,7 +173,9 @@ namespace Tum4ik.JustClipboardManager.Migrations
                 {
                     b.HasOne("Tum4ik.JustClipboardManager.Data.Models.Plugin", null)
                         .WithMany("Files")
-                        .HasForeignKey("PluginId");
+                        .HasForeignKey("PluginId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.Clip", b =>

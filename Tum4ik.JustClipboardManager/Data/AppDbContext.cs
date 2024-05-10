@@ -25,6 +25,12 @@ internal class AppDbContext : DbContext
       .Entity<Clip>()
       .Property(c => c.ClippedAt)
       .HasDefaultValueSql("datetime('now', 'localtime')");
+
+    modelBuilder
+      .Entity<Plugin>()
+      .HasMany(p => p.Files)
+      .WithOne()
+      .IsRequired();
   }
 
 

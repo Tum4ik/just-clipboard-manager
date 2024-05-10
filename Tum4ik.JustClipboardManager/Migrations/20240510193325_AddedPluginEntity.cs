@@ -32,7 +32,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     RelativePath = table.Column<string>(type: "TEXT", nullable: false),
-                    PluginId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    PluginId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +41,8 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         name: "FK_PluginFiles_Plugins_PluginId",
                         column: x => x.PluginId,
                         principalTable: "Plugins",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
