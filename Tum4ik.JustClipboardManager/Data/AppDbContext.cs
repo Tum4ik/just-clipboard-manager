@@ -1,5 +1,3 @@
-using System.IO;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Tum4ik.JustClipboardManager.Data.Models;
 
@@ -25,39 +23,5 @@ internal class AppDbContext : DbContext
       .Entity<Clip>()
       .Property(c => c.ClippedAt)
       .HasDefaultValueSql("datetime('now', 'localtime')");
-  }
-
-
-  public static void Configure(DbContextOptionsBuilder builder)
-  {
-    builder
-      .UseSqlite($"Data Source={DbFilePath}")
-      .UseLazyLoadingProxies();
-  }
-
-
-  private static string? _dbFilePath;
-  public static string DbFilePath => _dbFilePath ??= GetDbFilePath();
-
-
-  private static string GetDbFilePath()
-  {
-    var companyName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>()!.Company;
-    var dbFileDir = Path.Combine(
-      Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-      companyName,
-      Assembly.GetExecutingAssembly().GetName().Name!,
-      "Database"
-    );
-
-
-#if DEBUG
-    const string DbName = "clips_debug.db";
-#else
-    const string DbName = "clips.db";
-#endif
-    Directory.CreateDirectory(dbFileDir);
-    var dbFilePath = Path.Combine(dbFileDir, DbName);
-    return dbFilePath;
   }
 }

@@ -54,12 +54,16 @@ public partial class App : ISingleInstance, IApplicationLifetime
   [STAThread]
   public static void Main(string[] args)
   {
-    var app = new App();
-
+    var app = new App(args);
+    
     var instanceUniqueName = "JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46";
-#if DEBUG
-    instanceUniqueName += "_Development";
-#endif
+    instanceUniqueName += app._appEnvironmentService.Environment switch
+    {
+      AppEnvironment.Development => "_Development",
+      AppEnvironment.UiTest => "_UiTest",
+      _ => string.Empty,
+    };
+    
     var restartAfterCrashArg = Array.Find(args, a => a.StartsWith(RestartAfterCrashArg, StringComparison.Ordinal));
     var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
     if (restartAfterCrashArg is null && !isFirstInstance)
@@ -72,9 +76,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
       RestartAfterCrashCount = count;
     }
 
-#if !DEBUG
-    app.DispatcherUnhandledException += OnUnhandledException;
-#endif
+    if (app._appEnvironmentService.Environment == AppEnvironment.Production)
+    {
+      app.DispatcherUnhandledException += OnUnhandledException;
+    }
+
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
@@ -82,13 +88,18 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
 
   private readonly IConfiguration _configuration;
+  private readonly IAppEnvironmentService _appEnvironmentService;
   private readonly Harmony _harmony;
 
 
-  public App()
+  public App(string[] args)
   {
     UpgradeSettings();
-    _configuration = ConfigurationHelper.CreateConfiguration();
+    
+    AppEnvironment appEnvironment;
+    (_configuration, appEnvironment) = ConfigurationHelper.CreateConfiguration(args);
+    _appEnvironmentService = new AppEnvironmentService(appEnvironment);
+
     _harmony = new Harmony("just.clipboard.manager");
     var deviceId = InternalSettings.Default.DeviceId;
     if (string.IsNullOrEmpty(deviceId))
@@ -154,13 +165,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var processPath = Environment.ProcessPath;
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
-#if !DEBUG
       System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
       });
-#endif
     }
     else
     {
@@ -213,9 +222,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var result = joinableTaskFactory.Run(updateService.SilentUpdateAsync);
     if (result == UpdateResult.Started)
     {
-#if !DEBUG
       return;
-#endif
     }
 
     using (var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext())
@@ -299,6 +306,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterGeneratedWrappers()
       .RegisterDatabase()
       .RegisterThreadSwitching()
+      .RegisterInstance(_appEnvironmentService)
       .RegisterInstance(_configuration)
       .RegisterInstance<IApplicationLifetime>(this)
       .RegisterInstance(_harmony)

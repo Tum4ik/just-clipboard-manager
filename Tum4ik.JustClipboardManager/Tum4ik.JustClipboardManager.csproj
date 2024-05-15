@@ -46,7 +46,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.development.json" />
     <None Remove="appsettings.json" />
+    <None Remove="appsettings.uitest.json" />
     <None Remove="Controls\AppBarNavigationButton.xaml" />
     <None Remove="Controls\InfoBar.xaml" />
     <None Remove="Controls\InputFieldButton.xaml" />
@@ -154,6 +156,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="appsettings.uitest.json" />
+    <EmbeddedResource Include="appsettings.development.json" />
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 using Prism.Events;
 using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
@@ -32,7 +33,6 @@ internal class ClipboardService : IClipboardService
     _sentryHub = sentryHub;
 
     OnPluginsChainUpdated();
-
     eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.UIThread);
     eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Subscribe(OnPluginsChainUpdated);
   }
@@ -249,15 +249,11 @@ internal class ClipboardService : IClipboardService
     }
     catch (SqliteException e)
     {
-      var dbFilePath = AppDbContext.DbFilePath;
       _sentryHub.CaptureException(e, scope => scope.AddBreadcrumb(
         message: "SQLite exception when saving clip",
         category: "info",
         type: "info",
-        data: new Dictionary<string, string>
-        {
-          { "DB file exists", File.Exists(dbFilePath).ToString() }
-        }
+        data: null
       ));
     }
     catch (Exception e)

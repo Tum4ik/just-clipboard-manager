@@ -12,16 +12,19 @@ internal class UpdateService : IUpdateService
   private readonly IGitHubClient _gitHubClient;
   private readonly IEnvironment _environment;
   private readonly IHub _sentryHub;
+  private readonly IAppEnvironmentService _appEnvironmentService;
 
   public UpdateService(IInfoService infoService,
                        IGitHubClient gitHubClient,
                        IEnvironment environment,
-                       IHub sentryHub)
+                       IHub sentryHub,
+                       IAppEnvironmentService appEnvironmentService)
   {
     _infoService = infoService;
     _gitHubClient = gitHubClient;
     _environment = environment;
     _sentryHub = sentryHub;
+    _appEnvironmentService = appEnvironmentService;
   }
 
 
@@ -167,7 +170,7 @@ internal class UpdateService : IUpdateService
     {
       var exe = await DownloadUpdatesAsync(checkUpdatesResult.DownloadLink, null, CancellationToken.None)
         .ConfigureAwait(false);
-      if (exe is not null)
+      if (exe is not null && _appEnvironmentService.Environment == AppEnvironment.Production)
       {
         InstallUpdates(exe);
         return UpdateResult.Started;
@@ -187,11 +190,9 @@ internal class UpdateService : IUpdateService
   [ExcludeFromCodeCoverage]
   private static void InstallUpdates(FileInfo exeFile)
   {
-#if !DEBUG
     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exeFile.FullName, "/SILENT")
     {
       UseShellExecute = true
     });
-#endif
   }
 }

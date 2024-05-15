@@ -1,5 +1,6 @@
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
@@ -47,13 +48,14 @@ internal static class ContainerRegistryExtensions
 
   public static IContainerRegistry RegisterDatabase(this IContainerRegistry containerRegistry)
   {
-    var services = new ServiceCollection();
-    services.AddPooledDbContextFactory<AppDbContext>((sp, o) => AppDbContext.Configure(o), 2);
-    var serviceProvider = services.BuildServiceProvider();
-
-    return containerRegistry.RegisterSingleton<IDbContextFactory<AppDbContext>>(
-      serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>
-    );
+    return containerRegistry.RegisterSingleton<IDbContextFactory<AppDbContext>>(cp =>
+    {
+      var config = cp.Resolve<IConfiguration>();
+      var services = new ServiceCollection();
+      services.AddPooledDbContextFactory<AppDbContext>((sp, o) => o.Configure(config), 2);
+      var serviceProvider = services.BuildServiceProvider();
+      return serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
+    });
   }
 
 

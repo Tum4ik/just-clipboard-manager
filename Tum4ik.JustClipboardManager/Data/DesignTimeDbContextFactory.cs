@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Tum4ik.JustClipboardManager.Extensions;
+using Tum4ik.JustClipboardManager.Helpers;
 
 namespace Tum4ik.JustClipboardManager.Data;
 
@@ -10,8 +12,8 @@ internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbCon
 {
   public AppDbContext CreateDbContext(string[] args)
   {
-    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-    AppDbContext.Configure(optionsBuilder);
+    var (configuration, _) = ConfigurationHelper.CreateConfiguration(args);
+    var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>().Configure(configuration);
     return new(optionsBuilder.Options);
   }
 }
