@@ -156,8 +156,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.uitest.json" />
-    <EmbeddedResource Include="appsettings.development.json" />
+    <EmbeddedResource Include="appsettings.uitest.json" Condition="Exists('appsettings.uitest.json')" />
+    <EmbeddedResource Include="appsettings.development.json" Condition="Exists('appsettings.development.json')" />
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
