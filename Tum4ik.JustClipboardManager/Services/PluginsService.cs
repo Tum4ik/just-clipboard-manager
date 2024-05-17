@@ -56,8 +56,8 @@ internal class PluginsService : IPluginsService
   }
 
 
-  private readonly Dictionary<Guid, IPlugin> _plugins = new();
-  private readonly Dictionary<Guid, bool> _enabledPlugins = new();
+  private readonly Dictionary<Guid, IPlugin> _plugins = [];
+  private readonly Dictionary<Guid, bool> _enabledPlugins = [];
 
 
   public IReadOnlyCollection<IPlugin> InstalledPlugins
@@ -158,8 +158,8 @@ internal class PluginsService : IPluginsService
     _plugins.Remove(id);
     _enabledPlugins.Remove(id);
 
-    _moduleCatalog.UnloadModule(id.ToString());
     await _pluginRepository.UpdateIsInstalledAsync(id, false).ConfigureAwait(false);
+    _moduleCatalog.Modules.First(m => m.ModuleName == id.ToString()).State = ModuleState.NotStarted;
 
     _eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Publish();
   }

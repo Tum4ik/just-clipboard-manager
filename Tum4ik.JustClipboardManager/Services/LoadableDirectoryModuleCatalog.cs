@@ -37,18 +37,6 @@ internal class LoadableDirectoryModuleCatalog : DirectoryModuleCatalog, ILoadabl
   }
 
 
-  public void UnloadModule(string moduleName)
-  {
-    var itemToRemove = Items.FirstOrDefault(
-      i => i is IModuleInfo mi && mi.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase)
-    );
-    if (itemToRemove is not null)
-    {
-      Items.Remove(itemToRemove);
-    }
-  }
-
-
   private void OverrideModuleInfoCreation()
   {
     var original_GetNotAlreadyLoadedModuleInfos = AccessTools.Method(_sourceClass, "GetNotAlreadyLoadedModuleInfos");

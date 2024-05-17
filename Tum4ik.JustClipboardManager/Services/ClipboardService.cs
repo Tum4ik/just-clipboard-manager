@@ -46,8 +46,8 @@ internal class ClipboardService : IClipboardService
   /// </summary>
   private const string ChangeMarker = "JCM_change_{AD3D5E08-A1FA-4602-AF24-94C4ADDBCA78}";
 
-  private IReadOnlyCollection<IPlugin> _plugins = Array.Empty<IPlugin>();
-  private ImmutableList<string> _pluginFormats = ImmutableList.Create<string>();
+  private IReadOnlyCollection<IPlugin> _plugins = [];
+  private ImmutableList<string> _pluginFormats = [];
 
 
   public void Paste(ICollection<FormattedDataObject> formattedDataObjects, string? additionalInfo)

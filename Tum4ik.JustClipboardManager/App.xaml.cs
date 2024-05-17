@@ -242,10 +242,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
     {
       try
       {
-        await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(false);
+        await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(true);
         moduleManager.Run();
-        await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
+        await LoadInstalledPluginsAsync(pluginRepository, moduleManager).ConfigureAwait(false);
         await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
+        await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
       }
       catch (Exception e)
       {
@@ -265,6 +266,22 @@ public partial class App : ISingleInstance, IApplicationLifetime
     SingleInstance.Cleanup();
 
     base.OnExit(e);
+  }
+
+
+  private static async Task LoadInstalledPluginsAsync(IPluginRepository pluginRepository, IModuleManager moduleManager)
+  {
+    await foreach (var installedPlugin in pluginRepository.GetInstalledPluginsAsync())
+    {
+      try
+      {
+        moduleManager.LoadModule(installedPlugin.Id.ToString());
+      }
+      catch (ModuleNotFoundException)
+      {
+        await pluginRepository.DeleteByIdAsync(installedPlugin.Id).ConfigureAwait(false);
+      }
+    }
   }
 
 

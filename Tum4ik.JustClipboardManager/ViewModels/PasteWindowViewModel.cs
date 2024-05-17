@@ -108,7 +108,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       search: _search,
       idsToIgnore: _pinnedDbClips.Keys
     ).ConfigureAwait(false);
-  }
+    }
 
 
   public Task<PasteWindowResult?> WaitForInputAsync()

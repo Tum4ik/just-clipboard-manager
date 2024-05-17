@@ -20,6 +20,17 @@ internal class PluginRepository : IPluginRepository
   }
 
 
+  public async IAsyncEnumerable<Plugin> GetInstalledPluginsAsync()
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    var installedPlugins = dbContext.Plugins.Where(p => p.IsInstalled).AsAsyncEnumerable();
+    await foreach (var installedPlugin in installedPlugins.ConfigureAwait(false))
+    {
+      yield return installedPlugin;
+    }
+  }
+
+
   public async IAsyncEnumerable<PluginFile> GetUninstalledPluginsFilesAsync()
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
@@ -41,6 +52,16 @@ internal class PluginRepository : IPluginRepository
     await dbContext.Plugins
       .Where(p => p.Id == id)
       .ExecuteUpdateAsync(x => x.SetProperty(p => p.IsInstalled, isInstalled))
+      .ConfigureAwait(false);
+  }
+
+
+  public async Task DeleteByIdAsync(Guid id)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    await dbContext.Plugins
+      .Where(p => p.Id == id)
+      .ExecuteDeleteAsync()
       .ConfigureAwait(false);
   }
 
