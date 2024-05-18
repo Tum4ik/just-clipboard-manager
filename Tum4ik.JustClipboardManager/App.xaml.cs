@@ -197,7 +197,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
   }
 
 
-  protected override void OnStartup(StartupEventArgs e)
+  protected override async void OnStartup(StartupEventArgs e)
   {
     try
     {
@@ -209,8 +209,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     }
 
     var updateService = Container.Resolve<IUpdateService>();
-    var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
-    var result = joinableTaskFactory.Run(updateService.SilentUpdateAsync);
+    var result = await updateService.SilentUpdateAsync().ConfigureAwait(true);
     if (result == UpdateResult.Started)
     {
 #if !DEBUG
@@ -218,44 +217,40 @@ public partial class App : ISingleInstance, IApplicationLifetime
 #endif
     }
 
+    var trayIcon = Container.Resolve<TrayIcon>();
+    trayIcon.ForceCreate();
+    
+
     using (var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext())
     {
       try
       {
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
       }
       catch (SqliteException)
       {
-        dbContext.Database.EnsureDeleted();
-        dbContext.Database.Migrate();
+        await dbContext.Database.EnsureDeletedAsync().ConfigureAwait(false);
+        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
       }
     }
 
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
     var pluginRepository = Container.Resolve<IPluginRepository>();
+    var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
     var pluginsService = Container.Resolve<IPluginsService>();
-    var sentryHub = Container.Resolve<IHub>();
     var moduleManager = Container.Resolve<IModuleManager>();
 
-    joinableTaskFactory.Run(async () =>
-    {
-      try
-      {
-        await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(true);
-        moduleManager.Run();
-        await LoadInstalledPluginsAsync(pluginRepository, moduleManager).ConfigureAwait(false);
-        await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
-        await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
-      }
-      catch (Exception e)
-      {
-        sentryHub.CaptureException(e);
-      }
-    });
+    await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(false);
 
-    var trayIcon = Container.Resolve<TrayIcon>();
-    trayIcon.ForceCreate();
+    await joinableTaskFactory.SwitchToMainThreadAsync();
+    moduleManager.Run();
+    
+    await LoadInstalledPluginsAsync(pluginRepository, moduleManager).ConfigureAwait(false);
+    await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
+    await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
+
+    await joinableTaskFactory.SwitchToMainThreadAsync();
     var hookService = Container.Resolve<GeneralHookService>();
   }
 
