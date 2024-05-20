@@ -22,7 +22,8 @@ public class ShortcutServiceTests
       _wshShell,
       _file,
       _path,
-      _environment
+      _environment,
+      Substitute.For<IAppEnvironmentService>()
     );
   }
 

@@ -277,15 +277,6 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Development.
-        /// </summary>
-        internal static string Development {
-            get {
-                return ResourceManager.GetString("Development", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Disabled.
         /// </summary>
         internal static string Disabled {

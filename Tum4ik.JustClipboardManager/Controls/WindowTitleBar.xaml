@@ -3,10 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
-             xmlns:debug="debug-mode"
+             xmlns:converters="clr-namespace:Tum4ik.JustClipboardManager.Converters"
              mc:Ignorable="d">
+  <UserControl.Resources>
+    <converters:SizeToRectConverter x:Key="SizeToRectConverter"/>
+  </UserControl.Resources>
   <UserControl.Template>
     <ControlTemplate TargetType="controls:WindowTitleBar">
       <Grid Height="32">
@@ -37,16 +41,26 @@
         <TextBlock x:Name="_tag"
                    Grid.Column="2"
                    FontSize="12"
-                   Foreground="{DynamicResource {x:Static theming:AppColors.TextSecondaryBrush}}"
-                   VerticalAlignment="Center">
-          <mc:AlternateContent>
-            <mc:Choice Requires="debug">
-              <TextBlock.Text>
-                <Binding Path="DataContext.Translate[Development]"
-                         RelativeSource="{RelativeSource TemplatedParent}"/>
-              </TextBlock.Text>
-            </mc:Choice>
-          </mc:AlternateContent>
+                   Foreground="#C7FFFFFF"
+                   VerticalAlignment="Center"
+                   Background="#C42B1C"
+                   Padding="4"
+                   Text="{Binding DataContext.AppEnvironmentName, RelativeSource={RelativeSource TemplatedParent}}">
+          <TextBlock.Clip>
+            <RectangleGeometry RadiusX="4" RadiusY="4">
+              <RectangleGeometry.Rect>
+                <MultiBinding Converter="{StaticResource SizeToRectConverter}">
+                  <Binding Path="ActualWidth" ElementName="_tag"/>
+                  <Binding Path="ActualHeight" ElementName="_tag"/>
+                </MultiBinding>
+              </RectangleGeometry.Rect>
+            </RectangleGeometry>
+          </TextBlock.Clip>
+          <i:Interaction.Triggers>
+            <i:DataTrigger Binding="{Binding DataContext.AppEnvironmentName, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+              <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+            </i:DataTrigger>
+          </i:Interaction.Triggers>
         </TextBlock>
         <StackPanel Grid.Column="4" Orientation="Horizontal"
                     WindowChrome.IsHitTestVisibleInChrome="True">
@@ -74,7 +88,7 @@
         <Trigger Property="controls:WindowTitleBar.IsWindowActive" Value="False">
           <Setter TargetName="_icon" Property="Opacity" Value="0.5"/>
           <Setter TargetName="_title" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
-          <Setter TargetName="_tag" Property="Foreground" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
+          <Setter TargetName="_tag" Property="Opacity" Value="0.5"/>
           <Setter TargetName="_chromeMinimizeButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
           <Setter TargetName="_chromeMaximizeRestoreButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>
           <Setter TargetName="_chromeCloseButton" Property="IconColor" Value="{DynamicResource {x:Static theming:AppColors.TextDisabledBrush}}"/>

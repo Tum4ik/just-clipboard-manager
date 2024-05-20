@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Services.Dialogs;
@@ -19,34 +18,38 @@ internal partial class TrayIconViewModel : TranslationViewModel
   private readonly IThemeService _themeService;
   private readonly IApplicationLifetime _applicationLifetime;
   private readonly IInfoService _infoService;
+  private readonly IAppEnvironmentService _appEnvironmentService;
 
   public TrayIconViewModel(IDialogService dialogService,
                            ITranslationService translationService,
                            IThemeService themeService,
                            IEventAggregator eventAggregator,
                            IApplicationLifetime applicationLifetime,
-                           IInfoService infoService)
+                           IInfoService infoService,
+                           IAppEnvironmentService appEnvironmentService)
     : base(translationService, eventAggregator)
   {
     _dialogService = dialogService;
     _themeService = themeService;
     _applicationLifetime = applicationLifetime;
     _infoService = infoService;
-
+    _appEnvironmentService = appEnvironmentService;
     eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(() => OnPropertyChanged(nameof(SelectedTheme)));
   }
 
 
   public string ProductName => _infoService.ProductName;
-
-  [ObservableProperty]
-  private string _trayIcon
-#if DEBUG
-    = "/Resources/Icons/tray-dev.ico";
-#else
-    = "/Resources/Icons/tray.ico";
-#endif
-
+  public string TrayIcon
+  {
+    get
+    {
+      if (_appEnvironmentService.Environment == AppEnvironment.Production)
+      {
+        return "/Resources/Icons/tray.ico";
+      }
+      return "/Resources/Icons/tray-dev.ico";
+    }
+  }
 
   public ImmutableArray<ColorTheme> Themes => _themeService.Themes;
 
