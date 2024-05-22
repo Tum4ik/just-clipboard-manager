@@ -6,8 +6,8 @@ public class SetupFileTests
   [Fact]
   public void SetupFile_MustHaveBom()
   {
-    var filepath = "..\\..\\..\\..\\..\\InnoSetup\\Setup.iss";
-    using var reader = new StreamReader(filepath, Encoding.Default, true);
+    const string FilePath = @"..\..\..\..\..\InnoSetup\Setup.iss";
+    using var reader = new StreamReader(FilePath, Encoding.Default, true);
     if (reader.Peek() >= 0)
     {
       reader.Read();

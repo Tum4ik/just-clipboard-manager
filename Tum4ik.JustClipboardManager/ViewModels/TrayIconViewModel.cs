@@ -38,7 +38,15 @@ internal partial class TrayIconViewModel : TranslationViewModel
   }
 
 
-  public string ProductName => _infoService.ProductName;
+  private string? _productName;
+  public string ProductName => _productName ??= _infoService.ProductName + _appEnvironmentService.Environment switch
+  {
+    AppEnvironment.Production => string.Empty,
+    AppEnvironment.Development => " - Development",
+    AppEnvironment.UiTest => " - UI Test",
+    _ => string.Empty
+  };
+
   public string TrayIcon
   {
     get
