@@ -31,7 +31,8 @@
               <Setter Property="Margin" Value="0, 0, 0, 4"/>
             </Style>
           </StackPanel.Resources>
-          <controls:AppBarNavigationButton Icon="Settings" Text="{Binding Translate[Settings]}"
+          <controls:AppBarNavigationButton AutomationProperties.AutomationId="{x:Static const:AutomationIds.MainWindowSettingsButton}"
+                                           Icon="Settings" Text="{Binding Translate[Settings]}"
                                            IsChecked="{Binding IsSettingsTabChecked}"
                                            CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
           <controls:AppBarNavigationButton Icon="Extension" Text="{Binding Translate[Plugins]}"

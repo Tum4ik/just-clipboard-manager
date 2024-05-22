@@ -29,6 +29,7 @@ internal static class AppActionsHelper
       if (icon is not null)
       {
         icon.RightClick();
+        Thread.Sleep(1000);
         return;
       }
     }

@@ -8,8 +8,8 @@ internal static class AutomationElementExtensions
 {
   public static void Invoke(this AutomationElement element)
   {
-    var invokePattern = element.GetCurrentPattern(InvokePattern.Pattern) as InvokePattern;
-    invokePattern?.Invoke();
+    var invokePattern = (InvokePattern) element.GetCurrentPattern(InvokePattern.Pattern);
+    invokePattern.Invoke();
   }
 
 

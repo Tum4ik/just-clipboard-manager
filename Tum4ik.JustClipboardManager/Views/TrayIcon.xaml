@@ -14,13 +14,14 @@
                 IconSource="{Binding TrayIcon}"
                 ToolTipText="{Binding ProductName}">
   <tb:TaskbarIcon.ContextMenu>
-    <ContextMenu Background="White" UseLayoutRounding="True">
+    <ContextMenu AutomationProperties.AutomationId="{x:Static const:AutomationIds.TrayIconContextMenu}"
+                 Background="White" UseLayoutRounding="True">
       <ContextMenu.Resources>
         <converters:EqualityConverter x:Key="EqualityConverter"/>
         <converters:TranslateConverter x:Key="TranslateConverter"/>
       </ContextMenu.Resources>
-      <!--<MenuItem Header="Clips"/>-->
-      <MenuItem Header="{Binding Translate[Settings]}"
+      <MenuItem AutomationProperties.AutomationId="{x:Static const:AutomationIds.TrayIconContextMenuSettings}"
+                Header="{Binding Translate[Settings]}"
                 Command="{Binding OpenMainDialogCommand}"
                 CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
       <MenuItem Header="{Binding Translate[About]}"
