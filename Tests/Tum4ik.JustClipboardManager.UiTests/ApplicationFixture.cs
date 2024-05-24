@@ -15,7 +15,7 @@ public sealed class ApplicationFixture : IDisposable
     string[] appExePossiblePlaces = [
       @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\x64\Debug\net8.0-windows\JustClipboardManager.exe",
       @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\x64\Release\net8.0-windows\JustClipboardManager.exe",
-      @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\publish\JustClipboardManager.exe",
+      @".\Tum4ik.JustClipboardManager\bin\publish\JustClipboardManager.exe",
     ];
     foreach (var appExePath in appExePossiblePlaces)
     {
