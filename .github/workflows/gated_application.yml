@@ -95,10 +95,6 @@ jobs:
           /Enablecodecoverage `
           /Collect:"Code Coverage;Format=Cobertura"
 
-    - name: OS version
-      run: |
-        [environment]::OSVersion.Version
-
     - name: Test UI
       run: |
         $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
