@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using Tum4ik.JustClipboardManager.Resources.Icons;
 
 namespace Tum4ik.JustClipboardManager.Controls;
@@ -12,6 +13,9 @@ public partial class AppBarNavigationButton
   {
     InitializeComponent();
   }
+
+
+  private ICommand? _command;
 
 
   public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
@@ -34,11 +38,23 @@ public partial class AppBarNavigationButton
   }
 
 
+  protected override void OnChecked(RoutedEventArgs e)
+  {
+    base.OnChecked(e);
+    if (_command is not null && _command.CanExecute(CommandParameter))
+    {
+      _command.Execute(CommandParameter);
+    }
+  }
+
+
   private void RadioButton_Loaded(object sender, RoutedEventArgs e)
   {
-    if (IsChecked is true && Command.CanExecute(CommandParameter))
+    _command = Command;
+    Command = null;
+    if (IsChecked is true && _command is not null && _command.CanExecute(CommandParameter))
     {
-      Command.Execute(CommandParameter);
+      _command.Execute(CommandParameter);
     }
   }
 }

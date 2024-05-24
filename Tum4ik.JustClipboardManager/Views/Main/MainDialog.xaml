@@ -39,7 +39,8 @@
                                            IsChecked="{Binding IsPluginsTabChecked}"
                                            CommandParameter="{x:Static const:ViewNames.PluginsView}"/>
         </StackPanel>
-        <controls:AppBarNavigationButton Grid.Row="1"
+        <controls:AppBarNavigationButton AutomationProperties.AutomationId="{x:Static const:AutomationIds.MainWindowAboutButton}"
+                                         Grid.Row="1"
                                          Icon="Info"
                                          Text="{Binding Translate[About]}"
                                          IsChecked="{Binding IsAboutTabChecked}"

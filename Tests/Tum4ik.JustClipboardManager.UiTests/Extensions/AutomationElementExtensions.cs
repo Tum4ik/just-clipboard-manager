@@ -31,5 +31,6 @@ internal static class AutomationElementExtensions
     inputs[2].Anonymous.mi.dwFlags = MOUSE_EVENT_FLAGS.MOUSEEVENTF_RIGHTUP;
 
     PInvoke.SendInput(inputs, sizeof(INPUT));
+    Thread.Sleep(1000);
   }
 }

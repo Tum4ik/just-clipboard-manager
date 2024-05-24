@@ -1,2 +1,0 @@
-SendInput
-GetSystemMetrics

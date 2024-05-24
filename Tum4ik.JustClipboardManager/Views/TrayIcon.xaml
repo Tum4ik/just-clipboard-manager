@@ -24,7 +24,8 @@
                 Header="{Binding Translate[Settings]}"
                 Command="{Binding OpenMainDialogCommand}"
                 CommandParameter="{x:Static const:ViewNames.SettingsView}"/>
-      <MenuItem Header="{Binding Translate[About]}"
+      <MenuItem AutomationProperties.AutomationId="{x:Static const:AutomationIds.TrayIconContextMenuAbout}"
+                Header="{Binding Translate[About]}"
                 Command="{Binding OpenMainDialogCommand}"
                 CommandParameter="{x:Static const:ViewNames.AboutView}"/>
       <Separator/>
