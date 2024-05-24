@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Automation;
 using Tum4ik.JustClipboardManager.UiTests.Exceptions;
 using Tum4ik.JustClipboardManager.UiTests.Extensions;
@@ -11,9 +12,21 @@ public sealed class ApplicationFixture : IDisposable
 
   public ApplicationFixture()
   {
-    const string AppExePath = @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\x64\Debug\net8.0-windows\JustClipboardManager.exe";
-    _appProcess = Process.Start(AppExePath, "--uitest");
-    TrayIconElement = GetTrayIconElement();
+    string[] appExePossiblePlaces = [
+      @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\x64\Debug\net8.0-windows\JustClipboardManager.exe",
+      @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\x64\Release\net8.0-windows\JustClipboardManager.exe",
+      @"..\..\..\..\..\Tum4ik.JustClipboardManager\bin\publish\x64\JustClipboardManager.exe",
+    ];
+    foreach (var appExePath in appExePossiblePlaces)
+    {
+      if (File.Exists(appExePath))
+      {
+        _appProcess = Process.Start(appExePath, "--uitest");
+        TrayIconElement = GetTrayIconElement();
+        return;
+      }
+    }
+    throw new FileNotFoundException();
   }
 
 
