@@ -43,16 +43,28 @@ public sealed class ApplicationFixture : IDisposable
 
   private static AutomationElement GetTrayIconElement()
   {
-    var chevron = AutomationElement.RootElement.FindFirst(
+    AutomationElementCollection notificationIconAreas;
+    if (Environment.OSVersion.Version >= Version.Parse("10.0.22000"))
+    {
+      var chevron = AutomationElement.RootElement.FindFirst(
       TreeScope.Descendants,
-      new PropertyCondition(AutomationElement.NameProperty, "Show Hidden Icons")
-    );
-    chevron.Invoke();
+        new PropertyCondition(AutomationElement.NameProperty, "Show Hidden Icons")
+      );
+      chevron.Invoke();
 
-    var notificationIconAreas = AutomationElement.RootElement.FindAll(
-      TreeScope.Descendants,
-      new PropertyCondition(AutomationElement.ClassNameProperty, "Windows.UI.Input.InputSite.WindowClass")
-    );
+      notificationIconAreas = AutomationElement.RootElement.FindAll(
+        TreeScope.Descendants,
+        new PropertyCondition(AutomationElement.ClassNameProperty, "Windows.UI.Input.InputSite.WindowClass")
+      );
+    }
+    else
+    {
+      notificationIconAreas = AutomationElement.RootElement.FindAll(
+        TreeScope.Descendants,
+        new PropertyCondition(AutomationElement.AutomationIdProperty, "1504")
+      );
+    }
+
     foreach (AutomationElement area in notificationIconAreas)
     {
       var icon = area
