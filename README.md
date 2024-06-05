@@ -24,3 +24,10 @@
   <br/>
   <img src="https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graphs/sunburst.svg?token=ISPY8ADZZ8" />
 </h1>
+
+<p align="right">
+  <a href="https://www.buymeacoffee.com/tum4ik">
+    <img src=".attachments/bmc-brand-logo.svg" alt="Buy Me A Coffee"
+         style="background: #0274B5; border-radius: 6px; padding: 6px"/>
+  </a>
+</p>
