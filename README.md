@@ -26,7 +26,7 @@
 </h1>
 
 <p align="right">
-  <a href="https://www.buymeacoffee.com/tum4ik" target="_blank">
+  <a href="https://www.buymeacoffee.com/tum4ik" target="_blank" rel="noreferrer noopener">
     <img src=".attachments/bmc-brand-logo.svg"/>
   </a>
 </p>
