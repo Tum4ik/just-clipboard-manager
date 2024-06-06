@@ -27,7 +27,6 @@
 
 <p align="right">
   <a href="https://www.buymeacoffee.com/tum4ik">
-    <img src=".attachments/bmc-brand-icon.svg"/>
-    Buy me a coffee
+    <img src=".attachments/bmc-brand-logo.svg"/>
   </a>
 </p>
