@@ -27,5 +27,5 @@
 
 <h3 align="right">
   
-  [![Buy me a coffee](.attachments/bmc-brand-logo.svg)](https://www.buymeacoffee.com/tum4ik)
+  [![Buy me a coffee](.attachments/bmc-brand-logo.svg)](https://www.buymeacoffee.com/tum4ik){:target="_blank"}
 </h3>
