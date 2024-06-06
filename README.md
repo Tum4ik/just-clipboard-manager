@@ -25,8 +25,7 @@
   <img src="https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graphs/sunburst.svg?token=ISPY8ADZZ8" />
 </h1>
 
-<p align="right">
-  <a href="https://www.buymeacoffee.com/tum4ik" target="_blank" rel="noreferrer noopener">
-    <img src=".attachments/bmc-brand-logo.svg"/>
-  </a>
-</p>
+<h3 align="right">
+  
+  [![Buy me a coffee](.attachments/bmc-brand-logo.svg)](https://www.buymeacoffee.com/tum4ik)
+</h3>
