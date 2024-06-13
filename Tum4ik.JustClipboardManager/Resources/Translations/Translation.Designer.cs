@@ -61,6 +61,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The plugin archive has an abnormal compression ratio..
+        /// </summary>
+        internal static string AbnormalArchiveCompressionRatio_Body {
+            get {
+                return ResourceManager.GetString("AbnormalArchiveCompressionRatio_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         internal static string About {
@@ -340,6 +349,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Too many entries in the plugin archive..
+        /// </summary>
+        internal static string ExceededArchiveEntriesCount_Body {
+            get {
+                return ResourceManager.GetString("ExceededArchiveEntriesCount_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The size of the uncompressed plugin archive is too big..
+        /// </summary>
+        internal static string ExceededUncompressedArchiveSize_Body {
+            get {
+                return ResourceManager.GetString("ExceededUncompressedArchiveSize_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         internal static string Exit {
@@ -394,15 +421,6 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Impossible to load plugin..
-        /// </summary>
-        internal static string ImpossibleToLoadPlugin_Body {
-            get {
-                return ResourceManager.GetString("ImpossibleToLoadPlugin_Body", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         internal static string Install {
@@ -426,6 +444,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Interface {
             get {
                 return ResourceManager.GetString("Interface", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks like there is a problem connecting to the server. It can be caused by either internet connection problem or an error on the server side..
+        /// </summary>
+        internal static string InternetConnectionProblem_Body {
+            get {
+                return ResourceManager.GetString("InternetConnectionProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internet connection problem.
+        /// </summary>
+        internal static string InternetConnectionProblem_Title {
+            get {
+                return ResourceManager.GetString("InternetConnectionProblem_Title", resourceCulture);
             }
         }
         
@@ -462,6 +498,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Light {
             get {
                 return ResourceManager.GetString("Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The plugin module type is not found..
+        /// </summary>
+        internal static string MissingPluginModuleType_Body {
+            get {
+                return ResourceManager.GetString("MissingPluginModuleType_Body", resourceCulture);
             }
         }
         
@@ -565,15 +610,6 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin incompatibility.
-        /// </summary>
-        internal static string PluginIncompatibility_Title {
-            get {
-                return ResourceManager.GetString("PluginIncompatibility_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Plugin installation cancelled..
         /// </summary>
         internal static string PluginInstallationCancelled {
@@ -601,6 +637,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugin loading problem.
+        /// </summary>
+        internal static string PluginLoadingProblem {
+            get {
+                return ResourceManager.GetString("PluginLoadingProblem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible to create an instance of the plugin module..
+        /// </summary>
+        internal static string PluginModuleInstanceCreationProblem_Body {
+            get {
+                return ResourceManager.GetString("PluginModuleInstanceCreationProblem_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugins.
         /// </summary>
         internal static string Plugins {
@@ -610,11 +664,11 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin installation is blocked because of security reasons..
+        ///   Looks up a localized string similar to Plugin security violation.
         /// </summary>
-        internal static string PluginSecurityViolation_Body {
+        internal static string PluginSecurityViolation {
             get {
-                return ResourceManager.GetString("PluginSecurityViolation_Body", resourceCulture);
+                return ResourceManager.GetString("PluginSecurityViolation", resourceCulture);
             }
         }
         
@@ -678,24 +732,6 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string Sequence {
             get {
                 return ResourceManager.GetString("Sequence", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Looks like there is a problem connecting to the server. It can be caused by either internet connection problem or an error on the server side..
-        /// </summary>
-        internal static string ServerConnectionProblem_Body {
-            get {
-                return ResourceManager.GetString("ServerConnectionProblem_Body", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Server connection problem.
-        /// </summary>
-        internal static string ServerConnectionProblem_Title {
-            get {
-                return ResourceManager.GetString("ServerConnectionProblem_Title", resourceCulture);
             }
         }
         
@@ -804,6 +840,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         internal static string TopRight {
             get {
                 return ResourceManager.GetString("TopRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible to load all public types from the plugin..
+        /// </summary>
+        internal static string TypesLoadingProblem_Body {
+            get {
+                return ResourceManager.GetString("TypesLoadingProblem_Body", resourceCulture);
             }
         }
         

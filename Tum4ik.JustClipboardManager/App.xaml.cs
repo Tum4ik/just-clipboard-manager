@@ -2,7 +2,6 @@ using System.Windows;
 using System.Windows.Threading;
 using DeviceId;
 using DryIoc;
-using HarmonyLib;
 using IWshRuntimeLibrary;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.Threading;
 using Octokit;
 using Prism.DryIoc;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using Sentry.Extensibility;
 using SingleInstanceCore;
@@ -26,6 +27,7 @@ using Tum4ik.JustClipboardManager.Properties;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Services.PInvokeWrappers;
+using Tum4ik.JustClipboardManager.Services.Plugins;
 using Tum4ik.JustClipboardManager.Services.Theme;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels;
@@ -82,14 +84,12 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
 
   private readonly IConfiguration _configuration;
-  private readonly Harmony _harmony;
 
 
   public App()
   {
     UpgradeSettings();
     _configuration = ConfigurationHelper.CreateConfiguration();
-    _harmony = new Harmony("just.clipboard.manager");
     var deviceId = InternalSettings.Default.DeviceId;
     if (string.IsNullOrEmpty(deviceId))
     {
@@ -137,7 +137,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
     if (InternalSettings.Default.IsSettingsUpgradeRequired)
     {
       InternalSettings.Default.Upgrade();
-      PluginSettings.Default.Upgrade();
       SettingsGeneral.Default.Upgrade();
       SettingsHotkeys.Default.Upgrade();
       SettingsInterface.Default.Upgrade();
@@ -197,7 +196,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
   }
 
 
-  protected override void OnStartup(StartupEventArgs e)
+  protected override async void OnStartup(StartupEventArgs e)
   {
     try
     {
@@ -209,8 +208,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     }
 
     var updateService = Container.Resolve<IUpdateService>();
-    var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
-    var result = joinableTaskFactory.Run(updateService.SilentUpdateAsync);
+    var result = await updateService.SilentUpdateAsync().ConfigureAwait(true);
     if (result == UpdateResult.Started)
     {
 #if !DEBUG
@@ -218,43 +216,34 @@ public partial class App : ISingleInstance, IApplicationLifetime
 #endif
     }
 
+    var trayIcon = Container.Resolve<TrayIcon>();
+    trayIcon.ForceCreate();
+    
+
     using (var dbContext = Container.Resolve<IDbContextFactory<AppDbContext>>().CreateDbContext())
     {
       try
       {
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
       }
       catch (SqliteException)
       {
-        dbContext.Database.EnsureDeleted();
-        dbContext.Database.Migrate();
+        await dbContext.Database.EnsureDeletedAsync().ConfigureAwait(false);
+        await dbContext.Database.MigrateAsync().ConfigureAwait(false);
       }
     }
-
+    
     var settingsService = Container.Resolve<ISettingsService>();
     var clipRepository = Container.Resolve<IClipRepository>();
-    var pluginRepository = Container.Resolve<IPluginRepository>();
+    var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
     var pluginsService = Container.Resolve<IPluginsService>();
-    var sentryHub = Container.Resolve<IHub>();
-    var moduleManager = Container.Resolve<IModuleManager>();
+    var pluginCatalog = Container.Resolve<IPluginCatalog>();
 
-    joinableTaskFactory.Run(async () =>
-    {
-      try
-      {
-        await RemoveUninstalledPluginsFilesAsync(pluginRepository).ConfigureAwait(false);
-        moduleManager.Run();
-        await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
-        await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
-      }
-      catch (Exception e)
-      {
-        sentryHub.CaptureException(e);
-      }
-    });
+    await pluginCatalog.InitializeAsync().ConfigureAwait(false);
+    await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
+    await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
 
-    var trayIcon = Container.Resolve<TrayIcon>();
-    trayIcon.ForceCreate();
+    await joinableTaskFactory.SwitchToMainThreadAsync();
     var hookService = Container.Resolve<GeneralHookService>();
   }
 
@@ -265,16 +254,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
     SingleInstance.Cleanup();
 
     base.OnExit(e);
-  }
-
-
-  private static async Task RemoveUninstalledPluginsFilesAsync(IPluginRepository pluginRepository)
-  {
-    await foreach (var pluginFile in pluginRepository.GetUninstalledPluginsFilesAsync().ConfigureAwait(false))
-    {
-      System.IO.File.Delete(pluginFile.RelativePath);
-    }
-    await pluginRepository.DeleteUninstalledPluginsAsync().ConfigureAwait(false);
   }
 
 
@@ -293,6 +272,21 @@ public partial class App : ISingleInstance, IApplicationLifetime
   }
 
 
+  protected override void RegisterRequiredTypes(IContainerRegistry containerRegistry)
+  {
+    containerRegistry.RegisterSingleton<RegionAdapterMappings>();
+    containerRegistry.RegisterSingleton<IRegionManager, RegionManager>();
+    containerRegistry.RegisterSingleton<IRegionNavigationContentLoader, RegionNavigationContentLoader>();
+    containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+    containerRegistry.RegisterSingleton<IRegionViewRegistry, RegionViewRegistry>();
+    containerRegistry.RegisterSingleton<IRegionBehaviorFactory, RegionBehaviorFactory>();
+    containerRegistry.Register<IRegionNavigationJournalEntry, RegionNavigationJournalEntry>();
+    containerRegistry.Register<IRegionNavigationJournal, RegionNavigationJournal>();
+    containerRegistry.Register<IRegionNavigationService, RegionNavigationService>();
+    containerRegistry.Register<IDialogWindow, DialogWindow>(); //default dialog host
+  }
+
+
   protected override void RegisterTypes(IContainerRegistry containerRegistry)
   {
     containerRegistry
@@ -301,9 +295,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterThreadSwitching()
       .RegisterInstance(_configuration)
       .RegisterInstance<IApplicationLifetime>(this)
-      .RegisterInstance(_harmony)
       .RegisterSingleton<IHub>(() => HubAdapter.Instance)
-      .RegisterSingleton<ILoadableDirectoryModuleCatalog>(p => p.Resolve<IModuleCatalog>())
       .RegisterSingleton<IDialogService, ExtendedDialogService>()
       .RegisterSingleton<IUser32DllService, User32DllService>()
       .RegisterSingleton<ISHCoreDllService, SHCoreDllService>()
@@ -320,8 +312,8 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterSingleton<IPluginSettingsService>(p => p.Resolve<ISettingsService>())
       .RegisterSingleton<ITranslationService, TranslationService>()
       .RegisterSingleton<IThemeService, ThemeService>()
+      .RegisterSingleton<IPluginCatalog, PluginCatalog>()
       .RegisterSingleton<IPluginsService, PluginsService>()
-      .RegisterSingleton<IPluginsRegistryService>(p => p.Resolve<IPluginsService>())
       .RegisterSingleton<IHttpClientFactory, HttpClientFactory>()
       .RegisterSingleton<InfoBarService>()
       .RegisterSingleton<IInfoBarSubscriber>(p => p.Resolve<InfoBarService>())
@@ -373,12 +365,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
   protected override Window? CreateShell()
   {
     return null;
-  }
-
-
-  protected override IModuleCatalog CreateModuleCatalog()
-  {
-    return new LoadableDirectoryModuleCatalog(_harmony) { ModulePath = "./" };
   }
 
 

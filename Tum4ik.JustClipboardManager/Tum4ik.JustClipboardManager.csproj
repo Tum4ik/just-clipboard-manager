@@ -228,7 +228,6 @@
     <PackageReference Include="DeviceId.Windows" Version="6.6.0" />
     <PackageReference Include="H.NotifyIcon.Wpf" Version="2.0.129" />
     <PackageReference Include="Humanizer.Core.uk" Version="2.14.1" />
-    <PackageReference Include="Lib.Harmony" Version="2.3.3" />
     <PackageReference Include="MathConverter" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -261,11 +260,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>InternalSettings.settings</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\PluginSettings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>PluginSettings.settings</DependentUpon>
     </Compile>
     <Compile Update="Properties\SettingsGeneral.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -305,10 +299,6 @@
     <None Update="Properties\InternalSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>InternalSettings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="Properties\PluginSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>PluginSettings.Designer.cs</LastGenOutput>
     </None>
     <None Update="Properties\SettingsGeneral.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

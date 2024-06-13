@@ -32,12 +32,12 @@
     <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
   </ItemGroup>
   <Target Name="CopyPluginToBuildOutput" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x86)\Plugins\D930D2CD-3FD9-4012-A363-120676E22AFA\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder_x64)\Plugins\D930D2CD-3FD9-4012-A363-120676E22AFA\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CopyPluginToPublishOutput" AfterTargets="Publish">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x86)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x64)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x86)\Plugins\D930D2CD-3FD9-4012-A363-120676E22AFA\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="@(FilesToCopy->'$(PublishDestinationFolder_x64)\Plugins\D930D2CD-3FD9-4012-A363-120676E22AFA\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
 </Project>

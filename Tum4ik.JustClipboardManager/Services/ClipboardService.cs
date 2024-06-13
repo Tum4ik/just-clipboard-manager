@@ -13,7 +13,6 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
-using Tum4ik.JustClipboardManager.PluginDevKit;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
@@ -31,10 +30,7 @@ internal class ClipboardService : IClipboardService
     _pluginsService = pluginsService;
     _sentryHub = sentryHub;
 
-    OnPluginsChainUpdated();
-
     eventAggregator.GetEvent<ClipboardChangedEvent>().Subscribe(OnClipboardChanged, ThreadOption.UIThread);
-    eventAggregator.GetEvent<PluginsChainUpdatedEvent>().Subscribe(OnPluginsChainUpdated);
   }
 
 
@@ -46,9 +42,6 @@ internal class ClipboardService : IClipboardService
   /// </summary>
   private const string ChangeMarker = "JCM_change_{AD3D5E08-A1FA-4602-AF24-94C4ADDBCA78}";
 
-  private IReadOnlyCollection<IPlugin> _plugins = Array.Empty<IPlugin>();
-  private ImmutableList<string> _pluginFormats = ImmutableList.Create<string>();
-
 
   public void Paste(ICollection<FormattedDataObject> formattedDataObjects, string? additionalInfo)
   {
@@ -58,9 +51,11 @@ internal class ClipboardService : IClipboardService
     {
       object? data;
 
-      if (!restoredByPlugin && _pluginFormats.Contains(formattedDataObject.Format))
+      if (!restoredByPlugin && _pluginsService.EnabledPluginFormats.Contains(formattedDataObject.Format))
       {
-        var plugin = _plugins.First(p => p.Formats.Contains(formattedDataObject.Format));
+        var (pluginId, plugin) = _pluginsService
+          .EnabledPlugins
+          .First(p => p.Value.Formats.Contains(formattedDataObject.Format));
         try
         {
           data = plugin.RestoreData(formattedDataObject.Data, additionalInfo);
@@ -74,7 +69,7 @@ internal class ClipboardService : IClipboardService
               message: "Exception when restore data for plugin on paste operation",
               category: "info",
               type: "info",
-              dataPair: ("Plugin Id", plugin.Id!.ToString())
+              dataPair: ("Plugin Id", pluginId.ToString())
             );
           });
           data = GetDataFromBytes(formattedDataObject);
@@ -102,29 +97,21 @@ internal class ClipboardService : IClipboardService
   }
 
 
-  private void OnPluginsChainUpdated()
-  {
-    _plugins = _pluginsService.InstalledPlugins;
-    _pluginFormats = _plugins.SelectMany(p => p.Formats).ToImmutableList();
-  }
-
-
   private async Task SaveClipAsync()
   {
     try
     {
       var dataObject = Clipboard.GetDataObject();
       var formats = dataObject.GetFormats(false);
-      var pluginFormat = formats.Intersect(_pluginFormats).FirstOrDefault();
+      var pluginFormat = formats.Intersect(_pluginsService.EnabledPluginFormats).FirstOrDefault();
       if (formats.Length == 0 || formats.Contains(ChangeMarker) || pluginFormat is null)
       {
         return;
       }
 
-      var plugin = _plugins.FirstOrDefault(
-        p => _pluginsService.IsPluginEnabled(p.Id)
-             && p.Formats.Contains(pluginFormat)
-      );
+      var (pluginId, plugin) = _pluginsService
+        .EnabledPlugins
+        .FirstOrDefault(p => p.Value.Formats.Contains(pluginFormat));
       if (plugin is null)
       {
         return;
@@ -136,7 +123,7 @@ internal class ClipboardService : IClipboardService
         type: "info",
         data: new Dictionary<string, string>
         {
-          { "Plugin id", plugin.Id.ToString() }
+          { "Plugin id", pluginId.ToString() }
         }
       );
       
@@ -225,7 +212,7 @@ internal class ClipboardService : IClipboardService
 
       var clip = new Clip
       {
-        PluginId = plugin.Id,
+        PluginId = pluginId,
         FormattedDataObjects = formattedDataObjects,
         RepresentationData = representationData,
         AdditionalInfo = additionalInfo,

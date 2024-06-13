@@ -74,6 +74,7 @@ internal partial class PasteWindow
     }
 
     if (e.ExtentHeight != default
+        && e.ExtentHeight > e.ViewportHeight
         && e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight)
     {
       _vm.LoadNextClipsBatchAsync().ContinueWith(t => _isLoading = false, TaskScheduler.Default).Await(e => throw e);

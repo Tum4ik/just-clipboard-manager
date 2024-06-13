@@ -223,11 +223,11 @@
   <data name="Disabled" xml:space="preserve">
     <value>Вимкнено</value>
   </data>
-  <data name="ServerConnectionProblem_Body" xml:space="preserve">
+  <data name="InternetConnectionProblem_Body" xml:space="preserve">
     <value>Схоже, виникла проблема з підключенням до сервера. Це може бути викликано проблемою підключення до Інтернету або помилкою на стороні сервера.</value>
   </data>
-  <data name="ServerConnectionProblem_Title" xml:space="preserve">
-    <value>Проблема підключення до сервера</value>
+  <data name="InternetConnectionProblem_Title" xml:space="preserve">
+    <value>Проблема підключення до Інтернету</value>
   </data>
   <data name="Retry" xml:space="preserve">
     <value>Повторити спробу</value>
@@ -249,9 +249,6 @@
   </data>
   <data name="PluginSecurityViolation_Title" xml:space="preserve">
     <value>Порушення безпеки плагіна</value>
-  </data>
-  <data name="PluginSecurityViolation_Body" xml:space="preserve">
-    <value>Встановлення плагіна заблоковано з міркувань безпеки.</value>
   </data>
   <data name="DeleteClipsOlderThan" xml:space="preserve">
     <value>Видалити кліпи, старші за</value>
@@ -361,16 +358,34 @@
   <data name="PluginIncompatibility_Body" xml:space="preserve">
     <value>Плагін несумісний із поточною версією програми.</value>
   </data>
-  <data name="PluginIncompatibility_Title" xml:space="preserve">
-    <value>Несумісність плагіна</value>
-  </data>
   <data name="EmptyPluginArchive_Body" xml:space="preserve">
     <value>Архів встановлюваного плагіна порожній.</value>
   </data>
-  <data name="ImpossibleToLoadPlugin_Body" xml:space="preserve">
-    <value>Неможливо імпортувати плагін.</value>
-  </data>
   <data name="PluginsListFileMissing_Body" xml:space="preserve">
     <value>Файл списку плагінів відсутній на сервері.</value>
+  </data>
+  <data name="PluginSecurityViolation" xml:space="preserve">
+    <value>Порушення безпеки плагіна</value>
+  </data>
+  <data name="ExceededUncompressedArchiveSize_Body" xml:space="preserve">
+    <value>Розмір нестиснутого архіву плагіна завеликий.</value>
+  </data>
+  <data name="ExceededArchiveEntriesCount_Body" xml:space="preserve">
+    <value>Забагато елементів в архіві плагіну.</value>
+  </data>
+  <data name="AbnormalArchiveCompressionRatio_Body" xml:space="preserve">
+    <value>Архів плагіну має ненормальний коефіцієнт стиснення.</value>
+  </data>
+  <data name="PluginLoadingProblem" xml:space="preserve">
+    <value>Проблема встановлення плагіна</value>
+  </data>
+  <data name="PluginModuleInstanceCreationProblem_Body" xml:space="preserve">
+    <value>Неможливо створити екземпляр модуля плагіна.</value>
+  </data>
+  <data name="TypesLoadingProblem_Body" xml:space="preserve">
+    <value>Неможливо завантажити всі публічні типи з плагіна.</value>
+  </data>
+  <data name="MissingPluginModuleType_Body" xml:space="preserve">
+    <value>Тип модуля плагіна не знайдено.</value>
   </data>
 </root>

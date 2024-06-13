@@ -8,6 +8,7 @@ using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.PluginDevKit.Services;
 using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Plugins;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
 
@@ -51,10 +52,10 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     catch (HttpRequestException)
     {
       _infoBarService.ShowWarning(
-        "ServerConnectionProblem_Body",
+        "InternetConnectionProblem_Body",
         InfoBarActionType.Button,
         "Retry",
-        "ServerConnectionProblem_Title",
+        "InternetConnectionProblem_Title",
         r =>
         {
           if (r == InfoBarResult.Action)
@@ -90,7 +91,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
   }
 
 
-  public ObservableCollection<SearchPluginInfoDto> Plugins { get; } = new();
+  public ObservableCollection<SearchPluginInfoDto> Plugins { get; } = [];
 
   [ObservableProperty] private int _pluginInstallationProgress;
   [ObservableProperty] private Guid _installingPluginId;
@@ -104,31 +105,42 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     _installPluginCancellationTokenSource = new();
     InstallingPluginId = plugin.Id;
     var progress = new Progress<int>(p => PluginInstallationProgress = p);
-    var (success, reason) = await _pluginsService.InstallPluginAsync(
-      plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
+    var installationResult = await _pluginsService.InstallPluginAsync(
+      plugin.DownloadLink, plugin.Id, plugin.Version, progress, _installPluginCancellationTokenSource.Token
     ).ConfigureAwait(true);
 
-    if (success)
+    if (installationResult == PluginInstallationResult.Success)
     {
       plugin.IsInstalled = true;
     }
     else
     {
-      var (body, title, severity) = reason switch
+      var defaultNotification
+        = ("PluginInstallationProblem_Body", "PluginInstallationProblem_Title", InfoBarSeverity.Critical);
+      var (body, title, severity) = installationResult switch
       {
-        PluginInstallationFailReason.Incompatibility
-          => ("PluginIncompatibility_Body", "PluginIncompatibility_Title", InfoBarSeverity.Warning),
-        PluginInstallationFailReason.CancelledByUser
+        PluginInstallationResult.CancelledByUser
           => ("PluginInstallationCancelled", null, InfoBarSeverity.Informational),
-        PluginInstallationFailReason.InternetConnectionProblem
-          => ("ServerConnectionProblem_Body", "PluginDownloadProblem_Title", InfoBarSeverity.Warning),
-        PluginInstallationFailReason.SecurityViolation
-          => ("PluginSecurityViolation_Body", "PluginSecurityViolation_Title", InfoBarSeverity.Critical),
-        PluginInstallationFailReason.EmptyPluginArchive
+        PluginInstallationResult.InternetConnectionProblem
+          => ("InternetConnectionProblem_Body", "PluginDownloadProblem_Title", InfoBarSeverity.Warning),
+        PluginInstallationResult.EmptyArchive
           => ("EmptyPluginArchive_Body", null, InfoBarSeverity.Warning),
-        PluginInstallationFailReason.PluginLoadProblem
-          => ("ImpossibleToLoadPlugin_Body", null, InfoBarSeverity.Warning),
-        _ => ("PluginInstallationProblem_Body", "PluginInstallationProblem_Title", InfoBarSeverity.Critical),
+        PluginInstallationResult.ExceededArchiveEntriesCount
+          => ("ExceededArchiveEntriesCount_Body", "PluginSecurityViolation", InfoBarSeverity.Warning),
+        PluginInstallationResult.AbnormalArchiveCompressionRatio
+          => ("AbnormalArchiveCompressionRatio_Body", "PluginSecurityViolation", InfoBarSeverity.Warning),
+        PluginInstallationResult.ExceededUncompressedArchiveSize
+          => ("ExceededUncompressedArchiveSize_Body", "PluginSecurityViolation", InfoBarSeverity.Warning),
+        PluginInstallationResult.Incompatibility
+          => ("PluginIncompatibility_Body", null, InfoBarSeverity.Warning),
+        PluginInstallationResult.MissingPluginModuleType
+          => ("MissingPluginModuleType_Body", "PluginLoadingProblem", InfoBarSeverity.Warning),
+        PluginInstallationResult.TypesLoadingProblem
+          => ("TypesLoadingProblem_Body", "PluginLoadingProblem", InfoBarSeverity.Warning),
+        PluginInstallationResult.PluginModuleInstanceCreationProblem
+          => ("PluginModuleInstanceCreationProblem_Body", "PluginLoadingProblem", InfoBarSeverity.Warning),
+        PluginInstallationResult.OtherProblem => defaultNotification,
+        _ => defaultNotification
       };
       _infoBarService.Show(body, title, severity);
     }
