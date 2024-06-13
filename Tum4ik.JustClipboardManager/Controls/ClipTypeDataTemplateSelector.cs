@@ -11,7 +11,7 @@ internal class ClipTypeDataTemplateSelector : DataTemplateSelector
   {
     var clipDto = (ClipDto) item;
     var pluginsService = ContainerLocator.Container.Resolve<IPluginsService>();
-    var plugin = pluginsService.GetPlugin(clipDto.PluginId);
+    var plugin = pluginsService[clipDto.PluginId];
     return plugin?.RepresentationDataDataTemplate;
   }
 }

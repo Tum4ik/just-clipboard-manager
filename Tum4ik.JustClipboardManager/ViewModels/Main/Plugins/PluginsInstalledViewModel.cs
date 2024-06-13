@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Regions;
 using Tum4ik.JustClipboardManager.Data.Dto;
-using Tum4ik.JustClipboardManager.PluginDevKit;
+using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Services;
 using Tum4ik.JustClipboardManager.Services.Translation;
 using Tum4ik.JustClipboardManager.ViewModels.Base;
@@ -11,34 +11,44 @@ using Tum4ik.JustClipboardManager.ViewModels.Base;
 namespace Tum4ik.JustClipboardManager.ViewModels.Main.Plugins;
 internal partial class PluginsInstalledViewModel : TranslationViewModel, INavigationAware
 {
+  private readonly IPluginRepository _pluginRepository;
   private readonly IPluginsService _pluginsService;
-  private readonly ILoadableDirectoryModuleCatalog _moduleCatalog;
 
   public PluginsInstalledViewModel(ITranslationService translationService,
                                    IEventAggregator eventAggregator,
-                                   IPluginsService pluginsService,
-                                   ILoadableDirectoryModuleCatalog moduleCatalog)
+                                   IPluginRepository pluginRepository,
+                                   IPluginsService pluginsService)
     : base(translationService, eventAggregator)
   {
+    _pluginRepository = pluginRepository;
     _pluginsService = pluginsService;
-    _moduleCatalog = moduleCatalog;
   }
 
 
   public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
-  public void OnNavigatedTo(NavigationContext navigationContext)
+  public async void OnNavigatedTo(NavigationContext navigationContext)
   {
-    LoadPlugins();
+    await LoadPluginsAsync().ConfigureAwait(false);
   }
 
 
-  private void LoadPlugins()
+  private async Task LoadPluginsAsync()
   {
     Plugins.Clear();
-    foreach (var installedPluginDto in CreatePluginsDto(_pluginsService.InstalledPlugins))
+    // todo: get installed plugins from PluginsService
+    await foreach (var plugin in _pluginRepository.GetInstalledPluginsAsync())
     {
-      Plugins.Add(installedPluginDto);
+      Plugins.Add(new()
+      {
+        Id = plugin.Id,
+        Name = plugin.Name,
+        Version = Version.Parse(plugin.Version),
+        IsEnabled = plugin.IsEnabled,
+        Author = plugin.Author,
+        AuthorEmail = plugin.AuthorEmail,
+        Description = plugin.Description
+      });
     }
   }
 
@@ -52,17 +62,17 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
 
 
   [RelayCommand]
-  private void EnableDisablePlugin(InstalledPluginInfoDto plugin)
+  private async Task EnableDisablePluginAsync(InstalledPluginInfoDto plugin)
   {
     if (plugin.IsEnabled)
     {
       plugin.IsEnabled = false;
-      _pluginsService.DisablePlugin(plugin.Id);
+      await _pluginsService.DisablePluginAsync(plugin.Id).ConfigureAwait(false);
     }
     else
     {
       plugin.IsEnabled = true;
-      _pluginsService.EnablePlugin(plugin.Id);
+      await _pluginsService.EnablePluginAsync(plugin.Id).ConfigureAwait(false);
     }
   }
 
@@ -71,39 +81,6 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   private async Task UninstallPluginAsync(InstalledPluginInfoDto plugin)
   {
     await _pluginsService.UninstallPluginAsync(plugin.Id).ConfigureAwait(true);
-    LoadPlugins();
-  }
-
-
-  private IEnumerable<InstalledPluginInfoDto> CreatePluginsDto(IEnumerable<IPlugin> plugins)
-  {
-    foreach (var plugin in plugins)
-    {
-      var dto = PluginToDto(plugin);
-      if (dto is not null)
-      {
-        yield return dto;
-      }
-    }
-  }
-
-
-  private InstalledPluginInfoDto? PluginToDto(IPlugin plugin)
-  {
-    var pluginInfo = _moduleCatalog.GetPluginInfo(plugin.Id);
-    if (pluginInfo is null)
-    {
-      return null;
-    }
-
-    return new InstalledPluginInfoDto
-    {
-      Id = plugin.Id,
-      Name = pluginInfo.Name,
-      Version = pluginInfo.Version,
-      Author = pluginInfo.Author,
-      Description = pluginInfo.Description,
-      IsEnabled = _pluginsService.IsPluginEnabled(plugin.Id)
-    };
+    await LoadPluginsAsync().ConfigureAwait(false);
   }
 }

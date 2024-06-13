@@ -223,11 +223,11 @@
   <data name="Disabled" xml:space="preserve">
     <value>Disabled</value>
   </data>
-  <data name="ServerConnectionProblem_Body" xml:space="preserve">
+  <data name="InternetConnectionProblem_Body" xml:space="preserve">
     <value>Looks like there is a problem connecting to the server. It can be caused by either internet connection problem or an error on the server side.</value>
   </data>
-  <data name="ServerConnectionProblem_Title" xml:space="preserve">
-    <value>Server connection problem</value>
+  <data name="InternetConnectionProblem_Title" xml:space="preserve">
+    <value>Internet connection problem</value>
   </data>
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
@@ -249,9 +249,6 @@
   </data>
   <data name="PluginSecurityViolation_Title" xml:space="preserve">
     <value>Plugin security violation</value>
-  </data>
-  <data name="PluginSecurityViolation_Body" xml:space="preserve">
-    <value>Plugin installation is blocked because of security reasons.</value>
   </data>
   <data name="DeleteClipsOlderThan" xml:space="preserve">
     <value>Delete clips older than</value>
@@ -358,19 +355,37 @@
   <data name="PluginInstallationCancelled" xml:space="preserve">
     <value>Plugin installation cancelled.</value>
   </data>
-  <data name="PluginIncompatibility_Title" xml:space="preserve">
-    <value>Plugin incompatibility</value>
-  </data>
   <data name="PluginIncompatibility_Body" xml:space="preserve">
     <value>The plugin is incompatible with the current version of the application.</value>
   </data>
   <data name="EmptyPluginArchive_Body" xml:space="preserve">
     <value>The installing plugin archive is empty.</value>
   </data>
-  <data name="ImpossibleToLoadPlugin_Body" xml:space="preserve">
-    <value>Impossible to load plugin.</value>
-  </data>
   <data name="PluginsListFileMissing_Body" xml:space="preserve">
     <value>The plugins list file is missing on the server.</value>
+  </data>
+  <data name="PluginSecurityViolation" xml:space="preserve">
+    <value>Plugin security violation</value>
+  </data>
+  <data name="ExceededArchiveEntriesCount_Body" xml:space="preserve">
+    <value>Too many entries in the plugin archive.</value>
+  </data>
+  <data name="AbnormalArchiveCompressionRatio_Body" xml:space="preserve">
+    <value>The plugin archive has an abnormal compression ratio.</value>
+  </data>
+  <data name="ExceededUncompressedArchiveSize_Body" xml:space="preserve">
+    <value>The size of the uncompressed plugin archive is too big.</value>
+  </data>
+  <data name="MissingPluginModuleType_Body" xml:space="preserve">
+    <value>The plugin module type is not found.</value>
+  </data>
+  <data name="PluginLoadingProblem" xml:space="preserve">
+    <value>Plugin loading problem</value>
+  </data>
+  <data name="TypesLoadingProblem_Body" xml:space="preserve">
+    <value>Impossible to load all public types from the plugin.</value>
+  </data>
+  <data name="PluginModuleInstanceCreationProblem_Body" xml:space="preserve">
+    <value>Impossible to create an instance of the plugin module.</value>
   </data>
 </root>

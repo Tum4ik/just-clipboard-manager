@@ -16,7 +16,6 @@ internal class AppDbContext : DbContext
   public DbSet<FormattedDataObject> FormattedDataObjects { get; set; }
 
   public DbSet<Plugin> Plugins { get; set; }
-  public DbSet<PluginFile> PluginFiles { get; set; }
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,12 +24,6 @@ internal class AppDbContext : DbContext
       .Entity<Clip>()
       .Property(c => c.ClippedAt)
       .HasDefaultValueSql("datetime('now', 'localtime')");
-
-    modelBuilder
-      .Entity<Plugin>()
-      .HasMany(p => p.Files)
-      .WithOne()
-      .IsRequired();
   }
 
 

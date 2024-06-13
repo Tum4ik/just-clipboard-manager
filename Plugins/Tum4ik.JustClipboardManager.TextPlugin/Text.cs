@@ -6,7 +6,7 @@ using Tum4ik.JustClipboardManager.PluginDevKit.Models;
 
 namespace Tum4ik.JustClipboardManager.TextPlugin;
 
-public sealed class Text : Plugin
+public sealed class Text : Plugin<TextVisualTree>
 {
   public override IReadOnlyCollection<string> Formats { get; } = [DataFormats.UnicodeText, DataFormats.Text];
 
@@ -44,9 +44,9 @@ public sealed class Text : Plugin
 [Plugin(
   Id = "D930D2CD-3FD9-4012-A363-120676E22AFA",
   Name = "Default Text Plugin",
-  Version = "3.0.0",
+  Version = "1.0.0",
   Author = "Yevheniy Tymchishin",
   AuthorEmail = "timchishinevgeniy@gmail.com",
   Description = "A simple plugin to deal with the text data"
 )]
-public sealed class TextPlugin : PluginModule<Text, TextVisualTree> { }
+public sealed class TextPlugin : PluginModule<Text> { }

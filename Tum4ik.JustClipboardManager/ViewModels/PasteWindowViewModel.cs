@@ -263,6 +263,8 @@ internal partial class PasteWindowViewModel : TranslationViewModel
                                          string? search = null,
                                          IEnumerable<int>? idsToIgnore = null)
   {
+    // todo: get clips that has installed and enabled plugins
+    // do not do that decision in the DbClipToClipDto method
     var clips = _clipRepository.GetAsync(skip, take, search, idsToIgnore);
     var loadedCount = 0;
     await foreach (var clip in clips)
@@ -282,8 +284,8 @@ internal partial class PasteWindowViewModel : TranslationViewModel
 
   private ClipDto? DbClipToClipDto(Clip clip)
   {
-    var plugin = _pluginsService.GetPlugin(clip.PluginId);
-    if (plugin?.Id is null || !_pluginsService.IsPluginEnabled(plugin.Id))
+    var plugin = _pluginsService[clip.PluginId];
+    if (plugin is null)
     {
       return null;
     }
@@ -305,7 +307,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
         message: "Exception when restore representation data for plugin",
         category: "info",
         type: "info",
-        dataPair: ("PluginId", plugin.Id.ToString())
+        dataPair: ("PluginId", clip.PluginId.ToString())
       ));
     }
     return null;

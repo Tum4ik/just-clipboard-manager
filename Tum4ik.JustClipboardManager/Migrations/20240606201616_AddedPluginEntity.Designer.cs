@@ -11,7 +11,7 @@ using Tum4ik.JustClipboardManager.Data;
 namespace Tum4ik.JustClipboardManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240510193325_AddedPluginEntity")]
+    [Migration("20240606201616_AddedPluginEntity")]
     partial class AddedPluginEntity
     {
         /// <inheritdoc />
@@ -111,6 +111,22 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Author")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthorEmail")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FilesDirectory")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsInstalled")
                         .HasColumnType("INTEGER");
 
@@ -125,26 +141,6 @@ namespace Tum4ik.JustClipboardManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Plugins");
-                });
-
-            modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.PluginFile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("PluginId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RelativePath")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PluginId");
-
-                    b.ToTable("PluginFiles");
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.FormattedDataObject", b =>
@@ -169,23 +165,9 @@ namespace Tum4ik.JustClipboardManager.Migrations
                     b.Navigation("Clip");
                 });
 
-            modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.PluginFile", b =>
-                {
-                    b.HasOne("Tum4ik.JustClipboardManager.Data.Models.Plugin", null)
-                        .WithMany("Files")
-                        .HasForeignKey("PluginId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.Clip", b =>
                 {
                     b.Navigation("FormattedDataObjects");
-                });
-
-            modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.Plugin", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }
