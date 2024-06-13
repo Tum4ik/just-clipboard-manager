@@ -15,7 +15,6 @@ internal interface IPluginCatalog
                                                  IProgress<int>? progress = null,
                                                  CancellationToken cancellationToken = default);
 
-  Task<(PluginInstallationResult, IPluginModule?)> LoadPluginModuleAsync(
-    DirectoryInfo pluginDirectory, List<Assembly>? alreadyLoadedAssemblies = null
-  );
+  Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
+                                                       List<Assembly>? alreadyLoadedAssemblies = null);
 }

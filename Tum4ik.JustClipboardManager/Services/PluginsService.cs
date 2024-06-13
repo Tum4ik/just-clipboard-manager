@@ -220,21 +220,9 @@ internal class PluginsService : IPluginsService
 
     var pluginsDirectory = _configuration["Plugins:FilesDirectory"]!;
     var textPluginDirectory = Path.Combine(pluginsDirectory, textPluginIdStr);
-    var (result, pluginModule) = await _pluginCatalog
+    await _pluginCatalog
       .LoadPluginModuleAsync(new DirectoryInfo(textPluginDirectory))
       .ConfigureAwait(false);
-    if (result == PluginInstallationResult.Success && pluginModule is not null)
-    {
-      await _pluginRepository.AddAsync(new()
-      {
-        Id = textPluginId,
-        Name = pluginModule.Name,
-        Version = pluginModule.Version.ToString(),
-        Author = pluginModule.Author,
-        Description = pluginModule.Description,
-        FilesDirectory = textPluginDirectory
-      }).ConfigureAwait(false);
-    }
   }
 
 

@@ -148,16 +148,8 @@ internal class PluginCatalog : IPluginCatalog
       return PluginInstallationResult.CancelledByUser;
     }
 
-    var (result, pluginModule) = await LoadPluginModuleAsync(
-      new DirectoryInfo(destinationPluginDirectory),
-      GetAlreadyLoadedAssemblies()
-    ).ConfigureAwait(false);
-    if (result != PluginInstallationResult.Success)
-    {
-      Directory.Delete(destinationPluginDirectory, true);
-      return result;
-    }
 
+    var result = PluginInstallationResult.Success;
     if (await _pluginRepository.ExistsAsync(pluginId, pluginVersion).ConfigureAwait(false))
     {
       await _pluginRepository.UpdateIsInstalledAsync(pluginId, true).ConfigureAwait(false);
@@ -168,25 +160,18 @@ internal class PluginCatalog : IPluginCatalog
     }
     else
     {
-      await _pluginRepository.AddAsync(new()
-      {
-        Id = pluginId,
-        Name = pluginModule!.Name,
-        Version = pluginModule.Version.ToString(),
-        Author = pluginModule.Author,
-        Description = pluginModule.Description,
-        FilesDirectory = destinationPluginDirectory
-      }).ConfigureAwait(false);
+      result = await LoadPluginModuleAsync(
+        new DirectoryInfo(destinationPluginDirectory),
+        GetAlreadyLoadedAssemblies()
+      ).ConfigureAwait(false);
     }
 
     return result;
   }
 
 
-  public async Task<(PluginInstallationResult, IPluginModule?)> LoadPluginModuleAsync(
-    DirectoryInfo pluginDirectory,
-    List<Assembly>? alreadyLoadedAssemblies = null
-  )
+  public async Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
+                                                                    List<Assembly>? alreadyLoadedAssemblies = null)
   {
     var files = pluginDirectory
       .GetFiles("*.dll")
@@ -204,6 +189,21 @@ internal class PluginCatalog : IPluginCatalog
       }
     }
 
+    var result = await LoadPluginModuleFromLoadedAssembliesAsync(pluginDirectory, loadedAssemblies).ConfigureAwait(false);
+
+    if (result != PluginInstallationResult.Success)
+    {
+      Directory.Delete(pluginDirectory.FullName, true);
+      return result;
+    }
+
+    return result;
+  }
+
+
+  private async Task<PluginInstallationResult> LoadPluginModuleFromLoadedAssembliesAsync(DirectoryInfo pluginDirectory,
+                                                                                         List<Assembly> loadedAssemblies)
+  {
     var pluginAssembly = loadedAssemblies.FirstOrDefault(assembly =>
       assembly.GetName().Name == _defaultTextPluginAssemblyName
       ||
@@ -211,9 +211,10 @@ internal class PluginCatalog : IPluginCatalog
         .GetReferencedAssemblies()
         .Any(a => a.Name == _devKitAssemblyName && a.Version >= _devKitMinSupportedVersion)
     );
+
     if (pluginAssembly is null)
     {
-      return (PluginInstallationResult.Incompatibility, null);
+      return PluginInstallationResult.Incompatibility;
     }
 
     try
@@ -225,32 +226,47 @@ internal class PluginCatalog : IPluginCatalog
                              && !t.IsAbstract);
       if (pluginModuleType is null)
       {
-        return (PluginInstallationResult.MissingPluginModuleType, null);
+        return PluginInstallationResult.MissingPluginModuleType;
       }
 
       var pluginModule = (IPluginModule?) Activator.CreateInstance(pluginModuleType);
       if (pluginModule is null)
       {
-        return (PluginInstallationResult.PluginModuleInstanceCreationProblem, null);
+        return PluginInstallationResult.PluginModuleInstanceCreationProblem;
       }
       var plugin = await ConstructPluginAsync(pluginModule).ConfigureAwait(false);
-      _plugins[pluginModule.Id] = plugin;
+      var pluginId = pluginModule.Id;
+      _plugins[pluginId] = plugin;
+
+      if (!await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
+      {
+        await _pluginRepository.AddAsync(new()
+        {
+          Id = pluginId,
+          Name = pluginModule.Name,
+          Version = pluginModule.Version.ToString(),
+          Author = pluginModule.Author,
+          Description = pluginModule.Description,
+          FilesDirectory = pluginDirectory.FullName
+        }).ConfigureAwait(false);
+      }
+
       if (_isInitialized)
       {
         PluginsCollectionChanged?.Invoke(this, EventArgs.Empty);
       }
 
-      return (PluginInstallationResult.Success, pluginModule);
+      return PluginInstallationResult.Success;
     }
     catch (TypeLoadException e)
     {
       _sentryHub.CaptureException(e);
-      return (PluginInstallationResult.TypesLoadingProblem, null);
+      return PluginInstallationResult.TypesLoadingProblem;
     }
     catch (Exception e)
     {
       _sentryHub.CaptureException(e);
-      return (PluginInstallationResult.OtherProblem, null);
+      return PluginInstallationResult.OtherProblem;
     }
   }
 
