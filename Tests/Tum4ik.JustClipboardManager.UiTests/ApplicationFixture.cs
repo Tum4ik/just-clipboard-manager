@@ -65,19 +65,23 @@ public sealed class ApplicationFixture : IDisposable
       );
     }
 
-    foreach (AutomationElement area in notificationIconAreas)
+    for (var i = 0; i < 20; i++)
     {
-      var icon = area
-        .FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button))
-        .Cast<AutomationElement>()
-        .FirstOrDefault(ni =>
-        {
-          var name = (string) ni.GetCurrentPropertyValue(AutomationElement.NameProperty);
-          return name.Contains("Just Clipboard Manager - UI Test", StringComparison.OrdinalIgnoreCase);
-        });
-      if (icon is not null)
+      Thread.Sleep(1000);
+      foreach (AutomationElement area in notificationIconAreas)
       {
-        return icon;
+        var icon = area
+          .FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button))
+          .Cast<AutomationElement>()
+          .FirstOrDefault(ni =>
+          {
+            var name = (string) ni.GetCurrentPropertyValue(AutomationElement.NameProperty);
+            return name.Contains("Just Clipboard Manager - UI Test", StringComparison.OrdinalIgnoreCase);
+          });
+        if (icon is not null)
+        {
+          return icon;
+        }
       }
     }
     throw new ElementNotFoundException("Tray icon is not found");
