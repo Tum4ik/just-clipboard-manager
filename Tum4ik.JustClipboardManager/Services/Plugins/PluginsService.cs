@@ -10,9 +10,8 @@ using Tum4ik.JustClipboardManager.Data.Dto;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.PluginDevKit;
-using Tum4ik.JustClipboardManager.Services.Plugins;
 
-namespace Tum4ik.JustClipboardManager.Services;
+namespace Tum4ik.JustClipboardManager.Services.Plugins;
 internal class PluginsService : IPluginsService
 {
   private readonly IGitHubClient _gitHubClient;
