@@ -8,7 +8,7 @@ internal interface IPluginsService
   FrozenDictionary<Guid, IPlugin> EnabledPlugins { get; }
   IPlugin? this[Guid id] { get; }
   FrozenSet<string> EnabledPluginFormats { get; }
-  Task PreInstallPluginsAsync();
+  Task InitializeAsync();
   IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync();
   Task UninstallPluginAsync(Guid id);
   Task EnablePluginAsync(Guid id);

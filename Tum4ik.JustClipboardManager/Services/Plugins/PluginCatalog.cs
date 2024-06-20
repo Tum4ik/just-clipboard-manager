@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Data.Repositories;
+using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 
 namespace Tum4ik.JustClipboardManager.Services.Plugins;
@@ -15,17 +16,20 @@ internal class PluginCatalog : IPluginCatalog
   private readonly IContainerExtension _containerExtension;
   private readonly IHub _sentryHub;
   private readonly JoinableTaskFactory _joinableTaskFactory;
+  private readonly IAppDomain _appDomain;
 
   public PluginCatalog(IConfiguration configuration,
                        IPluginRepository pluginRepository,
                        IContainerExtension containerExtension,
                        IHub sentryHub,
-                       JoinableTaskFactory joinableTaskFactory)
+                       JoinableTaskFactory joinableTaskFactory,
+                       IAppDomain appDomain)
   {
     _pluginRepository = pluginRepository;
     _containerExtension = containerExtension;
     _sentryHub = sentryHub;
     _joinableTaskFactory = joinableTaskFactory;
+    _appDomain = appDomain;
     _pluginsDirectoryName = configuration["Plugins:FilesDirectory"]!;
     _devKitAssemblyName = configuration["Plugins:DevKitAssemblyName"]!;
     _devKitMinSupportedVersion = configuration.GetRequiredSection("Plugins:DevKitMinSupportedVersion").Get<Version>()!;
@@ -34,7 +38,7 @@ internal class PluginCatalog : IPluginCatalog
   }
 
 
-  private bool _isInitialized;
+  
   private readonly string _pluginsDirectoryName;
   private readonly string _devKitAssemblyName;
   private readonly Version _devKitMinSupportedVersion;
@@ -43,28 +47,6 @@ internal class PluginCatalog : IPluginCatalog
 
   private readonly Dictionary<Guid, IPlugin> _plugins = [];
   public IReadOnlyDictionary<Guid, IPlugin> Plugins { get; }
-  public event EventHandler? PluginsCollectionChanged;
-
-
-  public async Task InitializeAsync()
-  {
-    if (_isInitialized)
-    {
-      return;
-    }
-
-    await RemoveUninstalledPluginsFilesAsync().ConfigureAwait(false);
-
-    var alreadyLoadedAssemblies = GetAlreadyLoadedAssemblies();
-    await foreach (var installedPlugin in _pluginRepository.GetInstalledPluginsAsync().ConfigureAwait(false))
-    {
-      var filesDirectory = new DirectoryInfo(installedPlugin.FilesDirectory);
-      await LoadPluginModuleAsync(filesDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
-    }
-
-    _isInitialized = true;
-    PluginsCollectionChanged?.Invoke(this, EventArgs.Empty);
-  }
 
 
   public async Task<PluginInstallationResult> LoadPluginAsync(ZipArchive zipArchive,
@@ -162,7 +144,7 @@ internal class PluginCatalog : IPluginCatalog
     {
       result = await LoadPluginModuleAsync(
         new DirectoryInfo(destinationPluginDirectory),
-        GetAlreadyLoadedAssemblies()
+        _appDomain.GetLoadedAssemblies()
       ).ConfigureAwait(false);
     }
 
@@ -171,11 +153,11 @@ internal class PluginCatalog : IPluginCatalog
 
 
   public async Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
-                                                                    List<Assembly>? alreadyLoadedAssemblies = null)
+                                                                    Assembly[]? alreadyLoadedAssemblies = null)
   {
     var files = pluginDirectory
       .GetFiles("*.dll")
-      .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? GetAlreadyLoadedAssemblies()));
+      .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? _appDomain.GetLoadedAssemblies()));
     var loadedAssemblies = new List<Assembly>();
     foreach (FileInfo fileInfo in files)
     {
@@ -251,11 +233,6 @@ internal class PluginCatalog : IPluginCatalog
         }).ConfigureAwait(false);
       }
 
-      if (_isInitialized)
-      {
-        PluginsCollectionChanged?.Invoke(this, EventArgs.Empty);
-      }
-
       return PluginInstallationResult.Success;
     }
     catch (TypeLoadException e)
@@ -271,25 +248,9 @@ internal class PluginCatalog : IPluginCatalog
   }
 
 
-  private static List<Assembly> GetAlreadyLoadedAssemblies()
+  private static bool IsAssemblyFileAlreadyLoaded(FileInfo file, Assembly[] alreadyLoadedAssemblies)
   {
-    return AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic).ToList();
-  }
-
-
-  private async Task RemoveUninstalledPluginsFilesAsync()
-  {
-    await foreach (var uninstalledPlugin in _pluginRepository.GetUninstalledPluginsAsync().ConfigureAwait(false))
-    {
-      Directory.Delete(uninstalledPlugin.FilesDirectory, true);
-    }
-    await _pluginRepository.DeleteUninstalledPluginsAsync().ConfigureAwait(false);
-  }
-
-
-  private static bool IsAssemblyFileAlreadyLoaded(FileInfo file, List<Assembly> alreadyLoadedAssemblies)
-  {
-    return alreadyLoadedAssemblies.Exists(
+    return alreadyLoadedAssemblies.Any(
       assembly => string.Equals(Path.GetFileName(assembly.Location), file.Name, StringComparison.OrdinalIgnoreCase)
     );
   }

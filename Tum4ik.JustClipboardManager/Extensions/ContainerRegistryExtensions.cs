@@ -64,7 +64,8 @@ internal static class ContainerRegistryExtensions
       .RegisterSingleton<IEnvironment, EnvironmentWrapper>()
       .RegisterSingleton<IFile, FileWrapper>()
       .RegisterSingleton<IPath, PathWrapper>()
-      .RegisterSingleton<IClipboard, ClipboardWrapper>();
+      .RegisterSingleton<IClipboard, ClipboardWrapper>()
+      .RegisterSingleton<IAppDomain, AppDomainWrapper>();
   }
 
 

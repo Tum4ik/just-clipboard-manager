@@ -21,6 +21,7 @@ internal class PluginsService : IPluginsService
   private readonly IHub _sentryHub;
   private readonly IConfiguration _configuration;
   private readonly IPluginCatalog _pluginCatalog;
+  private readonly IAppDomain _appDomain;
 
   public PluginsService(IGitHubClient gitHubClient,
                         IHttpClientFactory httpClientFactory,
@@ -28,7 +29,8 @@ internal class PluginsService : IPluginsService
                         IPluginRepository pluginRepository,
                         IHub sentryHub,
                         IConfiguration configuration,
-                        IPluginCatalog pluginCatalog)
+                        IPluginCatalog pluginCatalog,
+                        IAppDomain appDomain)
   {
     _gitHubClient = gitHubClient;
     _httpClientFactory = httpClientFactory;
@@ -37,10 +39,11 @@ internal class PluginsService : IPluginsService
     _sentryHub = sentryHub;
     _configuration = configuration;
     _pluginCatalog = pluginCatalog;
-
-    LoadAvailablePlugins();
-    pluginCatalog.PluginsCollectionChanged += (s, e) => LoadAvailablePlugins();
+    _appDomain = appDomain;
   }
+
+
+  private bool _isInitialized;
 
 
   public FrozenDictionary<Guid, IPlugin> EnabledPlugins { get; private set; } = null!;
@@ -58,7 +61,30 @@ internal class PluginsService : IPluginsService
   public FrozenSet<string> EnabledPluginFormats { get; private set; } = null!;
 
 
-  public async Task PreInstallPluginsAsync()
+  public async Task InitializeAsync()
+  {
+    if (_isInitialized)
+    {
+      return;
+    }
+
+    await RemoveUninstalledPluginsFilesAsync().ConfigureAwait(false);
+
+    var alreadyLoadedAssemblies = _appDomain.GetLoadedAssemblies();
+    await foreach (var installedPlugin in _pluginRepository.GetInstalledPluginsAsync().ConfigureAwait(false))
+    {
+      var filesDirectory = new DirectoryInfo(installedPlugin.FilesDirectory);
+      await _pluginCatalog.LoadPluginModuleAsync(filesDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
+    }
+
+    await PreInstallPluginsAsync().ConfigureAwait(false);
+
+    await LoadAvailablePluginsAsync().ConfigureAwait(false);
+    _isInitialized = true;
+  }
+
+
+  private async Task PreInstallPluginsAsync()
   {
     await InstallDefaultTextPluginAsync().ConfigureAwait(false);
 
@@ -157,9 +183,15 @@ internal class PluginsService : IPluginsService
       using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
       using var zipArchive = new ZipArchive(memoryStream);
 
-      return await _pluginCatalog
+      var result = await _pluginCatalog
         .LoadPluginAsync(zipArchive, pluginId, pluginVersion, progress2, cancellationToken)
         .ConfigureAwait(false);
+      if (result == PluginInstallationResult.Success && _isInitialized)
+      {
+        await LoadAvailablePluginsAsync().ConfigureAwait(false);
+      }
+
+      return result;
     }
     catch (OperationCanceledException)
     {
@@ -184,12 +216,6 @@ internal class PluginsService : IPluginsService
   }
 
 
-  private void LoadAvailablePlugins()
-  {
-    LoadAvailablePluginsAsync().Await(e => _sentryHub.CaptureException(e));
-  }
-
-
   private async Task LoadAvailablePluginsAsync()
   {
     var enabledPlugins = new Dictionary<Guid, IPlugin>();
@@ -205,6 +231,16 @@ internal class PluginsService : IPluginsService
 
     EnabledPlugins = enabledPlugins.ToFrozenDictionary();
     EnabledPluginFormats = enabledPluginFormats.ToFrozenSet();
+  }
+
+
+  private async Task RemoveUninstalledPluginsFilesAsync()
+  {
+    await foreach (var uninstalledPlugin in _pluginRepository.GetUninstalledPluginsAsync().ConfigureAwait(false))
+    {
+      Directory.Delete(uninstalledPlugin.FilesDirectory, true);
+    }
+    await _pluginRepository.DeleteUninstalledPluginsAsync().ConfigureAwait(false);
   }
 
 
