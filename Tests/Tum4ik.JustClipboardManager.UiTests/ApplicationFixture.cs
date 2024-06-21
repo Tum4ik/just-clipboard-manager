@@ -66,7 +66,7 @@ public sealed class ApplicationFixture : IDisposable
     else
     {
       notificationIconAreas = AutomationElement.RootElement.FindAll(
-        TreeScope.Descendants,
+        TreeScope.Subtree,
         new PropertyCondition(AutomationElement.AutomationIdProperty, "1504")
       );
     }
