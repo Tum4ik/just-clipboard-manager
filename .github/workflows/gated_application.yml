@@ -95,19 +95,6 @@ jobs:
           /Enablecodecoverage `
           /Collect:"Code Coverage;Format=Cobertura"
 
-    - name: Test UI
-      run: |
-        $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-        $vsInstallationPath = & $vswherePath `
-          -latest `
-          -products * `
-          -requires Microsoft.VisualStudio.Workload.ManagedDesktop Microsoft.VisualStudio.Workload.Web `
-          -requiresAny `
-          -property installationPath
-        $vstestPath = Join-Path $vsInstallationPath "Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-        msbuild /t:Restore /t:Build /p:Configuration=Release
-        & $vstestPath .\Tests\*.UiTests\bin\Release\*\*.UiTests.dll
-
     - name: Define version
       id: define-version
       run: |

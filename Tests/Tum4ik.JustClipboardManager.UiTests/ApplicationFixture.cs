@@ -65,8 +65,9 @@ public sealed class ApplicationFixture : IDisposable
     }
     else
     {
+      // it seems it does not work, needs investigation on Windows 10
       notificationIconAreas = AutomationElement.RootElement.FindAll(
-        TreeScope.Subtree,
+        TreeScope.Descendants,
         new PropertyCondition(AutomationElement.AutomationIdProperty, "1504")
       );
     }
