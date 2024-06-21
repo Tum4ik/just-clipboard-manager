@@ -8,7 +8,7 @@ namespace Tum4ik.JustClipboardManager.UiTests;
 
 public sealed class ApplicationFixture : IDisposable
 {
-  private readonly Process _appProcess;
+  private readonly Process? _appProcess;
 
   public ApplicationFixture()
   {
@@ -21,27 +21,33 @@ public sealed class ApplicationFixture : IDisposable
     {
       if (File.Exists(appExePath))
       {
-        _appProcess = Process.Start(appExePath, "--uitest");
-        TrayIconElement = GetTrayIconElement();
-        return;
+        _appProcess = Process.Start(new ProcessStartInfo(appExePath, "--uitest") { UseShellExecute = true });
+        var trayIconElement = GetTrayIconElement();
+        if (trayIconElement is not null)
+        {
+          TrayIconElement = trayIconElement;
+          return;
+        }
+
+        Dispose();
+        throw new ElementNotFoundException("Tray icon is not found");
       }
     }
-    Process.Start("ls");
     throw new FileNotFoundException("Application exe file is not found.");
   }
 
 
   public void Dispose()
   {
-    _appProcess.Kill();
-    _appProcess.Dispose();
+    _appProcess?.Kill();
+    _appProcess?.Dispose();
   }
 
 
   public AutomationElement TrayIconElement { get; }
 
 
-  private static AutomationElement GetTrayIconElement()
+  private static AutomationElement? GetTrayIconElement()
   {
     AutomationElementCollection notificationIconAreas;
     if (Environment.OSVersion.Version >= Version.Parse("10.0.22000"))
@@ -84,7 +90,8 @@ public sealed class ApplicationFixture : IDisposable
         }
       }
     }
-    throw new ElementNotFoundException("Tray icon is not found");
+
+    return null;
   }
 }
 
