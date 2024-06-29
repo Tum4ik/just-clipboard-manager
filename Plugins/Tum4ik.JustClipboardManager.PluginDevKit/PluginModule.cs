@@ -47,11 +47,6 @@ public abstract class PluginModule<TPlugin> : IPluginModule
 
   public void OnInitialized(IContainerProvider containerProvider)
   {
-    //var pluginsService = containerProvider.Resolve<IPluginsRegistryService>();
-    //var plugin = (TPlugin) containerProvider.Resolve<IPlugin>(Id.ToString());
-    //plugin.Id = Id;
-    //plugin.RepresentationDataDataTemplate = new() { VisualTree = new(typeof(TVisualTree)) };
-    //pluginsService.RegisterPlugin(plugin);
   }
 
 

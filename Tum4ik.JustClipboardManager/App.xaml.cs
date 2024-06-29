@@ -237,10 +237,8 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var clipRepository = Container.Resolve<IClipRepository>();
     var joinableTaskFactory = Container.Resolve<JoinableTaskFactory>();
     var pluginsService = Container.Resolve<IPluginsService>();
-    var pluginCatalog = Container.Resolve<IPluginCatalog>();
 
-    await pluginCatalog.InitializeAsync().ConfigureAwait(false);
-    await pluginsService.PreInstallPluginsAsync().ConfigureAwait(false);
+    await pluginsService.InitializeAsync().ConfigureAwait(false);
     await RemoveOldClipsAsync(settingsService, clipRepository).ConfigureAwait(false);
 
     await joinableTaskFactory.SwitchToMainThreadAsync();

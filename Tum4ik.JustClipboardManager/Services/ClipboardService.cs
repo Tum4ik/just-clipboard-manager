@@ -13,6 +13,7 @@ using Tum4ik.JustClipboardManager.Data;
 using Tum4ik.JustClipboardManager.Data.Models;
 using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Events;
+using Tum4ik.JustClipboardManager.Services.Plugins;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class ClipboardService : IClipboardService
