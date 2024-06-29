@@ -9,10 +9,11 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
-    <DevelopmentDependency>true</DevelopmentDependency>
     <PackageId>Tum4ik.JustClipboardManager.PluginDevKit</PackageId>
     <PackageVersion>0.0.0.0-dev</PackageVersion>
     <Version>0.0.0.0-dev</Version>
@@ -41,6 +42,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/" />
+    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/" />
+    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/" />
   </ItemGroup>
 
 </Project>
