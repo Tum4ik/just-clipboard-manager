@@ -43,4 +43,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/@(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/@(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/@(TargetFramework)" />
+  </ItemGroup>
+
 </Project>
