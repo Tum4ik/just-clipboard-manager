@@ -46,9 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/$(TargetFramework)" />
-    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/$(TargetFramework)" />
-    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/$(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/" />
+    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/" />
+    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/" />
   </ItemGroup>
 
 </Project>
