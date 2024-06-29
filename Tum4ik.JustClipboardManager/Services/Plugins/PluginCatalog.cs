@@ -38,7 +38,6 @@ internal class PluginCatalog : IPluginCatalog
   }
 
 
-  
   private readonly string _pluginsDirectoryName;
   private readonly string _devKitAssemblyName;
   private readonly Version _devKitMinSupportedVersion;
@@ -65,68 +64,62 @@ internal class PluginCatalog : IPluginCatalog
       return PluginInstallationResult.ExceededArchiveEntriesCount;
     }
 
-    var destinationPluginDirectory = Path.Combine(_pluginsDirectoryName, pluginId.ToString());
+    var destinationPluginDirectoryInfo = new DirectoryInfo(
+      Path.Combine(_pluginsDirectoryName, pluginId.ToString().ToUpperInvariant())
+    );
+    var destinationPluginVersionDirectoryInfo = new DirectoryInfo(
+      Path.Combine(destinationPluginDirectoryInfo.FullName, pluginVersion.ToString())
+    );
     try
     {
-      var pluginInstallationResult = await Task.Run(() =>
+      var totalUncompressedArchiveSize = 0L;
+      for (var i = 0; i < entriesCount; i++)
       {
-        var result = PluginInstallationResult.Success;
-        var totalUncompressedArchiveSize = 0L;
-        for (var i = 0; i < entriesCount; i++)
+        var entry = zipArchive.Entries[i];
+        var entryFullName = entry.FullName;
+
+        var directory = Path.GetDirectoryName(entryFullName);
+        var fileName = Path.GetFileName(entryFullName);
+        if (directory is not null && fileName is not null)
         {
-          cancellationToken.ThrowIfCancellationRequested();
-          // todo: test with:
-          // throw new OperationCanceledException();
-          var entry = zipArchive.Entries[i];
-          var entryFullName = entry.FullName;
-
-          var directory = Path.GetDirectoryName(entryFullName);
-          var fileName = Path.GetFileName(entryFullName);
-          if (directory is not null && fileName is not null)
+          var destinationFileInfo = new FileInfo(
+            Path.Combine(destinationPluginVersionDirectoryInfo.FullName, directory, fileName)
+          );
+          Directory.CreateDirectory(destinationFileInfo.DirectoryName);
+          if (!destinationFileInfo.Exists)
           {
-            var destinationPath = Path.Combine(destinationPluginDirectory, pluginVersion.ToString(), directory, fileName);
-            try
-            {
-              entry.ExtractToFile(destinationPath, true);
-            }
-            catch (IOException)
-            {
-              // should be ignored in case the plugin is installed immediately after uninstallation
-              // and the plugins files are not removed yet
-            }
-
-            var uncompressedFileSize = new FileInfo(destinationPath).Length;
-            var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
-            totalUncompressedArchiveSize += uncompressedFileSize;
-            var isCompressionRatioViolation = compressionRatio > 10;
-            var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
-            if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
-            {
-              Directory.Delete(destinationPluginDirectory, true);
-              if (isCompressionRatioViolation)
-              {
-                return PluginInstallationResult.AbnormalArchiveCompressionRatio;
-              }
-              if (isTotalUncompressedArchiveSizeViolation)
-              {
-                return PluginInstallationResult.ExceededUncompressedArchiveSize;
-              }
-            }
+            using var fileStream = new FileStream(destinationFileInfo.FullName, FileMode.CreateNew);
+            using var entryStream = entry.Open();
+            await entryStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
           }
 
-          progress?.Report((int) ((double) i / entriesCount * 100));
+          destinationFileInfo.Refresh();
+          var uncompressedFileSize = destinationFileInfo.Length;
+          var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
+          totalUncompressedArchiveSize += uncompressedFileSize;
+          var isCompressionRatioViolation = compressionRatio > 10;
+          var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
+          if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
+          {
+            destinationPluginDirectoryInfo.Delete(true);
+            if (isCompressionRatioViolation)
+            {
+              return PluginInstallationResult.AbnormalArchiveCompressionRatio;
+            }
+            if (isTotalUncompressedArchiveSizeViolation)
+            {
+              return PluginInstallationResult.ExceededUncompressedArchiveSize;
+            }
+          }
         }
-        return result;
-      }, cancellationToken).ConfigureAwait(false);
-      if (pluginInstallationResult != PluginInstallationResult.Success)
-      {
-        return pluginInstallationResult;
+
+        progress?.Report((int) ((double) i / entriesCount * 100));
       }
     }
     catch (OperationCanceledException)
     {
       // delete already extracted files
-      Directory.Delete(destinationPluginDirectory, true);
+      destinationPluginDirectoryInfo.Delete(true);
       return PluginInstallationResult.CancelledByUser;
     }
 
@@ -143,7 +136,7 @@ internal class PluginCatalog : IPluginCatalog
     else
     {
       result = await LoadPluginModuleAsync(
-        new DirectoryInfo(destinationPluginDirectory),
+        destinationPluginVersionDirectoryInfo,
         _appDomain.GetLoadedAssemblies()
       ).ConfigureAwait(false);
     }
@@ -156,7 +149,7 @@ internal class PluginCatalog : IPluginCatalog
                                                                     Assembly[]? alreadyLoadedAssemblies = null)
   {
     var files = pluginDirectory
-      .GetFiles("*.dll")
+      .GetFiles("*.dll", SearchOption.AllDirectories)
       .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? _appDomain.GetLoadedAssemblies()));
     var loadedAssemblies = new List<Assembly>();
     foreach (FileInfo fileInfo in files)
@@ -172,13 +165,6 @@ internal class PluginCatalog : IPluginCatalog
     }
 
     var result = await LoadPluginModuleFromLoadedAssembliesAsync(pluginDirectory, loadedAssemblies).ConfigureAwait(false);
-
-    if (result != PluginInstallationResult.Success)
-    {
-      Directory.Delete(pluginDirectory.FullName, true);
-      return result;
-    }
-
     return result;
   }
 
@@ -201,6 +187,7 @@ internal class PluginCatalog : IPluginCatalog
 
     try
     {
+      _appDomain.CurrentDomain.AssemblyResolve += MyResolveEventHandler;
       var pluginModuleType = pluginAssembly
         .GetExportedTypes()
         .FirstOrDefault(t => typeof(IPluginModule).IsAssignableFrom(t)
@@ -245,6 +232,10 @@ internal class PluginCatalog : IPluginCatalog
       _sentryHub.CaptureException(e);
       return PluginInstallationResult.OtherProblem;
     }
+    finally
+    {
+      _appDomain.CurrentDomain.AssemblyResolve -= MyResolveEventHandler;
+    }
   }
 
 
@@ -253,6 +244,14 @@ internal class PluginCatalog : IPluginCatalog
     return alreadyLoadedAssemblies.Any(
       assembly => string.Equals(Path.GetFileName(assembly.Location), file.Name, StringComparison.OrdinalIgnoreCase)
     );
+  }
+
+
+  private Assembly? MyResolveEventHandler(object? sender, ResolveEventArgs args)
+  {
+    var requiredAssemblyName = args.Name.Split(',')[0];
+    var loadedAssemblies = _appDomain.GetLoadedAssemblies();
+    return loadedAssemblies.FirstOrDefault(a => a.GetName().Name == requiredAssemblyName);
   }
 
 

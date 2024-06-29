@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <PackageId>Tum4ik.JustClipboardManager.PluginDevKit</PackageId>
     <PackageVersion>0.0.0.0-dev</PackageVersion>
     <Version>0.0.0.0-dev</Version>
