@@ -9,6 +9,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -44,9 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/@(TargetFramework)" />
-    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/@(TargetFramework)" />
-    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/@(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/$(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/$(TargetFramework)" />
+    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/$(TargetFramework)" />
   </ItemGroup>
 
 </Project>
