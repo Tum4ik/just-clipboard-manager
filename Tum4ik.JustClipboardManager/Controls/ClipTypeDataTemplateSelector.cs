@@ -2,7 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Prism.Ioc;
 using Tum4ik.JustClipboardManager.Data.Dto;
-using Tum4ik.JustClipboardManager.Services;
+using Tum4ik.JustClipboardManager.Services.Plugins;
 
 namespace Tum4ik.JustClipboardManager.Controls;
 internal class ClipTypeDataTemplateSelector : DataTemplateSelector

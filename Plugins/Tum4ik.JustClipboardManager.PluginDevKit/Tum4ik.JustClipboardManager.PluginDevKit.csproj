@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <PackageId>Tum4ik.JustClipboardManager.PluginDevKit</PackageId>
     <PackageVersion>0.0.0.0-dev</PackageVersion>
     <Version>0.0.0.0-dev</Version>
@@ -21,7 +22,7 @@
     <PackageProjectUrl>https://github.com/Tum4ik/just-clipboard-manager</PackageProjectUrl>
     <PackageTags>clipboard;clipboard-manager;just-clipboard-manager</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Plugin declaraton improvements.</PackageReleaseNotes>
+    <PackageReleaseNotes>Development dependency.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Tum4ik/just-clipboard-manager.git</RepositoryUrl>
     <SolutionPropertiesLocation>..\..\SolutionProperties</SolutionPropertiesLocation>
