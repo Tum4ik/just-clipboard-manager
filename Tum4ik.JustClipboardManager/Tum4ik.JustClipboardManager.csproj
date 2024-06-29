@@ -229,6 +229,7 @@
     <PackageReference Include="H.NotifyIcon.Wpf" Version="2.0.129" />
     <PackageReference Include="Humanizer.Core.uk" Version="2.14.1" />
     <PackageReference Include="MathConverter" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

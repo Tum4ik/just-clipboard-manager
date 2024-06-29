@@ -10,7 +10,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -42,12 +41,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Pack="true" Include="$(OutputPath)\*.dll" PackagePath="ref/" />
-    <None Pack="true" Include="$(OutputPath)\*.pdb" PackagePath="ref/" />
-    <None Pack="true" Include="$(OutputPath)\*.xml" PackagePath="ref/" />
   </ItemGroup>
 
 </Project>
