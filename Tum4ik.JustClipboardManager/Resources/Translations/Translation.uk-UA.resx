@@ -247,9 +247,6 @@
   <data name="PluginInstallationProblem_Body" xml:space="preserve">
     <value>З якоїсь причини не вдалося встановити плагін.</value>
   </data>
-  <data name="PluginSecurityViolation_Title" xml:space="preserve">
-    <value>Порушення безпеки плагіна</value>
-  </data>
   <data name="DeleteClipsOlderThan" xml:space="preserve">
     <value>Видалити кліпи, старші за</value>
   </data>
@@ -387,5 +384,8 @@
   </data>
   <data name="MissingPluginModuleType_Body" xml:space="preserve">
     <value>Тип модуля плагіна не знайдено.</value>
+  </data>
+  <data name="PotentialConfigChangesAttack" xml:space="preserve">
+    <value>Потенційна атака на зміну конфігурації</value>
   </data>
 </root>

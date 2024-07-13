@@ -59,7 +59,7 @@ internal class PluginCatalog : IPluginCatalog
     {
       return PluginInstallationResult.EmptyArchive;
     }
-    if (entriesCount > 10000)
+    if (entriesCount > 10_000)
     {
       return PluginInstallationResult.ExceededArchiveEntriesCount;
     }
@@ -82,19 +82,29 @@ internal class PluginCatalog : IPluginCatalog
         var fileName = Path.GetFileName(entryFullName);
         if (directory is not null && fileName is not null)
         {
-          var destinationFileInfo = new FileInfo(
-            Path.Combine(destinationPluginVersionDirectoryInfo.FullName, directory, fileName)
+          var destinationDirectoryPath = Path.GetFullPath(
+            Path.Combine(destinationPluginVersionDirectoryInfo.FullName, directory)
           );
-          Directory.CreateDirectory(destinationFileInfo.DirectoryName);
-          if (!destinationFileInfo.Exists)
+          if (!destinationDirectoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
           {
-            using var fileStream = new FileStream(destinationFileInfo.FullName, FileMode.CreateNew);
+            destinationDirectoryPath += Path.DirectorySeparatorChar;
+          }
+          var destinationFilePath = Path.GetFullPath(Path.Combine(destinationDirectoryPath, fileName));
+
+          if (!destinationFilePath.StartsWith(destinationDirectoryPath, StringComparison.Ordinal))
+          {
+            return PluginInstallationResult.PotentialConfigChangesAttack;
+          }
+
+          Directory.CreateDirectory(destinationDirectoryPath);
+          if (!File.Exists(destinationFilePath))
+          {
+            using var fileStream = new FileStream(destinationFilePath, FileMode.CreateNew);
             using var entryStream = entry.Open();
             await entryStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
           }
 
-          destinationFileInfo.Refresh();
-          var uncompressedFileSize = destinationFileInfo.Length;
+          var uncompressedFileSize = new FileInfo(destinationFilePath).Length;
           var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
           totalUncompressedArchiveSize += uncompressedFileSize;
           var isCompressionRatioViolation = compressionRatio > 10;

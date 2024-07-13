@@ -247,9 +247,6 @@
   <data name="PluginInstallationProblem_Body" xml:space="preserve">
     <value>In some reason the plugin installation failed.</value>
   </data>
-  <data name="PluginSecurityViolation_Title" xml:space="preserve">
-    <value>Plugin security violation</value>
-  </data>
   <data name="DeleteClipsOlderThan" xml:space="preserve">
     <value>Delete clips older than</value>
   </data>
@@ -387,5 +384,8 @@
   </data>
   <data name="PluginModuleInstanceCreationProblem_Body" xml:space="preserve">
     <value>Impossible to create an instance of the plugin module.</value>
+  </data>
+  <data name="PotentialConfigChangesAttack" xml:space="preserve">
+    <value>Potential config changes attack</value>
   </data>
 </root>

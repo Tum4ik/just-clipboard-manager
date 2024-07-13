@@ -59,6 +59,7 @@ jobs:
           --nologo `
           /p:PackageVersion=$version `
           /p:Version=$version `
+          /p:GeneratePackageOnBuild=false `
           /p:ContinuousIntegrationBuild=true
 
     - name: Sign code files

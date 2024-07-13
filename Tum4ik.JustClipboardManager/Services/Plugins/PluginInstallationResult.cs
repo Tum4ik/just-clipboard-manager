@@ -9,6 +9,7 @@ internal enum PluginInstallationResult
   ExceededArchiveEntriesCount,
   AbnormalArchiveCompressionRatio,
   ExceededUncompressedArchiveSize,
+  PotentialConfigChangesAttack,
   Incompatibility,
   MissingPluginModuleType,
   TypesLoadingProblem,

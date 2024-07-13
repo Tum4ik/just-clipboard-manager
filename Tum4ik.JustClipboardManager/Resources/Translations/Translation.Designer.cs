@@ -673,20 +673,20 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugin security violation.
-        /// </summary>
-        internal static string PluginSecurityViolation_Title {
-            get {
-                return ResourceManager.GetString("PluginSecurityViolation_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The plugins list file is missing on the server..
         /// </summary>
         internal static string PluginsListFileMissing_Body {
             get {
                 return ResourceManager.GetString("PluginsListFileMissing_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potential config changes attack.
+        /// </summary>
+        internal static string PotentialConfigChangesAttack {
+            get {
+                return ResourceManager.GetString("PotentialConfigChangesAttack", resourceCulture);
             }
         }
         

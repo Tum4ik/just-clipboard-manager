@@ -130,6 +130,8 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
           => ("AbnormalArchiveCompressionRatio_Body", "PluginSecurityViolation", InfoBarSeverity.Warning),
         PluginInstallationResult.ExceededUncompressedArchiveSize
           => ("ExceededUncompressedArchiveSize_Body", "PluginSecurityViolation", InfoBarSeverity.Warning),
+        PluginInstallationResult.PotentialConfigChangesAttack
+          => ("PotentialConfigChangesAttack", "PluginSecurityViolation", InfoBarSeverity.Critical),
         PluginInstallationResult.Incompatibility
           => ("PluginIncompatibility_Body", null, InfoBarSeverity.Warning),
         PluginInstallationResult.MissingPluginModuleType
