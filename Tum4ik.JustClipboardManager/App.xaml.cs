@@ -74,9 +74,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       RestartAfterCrashCount = count;
     }
 
-#if !DEBUG
     app.DispatcherUnhandledException += OnUnhandledException;
-#endif
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
