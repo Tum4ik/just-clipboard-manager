@@ -15,5 +15,7 @@ internal interface IPluginCatalog
                                                  CancellationToken cancellationToken = default);
 
   Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
-                                                       Assembly[]? alreadyLoadedAssemblies = null);
+                                                       DirectoryInfo pluginVersionDirectory,
+                                                       Assembly[]? alreadyLoadedAssemblies = null,
+                                                       bool isBuiltInPlugin = false);
 }

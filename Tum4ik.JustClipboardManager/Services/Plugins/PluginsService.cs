@@ -73,12 +73,17 @@ internal class PluginsService : IPluginsService
     var alreadyLoadedAssemblies = _appDomain.GetLoadedAssemblies();
     await foreach (var installedPlugin in _pluginRepository.GetInstalledPluginsAsync().ConfigureAwait(false))
     {
-      var filesDirectory = new DirectoryInfo(installedPlugin.FilesDirectory);
-      await _pluginCatalog.LoadPluginModuleAsync(filesDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
+      var pluginDirectory = new DirectoryInfo(installedPlugin.FilesDirectory);
+      var pluginVersionDirectory = pluginDirectory;
+      if (!installedPlugin.IsBuiltIn)
+      {
+        pluginVersionDirectory = new DirectoryInfo(Path.Combine(installedPlugin.FilesDirectory, installedPlugin.Version));
+      }
+      
+      await _pluginCatalog.LoadPluginModuleAsync(pluginDirectory, pluginVersionDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
     }
 
     await PreInstallPluginsAsync().ConfigureAwait(false);
-
     await LoadAvailablePluginsAsync().ConfigureAwait(false);
     _isInitialized = true;
   }
@@ -254,9 +259,9 @@ internal class PluginsService : IPluginsService
     }
 
     var pluginsDirectory = _configuration["Plugins:FilesDirectory"]!;
-    var textPluginDirectory = Path.Combine(pluginsDirectory, textPluginIdStr);
+    var textPluginDirectory = new DirectoryInfo(Path.Combine(pluginsDirectory, textPluginIdStr));
     await _pluginCatalog
-      .LoadPluginModuleAsync(new DirectoryInfo(textPluginDirectory))
+      .LoadPluginModuleAsync(textPluginDirectory, textPluginDirectory, isBuiltInPlugin: true)
       .ConfigureAwait(false);
   }
 

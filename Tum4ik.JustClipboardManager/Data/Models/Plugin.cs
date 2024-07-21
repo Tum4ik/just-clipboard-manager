@@ -11,5 +11,6 @@ internal class Plugin
   public string? Description { get; set; }
   public bool IsInstalled { get; set; } = true;
   public bool IsEnabled { get; set; } = true;
+  public bool IsBuiltIn { get; set; }
   public required string FilesDirectory { get; set; }
 }

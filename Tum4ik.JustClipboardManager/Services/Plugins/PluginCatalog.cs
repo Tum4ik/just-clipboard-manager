@@ -146,6 +146,7 @@ internal class PluginCatalog : IPluginCatalog
     else
     {
       result = await LoadPluginModuleAsync(
+        destinationPluginDirectoryInfo,
         destinationPluginVersionDirectoryInfo,
         _appDomain.GetLoadedAssemblies()
       ).ConfigureAwait(false);
@@ -156,9 +157,11 @@ internal class PluginCatalog : IPluginCatalog
 
 
   public async Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
-                                                                    Assembly[]? alreadyLoadedAssemblies = null)
+                                                                    DirectoryInfo pluginVersionDirectory,
+                                                                    Assembly[]? alreadyLoadedAssemblies = null,
+                                                                    bool isBuiltInPlugin = false)
   {
-    var files = pluginDirectory
+    var files = pluginVersionDirectory
       .GetFiles("*.dll", SearchOption.AllDirectories)
       .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? _appDomain.GetLoadedAssemblies()));
     var loadedAssemblies = new List<Assembly>();
@@ -174,13 +177,14 @@ internal class PluginCatalog : IPluginCatalog
       }
     }
 
-    var result = await LoadPluginModuleFromLoadedAssembliesAsync(pluginDirectory, loadedAssemblies).ConfigureAwait(false);
+    var result = await LoadPluginModuleFromLoadedAssembliesAsync(pluginDirectory, loadedAssemblies, isBuiltInPlugin).ConfigureAwait(false);
     return result;
   }
 
 
   private async Task<PluginInstallationResult> LoadPluginModuleFromLoadedAssembliesAsync(DirectoryInfo pluginDirectory,
-                                                                                         List<Assembly> loadedAssemblies)
+                                                                                         List<Assembly> loadedAssemblies,
+                                                                                         bool isBuiltInPlugin)
   {
     var pluginAssembly = loadedAssemblies.FirstOrDefault(assembly =>
       assembly.GetName().Name == _defaultTextPluginAssemblyName
@@ -226,7 +230,8 @@ internal class PluginCatalog : IPluginCatalog
           Version = pluginModule.Version.ToString(),
           Author = pluginModule.Author,
           Description = pluginModule.Description,
-          FilesDirectory = pluginDirectory.FullName
+          FilesDirectory = pluginDirectory.FullName,
+          IsBuiltIn = isBuiltInPlugin
         }).ConfigureAwait(false);
       }
 
