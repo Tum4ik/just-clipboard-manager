@@ -36,14 +36,6 @@ internal class PinnedClipRepository : IPinnedClipRepository
   }
 
 
-  public async Task UpdateAsync(PinnedClip clip)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    dbContext.PinnedClips.Update(clip);
-    await dbContext.SaveChangesAsync().ConfigureAwait(false);
-  }
-
-
   public async Task DeleteByIdAsync(int id)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);

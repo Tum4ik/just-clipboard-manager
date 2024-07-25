@@ -141,21 +141,21 @@ internal class PluginsService : IPluginsService
 
   public async Task UninstallPluginAsync(Guid id)
   {
-    await _pluginRepository.UpdateIsInstalledAsync(id, false).ConfigureAwait(false);
+    await _pluginRepository.UpdateAsync(id, u => u.SetProperty(p => p.IsInstalled, false)).ConfigureAwait(false);
     await LoadAvailablePluginsAsync().ConfigureAwait(false);
   }
 
 
   public async Task EnablePluginAsync(Guid id)
   {
-    await _pluginRepository.UpdateIsEnabledAsync(id, true).ConfigureAwait(false);
+    await _pluginRepository.UpdateAsync(id, u => u.SetProperty(p => p.IsEnabled, true)).ConfigureAwait(false);
     await LoadAvailablePluginsAsync().ConfigureAwait(false);
   }
 
 
   public async Task DisablePluginAsync(Guid id)
   {
-    await _pluginRepository.UpdateIsEnabledAsync(id, false).ConfigureAwait(false);
+    await _pluginRepository.UpdateAsync(id, u => u.SetProperty(p => p.IsEnabled, false)).ConfigureAwait(false);
     await LoadAvailablePluginsAsync().ConfigureAwait(false);
   }
 
@@ -174,9 +174,10 @@ internal class PluginsService : IPluginsService
     );
     if (await _pluginRepository.ExistsAsync(pluginId, pluginVersion).ConfigureAwait(false))
     {
-      // todo: improve repositories to avoid those two calls below, must one call
-      await _pluginRepository.UpdateIsInstalledAsync(pluginId, true).ConfigureAwait(false);
-      await _pluginRepository.UpdateIsEnabledAsync(pluginId, true).ConfigureAwait(false);
+      await _pluginRepository.UpdateAsync(pluginId, u => u
+        .SetProperty(p => p.IsInstalled, true)
+        .SetProperty(p => p.IsEnabled, true)
+      ).ConfigureAwait(false);
       progress?.Report(100);
       return PluginInstallationResult.Success;
     }

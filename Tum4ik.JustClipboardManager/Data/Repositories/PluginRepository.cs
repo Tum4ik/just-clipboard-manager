@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Tum4ik.JustClipboardManager.Data.Models;
 
 namespace Tum4ik.JustClipboardManager.Data.Repositories;
@@ -42,45 +44,12 @@ internal class PluginRepository : IPluginRepository
   }
 
 
-  public async Task UpdateIsInstalledAsync(Guid id, bool isInstalled)
+  public async Task UpdateAsync(Guid id, Expression<Func<SetPropertyCalls<Plugin>, SetPropertyCalls<Plugin>>> updates)
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     await dbContext.Plugins
       .Where(p => p.Id == id)
-      .ExecuteUpdateAsync(x => x.SetProperty(p => p.IsInstalled, isInstalled))
-      .ConfigureAwait(false);
-  }
-
-
-  public async Task UpdateIsEnabledAsync(Guid id, bool isEnabled)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    await dbContext.Plugins
-      .Where(p => p.Id == id)
-      .ExecuteUpdateAsync(x => x.SetProperty(p => p.IsEnabled, isEnabled))
-      .ConfigureAwait(false);
-  }
-
-
-  public async Task UpdateAsync(Guid id, Version version, bool isInstalled)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    await dbContext.Plugins
-      .Where(p => p.Id == id)
-      .ExecuteUpdateAsync(x => x
-        .SetProperty(p => p.Version, version.ToString())
-        .SetProperty(p => p.IsInstalled, isInstalled)
-      )
-      .ConfigureAwait(false);
-  }
-
-
-  public async Task DeleteByIdAsync(Guid id)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    await dbContext.Plugins
-      .Where(p => p.Id == id)
-      .ExecuteDeleteAsync()
+      .ExecuteUpdateAsync(updates)
       .ConfigureAwait(false);
   }
 
@@ -111,13 +80,6 @@ internal class PluginRepository : IPluginRepository
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     return await dbContext.Plugins.AnyAsync(p => p.Id == id && p.IsInstalled).ConfigureAwait(false);
-  }
-
-
-  public async Task<bool> IsEnabledAsync(Guid id)
-  {
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    return await dbContext.Plugins.AnyAsync(p => p.Id == id && p.IsEnabled).ConfigureAwait(false);
   }
 
 

@@ -137,11 +137,14 @@ internal class PluginCatalog : IPluginCatalog
     var result = PluginInstallationResult.Success;
     if (await _pluginRepository.ExistsAsync(pluginId, pluginVersion).ConfigureAwait(false))
     {
-      await _pluginRepository.UpdateIsInstalledAsync(pluginId, true).ConfigureAwait(false);
+      await _pluginRepository.UpdateAsync(pluginId, u => u.SetProperty(p => p.IsInstalled, true)).ConfigureAwait(false);
     }
     else if (await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
     {
-      await _pluginRepository.UpdateAsync(pluginId, pluginVersion, true).ConfigureAwait(false);
+      await _pluginRepository.UpdateAsync(pluginId, u => u
+        .SetProperty(p => p.Version, pluginVersion.ToString())
+        .SetProperty(p => p.IsInstalled, true)
+      ).ConfigureAwait(false);
     }
     else
     {
