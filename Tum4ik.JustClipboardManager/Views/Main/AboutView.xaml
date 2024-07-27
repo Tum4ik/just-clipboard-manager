@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main"
+             xmlns:const="clr-namespace:Tum4ik.JustClipboardManager.Constants"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
              xmlns:theming="clr-namespace:Tum4ik.JustClipboardManager.PluginDevKit.Theming;assembly=Tum4ik.JustClipboardManager.PluginDevKit"
              mc:Ignorable="d"
+             AutomationProperties.AutomationId="{x:Static const:AutomationIds.MainWindowAboutView}"
              d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
              Padding="8">
   <DockPanel>

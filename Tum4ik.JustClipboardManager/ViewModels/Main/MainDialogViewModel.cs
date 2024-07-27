@@ -13,6 +13,7 @@ namespace Tum4ik.JustClipboardManager.ViewModels.Main;
 internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
 {
   private readonly IRegionManager _regionManager;
+  private readonly IAppEnvironmentService _appEnvironmentService;
 
   public IInfoBarSubscriber InfoBarSubscriber { get; }
 
@@ -20,11 +21,13 @@ internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
                              IRegionManager regionManager,
                              ITranslationService translationService,
                              IEventAggregator eventAggregator,
-                             IInfoBarSubscriber infoBarSubscriber)
+                             IInfoBarSubscriber infoBarSubscriber,
+                             IAppEnvironmentService appEnvironmentService)
     : base(translationService, eventAggregator)
   {
     _regionManager = regionManager;
     InfoBarSubscriber = infoBarSubscriber;
+    _appEnvironmentService = appEnvironmentService;
     Title = infoService.ProductName;
   }
 
@@ -70,6 +73,15 @@ internal partial class MainDialogViewModel : TranslationViewModel, IDialogAware
 
   public string Title { get; }
   public event Action<IDialogResult>? RequestClose;
+
+  private string? _appEnvironmentName;
+  public string? AppEnvironmentName => _appEnvironmentName ??= _appEnvironmentService.Environment switch
+  {
+    AppEnvironment.Production => null,
+    AppEnvironment.Development => "Development",
+    AppEnvironment.UiTest => "UI Test",
+    _ => null,
+  };
 
 
   [RelayCommand]

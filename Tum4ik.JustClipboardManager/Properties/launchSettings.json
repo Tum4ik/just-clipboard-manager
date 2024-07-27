@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tum4ik.JustClipboardManager": {
+      "commandName": "Project",
+      "commandLineArgs": "--development"
+    }
+  }
+}

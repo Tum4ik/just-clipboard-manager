@@ -56,12 +56,16 @@ public partial class App : ISingleInstance, IApplicationLifetime
   [STAThread]
   public static void Main(string[] args)
   {
-    var app = new App();
-
+    var app = new App(args);
+    
     var instanceUniqueName = "JustClipboardManager_B9D1525B-D41C-49E0-83F7-038339056F46";
-#if DEBUG
-    instanceUniqueName += "_Development";
-#endif
+    instanceUniqueName += app._appEnvironmentService.Environment switch
+    {
+      AppEnvironment.Development => "_Development",
+      AppEnvironment.UiTest => "_UiTest",
+      _ => string.Empty,
+    };
+    
     var restartAfterCrashArg = Array.Find(args, a => a.StartsWith(RestartAfterCrashArg, StringComparison.Ordinal));
     var isFirstInstance = app.InitializeAsFirstInstance(instanceUniqueName);
     if (restartAfterCrashArg is null && !isFirstInstance)
@@ -74,7 +78,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
       RestartAfterCrashCount = count;
     }
 
-    app.DispatcherUnhandledException += OnUnhandledException;
+    if (app._appEnvironmentService.Environment == AppEnvironment.Production)
+    {
+      app.DispatcherUnhandledException += OnUnhandledException;
+    }
+
     app.InitializeComponent();
     app.OverrideDefaultProperties();
     app.Run();
@@ -82,12 +90,17 @@ public partial class App : ISingleInstance, IApplicationLifetime
 
 
   private readonly IConfiguration _configuration;
+  private readonly IAppEnvironmentService _appEnvironmentService;
 
 
-  public App()
+  public App(string[] args)
   {
     UpgradeSettings();
-    _configuration = ConfigurationHelper.CreateConfiguration();
+    
+    AppEnvironment appEnvironment;
+    (_configuration, appEnvironment) = ConfigurationHelper.CreateConfiguration(args);
+    _appEnvironmentService = new AppEnvironmentService(appEnvironment);
+
     var deviceId = InternalSettings.Default.DeviceId;
     if (string.IsNullOrEmpty(deviceId))
     {
@@ -151,13 +164,11 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var processPath = Environment.ProcessPath;
     if (processPath is not null && RestartAfterCrashCount < 5)
     {
-#if !DEBUG
       System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(processPath)
       {
         Arguments = $"{RestartAfterCrashArg}{RestartAfterCrashDelimiter}{RestartAfterCrashCount + 1}",
         UseShellExecute = true
       });
-#endif
     }
     else
     {
@@ -209,9 +220,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     var result = await updateService.SilentUpdateAsync().ConfigureAwait(true);
     if (result == UpdateResult.Started)
     {
-#if !DEBUG
       return;
-#endif
     }
 
     var trayIcon = Container.Resolve<TrayIcon>();
@@ -289,6 +298,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
       .RegisterGeneratedWrappers()
       .RegisterDatabase()
       .RegisterThreadSwitching()
+      .RegisterInstance(_appEnvironmentService)
       .RegisterInstance(_configuration)
       .RegisterInstance<IApplicationLifetime>(this)
       .RegisterSingleton<IHub>(() => HubAdapter.Instance)
