@@ -20,7 +20,7 @@ internal static class DbContextOptionsBuilderExtensions
                                                         IConfiguration configuration)
     where T : DbContext
   {
-    return builder.Configure(configuration);
+    return (DbContextOptionsBuilder<T>) ((DbContextOptionsBuilder) builder).Configure(configuration);
   }
 
 
