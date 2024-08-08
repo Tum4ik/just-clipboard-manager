@@ -49,7 +49,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
 
                     b.HasIndex("SearchLabel");
 
-                    b.ToTable("Clips");
+                    b.ToTable("Clips", (string)null);
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.FormattedDataObject", b =>
@@ -80,7 +80,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
 
                     b.HasIndex("ClipId");
 
-                    b.ToTable("FormattedDataObjects");
+                    b.ToTable("FormattedDataObjects", (string)null);
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.PinnedClip", b =>
@@ -99,7 +99,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
 
                     b.HasIndex("ClipId");
 
-                    b.ToTable("PinnedClips");
+                    b.ToTable("PinnedClips", (string)null);
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.Plugin", b =>
@@ -121,9 +121,6 @@ namespace Tum4ik.JustClipboardManager.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsBuiltIn")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("INTEGER");
 
@@ -140,7 +137,7 @@ namespace Tum4ik.JustClipboardManager.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plugins");
+                    b.ToTable("Plugins", (string)null);
                 });
 
             modelBuilder.Entity("Tum4ik.JustClipboardManager.Data.Models.FormattedDataObject", b =>
