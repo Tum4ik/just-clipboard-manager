@@ -52,7 +52,7 @@ internal static class ContainerRegistryExtensions
     {
       var config = cp.Resolve<IConfiguration>();
       var services = new ServiceCollection();
-      services.AddPooledDbContextFactory<AppDbContext>((sp, o) => o.Configure(config), 2);
+      services.AddPooledDbContextFactory<AppDbContext>(o => o.Configure(config), 2);
       var serviceProvider = services.BuildServiceProvider();
       return serviceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
     });
