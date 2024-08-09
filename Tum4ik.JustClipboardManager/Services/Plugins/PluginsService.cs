@@ -40,10 +40,13 @@ internal class PluginsService : IPluginsService
     _configuration = configuration;
     _pluginCatalog = pluginCatalog;
     _appDomain = appDomain;
+
+    _pluginsDirectoryName = configuration["Plugins:FilesDirectory"]!;
   }
 
 
   private bool _isInitialized;
+  private readonly string _pluginsDirectoryName;
 
 
   public FrozenDictionary<Guid, IPlugin> EnabledPlugins { get; private set; } = null!;
@@ -69,43 +72,48 @@ internal class PluginsService : IPluginsService
     }
 
     await RemoveUninstalledPluginsFilesAsync().ConfigureAwait(false);
+    await PreInstallAndUpdatePluginsAsync().ConfigureAwait(false);
 
     var alreadyLoadedAssemblies = _appDomain.GetLoadedAssemblies();
     await foreach (var installedPlugin in _pluginRepository.GetInstalledPluginsAsync().ConfigureAwait(false))
     {
       var pluginDirectory = new DirectoryInfo(installedPlugin.FilesDirectory);
-      var pluginVersionDirectory = pluginDirectory;
-      if (!installedPlugin.IsBuiltIn)
+      var (result, _) = await _pluginCatalog.LoadPluginModuleAsync(pluginDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
+      if (result != PluginInstallationResult.Success)
       {
-        pluginVersionDirectory = new DirectoryInfo(Path.Combine(installedPlugin.FilesDirectory, installedPlugin.Version));
+        await _pluginRepository.UpdateAsync(installedPlugin.Id, x => x.SetProperty(p => p.IsInstalled, false)).ConfigureAwait(false);
       }
-      
-      await _pluginCatalog.LoadPluginModuleAsync(pluginDirectory, pluginVersionDirectory, alreadyLoadedAssemblies).ConfigureAwait(false);
     }
 
-    await PreInstallPluginsAsync().ConfigureAwait(false);
     await LoadAvailablePluginsAsync().ConfigureAwait(false);
     _isInitialized = true;
   }
 
 
-  private async Task PreInstallPluginsAsync()
+  private async Task PreInstallAndUpdatePluginsAsync()
   {
     await InstallDefaultTextPluginAsync().ConfigureAwait(false);
 
     const string FileName = "pre-install-plugins";
-    if (!_file.Exists(FileName))
+    HashSet<Guid>? pluginIdsToInstall = null;
+    if (_file.Exists(FileName))
     {
-      return;
+      pluginIdsToInstall = (await _file.ReadAllLinesAsync(FileName).ConfigureAwait(false))
+        .Select(line => Guid.TryParse(line, out var guid) ? guid : Guid.Empty)
+        .Where(guid => guid != Guid.Empty)
+        .ToHashSet();
     }
+    var installedPlugins = _pluginRepository.GetInstalledPluginsAsync()
+      .ToBlockingEnumerable()
+      .ToDictionary(p => p.Id);
 
-    var pluginIdsToInstall = (await _file.ReadAllLinesAsync(FileName).ConfigureAwait(false))
-      .Select(line => Guid.TryParse(line, out var guid) ? guid : Guid.Empty)
-      .Where(guid => guid != Guid.Empty)
-      .ToHashSet();
     await foreach (var pluginDto in SearchPluginsAsync().ConfigureAwait(false))
     {
-      if (pluginIdsToInstall.Contains(pluginDto.Id))
+      var shouldInstallPlugin = pluginIdsToInstall is not null && pluginIdsToInstall.Contains(pluginDto.Id);
+      var shouldUpdatePlugin = installedPlugins.TryGetValue(pluginDto.Id, out var installedPlugin)
+        && Version.TryParse(installedPlugin.Version, out var installedPluginVersion)
+        && pluginDto.Version > installedPluginVersion;
+      if (shouldInstallPlugin || shouldUpdatePlugin)
       {
         await InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id, pluginDto.Version).ConfigureAwait(false);
       }
@@ -160,11 +168,13 @@ internal class PluginsService : IPluginsService
   }
 
 
-  public async Task<PluginInstallationResult> InstallPluginAsync(Uri downloadLink,
-                                                                 Guid pluginId,
-                                                                 Version pluginVersion,
-                                                                 IProgress<int>? progress = null,
-                                                                 CancellationToken cancellationToken = default)
+  public async Task<PluginInstallationResult> InstallPluginAsync(
+    Uri downloadLink,
+    Guid pluginId,
+    Version pluginVersion,
+    IProgress<int>? progress = null,
+    CancellationToken cancellationToken = default
+  )
   {
     _sentryHub.AddBreadcrumb(
       message: "Installing plugin",
@@ -172,15 +182,6 @@ internal class PluginsService : IPluginsService
       type: "info",
       data: new Dictionary<string, string> { { "Plugin id", pluginId.ToString() } }
     );
-    if (await _pluginRepository.ExistsAsync(pluginId, pluginVersion).ConfigureAwait(false))
-    {
-      await _pluginRepository.UpdateAsync(pluginId, u => u
-        .SetProperty(p => p.IsInstalled, true)
-        .SetProperty(p => p.IsEnabled, true)
-      ).ConfigureAwait(false);
-      progress?.Report(100);
-      return PluginInstallationResult.Success;
-    }
 
     Progress<int>? progress1 = progress is null ? null : new(p => progress.Report(p / 2));
     Progress<int>? progress2 = progress is null ? null : new(p => progress.Report(p / 2 + 50));
@@ -189,9 +190,35 @@ internal class PluginsService : IPluginsService
       using var memoryStream = await DownloadPluginZipAsync(downloadLink, progress1, cancellationToken).ConfigureAwait(false);
       using var zipArchive = new ZipArchive(memoryStream);
 
-      var result = await _pluginCatalog
-        .LoadPluginAsync(zipArchive, pluginId, pluginVersion, progress2, cancellationToken)
-        .ConfigureAwait(false);
+      var destinationPluginDirectoryInfo = new DirectoryInfo(
+        Path.Combine(_pluginsDirectoryName, pluginId.ToString().ToUpperInvariant())
+      );
+      var result = await InstallFromZipAsync(
+        zipArchive, destinationPluginDirectoryInfo, progress2, cancellationToken
+      ).ConfigureAwait(false);
+
+      if (result != PluginInstallationResult.Success)
+      {
+        return result;
+      }
+
+      IPluginModule? pluginModule;
+      (result, pluginModule) = await _pluginCatalog.LoadPluginModuleAsync(destinationPluginDirectoryInfo).ConfigureAwait(false);
+      if (result == PluginInstallationResult.Success
+        && pluginModule is not null
+        && !await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
+      {
+        await _pluginRepository.AddAsync(new()
+        {
+          Id = pluginId,
+          Name = pluginModule.Name,
+          Version = pluginModule.Version.ToString(),
+          Author = pluginModule.Author,
+          Description = pluginModule.Description,
+          FilesDirectory = destinationPluginDirectoryInfo.FullName
+        }).ConfigureAwait(false);
+      }
+
       if (result == PluginInstallationResult.Success && _isInitialized)
       {
         await LoadAvailablePluginsAsync().ConfigureAwait(false);
@@ -219,6 +246,86 @@ internal class PluginsService : IPluginsService
     {
       progress?.Report(100);
     }
+  }
+
+
+  private static async Task<PluginInstallationResult> InstallFromZipAsync(ZipArchive zipArchive,
+                                                                          DirectoryInfo destinationPluginDirectoryInfo,
+                                                                          IProgress<int>? progress = null,
+                                                                          CancellationToken cancellationToken = default)
+  {
+    var entriesCount = zipArchive.Entries.Count;
+    if (entriesCount <= 0)
+    {
+      return PluginInstallationResult.EmptyArchive;
+    }
+    if (entriesCount > 10_000)
+    {
+      return PluginInstallationResult.ExceededArchiveEntriesCount;
+    }
+
+    try
+    {
+      var totalUncompressedArchiveSize = 0L;
+      for (var i = 0; i < entriesCount; i++)
+      {
+        var entry = zipArchive.Entries[i];
+        var entryFullName = entry.FullName;
+
+        var directory = Path.GetDirectoryName(entryFullName);
+        var fileName = Path.GetFileName(entryFullName);
+        if (directory is not null && fileName is not null)
+        {
+          var destinationDirectoryPath = Path.GetFullPath(
+            Path.Combine(destinationPluginDirectoryInfo.FullName, directory)
+          );
+          if (!destinationDirectoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+          {
+            destinationDirectoryPath += Path.DirectorySeparatorChar;
+          }
+          var destinationFilePath = Path.GetFullPath(Path.Combine(destinationDirectoryPath, fileName));
+
+          if (!destinationFilePath.StartsWith(destinationDirectoryPath, StringComparison.Ordinal))
+          {
+            return PluginInstallationResult.PotentialConfigChangesAttack;
+          }
+
+          Directory.CreateDirectory(destinationDirectoryPath);
+
+          using var fileStream = File.Create(destinationFilePath);
+          using var entryStream = entry.Open();
+          await entryStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
+
+          var uncompressedFileSize = new FileInfo(destinationFilePath).Length;
+          var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
+          totalUncompressedArchiveSize += uncompressedFileSize;
+          var isCompressionRatioViolation = compressionRatio > 10;
+          var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
+          if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
+          {
+            destinationPluginDirectoryInfo.Delete(true);
+            if (isCompressionRatioViolation)
+            {
+              return PluginInstallationResult.AbnormalArchiveCompressionRatio;
+            }
+            if (isTotalUncompressedArchiveSizeViolation)
+            {
+              return PluginInstallationResult.ExceededUncompressedArchiveSize;
+            }
+          }
+        }
+
+        progress?.Report((int) ((double) i / entriesCount * 100));
+      }
+    }
+    catch (OperationCanceledException)
+    {
+      // delete already extracted files
+      destinationPluginDirectoryInfo.Delete(true);
+      return PluginInstallationResult.CancelledByUser;
+    }
+
+    return PluginInstallationResult.Success;
   }
 
 
@@ -261,9 +368,21 @@ internal class PluginsService : IPluginsService
 
     var pluginsDirectory = _configuration["Plugins:FilesDirectory"]!;
     var textPluginDirectory = new DirectoryInfo(Path.Combine(pluginsDirectory, textPluginIdStr));
-    await _pluginCatalog
-      .LoadPluginModuleAsync(textPluginDirectory, textPluginDirectory, isBuiltInPlugin: true)
+    var (result, pluginModule) = await _pluginCatalog
+      .LoadPluginModuleAsync(textPluginDirectory)
       .ConfigureAwait(false);
+    if (result == PluginInstallationResult.Success && pluginModule is not null)
+    {
+      await _pluginRepository.AddAsync(new()
+      {
+        Id = textPluginId,
+        Name = pluginModule.Name,
+        Version = pluginModule.Version.ToString(),
+        Author = pluginModule.Author,
+        Description = pluginModule.Description,
+        FilesDirectory = textPluginDirectory.FullName
+      }).ConfigureAwait(false);
+    }
   }
 
 

@@ -11,6 +11,7 @@ internal enum PluginInstallationResult
   ExceededUncompressedArchiveSize,
   PotentialConfigChangesAttack,
   Incompatibility,
+  MissingPluginDirectory,
   MissingPluginModuleType,
   TypesLoadingProblem,
   PluginModuleInstanceCreationProblem,

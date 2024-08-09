@@ -405,4 +405,7 @@
   <data name="PotentialConfigChangesAttack" xml:space="preserve">
     <value>Potential config changes attack</value>
   </data>
+  <data name="MissingPluginDirectory_Body" xml:space="preserve">
+    <value>The plugin files are not found.</value>
+  </data>
 </root>

@@ -109,8 +109,8 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     ).ConfigureAwait(true);
 
     if (installationResult == PluginInstallationResult.Success)
-    {
-      plugin.IsInstalled = true;
+      {
+        plugin.IsInstalled = true;
     }
     else
     {
@@ -134,6 +134,8 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
           => ("PotentialConfigChangesAttack", "PluginSecurityViolation", InfoBarSeverity.Critical),
         PluginInstallationResult.Incompatibility
           => ("PluginIncompatibility_Body", null, InfoBarSeverity.Warning),
+        PluginInstallationResult.MissingPluginDirectory
+          => ("MissingPluginDirectory_Body", "PluginLoadingProblem", InfoBarSeverity.Warning),
         PluginInstallationResult.MissingPluginModuleType
           => ("MissingPluginModuleType_Body", "PluginLoadingProblem", InfoBarSeverity.Warning),
         PluginInstallationResult.TypesLoadingProblem

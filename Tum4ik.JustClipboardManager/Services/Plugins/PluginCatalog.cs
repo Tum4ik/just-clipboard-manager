@@ -1,36 +1,30 @@
 using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Compression;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
-using Tum4ik.JustClipboardManager.Data.Repositories;
 using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.PluginDevKit;
 
 namespace Tum4ik.JustClipboardManager.Services.Plugins;
 internal class PluginCatalog : IPluginCatalog
 {
-  private readonly IPluginRepository _pluginRepository;
   private readonly IContainerExtension _containerExtension;
   private readonly IHub _sentryHub;
   private readonly JoinableTaskFactory _joinableTaskFactory;
   private readonly IAppDomain _appDomain;
 
   public PluginCatalog(IConfiguration configuration,
-                       IPluginRepository pluginRepository,
                        IContainerExtension containerExtension,
                        IHub sentryHub,
                        JoinableTaskFactory joinableTaskFactory,
                        IAppDomain appDomain)
   {
-    _pluginRepository = pluginRepository;
     _containerExtension = containerExtension;
     _sentryHub = sentryHub;
     _joinableTaskFactory = joinableTaskFactory;
     _appDomain = appDomain;
-    _pluginsDirectoryName = configuration["Plugins:FilesDirectory"]!;
     _devKitAssemblyName = configuration["Plugins:DevKitAssemblyName"]!;
     _devKitMinSupportedVersion = configuration.GetRequiredSection("Plugins:DevKitMinSupportedVersion").Get<Version>()!;
     _defaultTextPluginAssemblyName = configuration["Plugins:DefaultTextPluginAssemblyName"]!;
@@ -38,135 +32,36 @@ internal class PluginCatalog : IPluginCatalog
   }
 
 
-  private readonly string _pluginsDirectoryName;
   private readonly string _devKitAssemblyName;
   private readonly Version _devKitMinSupportedVersion;
   private readonly string _defaultTextPluginAssemblyName;
+  private readonly Dictionary<string, IPluginModule> _directoryPathToLoadedModules = [];
 
 
   private readonly Dictionary<Guid, IPlugin> _plugins = [];
   public IReadOnlyDictionary<Guid, IPlugin> Plugins { get; }
 
 
-  public async Task<PluginInstallationResult> LoadPluginAsync(ZipArchive zipArchive,
-                                                              Guid pluginId,
-                                                              Version pluginVersion,
-                                                              IProgress<int>? progress = null,
-                                                              CancellationToken cancellationToken = default)
+  public async Task<(PluginInstallationResult, IPluginModule?)>
+    LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
+                          Assembly[]? alreadyLoadedAssemblies = null)
   {
-    var entriesCount = zipArchive.Entries.Count;
-    if (entriesCount <= 0)
+    if (_directoryPathToLoadedModules.TryGetValue(pluginDirectory.FullName, out var module))
     {
-      return PluginInstallationResult.EmptyArchive;
+      return (PluginInstallationResult.Success, module);
     }
-    if (entriesCount > 10_000)
-    {
-      return PluginInstallationResult.ExceededArchiveEntriesCount;
-    }
-
-    var destinationPluginDirectoryInfo = new DirectoryInfo(
-      Path.Combine(_pluginsDirectoryName, pluginId.ToString().ToUpperInvariant())
-    );
-    var destinationPluginVersionDirectoryInfo = new DirectoryInfo(
-      Path.Combine(destinationPluginDirectoryInfo.FullName, pluginVersion.ToString())
-    );
+    IEnumerable<FileInfo> files;
     try
     {
-      var totalUncompressedArchiveSize = 0L;
-      for (var i = 0; i < entriesCount; i++)
-      {
-        var entry = zipArchive.Entries[i];
-        var entryFullName = entry.FullName;
-
-        var directory = Path.GetDirectoryName(entryFullName);
-        var fileName = Path.GetFileName(entryFullName);
-        if (directory is not null && fileName is not null)
-        {
-          var destinationDirectoryPath = Path.GetFullPath(
-            Path.Combine(destinationPluginVersionDirectoryInfo.FullName, directory)
-          );
-          if (!destinationDirectoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-          {
-            destinationDirectoryPath += Path.DirectorySeparatorChar;
-          }
-          var destinationFilePath = Path.GetFullPath(Path.Combine(destinationDirectoryPath, fileName));
-
-          if (!destinationFilePath.StartsWith(destinationDirectoryPath, StringComparison.Ordinal))
-          {
-            return PluginInstallationResult.PotentialConfigChangesAttack;
-          }
-
-          Directory.CreateDirectory(destinationDirectoryPath);
-          if (!File.Exists(destinationFilePath))
-          {
-            using var fileStream = new FileStream(destinationFilePath, FileMode.CreateNew);
-            using var entryStream = entry.Open();
-            await entryStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
-          }
-
-          var uncompressedFileSize = new FileInfo(destinationFilePath).Length;
-          var compressionRatio = (double) uncompressedFileSize / entry.CompressedLength;
-          totalUncompressedArchiveSize += uncompressedFileSize;
-          var isCompressionRatioViolation = compressionRatio > 10;
-          var isTotalUncompressedArchiveSizeViolation = totalUncompressedArchiveSize > 1024 * 1024 * 1024; // 1 GB
-          if (isCompressionRatioViolation || isTotalUncompressedArchiveSizeViolation)
-          {
-            destinationPluginDirectoryInfo.Delete(true);
-            if (isCompressionRatioViolation)
-            {
-              return PluginInstallationResult.AbnormalArchiveCompressionRatio;
-            }
-            if (isTotalUncompressedArchiveSizeViolation)
-            {
-              return PluginInstallationResult.ExceededUncompressedArchiveSize;
-            }
-          }
-        }
-
-        progress?.Report((int) ((double) i / entriesCount * 100));
-      }
+      files = pluginDirectory
+        .GetFiles("*.dll", SearchOption.AllDirectories)
+        .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? _appDomain.GetLoadedAssemblies()));
     }
-    catch (OperationCanceledException)
+    catch (DirectoryNotFoundException)
     {
-      // delete already extracted files
-      destinationPluginDirectoryInfo.Delete(true);
-      return PluginInstallationResult.CancelledByUser;
+      return (PluginInstallationResult.MissingPluginDirectory, null);
     }
 
-
-    var result = PluginInstallationResult.Success;
-    if (await _pluginRepository.ExistsAsync(pluginId, pluginVersion).ConfigureAwait(false))
-    {
-      await _pluginRepository.UpdateAsync(pluginId, u => u.SetProperty(p => p.IsInstalled, true)).ConfigureAwait(false);
-    }
-    else if (await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
-    {
-      await _pluginRepository.UpdateAsync(pluginId, u => u
-        .SetProperty(p => p.Version, pluginVersion.ToString())
-        .SetProperty(p => p.IsInstalled, true)
-      ).ConfigureAwait(false);
-    }
-    else
-    {
-      result = await LoadPluginModuleAsync(
-        destinationPluginDirectoryInfo,
-        destinationPluginVersionDirectoryInfo,
-        _appDomain.GetLoadedAssemblies()
-      ).ConfigureAwait(false);
-    }
-
-    return result;
-  }
-
-
-  public async Task<PluginInstallationResult> LoadPluginModuleAsync(DirectoryInfo pluginDirectory,
-                                                                    DirectoryInfo pluginVersionDirectory,
-                                                                    Assembly[]? alreadyLoadedAssemblies = null,
-                                                                    bool isBuiltInPlugin = false)
-  {
-    var files = pluginVersionDirectory
-      .GetFiles("*.dll", SearchOption.AllDirectories)
-      .Where(file => !IsAssemblyFileAlreadyLoaded(file, alreadyLoadedAssemblies ?? _appDomain.GetLoadedAssemblies()));
     var loadedAssemblies = new List<Assembly>();
     foreach (FileInfo fileInfo in files)
     {
@@ -180,14 +75,18 @@ internal class PluginCatalog : IPluginCatalog
       }
     }
 
-    var result = await LoadPluginModuleFromLoadedAssembliesAsync(pluginDirectory, loadedAssemblies, isBuiltInPlugin).ConfigureAwait(false);
-    return result;
+    var (result, pluginModule) = await LoadPluginModuleFromLoadedAssembliesAsync(loadedAssemblies).ConfigureAwait(false);
+    if (result == PluginInstallationResult.Success && pluginModule is not null)
+    {
+      _directoryPathToLoadedModules[pluginDirectory.FullName] = pluginModule;
+    }
+
+    return (result, pluginModule);
   }
 
 
-  private async Task<PluginInstallationResult> LoadPluginModuleFromLoadedAssembliesAsync(DirectoryInfo pluginDirectory,
-                                                                                         List<Assembly> loadedAssemblies,
-                                                                                         bool isBuiltInPlugin)
+  private async Task<(PluginInstallationResult, IPluginModule?)>
+    LoadPluginModuleFromLoadedAssembliesAsync(List<Assembly> loadedAssemblies)
   {
     var pluginAssembly = loadedAssemblies.FirstOrDefault(assembly =>
       assembly.GetName().Name == _defaultTextPluginAssemblyName
@@ -199,7 +98,7 @@ internal class PluginCatalog : IPluginCatalog
 
     if (pluginAssembly is null)
     {
-      return PluginInstallationResult.Incompatibility;
+      return (PluginInstallationResult.Incompatibility, null);
     }
 
     try
@@ -212,43 +111,29 @@ internal class PluginCatalog : IPluginCatalog
                              && !t.IsAbstract);
       if (pluginModuleType is null)
       {
-        return PluginInstallationResult.MissingPluginModuleType;
+        return (PluginInstallationResult.MissingPluginModuleType, null);
       }
 
       var pluginModule = (IPluginModule?) Activator.CreateInstance(pluginModuleType);
       if (pluginModule is null)
       {
-        return PluginInstallationResult.PluginModuleInstanceCreationProblem;
+        return (PluginInstallationResult.PluginModuleInstanceCreationProblem, null);
       }
       var plugin = await ConstructPluginAsync(pluginModule).ConfigureAwait(false);
       var pluginId = pluginModule.Id;
       _plugins[pluginId] = plugin;
 
-      if (!await _pluginRepository.ExistsAsync(pluginId).ConfigureAwait(false))
-      {
-        await _pluginRepository.AddAsync(new()
-        {
-          Id = pluginId,
-          Name = pluginModule.Name,
-          Version = pluginModule.Version.ToString(),
-          Author = pluginModule.Author,
-          Description = pluginModule.Description,
-          FilesDirectory = pluginDirectory.FullName,
-          IsBuiltIn = isBuiltInPlugin
-        }).ConfigureAwait(false);
-      }
-
-      return PluginInstallationResult.Success;
+      return (PluginInstallationResult.Success, pluginModule);
     }
     catch (TypeLoadException e)
     {
       _sentryHub.CaptureException(e);
-      return PluginInstallationResult.TypesLoadingProblem;
+      return (PluginInstallationResult.TypesLoadingProblem, null);
     }
     catch (Exception e)
     {
       _sentryHub.CaptureException(e);
-      return PluginInstallationResult.OtherProblem;
+      return (PluginInstallationResult.OtherProblem, null);
     }
     finally
     {

@@ -493,6 +493,15 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The plugin files are not found..
+        /// </summary>
+        internal static string MissingPluginDirectory_Body {
+            get {
+                return ResourceManager.GetString("MissingPluginDirectory_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The plugin module type is not found..
         /// </summary>
         internal static string MissingPluginModuleType_Body {

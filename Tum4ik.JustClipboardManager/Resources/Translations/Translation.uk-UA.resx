@@ -405,4 +405,7 @@
   <data name="PotentialConfigChangesAttack" xml:space="preserve">
     <value>Потенційна атака на зміну конфігурації</value>
   </data>
+  <data name="MissingPluginDirectory_Body" xml:space="preserve">
+    <value>Файли плагіна не знайдено.</value>
+  </data>
 </root>
