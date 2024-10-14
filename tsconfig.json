@@ -4,6 +4,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -21,7 +24,8 @@
     "module": "ES2022",
     "lib": [
       "ES2022",
-      "dom"
+      "DOM",
+      "DOM.Iterable"
     ]
   },
   "angularCompilerOptions": {
