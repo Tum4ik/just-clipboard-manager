@@ -7,9 +7,9 @@
     "email": "timchishinevgeniy@gmail.com"
   },
   "license": "MIT",
-  "main": "main.js",
+  "main": "./dist/main-electron.js",
   "scripts": {
-    "electron": "ng build && electron .",
+    "electron": "tsc main-electron.ts --outDir ./dist && ng build && electron .",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
@@ -29,6 +29,7 @@
     "@angular/platform-browser-dynamic": "^18.2.8",
     "@angular/router": "^18.2.8",
     "rxjs": "~7.8.0",
+    "ts-node": "^10.9.2",
     "tslib": "^2.8.0",
     "zone.js": "~0.14.10"
   },
