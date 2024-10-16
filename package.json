@@ -7,9 +7,9 @@
     "email": "timchishinevgeniy@gmail.com"
   },
   "license": "MIT",
-  "main": "./dist/main-electron.js",
+  "main": "./dist/main.js",
   "scripts": {
-    "electron": "tsc main-electron.ts --outDir ./dist && ng build && electron .",
+    "electron": "tsc -p tsconfig.electron.json && ng build && electron .",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
