@@ -10,4 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'just clipboard manager';
+
+  test() {
+    console.log('test');
+  }
 }

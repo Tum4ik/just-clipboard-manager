@@ -9,7 +9,9 @@
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
-    "electron": "tsc -p tsconfig.electron.json && ng build && electron .",
+    "electron": "npm run electron-tsc && ng build && electron .",
+    "electron-serve": "concurrently \"npm run electron-tsc && ng serve\" \"wait-on tcp:4200 && electron . --serve\"",
+    "electron-tsc": "tsc -p tsconfig.electron.json",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
@@ -38,6 +40,7 @@
     "@angular/cli": "^18.2.8",
     "@angular/compiler-cli": "^18.2.8",
     "@types/jasmine": "~5.1.0",
+    "concurrently": "^9.0.1",
     "electron": "^33.0.0",
     "jasmine-core": "~5.4",
     "karma": "~6.4.0",
@@ -45,6 +48,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.2"
+    "typescript": "~5.5.2",
+    "wait-on": "^8.0.1"
   }
 }

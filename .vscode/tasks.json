@@ -37,6 +37,56 @@
           }
         }
       }
+    },
+    {
+      "label": "Build.Main",
+      "type": "shell",
+      "command": "npm run electron-tsc",
+      "isBackground": false,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "applyTo": "closedDocuments",
+        "fileLocation": [
+          "relative",
+          "${cwd}"
+        ],
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^.*Terminal will be reused by tasks, press any key to close it.*"
+        }
+      }
+    },
+    {
+      "label": "Build.Renderer",
+      "type": "shell",
+      "command": "npm run start",
+      "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "applyTo": "closedDocuments",
+        "fileLocation": [
+          "relative",
+          "${cwd}"
+        ],
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^.*Application bundle generation complete.*"
+        }
+      }
     }
   ]
 }

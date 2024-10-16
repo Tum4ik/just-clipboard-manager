@@ -1,12 +1,19 @@
 import { app, BrowserWindow } from 'electron';
 
+const isServe = process.argv.slice(1).some(arg => arg === '--serve');
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600
   });
 
-  win.loadFile('dist/just-clipboard-manager/browser/index.html');
+  if (isServe) {
+    win.loadURL('http://localhost:4200/');
+  }
+  else {
+    win.loadFile('dist/just-clipboard-manager/browser/index.html');
+  }
 };
 
 app.whenReady().then(() => {
