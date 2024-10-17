@@ -11,7 +11,7 @@
   "scripts": {
     "electron": "npm run electron-tsc && ng build && electron .",
     "electron-serve": "concurrently \"npm run electron-tsc && ng serve\" \"wait-on tcp:4200 && electron . --serve\"",
-    "electron-tsc": "tsc -p tsconfig.electron.json",
+    "electron-tsc": "copy-files-from-to && tsc -p tsconfig.electron.json",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
@@ -20,6 +20,15 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+  "config": {
+    "forge": "./forge.config.ts"
+  },
+  "copyFiles": [
+    {
+      "from": "electron/assets/**/*",
+      "to": "dist/assets/"
+    }
+  ],
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.0",
@@ -39,8 +48,13 @@
     "@angular-devkit/build-angular": "^18.2.8",
     "@angular/cli": "^18.2.8",
     "@angular/compiler-cli": "^18.2.8",
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
     "@types/jasmine": "~5.1.0",
     "concurrently": "^9.0.1",
+    "copy-files-from-to": "^3.11.0",
     "electron": "^33.0.0",
     "jasmine-core": "~5.4",
     "karma": "~6.4.0",

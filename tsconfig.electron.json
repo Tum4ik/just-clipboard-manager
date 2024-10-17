@@ -27,7 +27,7 @@
       "DOM.Iterable"
     ]
   },
-  "files": [
-    "electron/main.ts"
+  "include": [
+    "electron/**/*"
   ]
 }

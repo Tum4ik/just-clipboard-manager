@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron';
+import { AppTray } from './tray/app-tray';
 
 const isServe = process.argv.slice(1).some(arg => arg === '--serve');
 
@@ -18,4 +19,5 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
+  AppTray.initialize(__dirname);
 });
