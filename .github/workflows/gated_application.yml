@@ -1,0 +1,48 @@
+name: Gated (Application)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'release/**'
+    paths-ignore:
+      - '.attachments/**'
+      - '.editorconfig'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+
+jobs:
+
+  build:
+
+    name: Gated Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+
+    - name: Clean Install
+      run: npm ci
+
+    - name: Electron Forge make
+      run: npm run electron-forge-make
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        if-no-files-found: error
+        name: BuildFiles
+        path: |
+          out
