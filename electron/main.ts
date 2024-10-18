@@ -1,5 +1,10 @@
 import { app, BrowserWindow } from 'electron';
+import electronSquirrelStartup from 'electron-squirrel-startup';
 import { AppTray } from './tray/app-tray';
+
+if (electronSquirrelStartup) {
+  app.quit();
+}
 
 const isServe = process.argv.slice(1).some(arg => arg === '--serve');
 

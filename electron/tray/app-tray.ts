@@ -9,7 +9,7 @@ export class AppTray {
   private readonly tray: Tray;
 
   private constructor(private readonly dirname: string) {
-    this.tray = new Tray(path.join(this.dirname, 'assets/tray-dev.ico'));
+    this.tray = new Tray(path.join(this.dirname, 'assets', process.platform, 'tray.ico'));
     this.tray.setToolTip('Just Clipboard Manager');
   }
 }
