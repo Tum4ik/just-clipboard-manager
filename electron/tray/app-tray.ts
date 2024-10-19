@@ -9,7 +9,11 @@ export class AppTray {
   private readonly tray: Tray;
 
   private constructor(private readonly dirname: string) {
-    const trayIconFilePath = path.join(this.dirname, 'assets', process.platform, 'tray.ico');
+    let trayIconFileName = 'tray.ico';
+    if (process.platform == 'linux' || process.platform == 'darwin') {
+      trayIconFileName = 'tray.png';
+    }
+    const trayIconFilePath = path.join(this.dirname, 'assets', process.platform, trayIconFileName);
     dialog.showMessageBox({
       message: trayIconFilePath
     });
