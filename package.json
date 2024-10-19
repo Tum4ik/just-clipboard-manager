@@ -12,7 +12,7 @@
     "electron": "npm run electron-tsc && ng build && electron .",
     "electron-serve": "concurrently \"npm run electron-tsc && ng serve\" \"wait-on tcp:4200 && electron . --serve\"",
     "electron-tsc": "copy-files-from-to && tsc -p tsconfig.electron.json",
-    "electron-forge-make": "npm run electron-tsc && electron-forge make",
+    "electron-forge-make": "npm run electron-tsc && ng build && electron-forge make",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
