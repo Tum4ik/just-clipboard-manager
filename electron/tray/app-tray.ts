@@ -1,4 +1,4 @@
-import { dialog, Tray } from "electron";
+import { Tray } from "electron";
 import path from 'path';
 
 export class AppTray {
@@ -14,9 +14,6 @@ export class AppTray {
       trayIconFileName = 'tray.png';
     }
     const trayIconFilePath = path.join(this.dirname, 'assets', process.platform, trayIconFileName);
-    dialog.showMessageBox({
-      message: trayIconFilePath
-    });
     this.tray = new Tray(trayIconFilePath);
     this.tray.setToolTip('Just Clipboard Manager');
   }

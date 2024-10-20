@@ -11,10 +11,15 @@ const isServe = process.argv.slice(1).some(arg => arg === '--serve');
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    titleBarStyle: 'hidden',
+    // titleBarOverlay: true,
+    webPreferences: {
+      devTools: !app.isPackaged
+    }
   });
 
-  if (isServe) {
+  if (isServe && !app.isPackaged) {
     win.loadURL('http://localhost:4200/');
   }
   else {
