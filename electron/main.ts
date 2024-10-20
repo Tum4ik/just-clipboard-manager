@@ -13,7 +13,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     titleBarStyle: 'hidden',
-    // titleBarOverlay: true,
+    titleBarOverlay: true,
     webPreferences: {
       devTools: !app.isPackaged
     }
