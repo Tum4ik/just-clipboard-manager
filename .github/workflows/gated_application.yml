@@ -19,9 +19,16 @@ on:
 jobs:
 
   build:
+    strategy:
+      matrix:
+        platform:
+          - id: windows-latest
+            name: Windows
+          - id: ubuntu-latest
+            name: Ubuntu
 
-    name: Gated Build
-    runs-on: ubuntu-latest
+    name: Gated Build (${{ matrix.platform.name }})
+    runs-on: ${{ matrix.platform.id }}
 
     steps:
     - name: Checkout
@@ -43,6 +50,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
-        name: BuildFiles
+        name: BuildFiles_${{ matrix.platform.name }}
         path: |
           out
