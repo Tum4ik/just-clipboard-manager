@@ -1,0 +1,12 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'jcm-paste-window',
+  standalone: true,
+  imports: [],
+  templateUrl: './paste-window.component.html',
+  styleUrl: './paste-window.component.scss'
+})
+export class PasteWindowComponent {
+
+}
