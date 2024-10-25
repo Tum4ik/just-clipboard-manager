@@ -1,4 +1,5 @@
 import { App, BrowserWindow, globalShortcut, Menu, NativeImage, nativeImage, Tray } from "electron";
+import Store from 'electron-store';
 import path from 'path';
 
 export class AppTray {
@@ -6,6 +7,15 @@ export class AppTray {
     new AppTray(app, dirname);
   }
 
+  private readonly store = new Store({
+    name: 'settings',
+    schema: {
+      language: {
+        type: 'string',
+        default: 'en'
+      }
+    }
+  });
   private readonly tray: Tray;
   private readonly isServe: boolean;
 
@@ -38,10 +48,13 @@ export class AppTray {
         label: 'Language',
         submenu: [
           {
-            label: 'en'
+            label: 'en',
+            type: 'checkbox',
+            checked: true
           },
           {
-            label: 'uk'
+            label: 'uk',
+            type: 'checkbox'
           }
         ]
       },
