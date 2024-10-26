@@ -1,12 +1,9 @@
 import { App, BrowserWindow, globalShortcut, Menu, NativeImage, nativeImage, Tray } from "electron";
 import Store from 'electron-store';
+import { i18n as I18n } from 'i18next';
 import path from 'path';
 
 export class AppTray {
-  static initialize(app: App, dirname: string) {
-    new AppTray(app, dirname);
-  }
-
   private readonly store = new Store({
     name: 'settings',
     schema: {
@@ -16,45 +13,65 @@ export class AppTray {
       }
     }
   });
+  private readonly trayIcon: NativeImage;
   private readonly tray: Tray;
   private readonly isServe: boolean;
 
-  private constructor(
+  constructor(
     private readonly app: App,
-    private readonly dirname: string
+    private readonly dirname: string,
+    private readonly i18n: I18n
   ) {
     this.isServe = process.argv.slice(1).some(arg => arg === '--serve');
 
+    this.store.onDidChange('language', (newValue, oldValue) => this.onLanguageSettingChanged(newValue as string));
+
+    this.trayIcon = this.createTrayIcon(app);
+    this.tray = new Tray(this.trayIcon);
+    this.tray.setToolTip('Just Clipboard Manager');
+    this.tray.setContextMenu(this.createMenu());
+
+    globalShortcut.register('Ctrl+Shift+Q', this.showPasteWindow.bind(this));
+  }
+
+
+  private createTrayIcon(app: App): NativeImage {
     let trayIconFileName = app.isPackaged ? 'tray.ico' : 'tray-dev.ico';
     if (process.platform == 'linux') {
       trayIconFileName = app.isPackaged ? 'tray.png' : 'tray-dev.png';
     }
-    const trayIcon = nativeImage.createFromPath(path.join(this.dirname, 'assets', process.platform, trayIconFileName));
-    this.tray = new Tray(trayIcon);
-    this.tray.setToolTip('Just Clipboard Manager');
-    this.tray.setContextMenu(Menu.buildFromTemplate([
+    return nativeImage.createFromPath(path.join(this.dirname, 'assets', process.platform, trayIconFileName));
+  }
+
+
+  private createMenu(): Menu {
+    const selectedLang = this.i18n.language;
+    return Menu.buildFromTemplate([
       // todo: customize tray menu, see https://github.com/max-mapper/menubar
       {
-        label: 'Settings',
-        click: () => this.showMainWindow(trayIcon)
+        label: this.i18n.t('settings'),
+        click: () => this.showMainWindow(this.trayIcon)
       },
       {
-        label: 'About'
+        label: this.i18n.t('about')
       },
       {
         type: 'separator'
       },
       {
-        label: 'Language',
+        label: this.i18n.t('language'),
         submenu: [
           {
-            label: 'en',
+            label: 'English (United States)',
             type: 'checkbox',
-            checked: true
+            checked: selectedLang === 'en',
+            click: () => this.store.set('language', 'en')
           },
           {
-            label: 'uk',
-            type: 'checkbox'
+            label: 'українська (Україна)',
+            type: 'checkbox',
+            checked: selectedLang === 'uk',
+            click: () => this.store.set('language', 'uk')
           }
         ]
       },
@@ -62,12 +79,16 @@ export class AppTray {
         type: 'separator'
       },
       {
-        label: 'Exit',
+        label: this.i18n.t('exit'),
         click: this.app.quit
       }
-    ]));
+    ]);
+  }
 
-    globalShortcut.register('Ctrl+Shift+Q', this.showPasteWindow.bind(this));
+
+  private async onLanguageSettingChanged(lang: string) {
+    await this.i18n.changeLanguage(lang);
+    this.tray.setContextMenu(this.createMenu());
   }
 
 
