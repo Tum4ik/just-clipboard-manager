@@ -17,7 +17,6 @@ const config: ForgeConfig = {
       '.github',
       '.vscode',
       'electron',
-      'src',
       '.editorconfig',
       '.gitignore',
       'angular.json',
