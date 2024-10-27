@@ -11,7 +11,13 @@ else if (process.platform == 'linux') {
 }
 
 const config: ForgeConfig = {
-  makers: makers
+  makers: makers,
+  packagerConfig: {
+    ignore: [
+      '.github',
+      '.vscode'
+    ]
+  }
 };
 
 export default config;

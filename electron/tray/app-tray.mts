@@ -127,7 +127,7 @@ export class AppTray {
       win.loadURL(`http://localhost:4200/index.html?window=${type}`);
     }
     else {
-      win.loadFile(path.join(__dirname, 'just-clipboard-manager/browser/index.html'), {
+      win.loadFile(path.join(this.dirname, 'just-clipboard-manager/browser/index.html'), {
         query: { window: type }
       });
     }
