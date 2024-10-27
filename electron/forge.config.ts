@@ -25,10 +25,7 @@ const config: ForgeConfig = {
       'cspell.json',
       'LICENSE',
       'README.md',
-      'tsconfig.app.json',
-      'tsconfig.electron.json',
-      'tsconfig.json',
-      'tsconfig.spec.json',
+      '^tsconfig(\.\w+)?\.json$',
     ]
   }
 };
