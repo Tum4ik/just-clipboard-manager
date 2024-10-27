@@ -14,8 +14,21 @@ const config: ForgeConfig = {
   makers: makers,
   packagerConfig: {
     ignore: [
-      '.github',
-      '.vscode'
+      '.github/',
+      '.vscode/',
+      'electron/',
+      'src/',
+      '.editorconfig',
+      '.gitignore',
+      'angular.json',
+      'app-icon.xcf',
+      'cspell.json',
+      'LICENSE',
+      'README.md',
+      'tsconfig.app.json',
+      'tsconfig.electron.json',
+      'tsconfig.json',
+      'tsconfig.spec.json',
     ]
   }
 };
