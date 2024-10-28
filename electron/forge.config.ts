@@ -20,6 +20,7 @@ const config: ForgeConfig = {
       'electron/i18n',
       'electron/tray',
       'electron/forge.config.ts',
+      'electron/main.ts',
       '.editorconfig',
       '.gitignore',
       'angular.json',
