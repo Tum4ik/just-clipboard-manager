@@ -1,6 +1,8 @@
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import type { ForgeConfig } from '@electron-forge/shared-types';
+import fs from 'fs';
+import path from 'path';
 
 const makers = [];
 if (process.platform == 'win32') {
@@ -17,7 +19,7 @@ const config: ForgeConfig = {
       '.github',
       '.vscode',
 
-      'electron/assets',
+      /* 'electron/assets',
       'electron/i18n',
       'electron/tray',
       'electron/forge.config.ts',
@@ -26,7 +28,7 @@ const config: ForgeConfig = {
       'src/app',
       'src/index.html',
       'src/main.ts',
-      'src/styles.scss',
+      'src/styles.scss', */
 
       '.editorconfig',
       '.gitignore',
@@ -40,6 +42,12 @@ const config: ForgeConfig = {
       'tsconfig.electron.json',
       'tsconfig.spec.json',
     ]
+  },
+  hooks: {
+    async packageAfterPrune(config, buildPath): Promise<void> {
+      fs.rmSync(path.join(buildPath, 'electron'), { recursive: true, force: true });
+      fs.rmSync(path.join(buildPath, 'src'), { recursive: true, force: true });
+    }
   }
 };
 
