@@ -18,18 +18,6 @@ const config: ForgeConfig = {
     ignore: [
       '.github',
       '.vscode',
-
-      /* 'electron/assets',
-      'electron/i18n',
-      'electron/tray',
-      'electron/forge.config.ts',
-      'electron/main.ts',
-
-      'src/app',
-      'src/index.html',
-      'src/main.ts',
-      'src/styles.scss', */
-
       '.editorconfig',
       '.gitignore',
       'angular.json',

@@ -1,4 +1,5 @@
-import { app } from 'electron';
+import { spawn } from 'child_process';
+import { app, dialog } from 'electron';
 import electronSquirrelStartup from 'electron-squirrel-startup';
 import i18n from 'i18next';
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend';
@@ -27,4 +28,13 @@ app
   .whenReady().then(async () => {
     const tray = await import("./tray/app-tray.mjs");
     new tray.AppTray(app, __dirname, i18n);
+
+    const exe = path.join(__dirname, 'dotnet', 'JustClipboardManager.ClipboardListener.exe');
+    const process = spawn(exe);
+    process.stdout.on('data', data => {
+      if (data.toString() === 'clipboard-updated') {
+        // clipboard updated event
+        dialog.showMessageBox({ message: data.toString() });
+      }
+    });
   });

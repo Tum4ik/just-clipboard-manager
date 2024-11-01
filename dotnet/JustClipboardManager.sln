@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustClipboardManager.ClipboardListener", "JustClipboardManager.ClipboardListener\JustClipboardManager.ClipboardListener.csproj", "{A2235AF8-F22A-48BA-B331-C18D1A407397}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2235AF8-F22A-48BA-B331-C18D1A407397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2235AF8-F22A-48BA-B331-C18D1A407397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2235AF8-F22A-48BA-B331-C18D1A407397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2235AF8-F22A-48BA-B331-C18D1A407397}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C29BD22-F280-4172-8C38-3B26FEE4AFA8}
+	EndGlobalSection
+EndGlobal
