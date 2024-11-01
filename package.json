@@ -13,7 +13,7 @@
     "electron-serve": "concurrently \"npm run electron-tsc && ng serve\" \"wait-on tcp:4200 && electron . --serve\"",
     "electron-tsc": "copy-files-from-to && tsc -p tsconfig.electron.json",
     "electron-forge-make": "npm run dotnet-publish-listener && npm run electron-tsc && ng build && electron-forge make",
-    "dotnet-publish-listener": "dotnet publish ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj --self-contained true --output ./dist/dotnet",
+    "dotnet-publish-listener": "dotnet publish ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj -c Release -r win-x64 --self-contained true --output ./dist/dotnet",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
