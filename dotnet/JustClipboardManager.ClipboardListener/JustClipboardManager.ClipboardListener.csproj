@@ -9,8 +9,22 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GtkSharpVersion>3.24.24</GtkSharpVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="GtkSharp" Version="3.24.24.95" />
+    <PackageReference Include="GtkSharp" Version="$(GtkSharpVersion).95" />
   </ItemGroup>
+
+  <ItemGroup>
+    <GtkLibs Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/libgtk-3-0.dll"/>
+    <!-- <GtkLibs Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/libgtk-3.so.0"/>
+    <GtkLibs Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/libgtk-3.0.dylib"/>
+    <GtkLibs Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/gtk-3.dll"/> -->
+  </ItemGroup>
+  <Target Name="CopyPluginToPublishOutput" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <Copy SourceFiles="@(GtkLibs)" DestinationFolder="$(PublishDir)" />
+  </Target>
 
 </Project>
