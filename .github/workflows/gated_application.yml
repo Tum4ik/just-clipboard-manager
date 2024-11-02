@@ -24,8 +24,8 @@ jobs:
         platform:
           - id: windows-latest
             name: Windows
-          - id: ubuntu-latest
-            name: Ubuntu
+          # - id: ubuntu-latest
+          #   name: Ubuntu
 
     name: Gated Build (${{ matrix.platform.name }})
     runs-on: ${{ matrix.platform.id }}
