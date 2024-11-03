@@ -18,7 +18,6 @@ const config: ForgeConfig = {
     ignore: [
       '.github',
       '.vscode',
-      'dotnet',
       '.editorconfig',
       '.gitignore',
       'angular.json',
@@ -34,6 +33,7 @@ const config: ForgeConfig = {
   },
   hooks: {
     async packageAfterPrune(config, buildPath): Promise<void> {
+      fs.rmSync(path.join(buildPath, 'dotnet'), { recursive: true, force: true });
       fs.rmSync(path.join(buildPath, 'electron'), { recursive: true, force: true });
       fs.rmSync(path.join(buildPath, 'src'), { recursive: true, force: true });
     }

@@ -19,9 +19,9 @@
 
   <Target Name="CopyGtk" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
     <ItemGroup>
-      <GtkFiles Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/**/*" />
+      <GtkFiles Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/**/*"
+                Exclude="$(LocalAppData)/Gtk/$(GtkSharpVersion)/gtk.zip"/>
     </ItemGroup>
-    <!-- <Copy SourceFiles="@(GtkFiles)" DestinationFiles="@(GtkFiles->'$(PublishDir)/%(RecursiveDir)%(Filename)%(Extension)')" /> -->
     <Copy SourceFiles="@(GtkFiles)" DestinationFolder="$(PublishDir)/%(RecursiveDir)" />
   </Target>
 
