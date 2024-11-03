@@ -32,9 +32,9 @@ app
     const exe = path.join(__dirname, 'dotnet', 'JustClipboardManager.ClipboardListener.exe');
     const process = spawn(exe);
     process.stdout.on('data', data => {
-      if (data.toString() === 'clipboard-updated') {
+      if (data.toString().trim() === 'clipboard-updated') {
         // clipboard updated event
-        dialog.showMessageBox({ message: data.toString() });
+        dialog.showMessageBox({ message: 'compared' });
       }
     });
   });

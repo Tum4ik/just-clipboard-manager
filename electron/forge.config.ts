@@ -18,6 +18,7 @@ const config: ForgeConfig = {
     ignore: [
       '.github',
       '.vscode',
+      'dotnet',
       '.editorconfig',
       '.gitignore',
       'angular.json',
