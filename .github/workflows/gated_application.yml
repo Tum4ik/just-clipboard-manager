@@ -42,16 +42,23 @@ jobs:
         node-version: 22
         cache: 'npm'
 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
     - name: Clean Install
       run: npm ci
 
     - name: Electron Forge make
-      shell: pwsh
       run: |
-        npm run prod-dotnet-publish-listener `
-          -- `
-          -RuntimeIdentifier ${{ matrix.platform.runtime-identifier }} `
-          -Version 4.0.0
+        dotnet publish ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj `
+          -c Release `
+          -r ${{ matrix.platform.runtime-identifier }} `
+          --self-contained `
+          --output ./dist/dotnet `
+          --nologo `
+          /p:Version=4.0.0
         npm run prod-electron-forge-make
 
     - name: Upload build artifacts
