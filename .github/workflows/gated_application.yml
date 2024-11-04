@@ -51,6 +51,7 @@ jobs:
       run: npm ci
 
     - name: Electron Forge make
+      shell: pwsh
       run: |
         dotnet publish ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj `
           -c Release `
