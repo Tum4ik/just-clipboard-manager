@@ -25,8 +25,9 @@ jobs:
           - id: windows-latest
             name: Windows
             runtime-identifier: win-x64
-          # - id: ubuntu-latest
-          #   name: Ubuntu
+          - id: ubuntu-latest
+            name: Ubuntu
+            runtime-identifier: linux-x64
 
     name: Gated Build (${{ matrix.platform.name }})
     runs-on: ${{ matrix.platform.id }}
