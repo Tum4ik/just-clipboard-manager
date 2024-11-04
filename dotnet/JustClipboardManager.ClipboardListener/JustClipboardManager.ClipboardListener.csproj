@@ -19,6 +19,7 @@
 
   <Target Name="CopyGtk" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' == 'win-x64'">
     <ItemGroup>
+      <!-- todo: try to exclude more unused files to reduce final app size -->
       <GtkFiles Include="$(LocalAppData)/Gtk/$(GtkSharpVersion)/**/*"
                 Exclude="$(LocalAppData)/Gtk/$(GtkSharpVersion)/gtk.zip"/>
     </ItemGroup>
