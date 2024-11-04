@@ -14,6 +14,8 @@
     "electron-tsc": "copy-files-from-to && tsc -p tsconfig.electron.json",
     "electron-forge-make": "npm run dotnet-publish-listener && npm run electron-tsc && ng build && electron-forge make",
     "dotnet-publish-listener": "@powershell ./scripts/publish-listener.ps1 -RuntimeIdentifier win-x64 -Version 4.0.0",
+    "prod-electron-forge-make": "npm run electron-tsc && ng build && electron-forge make",
+    "prod-dotnet-publish-listener": "@powershell ./scripts/publish-listener.ps1",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",

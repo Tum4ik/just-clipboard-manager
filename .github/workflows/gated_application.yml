@@ -24,6 +24,7 @@ jobs:
         platform:
           - id: windows-latest
             name: Windows
+            runtime-identifier: win-x64
           # - id: ubuntu-latest
           #   name: Ubuntu
 
@@ -44,7 +45,12 @@ jobs:
       run: npm ci
 
     - name: Electron Forge make
-      run: npm run electron-forge-make
+      run: |
+        npm run prod-dotnet-publish-listener `
+          -- `
+          -RuntimeIdentifier ${{ matrix.platform.runtime-identifier }} `
+          -Version 4.0.0
+        npm run prod-electron-forge-make
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
