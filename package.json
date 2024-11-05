@@ -9,17 +9,17 @@
   "license": "MIT",
   "main": "./dist/main.js",
   "scripts": {
-    "electron": "npm run electron-tsc && ng build && electron .",
+    "electron": "npm run electron-tsc && npm run build && electron .",
     "electron-serve": "concurrently \"npm run electron-tsc && ng serve\" \"wait-on tcp:4200 && electron . --serve\"",
     "electron-tsc": "copy-files-from-to && tsc -p tsconfig.electron.json",
-    "electron-forge-make": "npm run dotnet-publish-listener && npm run electron-tsc && ng build && electron-forge make",
-    "dotnet-publish-listener": "@powershell ./scripts/publish-listener.ps1 -RuntimeIdentifier win-x64 -Version 4.0.0",
-    "prod-electron-forge-make": "npm run electron-tsc && ng build && electron-forge make",
+    "electron-forge-make": "npm run dotnet-publish-listener && npm run electron-tsc && npm run build && electron-forge make",
+    "dotnet-publish-listener": "dotnet publish ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj --output ./dist/dotnet",
+    "prod-electron-forge-make": "npm run electron-tsc && npm run build && electron-forge make",
     "outdated": "npm outdated",
     "update-packages": "npm update --save",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build just-clipboard-manager-pdk && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -73,6 +73,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^18.2.0",
     "typescript": "~5.5.2",
     "wait-on": "^8.0.1"
   }
