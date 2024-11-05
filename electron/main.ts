@@ -29,7 +29,7 @@ app
     const tray = await import("./tray/app-tray.mjs");
     new tray.AppTray(app, __dirname, i18n);
 
-    const exe = path.join(__dirname, 'dotnet', 'JustClipboardManager.ClipboardListener.exe');
+    const exe = path.join(__dirname, 'dotnet', getExecutable());
     const process = spawn(exe);
     process.stdout.on('data', data => {
       if (data.toString().trim() === 'clipboard-updated') {
@@ -38,3 +38,14 @@ app
       }
     });
   });
+
+function getExecutable(): string {
+  switch (process.platform) {
+    case 'win32':
+      return 'JustClipboardManager.ClipboardListener.exe';
+    case 'linux':
+      return 'JustClipboardManager.ClipboardListener';
+  }
+
+  throw new Error('Unsupported platform');
+}
