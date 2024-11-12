@@ -78,6 +78,7 @@ internal class ClipRepository : IClipRepository
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     var clipIdsToRemove = dbContext.Clips
       .Where(c => c.ClippedAt < date)
+      .Where(c => !dbContext.PinnedClips.Select(pc => pc.Clip.Id).Contains(c.Id))
       .Select(c => c.Id);
     var clipIdsCommaSeparated = string.Join(",", clipIdsToRemove);
     await dbContext.Database
