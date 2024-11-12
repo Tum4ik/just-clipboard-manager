@@ -171,7 +171,7 @@ internal partial class PasteWindowViewModel : TranslationViewModel
       return;
     }
 
-    var dataObjects = clip.FormattedDataObjects;
+    var dataObjects = await _clipRepository.GetFormattedDataObjectsAsync(clip.Id).ConfigureAwait(true);
     SetInputResult(new()
     {
       FormattedDataObjects = dataObjects,

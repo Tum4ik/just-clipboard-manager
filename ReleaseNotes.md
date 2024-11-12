@@ -1,5 +1,5 @@
 ### Features
-* Pin clips in the paste window.
+* Improved data fetching for paste window.
 
 ### Fixes
-* Graceful exit on application update.
+* Do not remove pinned clips when removing old clips.

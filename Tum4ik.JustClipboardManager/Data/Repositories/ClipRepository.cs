@@ -36,12 +36,21 @@ internal class ClipRepository : IClipRepository
       .OrderByDescending(c => c.ClippedAt)
       .Skip(skip)
       .Take(take)
-      .Include(c => c.FormattedDataObjects.OrderBy(fdo => fdo.FormatOrder))
       .AsAsyncEnumerable();
     await foreach (var clip in clips.ConfigureAwait(false))
     {
       yield return clip;
     }
+  }
+
+
+  public async Task<List<FormattedDataObject>> GetFormattedDataObjectsAsync(int clipId)
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    return await dbContext.FormattedDataObjects
+      .Where(fdo => fdo.Clip.Id == clipId)
+      .ToListAsync()
+      .ConfigureAwait(false);
   }
 
 
