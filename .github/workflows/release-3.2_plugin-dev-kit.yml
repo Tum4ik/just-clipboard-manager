@@ -1,4 +1,4 @@
-name: Release 3.1 (Plugin Dev Kit)
+name: Release 3.2 (Plugin Dev Kit)
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
 
   build:
     
-    name: Build 3.1
+    name: Build 3.2
     runs-on: windows-latest
     outputs:
       version: ${{ steps.define-version.outputs.version }}
