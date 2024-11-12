@@ -12,4 +12,9 @@ internal class Plugin
   public bool IsInstalled { get; set; } = true;
   public bool IsEnabled { get; set; } = true;
   public required string FilesDirectory { get; set; }
+
+  // todo:
+  // 1. Remove AddedPluginEntity migration
+  // 2. Add IsBuiltIn property
+  // 3. Add AddedPluginEntity migration
 }

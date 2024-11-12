@@ -138,11 +138,11 @@
   <data name="Exit" xml:space="preserve">
     <value>Вихід</value>
   </data>
-  <data name="Dark" xml:space="preserve">
-    <value>Темна</value>
-  </data>
   <data name="Light" xml:space="preserve">
     <value>Світла</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Темна</value>
   </data>
   <data name="AutoStartApplication" xml:space="preserve">
     <value>Автозапуск додатку</value>
@@ -153,14 +153,14 @@
   <data name="ShowPasteWindow" xml:space="preserve">
     <value>Показати вікно вставки</value>
   </data>
-  <data name="Accept" xml:space="preserve">
-    <value>Прийняти</value>
+  <data name="EditHotkey" xml:space="preserve">
+    <value>Редагувати гарячу клавішу</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Скасувати</value>
   </data>
-  <data name="EditHotkey" xml:space="preserve">
-    <value>Редагувати гарячу клавішу</value>
+  <data name="Accept" xml:space="preserve">
+    <value>Прийняти</value>
   </data>
   <data name="PressHotkey" xml:space="preserve">
     <value>Натисніть гарячу клавішу</value>
@@ -198,14 +198,14 @@
   <data name="LeaveFeedback" xml:space="preserve">
     <value>Залишити відгук</value>
   </data>
+  <data name="SuggestIdea" xml:space="preserve">
+    <value>Запропонувати ідею</value>
+  </data>
   <data name="AskQuestion" xml:space="preserve">
     <value>Задати питання</value>
   </data>
   <data name="ContactMeDirectly" xml:space="preserve">
     <value>Зв'язатися зі мною напряму</value>
-  </data>
-  <data name="SuggestIdea" xml:space="preserve">
-    <value>Запропонувати ідею</value>
   </data>
   <data name="SourceCode" xml:space="preserve">
     <value>Вихідний код</value>
@@ -288,20 +288,20 @@
   <data name="month_Plural" xml:space="preserve">
     <value>місяців</value>
   </data>
-  <data name="year_Plural" xml:space="preserve">
-    <value>років</value>
-  </data>
   <data name="year_Paucal" xml:space="preserve">
     <value>роки</value>
   </data>
+  <data name="year_Plural" xml:space="preserve">
+    <value>років</value>
+  </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>Мишка</value>
+  </data>
+  <data name="Caret" xml:space="preserve">
+    <value>Каретка</value>
+  </data>
   <data name="DisplayCorner" xml:space="preserve">
     <value>Кут дисплея</value>
-  </data>
-  <data name="BottomLeft" xml:space="preserve">
-    <value>Нижній лівий</value>
-  </data>
-  <data name="BottomRight" xml:space="preserve">
-    <value>Нижній правий</value>
   </data>
   <data name="TopLeft" xml:space="preserve">
     <value>Верхній лівий</value>
@@ -309,11 +309,11 @@
   <data name="TopRight" xml:space="preserve">
     <value>Верхній правий</value>
   </data>
-  <data name="Mouse" xml:space="preserve">
-    <value>Мишка</value>
+  <data name="BottomLeft" xml:space="preserve">
+    <value>Нижній лівий</value>
   </data>
-  <data name="Caret" xml:space="preserve">
-    <value>Каретка</value>
+  <data name="BottomRight" xml:space="preserve">
+    <value>Нижній правий</value>
   </data>
   <data name="PasteWindow" xml:space="preserve">
     <value>Вікно вставки</value>
@@ -336,11 +336,11 @@
   <data name="Size" xml:space="preserve">
     <value>Розмір</value>
   </data>
-  <data name="Height" xml:space="preserve">
-    <value>Висота</value>
-  </data>
   <data name="Width" xml:space="preserve">
     <value>Ширина</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Висота</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>За замовчуванням</value>
@@ -381,31 +381,34 @@
   <data name="PluginSecurityViolation" xml:space="preserve">
     <value>Порушення безпеки плагіна</value>
   </data>
-  <data name="ExceededUncompressedArchiveSize_Body" xml:space="preserve">
-    <value>Розмір нестиснутого архіву плагіна завеликий.</value>
-  </data>
   <data name="ExceededArchiveEntriesCount_Body" xml:space="preserve">
     <value>Забагато елементів в архіві плагіну.</value>
   </data>
   <data name="AbnormalArchiveCompressionRatio_Body" xml:space="preserve">
     <value>Архів плагіну має ненормальний коефіцієнт стиснення.</value>
   </data>
+  <data name="ExceededUncompressedArchiveSize_Body" xml:space="preserve">
+    <value>Розмір нестиснутого архіву плагіна завеликий.</value>
+  </data>
+  <data name="MissingPluginModuleType_Body" xml:space="preserve">
+    <value>Тип модуля плагіна не знайдено.</value>
+  </data>
   <data name="PluginLoadingProblem" xml:space="preserve">
     <value>Проблема встановлення плагіна</value>
-  </data>
-  <data name="PluginModuleInstanceCreationProblem_Body" xml:space="preserve">
-    <value>Неможливо створити екземпляр модуля плагіна.</value>
   </data>
   <data name="TypesLoadingProblem_Body" xml:space="preserve">
     <value>Неможливо завантажити всі публічні типи з плагіна.</value>
   </data>
-  <data name="MissingPluginModuleType_Body" xml:space="preserve">
-    <value>Тип модуля плагіна не знайдено.</value>
+  <data name="PluginModuleInstanceCreationProblem_Body" xml:space="preserve">
+    <value>Неможливо створити екземпляр модуля плагіна.</value>
   </data>
   <data name="PotentialConfigChangesAttack" xml:space="preserve">
     <value>Потенційна атака на зміну конфігурації</value>
   </data>
   <data name="MissingPluginDirectory_Body" xml:space="preserve">
     <value>Файли плагіна не знайдено.</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Відновити</value>
   </data>
 </root>

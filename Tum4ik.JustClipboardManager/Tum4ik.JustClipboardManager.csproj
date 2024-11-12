@@ -253,7 +253,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Tum4ik.StinimGen" Version="2.1.24171.1" />
+    <PackageReference Include="Tum4ik.StinimGen" Version="2.2.24230.3" />
   </ItemGroup>
 
   <ItemGroup>

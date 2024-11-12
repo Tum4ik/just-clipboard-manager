@@ -408,4 +408,7 @@
   <data name="MissingPluginDirectory_Body" xml:space="preserve">
     <value>The plugin files are not found.</value>
   </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
 </root>

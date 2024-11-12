@@ -105,7 +105,7 @@ internal partial class PluginsSearchViewModel : TranslationViewModel, INavigatio
     InstallingPluginId = plugin.Id;
     var progress = new Progress<int>(p => PluginInstallationProgress = p);
     var installationResult = await _pluginsService.InstallPluginAsync(
-      plugin.DownloadLink, plugin.Id, plugin.Version, progress, _installPluginCancellationTokenSource.Token
+      plugin.DownloadLink, plugin.Id, progress, _installPluginCancellationTokenSource.Token
     ).ConfigureAwait(true);
 
     if (installationResult == PluginInstallationResult.Success)

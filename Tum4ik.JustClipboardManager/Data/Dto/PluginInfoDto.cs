@@ -3,7 +3,7 @@ internal abstract class PluginInfoDto
 {
   public required Guid Id { get; init; }
   public required string Name { get; init; }
-  public required Version Version { get; init; }
+  public required string Version { get; init; }
   public string? Author { get; init; }
   public string? AuthorEmail { get; init; }
   public string? Description { get; init; }

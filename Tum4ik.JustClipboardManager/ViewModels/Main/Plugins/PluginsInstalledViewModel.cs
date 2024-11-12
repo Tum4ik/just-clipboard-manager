@@ -36,18 +36,18 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   private async Task LoadPluginsAsync()
   {
     Plugins.Clear();
-    // todo: get installed plugins from PluginsService
-    await foreach (var plugin in _pluginRepository.GetInstalledPluginsAsync())
+    await foreach (var plugin in _pluginRepository.GetAllAsync())
     {
       Plugins.Add(new()
       {
         Id = plugin.Id,
         Name = plugin.Name,
-        Version = Version.Parse(plugin.Version),
+        Version = plugin.Version,
         IsEnabled = plugin.IsEnabled,
         Author = plugin.Author,
         AuthorEmail = plugin.AuthorEmail,
-        Description = plugin.Description
+        Description = plugin.Description,
+        IsInstalled = plugin.IsInstalled
       });
     }
   }
@@ -80,7 +80,15 @@ internal partial class PluginsInstalledViewModel : TranslationViewModel, INaviga
   [RelayCommand]
   private async Task UninstallPluginAsync(InstalledPluginInfoDto plugin)
   {
+    plugin.IsInstalled = false;
     await _pluginsService.UninstallPluginAsync(plugin.Id).ConfigureAwait(true);
-    await LoadPluginsAsync().ConfigureAwait(false);
+  }
+
+
+  [RelayCommand]
+  private async Task RestorePluginAsync(InstalledPluginInfoDto plugin)
+  {
+    plugin.IsInstalled = true;
+    await _pluginsService.RestorePluginAsync(plugin.Id).ConfigureAwait(true);
   }
 }

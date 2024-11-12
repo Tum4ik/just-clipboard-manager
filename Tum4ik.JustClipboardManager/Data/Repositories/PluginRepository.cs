@@ -22,6 +22,16 @@ internal class PluginRepository : IPluginRepository
   }
 
 
+  public async IAsyncEnumerable<Plugin> GetAllAsync()
+  {
+    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
+    await foreach (var plugin in dbContext.Plugins.AsAsyncEnumerable().ConfigureAwait(false))
+    {
+      yield return plugin;
+    }
+  }
+
+
   public async IAsyncEnumerable<Plugin> GetInstalledPluginsAsync()
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
@@ -65,14 +75,6 @@ internal class PluginRepository : IPluginRepository
   {
     using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
     return await dbContext.Plugins.AnyAsync(p => p.Id == id).ConfigureAwait(false);
-  }
-
-
-  public async Task<bool> ExistsAsync(Guid id, Version version)
-  {
-    var versionStr = version.ToString();
-    using var dbContext = await _dbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
-    return await dbContext.Plugins.AnyAsync(p => p.Id == id && p.Version == versionStr).ConfigureAwait(false);
   }
 
 

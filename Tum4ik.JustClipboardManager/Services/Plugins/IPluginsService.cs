@@ -11,12 +11,12 @@ internal interface IPluginsService
   Task InitializeAsync();
   IAsyncEnumerable<SearchPluginInfoDto> SearchPluginsAsync();
   Task UninstallPluginAsync(Guid id);
+  Task RestorePluginAsync(Guid id);
   Task EnablePluginAsync(Guid id);
   Task DisablePluginAsync(Guid id);
 
   Task<PluginInstallationResult> InstallPluginAsync(Uri downloadLink,
                                                     Guid pluginId,
-                                                    Version pluginVersion,
                                                     IProgress<int>? progress = null,
                                                     CancellationToken cancellationToken = default);
 }

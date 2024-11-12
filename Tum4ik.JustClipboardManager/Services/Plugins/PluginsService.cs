@@ -109,13 +109,18 @@ internal class PluginsService : IPluginsService
 
     await foreach (var pluginDto in SearchPluginsAsync().ConfigureAwait(false))
     {
+      if (!Version.TryParse(pluginDto.Version, out var availablePluginVersion))
+      {
+        continue;
+      }
+
       var shouldInstallPlugin = pluginIdsToInstall is not null && pluginIdsToInstall.Contains(pluginDto.Id);
       var shouldUpdatePlugin = installedPlugins.TryGetValue(pluginDto.Id, out var installedPlugin)
         && Version.TryParse(installedPlugin.Version, out var installedPluginVersion)
-        && pluginDto.Version > installedPluginVersion;
+        && availablePluginVersion > installedPluginVersion;
       if (shouldInstallPlugin || shouldUpdatePlugin)
       {
-        await InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id, pluginDto.Version).ConfigureAwait(false);
+        await InstallPluginAsync(pluginDto.DownloadLink, pluginDto.Id).ConfigureAwait(false);
       }
     }
     _file.Delete(FileName);
@@ -154,6 +159,13 @@ internal class PluginsService : IPluginsService
   }
 
 
+  public async Task RestorePluginAsync(Guid id)
+  {
+    await _pluginRepository.UpdateAsync(id, u => u.SetProperty(p => p.IsInstalled, true)).ConfigureAwait(false);
+    await LoadAvailablePluginsAsync().ConfigureAwait(false);
+  }
+
+
   public async Task EnablePluginAsync(Guid id)
   {
     await _pluginRepository.UpdateAsync(id, u => u.SetProperty(p => p.IsEnabled, true)).ConfigureAwait(false);
@@ -171,7 +183,6 @@ internal class PluginsService : IPluginsService
   public async Task<PluginInstallationResult> InstallPluginAsync(
     Uri downloadLink,
     Guid pluginId,
-    Version pluginVersion,
     IProgress<int>? progress = null,
     CancellationToken cancellationToken = default
   )

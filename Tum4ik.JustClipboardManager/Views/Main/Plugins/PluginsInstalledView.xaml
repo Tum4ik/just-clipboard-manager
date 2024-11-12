@@ -1,10 +1,10 @@
 <UserControl x:Class="Tum4ik.JustClipboardManager.Views.Main.Plugins.PluginsInstalledView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              xmlns:vm="clr-namespace:Tum4ik.JustClipboardManager.ViewModels.Main.Plugins"
              xmlns:dto="clr-namespace:Tum4ik.JustClipboardManager.Data.Dto"
              xmlns:controls="clr-namespace:Tum4ik.JustClipboardManager.Controls"
@@ -23,7 +23,7 @@
                                Version="{Binding Version}"
                                Author="{Binding Author}"
                                Description="{Binding Description}"
-                               IsPluginEnabled="{Binding IsEnabled}">
+                               IsPluginEnabled="{Binding IsInstalledAndEnabled}">
             <controls:PluginCard.Footer>
               <DockPanel LastChildFill="False">
                 <DockPanel.Resources>
@@ -36,7 +36,16 @@
                                        IsChecked="{Binding IsEnabled, Mode=OneWay}"
                                        Command="{Binding DataContext.EnableDisablePluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                        CommandParameter="{Binding}"
-                                       Margin="0, 0, 8, 0"/>
+                                       Margin="0, 0, 8, 0">
+                  <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                  </i:Interaction.Triggers>
+                </controls:ToggleSwitch>
                 <TextBlock DockPanel.Dock="Left"
                            Text="{Binding DataContext.Translate[Enabled], RelativeSource={RelativeSource AncestorType=UserControl}}"
                            Foreground="{DynamicResource {x:Static theming:AppColors.SystemSuccessBrush}}">
@@ -66,9 +75,38 @@
                                       Command="{Binding DataContext.UninstallPluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       CommandParameter="{Binding}">
                   <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
+                    </i:DataTrigger>
                     <!-- Special case for Default Text Plugin -->
                     <i:DataTrigger Binding="{Binding Id}" Value="D930D2CD-3FD9-4012-A363-120676E22AFA">
+                      <i:Interaction.Behaviors>
+                        <i:ConditionBehavior>
+                          <i:ConditionalExpression >
+                            <i:ComparisonCondition LeftOperand="{Binding IsInstalled}"
+                                                   Operator="Equal"
+                                                   RightOperand="True"/>
+                          </i:ConditionalExpression>
+                        </i:ConditionBehavior>
+                      </i:Interaction.Behaviors>
                       <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+
+                  </i:Interaction.Triggers>
+                </controls:WinUiButton>
+                <controls:WinUiButton DockPanel.Dock="Right"
+                                      Text="{Binding DataContext.Translate[Restore], RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      Command="{Binding DataContext.RestorePluginCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      CommandParameter="{Binding}">
+                  <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Collapsed"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                      <i:ChangePropertyAction PropertyName="Visibility" Value="Visible"/>
                     </i:DataTrigger>
                   </i:Interaction.Triggers>
                 </controls:WinUiButton>
