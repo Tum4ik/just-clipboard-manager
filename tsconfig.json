@@ -11,11 +11,6 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "paths": {
-      "just-clipboard-manager-pdk": [
-        "./dist/just-clipboard-manager-pdk"
-      ]
-    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -31,6 +26,10 @@
       "ES2022",
       "DOM",
       "DOM.Iterable"
+    ],
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
     ]
   },
   "angularCompilerOptions": {

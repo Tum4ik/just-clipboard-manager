@@ -3,12 +3,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/lib",
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true
+    "outDir": "../../out-tsc/spec",
+    "types": [
+      "jasmine"
+    ]
   },
-  "exclude": [
-    "**/*.spec.ts"
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
   ]
 }

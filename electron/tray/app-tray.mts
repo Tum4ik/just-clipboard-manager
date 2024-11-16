@@ -20,7 +20,7 @@ export class AppTray {
   constructor(
     private readonly app: App,
     private readonly dirname: string,
-    private readonly i18n: I18n
+    private readonly i18n: I18n,
   ) {
     this.isServe = process.argv.slice(1).some(arg => arg === '--serve');
 
@@ -31,7 +31,7 @@ export class AppTray {
     this.tray.setToolTip('Just Clipboard Manager');
     this.tray.setContextMenu(this.createMenu());
 
-    globalShortcut.register('Ctrl+Shift+Q', this.showPasteWindow.bind(this));
+    globalShortcut.register('Ctrl+Shift+Q', this.showPasteWindowAsync.bind(this));
   }
 
 
@@ -50,7 +50,7 @@ export class AppTray {
       // todo: customize tray menu, see https://github.com/max-mapper/menubar
       {
         label: this.i18n.t('settings'),
-        click: () => this.showMainWindow(this.trayIcon)
+        click: () => this.showMainWindowAsync(this.trayIcon)
       },
       {
         label: this.i18n.t('about')
@@ -92,7 +92,7 @@ export class AppTray {
   }
 
 
-  private showMainWindow(icon: NativeImage) {
+  private async showMainWindowAsync(icon: NativeImage) {
     const win = new BrowserWindow({
       minWidth: 800,
       minHeight: 600,
@@ -101,14 +101,15 @@ export class AppTray {
       icon: icon,
       // titleBarStyle: 'hidden',
       webPreferences: {
-        devTools: !this.app.isPackaged
+        devTools: !this.app.isPackaged,
+        preload: path.join(this.dirname, 'preload.js')
       },
     });
-    this.loadWindow(win, 'main-window');
+    await this.loadWindowAsync(win, 'main-window');
   }
 
 
-  private showPasteWindow() {
+  private async showPasteWindowAsync() {
     const win = new BrowserWindow({
       width: 400,
       height: 400,
@@ -118,16 +119,16 @@ export class AppTray {
         devTools: !this.app.isPackaged
       }
     });
-    this.loadWindow(win, 'paste-window');
+    await this.loadWindowAsync(win, 'paste-window');
   }
 
 
-  private loadWindow(win: BrowserWindow, type: WindowType) {
+  private async loadWindowAsync(win: BrowserWindow, type: WindowType) {
     if (this.isServe && !this.app.isPackaged) {
-      win.loadURL(`http://localhost:4200/index.html?window=${type}`);
+      await win.loadURL(`http://localhost:4200/index.html?window=${type}`);
     }
     else {
-      win.loadFile(path.join(this.dirname, 'just-clipboard-manager/browser/index.html'), {
+      await win.loadFile(path.join(this.dirname, 'just-clipboard-manager/browser/index.html'), {
         query: { window: type }
       });
     }

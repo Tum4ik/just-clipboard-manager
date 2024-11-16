@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'jcm-main-window',
@@ -7,6 +7,11 @@ import { Component } from '@angular/core';
   templateUrl: './main-window.component.html',
   styleUrl: './main-window.component.scss'
 })
-export class MainWindowComponent {
+export class MainWindowComponent implements OnInit {
+  async ngOnInit() {
+    // window.electronAPI.callPlugin('processData').then((r: any) => console.log(r))
+    const r = await window.electronAPI.callPlugin('processData');
+    console.log(r);
+  }
 
 }

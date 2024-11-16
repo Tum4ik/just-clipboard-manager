@@ -1,9 +1,10 @@
 import { spawn } from 'child_process';
-import { app, dialog } from 'electron';
+import { app, clipboard, ipcMain } from 'electron';
 import electronSquirrelStartup from 'electron-squirrel-startup';
 import i18n from 'i18next';
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 if (electronSquirrelStartup) {
   app.quit();
@@ -23,18 +24,49 @@ i18n.use(FsBackend)
     defaultNS: 'translation'
   });
 
-app
-  .on('window-all-closed', () => { })
-  .whenReady().then(async () => {
-    const tray = await import("./tray/app-tray.mjs");
-    new tray.AppTray(app, __dirname, i18n);
+const clipboardListenerExe = path.join(__dirname, 'dotnet', getExecutable());
+const clipboardListenerProcess = spawn(clipboardListenerExe);
 
-    const exe = path.join(__dirname, 'dotnet', getExecutable());
-    const process = spawn(exe);
-    process.stdout.on('data', data => {
+app
+  .on('will-quit', e => {
+    e.preventDefault();
+  })
+  .on('quit', () => {
+    clipboardListenerProcess.kill();
+  })
+  .whenReady().then(async () => {
+
+    const pluginUrl = pathToFileURL(`${__dirname}/text-plugin/fesm2022/text-plugin.mjs`, {
+      windows: process.platform == 'win32'
+    });
+    const pluginModule = await import(pluginUrl.href);
+    const pluginTypeName = Object.keys(pluginModule).at(0)!;
+    const PluginType = pluginModule[pluginTypeName];
+    const pluginInstance/* : ClipboardDataPlugin<unknown> */ = new PluginType();
+    // ipcMain.handle('call-plugin', (event, methodName: string, ...args) => {
+    //   if (typeof pluginInstance[methodName] === 'function') {
+    //     return pluginInstance[methodName](...args);
+    //   }
+    // });
+    ipcMain.handle('call-plugin', (event, methodName: string) => {
+      if (typeof pluginInstance[methodName] === 'function') {
+        const res = pluginInstance[methodName]();
+        return res;
+
+
+      }
+    });
+
+
+
+
+    const { AppTray } = await import("./tray/app-tray.mjs");
+    new AppTray(app, __dirname, i18n);
+
+    clipboardListenerProcess.stdout.on('data', data => {
       if (data.toString().trim() === 'clipboard-updated') {
         // clipboard updated event
-        dialog.showMessageBox({ message: 'compared' });
+        console.log(clipboard.availableFormats());
       }
     });
   });

@@ -100,9 +100,14 @@
     },
     "just-clipboard-manager-pdk": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/just-clipboard-manager-pdk",
       "sourceRoot": "projects/just-clipboard-manager-pdk/src",
-      "prefix": "lib",
+      "prefix": "jcm-pdk",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -123,6 +128,44 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/just-clipboard-manager-pdk/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "text-plugin": {
+      "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/text-plugin",
+      "sourceRoot": "projects/text-plugin/src",
+      "prefix": "text-plugin",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/text-plugin/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/text-plugin/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/text-plugin/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/text-plugin/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
