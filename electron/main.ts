@@ -1,10 +1,10 @@
+// import { ViewContainerRef } from '@angular/core';
 import { spawn } from 'child_process';
-import { app, clipboard, ipcMain } from 'electron';
+import { app, clipboard } from 'electron';
 import electronSquirrelStartup from 'electron-squirrel-startup';
 import i18n from 'i18next';
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import path from 'path';
-import { pathToFileURL } from 'url';
 
 if (electronSquirrelStartup) {
   app.quit();
@@ -36,26 +36,23 @@ app
   })
   .whenReady().then(async () => {
 
-    const pluginUrl = pathToFileURL(`${__dirname}/text-plugin/fesm2022/text-plugin.mjs`, {
-      windows: process.platform == 'win32'
-    });
-    const pluginModule = await import(pluginUrl.href);
-    const pluginTypeName = Object.keys(pluginModule).at(0)!;
-    const PluginType = pluginModule[pluginTypeName];
-    const pluginInstance/* : ClipboardDataPlugin<unknown> */ = new PluginType();
-    // ipcMain.handle('call-plugin', (event, methodName: string, ...args) => {
+    // const pluginUrl = pathToFileURL(`${__dirname}/text-plugin/fesm2022/text-plugin.mjs`, {
+    //   windows: process.platform == 'win32'
+    // });
+    // const pluginModule = await import(pluginUrl.href);
+    // const pluginTypeName = Object.keys(pluginModule).at(0)!;
+    // const PluginType = pluginModule[pluginTypeName];
+    // const pluginInstance/* : ClipboardDataPlugin<unknown> */ = new PluginType();
+
+    // ipcMain.handle('call-plugin', (event, methodName: string) => {
     //   if (typeof pluginInstance[methodName] === 'function') {
-    //     return pluginInstance[methodName](...args);
+    //     const res = pluginInstance[methodName]();
+    //     return res;
     //   }
     // });
-    ipcMain.handle('call-plugin', (event, methodName: string) => {
-      if (typeof pluginInstance[methodName] === 'function') {
-        const res = pluginInstance[methodName]();
-        return res;
-
-
-      }
-    });
+    // ipcMain.handle('getRepresentationDataComponent', (event, viewContainer) => {
+    //   return pluginInstance['getRepresentationDataComponent'](viewContainer);
+    // });
 
 
 
