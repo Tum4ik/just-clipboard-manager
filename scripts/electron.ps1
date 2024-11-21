@@ -2,7 +2,7 @@ dotnet publish `
   ./dotnet/JustClipboardManager.ClipboardListener/JustClipboardManager.ClipboardListener.csproj `
   --output ./dist/dotnet
 
-copy-files-from-to
+npm run copy-files-from-to
 tsc -p tsconfig.electron.json
 
 cd ./plugins/text-plugin

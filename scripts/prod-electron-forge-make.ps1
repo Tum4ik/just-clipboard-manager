@@ -1,4 +1,4 @@
-copy-files-from-to
+npm run copy-files-from-to
 tsc -p tsconfig.electron.json
 
 npm run build
