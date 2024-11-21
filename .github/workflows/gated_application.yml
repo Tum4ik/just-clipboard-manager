@@ -60,7 +60,7 @@ jobs:
           --output ./dist/dotnet `
           --nologo `
           /p:Version=4.0.0
-        ./prod-electron-forge-make.ps1
+        ./scripts/prod-electron-forge-make.ps1
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
