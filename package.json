@@ -11,6 +11,7 @@
   "scripts": {
     "electron": "@powershell ./scripts/electron.ps1",
     "electron-serve": "@powershell ./scripts/electron-serve.ps1",
+    "tsc": "tsc",
     "electron-forge": "electron-forge",
     "copy-files-from-to": "copy-files-from-to",
     "concurrently": "concurrently",
