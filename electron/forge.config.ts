@@ -36,6 +36,8 @@ const config: ForgeConfig = {
       fs.rmSync(path.join(buildPath, 'dotnet'), { recursive: true, force: true });
       fs.rmSync(path.join(buildPath, 'electron'), { recursive: true, force: true });
       fs.rmSync(path.join(buildPath, 'src'), { recursive: true, force: true });
+      fs.rmSync(path.join(buildPath, 'plugins'), { recursive: true, force: true });
+      fs.rmSync(path.join(buildPath, 'scripts'), { recursive: true, force: true });
     }
   }
 };

@@ -62,7 +62,7 @@ jobs:
           --output ./dist/dotnet `
           --nologo `
           /p:Version=4.0.0
-        ./scripts/prod-electron-forge-make.ps1
+        ./scripts/prod-electron-forge-make.ps1 | Out-Host
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -70,4 +70,4 @@ jobs:
         if-no-files-found: error
         name: BuildFiles_${{ matrix.platform.name }}
         path: |
-          out/make
+          ${{ matrix.platform.files-to-include }}
