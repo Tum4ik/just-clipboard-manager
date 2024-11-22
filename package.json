@@ -12,7 +12,7 @@
     "electron": "@powershell ./scripts/electron.ps1",
     "electron-serve": "@powershell ./scripts/electron-serve.ps1",
     "tsc": "tsc -p tsconfig.electron.json",
-    "electron-forge": "electron-forge",
+    "electron-forge-make": "electron-forge make",
     "copy-files-from-to": "copy-files-from-to",
     "concurrently": "concurrently",
     "outdated": "npm outdated",
