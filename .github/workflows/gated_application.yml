@@ -25,9 +25,11 @@ jobs:
           - id: windows-latest
             name: Windows
             runtime-identifier: win-x64
+            files-to-include: out/make/**/squirrel.windows/x64/just-clipboard-manager*.exe
           - id: ubuntu-latest
             name: Ubuntu
             runtime-identifier: linux-x64
+            files-to-include: out/make/**/deb/x64/just-clipboard-manager*.deb
 
     name: Gated Build (${{ matrix.platform.name }})
     runs-on: ${{ matrix.platform.id }}

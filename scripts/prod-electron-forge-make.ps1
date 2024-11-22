@@ -2,6 +2,7 @@ npm run copy-files-from-to
 npm run tsc
 
 cd ./plugins/text-plugin
+npm ci
 npx rollup -c
 cd ../../
 
