@@ -3,7 +3,10 @@ npm run tsc
 
 cd ./plugins/text-plugin
 #npm ci
-npx rollup -c | Out-Host
+npx rollup -c
+if ($LastExitCode -ne 0) {
+  throw
+}
 cd ../../
 
 npm run build
