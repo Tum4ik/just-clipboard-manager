@@ -1,5 +1,5 @@
 npm run copy-files-from-to
-tsc -p tsconfig.electron.json
+npm run tsc
 
 cd ./plugins/text-plugin
 npx rollup -c

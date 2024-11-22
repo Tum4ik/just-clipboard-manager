@@ -3,7 +3,7 @@ dotnet publish `
   --output ./dist/dotnet
 
 npm run copy-files-from-to
-npm run tsc -p tsconfig.electron.json
+npm run tsc
 
 cd ./plugins/text-plugin
 npx rollup -c
