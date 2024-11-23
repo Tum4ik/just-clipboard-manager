@@ -64,10 +64,12 @@ jobs:
           /p:Version=4.0.0
         ./scripts/prod-electron-forge-make.ps1
 
+    - name: Move files
+      run: mv ${{ matrix.platform.files-to-include }} ./
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
         name: BuildFiles_${{ matrix.platform.name }}
-        path: |
-          ${{ matrix.platform.files-to-include }}
+        path: ./
