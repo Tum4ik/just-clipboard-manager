@@ -68,12 +68,11 @@ jobs:
       shell: bash
       run: |
         shopt -s globstar
-        mv ${{ matrix.platform.files-to-include }} ./out
-        rm -rf out/make
+        mv ${{ matrix.platform.files-to-include }} ./installer
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
         name: BuildFiles_${{ matrix.platform.name }}
-        path: ./out
+        path: ./installer
