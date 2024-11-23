@@ -65,10 +65,11 @@ jobs:
         ./scripts/prod-electron-forge-make.ps1
 
     - name: Move files
+      shell: bash
       run: |
-        ls -R out/make/
         shopt -s globstar
         mv ${{ matrix.platform.files-to-include }} ./
+        rm -rf out
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
