@@ -68,7 +68,7 @@ jobs:
       shell: bash
       run: |
         shopt -s globstar
-        mv ${{ matrix.platform.files-to-include }} ./installer
+        mv ${{ matrix.platform.files-to-include }} ./installer/
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
