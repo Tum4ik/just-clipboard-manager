@@ -67,6 +67,7 @@ jobs:
     - name: Move files
       run: |
         ls -R out/make/
+        shopt -s globstar
         mv ${{ matrix.platform.files-to-include }} ./
 
     - name: Upload build artifacts
