@@ -67,6 +67,7 @@ jobs:
     - name: Move files
       shell: bash
       run: |
+        mkdir installer
         shopt -s globstar
         mv ${{ matrix.platform.files-to-include }} ./installer/
 
