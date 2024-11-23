@@ -65,7 +65,9 @@ jobs:
         ./scripts/prod-electron-forge-make.ps1
 
     - name: Move files
-      run: mv ${{ matrix.platform.files-to-include }} ./
+      run: |
+        ls -R out/make/
+        mv ${{ matrix.platform.files-to-include }} ./
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
