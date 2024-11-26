@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "../../dist/plugins/text-plugin",
+    "outDir": "../dist/plugins/text-plugin",
     "target": "ES2022",
     "module": "NodeNext",
     "esModuleInterop": true,

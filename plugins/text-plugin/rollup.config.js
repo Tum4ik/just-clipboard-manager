@@ -5,7 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 export default {
   input: 'index.ts',
   output: {
-    file: '../../dist/plugins/text-plugin/bundle.mjs',
+    file: '../dist/plugins/text-plugin/plugin-bundle.mjs',
     format: 'esm'
   },
   plugins: [

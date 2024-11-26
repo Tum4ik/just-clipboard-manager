@@ -16,7 +16,7 @@ export class MainWindowComponent {
   ) { }
 
   async createComp() {
-    const path = './plugins/text-plugin/bundle.mjs';
+    const path = './plugins/text-plugin/plugin-bundle.mjs';
     const pluginModule = await import(path);
     const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
 
