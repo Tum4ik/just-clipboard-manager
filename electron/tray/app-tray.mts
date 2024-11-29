@@ -1,8 +1,12 @@
-import { App, BrowserWindow, globalShortcut, Menu, NativeImage, nativeImage, Tray } from "electron";
+import { type App, BrowserWindow, globalShortcut, Menu, NativeImage, nativeImage, Tray } from "electron";
 import Store from 'electron-store';
-import { i18n as I18n } from 'i18next';
+import { inject, injectable } from "inversify";
 import path from 'path';
+import 'reflect-metadata';
+import { TYPES } from "../ioc/types.js";
+import { TranslateService } from "../services/translate-service.js";
 
+@injectable()
 export class AppTray {
   private readonly store = new Store({
     name: 'settings',
@@ -18,9 +22,9 @@ export class AppTray {
   private readonly isServe: boolean;
 
   constructor(
-    private readonly app: App,
-    private readonly dirname: string,
-    private readonly i18n: I18n,
+    @inject(TYPES.App) private readonly app: App,
+    @inject(TYPES.AppDir) private readonly appDir: string,
+    private readonly i18n: TranslateService,
   ) {
     this.isServe = process.argv.slice(1).some(arg => arg === '--serve');
 
@@ -40,26 +44,26 @@ export class AppTray {
     if (process.platform == 'linux') {
       trayIconFileName = app.isPackaged ? 'tray.png' : 'tray-dev.png';
     }
-    return nativeImage.createFromPath(path.join(this.dirname, 'assets', process.platform, trayIconFileName));
+    return nativeImage.createFromPath(path.join(this.appDir, 'assets', process.platform, trayIconFileName));
   }
 
 
   private createMenu(): Menu {
-    const selectedLang = this.i18n.language;
+    const selectedLang = this.i18n.selectedLanguage;
     return Menu.buildFromTemplate([
       // todo: customize tray menu, see https://github.com/max-mapper/menubar
       {
-        label: this.i18n.t('settings'),
+        label: this.i18n.translate('settings'),
         click: () => this.showMainWindowAsync(this.trayIcon)
       },
       {
-        label: this.i18n.t('about')
+        label: this.i18n.translate('about')
       },
       {
         type: 'separator'
       },
       {
-        label: this.i18n.t('language'),
+        label: this.i18n.translate('language'),
         submenu: [
           {
             label: 'English (United States)',
@@ -79,7 +83,7 @@ export class AppTray {
         type: 'separator'
       },
       {
-        label: this.i18n.t('exit'),
+        label: this.i18n.translate('exit'),
         click: this.app.quit
       }
     ]);
@@ -87,7 +91,7 @@ export class AppTray {
 
 
   private async onLanguageSettingChanged(lang: string) {
-    await this.i18n.changeLanguage(lang);
+    await this.i18n.changeLanguageAsync(lang);
     this.tray.setContextMenu(this.createMenu());
   }
 
@@ -102,7 +106,7 @@ export class AppTray {
       // titleBarStyle: 'hidden',
       webPreferences: {
         devTools: !this.app.isPackaged,
-        preload: path.join(this.dirname, 'preload.js')
+        preload: path.join(this.appDir, 'preload.js')
       },
     });
     await this.loadWindowAsync(win, 'main-window');
@@ -128,7 +132,7 @@ export class AppTray {
       await win.loadURL(`http://localhost:4200/index.html?window=${type}`);
     }
     else {
-      await win.loadFile(path.join(this.dirname, 'just-clipboard-manager/browser/index.html'), {
+      await win.loadFile(path.join(this.appDir, 'just-clipboard-manager/browser/index.html'), {
         query: { window: type }
       });
     }

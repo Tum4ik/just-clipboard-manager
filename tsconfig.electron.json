@@ -16,6 +16,7 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "moduleResolution": "NodeNext",
     "importHelpers": true,
     "target": "ES2022",
