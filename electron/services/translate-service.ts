@@ -3,12 +3,14 @@ import FsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import { inject, injectable } from "inversify";
 import path from 'path';
 import 'reflect-metadata';
-import { TYPES } from "../ioc/types.js";
+import { TYPES } from "../ioc/types";
+import { SettingsService } from './settings-service';
 
 @injectable()
 export class TranslateService {
   constructor(
     @inject(TYPES.AppDir) private readonly appDir: string,
+    private readonly settings: SettingsService,
   ) { }
 
 
@@ -27,6 +29,7 @@ export class TranslateService {
 
     this.isInitialize = true;
 
+    const lang = this.settings.getLanguage();
     await i18n.use(FsBackend)
       .init<FsBackendOptions>({
         backend: {
@@ -34,9 +37,9 @@ export class TranslateService {
           addPath: path.join(this.appDir, 'i18n/{{lng}}/{{ns}}.missing.yml'),
         },
         initImmediate: false,
-        lng: 'en', // todo: use selected lang from settings
+        lng: lang, // todo: use selected lang from settings
         fallbackLng: 'en',
-        preload: ['en'], // todo: preload selected lang from settings
+        preload: [lang], // todo: preload selected lang from settings
         ns: 'translation',
         defaultNS: 'translation'
       });

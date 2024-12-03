@@ -3,7 +3,9 @@ import electronSquirrelStartup from 'electron-squirrel-startup';
 import { Container } from 'inversify';
 import { TYPES } from './ioc/types';
 import { ClipboardListener } from './services/clipboard-listener';
+import { SettingsService } from './services/settings-service';
 import { TranslateService } from './services/translate-service';
+import { AppTray } from './tray/app-tray';
 
 if (electronSquirrelStartup) {
   app.quit();
@@ -31,16 +33,17 @@ app
     //   return pluginInstance['getRepresentationDataComponent'](viewContainer);
     // });
 
-    const { AppTray } = await import("./tray/app-tray.mjs");
 
     const container = new Container({ autoBindInjectable: true, defaultScope: 'Transient' });
     container.bind<App>(TYPES.App).toConstantValue(app);
     container.bind<string>(TYPES.AppDir).toConstantValue(__dirname);
+    container.bind<SettingsService>(SettingsService).toSelf().inSingletonScope();
     container.bind<TranslateService>(TranslateService).toSelf().inSingletonScope();
     container.bind<ClipboardListener>(ClipboardListener).toSelf().inSingletonScope();
-    container.bind<typeof AppTray>(AppTray).toSelf().inSingletonScope();
+    container.bind<AppTray>(AppTray).toSelf().inSingletonScope();
 
+    await container.get<SettingsService>(SettingsService).initAsync();
     await container.get<TranslateService>(TranslateService).initAsync();
-    container.get<typeof AppTray>(AppTray);
+    container.get<AppTray>(AppTray);
     container.get<ClipboardListener>(ClipboardListener).start();
   });

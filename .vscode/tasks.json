@@ -41,7 +41,7 @@
     {
       "label": "Build.Main",
       "type": "shell",
-      "command": "npm run electron-tsc",
+      "command": "npm run tsc",
       "isBackground": false,
       "group": {
         "kind": "build",

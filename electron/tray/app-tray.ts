@@ -1,22 +1,14 @@
-import { type App, BrowserWindow, globalShortcut, Menu, NativeImage, nativeImage, Tray } from "electron";
-import Store from 'electron-store';
+import { type App, BrowserWindow, globalShortcut, Menu, MenuItem, NativeImage, nativeImage, Tray } from "electron";
 import { inject, injectable } from "inversify";
 import path from 'path';
 import 'reflect-metadata';
-import { TYPES } from "../ioc/types.js";
-import { TranslateService } from "../services/translate-service.js";
+import { TYPES } from "../ioc/types";
+import { SettingsService } from "../services/settings-service";
+import { TranslateService } from "../services/translate-service";
 
 @injectable()
 export class AppTray {
-  private readonly store = new Store({
-    name: 'settings',
-    schema: {
-      language: {
-        type: 'string',
-        default: 'en'
-      }
-    }
-  });
+
   private readonly trayIcon: NativeImage;
   private readonly tray: Tray;
   private readonly isServe: boolean;
@@ -24,13 +16,14 @@ export class AppTray {
   constructor(
     @inject(TYPES.App) private readonly app: App,
     @inject(TYPES.AppDir) private readonly appDir: string,
+    private readonly settings: SettingsService,
     private readonly i18n: TranslateService,
   ) {
     this.isServe = process.argv.slice(1).some(arg => arg === '--serve');
 
-    this.store.onDidChange('language', (newValue, oldValue) => this.onLanguageSettingChanged(newValue as string));
+    this.settings.onLanguageChanged(newValue => this.onLanguageSettingChanged(newValue));
 
-    this.trayIcon = this.createTrayIcon(app);
+    this.trayIcon = this.createTrayIcon();
     this.tray = new Tray(this.trayIcon);
     this.tray.setToolTip('Just Clipboard Manager');
     this.tray.setContextMenu(this.createMenu());
@@ -39,17 +32,17 @@ export class AppTray {
   }
 
 
-  private createTrayIcon(app: App): NativeImage {
-    let trayIconFileName = app.isPackaged ? 'tray.ico' : 'tray-dev.ico';
+  private createTrayIcon(): NativeImage {
+    let trayIconFileName = this.app.isPackaged ? 'tray.ico' : 'tray-dev.ico';
     if (process.platform == 'linux') {
-      trayIconFileName = app.isPackaged ? 'tray.png' : 'tray-dev.png';
+      trayIconFileName = this.app.isPackaged ? 'tray.png' : 'tray-dev.png';
     }
     return nativeImage.createFromPath(path.join(this.appDir, 'assets', process.platform, trayIconFileName));
   }
 
 
   private createMenu(): Menu {
-    const selectedLang = this.i18n.selectedLanguage;
+    const selectedLang = this.settings.getLanguage();
     return Menu.buildFromTemplate([
       // todo: customize tray menu, see https://github.com/max-mapper/menubar
       {
@@ -57,7 +50,7 @@ export class AppTray {
         click: () => this.showMainWindowAsync(this.trayIcon)
       },
       {
-        label: this.i18n.translate('about')
+        label: this.i18n.translate('about'),
       },
       {
         type: 'separator'
@@ -69,13 +62,13 @@ export class AppTray {
             label: 'English (United States)',
             type: 'checkbox',
             checked: selectedLang === 'en',
-            click: () => this.store.set('language', 'en')
+            click: (e) => this.setLanguageFromMenuAsync(e, 'en')
           },
           {
             label: 'українська (Україна)',
             type: 'checkbox',
             checked: selectedLang === 'uk',
-            click: () => this.store.set('language', 'uk')
+            click: (e) => this.setLanguageFromMenuAsync(e, 'uk')
           }
         ]
       },
@@ -84,9 +77,20 @@ export class AppTray {
       },
       {
         label: this.i18n.translate('exit'),
-        click: this.app.quit
+        role: 'quit'
       }
     ]);
+  }
+
+
+  private async setLanguageFromMenuAsync(menuItem: MenuItem, lang: string) {
+    const selectedLang = await this.settings.getLanguage();
+    if (selectedLang === lang) {
+      menuItem.checked = true;
+    }
+    else {
+      this.settings.setLanguage(lang);
+    }
   }
 
 
