@@ -9,4 +9,5 @@ cd ./plugins/text-plugin
 npx rollup -c
 cd ../../
 
+npm run build
 npm run concurrently "ng serve" "wait-on tcp:4200 && electron . --serve"

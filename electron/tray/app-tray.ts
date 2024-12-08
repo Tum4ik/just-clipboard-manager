@@ -42,7 +42,7 @@ export class AppTray {
 
 
   private createMenu(): Menu {
-    const selectedLang = this.settings.getLanguage();
+    const selectedLang = this.settings.language;
     return Menu.buildFromTemplate([
       // todo: customize tray menu, see https://github.com/max-mapper/menubar
       {
@@ -84,12 +84,12 @@ export class AppTray {
 
 
   private async setLanguageFromMenuAsync(menuItem: MenuItem, lang: string) {
-    const selectedLang = await this.settings.getLanguage();
+    const selectedLang = await this.settings.language;
     if (selectedLang === lang) {
       menuItem.checked = true;
     }
     else {
-      this.settings.setLanguage(lang);
+      this.settings.language = lang;
     }
   }
 

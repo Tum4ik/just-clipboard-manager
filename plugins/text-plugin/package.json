@@ -15,7 +15,7 @@
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-typescript": "^12.1.1",
     "@types/node": "^22.9.0",
-    "just-clipboard-manager-pdk": "^4.0.4",
+    "just-clipboard-manager-pdk": "^4.0.5",
     "rollup": "^4.27.3",
     "typescript": "^5.6.3"
   }

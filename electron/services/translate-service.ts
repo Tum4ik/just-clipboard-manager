@@ -29,7 +29,7 @@ export class TranslateService {
 
     this.isInitialize = true;
 
-    const lang = this.settings.getLanguage();
+    const lang = this.settings.language;
     await i18n.use(FsBackend)
       .init<FsBackendOptions>({
         backend: {

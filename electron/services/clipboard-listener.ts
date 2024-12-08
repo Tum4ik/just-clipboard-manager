@@ -1,15 +1,17 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import { type App, clipboard } from 'electron';
+import { type App } from 'electron';
 import { inject, injectable } from 'inversify';
 import path from 'path';
 import 'reflect-metadata';
 import { TYPES } from '../ioc/types';
+import { ClipboardDataProcessor } from './clipboard-data-processor';
 
 @injectable()
 export class ClipboardListener {
   constructor(
     @inject(TYPES.App) private readonly app: App,
     @inject(TYPES.AppDir) private readonly appDir: string,
+    private readonly clipboardDataProcessor: ClipboardDataProcessor
   ) { }
 
 
@@ -26,8 +28,7 @@ export class ClipboardListener {
     this.clipboardListenerProcess = spawn(clipboardListenerExe);
     this.clipboardListenerProcess.stdout.on('data', data => {
       if (data.toString().trim() === 'clipboard-updated') {
-        // clipboard updated event
-        console.log(clipboard.availableFormats());
+        this.clipboardDataProcessor.processCurrentItem();
       }
     });
 

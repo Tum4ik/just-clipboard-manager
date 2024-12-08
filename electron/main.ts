@@ -3,6 +3,7 @@ import electronSquirrelStartup from 'electron-squirrel-startup';
 import { Container } from 'inversify';
 import { TYPES } from './ioc/types';
 import { ClipboardListener } from './services/clipboard-listener';
+import { PluginsService } from './services/plugins-service';
 import { SettingsService } from './services/settings-service';
 import { TranslateService } from './services/translate-service';
 import { AppTray } from './tray/app-tray';
@@ -41,9 +42,11 @@ app
     container.bind<TranslateService>(TranslateService).toSelf().inSingletonScope();
     container.bind<ClipboardListener>(ClipboardListener).toSelf().inSingletonScope();
     container.bind<AppTray>(AppTray).toSelf().inSingletonScope();
+    container.bind<PluginsService>(PluginsService).toSelf().inSingletonScope();
 
     await container.get<SettingsService>(SettingsService).initAsync();
     await container.get<TranslateService>(TranslateService).initAsync();
     container.get<AppTray>(AppTray);
+    await container.get<PluginsService>(PluginsService).loadPluginsAsync();
     container.get<ClipboardListener>(ClipboardListener).start();
   });

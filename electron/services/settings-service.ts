@@ -27,12 +27,19 @@ export class SettingsService {
   }
 
 
-  getLanguage(): string {
-    return this.store.get('language') as string;
+  private _language?: string;
+  get language(): string {
+    if (this._language) {
+      return this._language;
+    }
+    this._language = this.store.get('language') as string;
+    return this._language;
   }
-
-  setLanguage(value: string): void {
-    this.store.set('language', value);
+  set language(value: string) {
+    if (this._language !== value) {
+      this._language = value;
+      this.store.set('language', value);
+    }
   }
 
   onLanguageChanged(callback: (newValue: string) => void): Unsubscribe {
