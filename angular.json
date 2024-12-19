@@ -29,10 +29,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "plugins/**/*",
-                "input": "plugins/dist"
               }
             ],
             "styles": [

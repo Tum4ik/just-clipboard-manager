@@ -2,7 +2,6 @@ import i18n from 'i18next';
 import FsBackend, { FsBackendOptions } from 'i18next-fs-backend';
 import { inject, injectable } from "inversify";
 import path from 'path';
-import 'reflect-metadata';
 import { TYPES } from "../ioc/types";
 import { SettingsService } from './settings-service';
 

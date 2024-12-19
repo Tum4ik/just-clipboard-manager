@@ -1,6 +1,4 @@
 import { Component, ElementRef, Renderer2 } from '@angular/core';
-import { Buffer } from 'buffer';
-import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
 
 @Component({
   selector: 'jcm-main-window',
@@ -16,11 +14,9 @@ export class MainWindowComponent {
   ) { }
 
   async createComp() {
-    const path = './plugins/text-plugin/plugin-bundle.mjs';
-    const pluginModule = await import(path);
-    const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
 
-    this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Buffer.from("")));
+
+    this.renderer.appendChild(this.element.nativeElement, '');
 
 
   }

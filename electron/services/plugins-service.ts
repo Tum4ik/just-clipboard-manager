@@ -1,10 +1,9 @@
 import { readdir } from 'fs/promises';
 import { inject, injectable } from "inversify";
-import path from 'path';
-import 'reflect-metadata';
-import { TYPES } from "../ioc/types";
-import { pathToFileURL } from 'url';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
+import path from 'path';
+import { pathToFileURL } from 'url';
+import { TYPES } from "../ioc/types";
 
 @injectable()
 export class PluginsService {
@@ -14,9 +13,9 @@ export class PluginsService {
 
 
   private _plugins: ClipboardDataPlugin[] = [];
-  
-  
-  get plugins(): readonly ClipboardDataPlugin[]{
+
+
+  get plugins(): readonly ClipboardDataPlugin[] {
     return this._plugins;
   }
 
@@ -26,7 +25,7 @@ export class PluginsService {
       return;
     }
 
-    const pluginsFolder = path.join(this.appDir, 'just-clipboard-manager', 'browser', 'plugins');
+    const pluginsFolder = path.join(this.appDir, 'plugins');
     const pluginsFiles = (await readdir(pluginsFolder, { withFileTypes: true }))
       .filter(item => item.isDirectory())
       .map(dir => path.join(pluginsFolder, dir.name, 'plugin-bundle.mjs'))

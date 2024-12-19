@@ -1,6 +1,7 @@
 import { clipboard } from "electron";
 import { injectable } from "inversify";
-import 'reflect-metadata';
+import { Clip } from "../data/entities/clip";
+import { clipRepository } from "../data/repositories/clip-repository";
 import { PluginsService } from "./plugins-service";
 
 @injectable()
@@ -21,6 +22,13 @@ export class ClipboardDataProcessor {
 
       const data = plugin.extractData(clipboard);
       const representationData = plugin.extractRepresentationData(clipboard);
+
+      const clip = new Clip();
+      clip.pluginId = plugin.id;
+      clip.data = data;
+      clip.representationData = representationData;
+      // todo: search label
+      clipRepository.insert(clip);
 
       break;
     }

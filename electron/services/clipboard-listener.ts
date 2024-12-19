@@ -2,7 +2,6 @@ import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { type App } from 'electron';
 import { inject, injectable } from 'inversify';
 import path from 'path';
-import 'reflect-metadata';
 import { TYPES } from '../ioc/types';
 import { ClipboardDataProcessor } from './clipboard-data-processor';
 

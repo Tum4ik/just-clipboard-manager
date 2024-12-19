@@ -1,7 +1,6 @@
 import { type App, BrowserWindow, globalShortcut, Menu, MenuItem, NativeImage, nativeImage, Tray } from "electron";
 import { inject, injectable } from "inversify";
 import path from 'path';
-import 'reflect-metadata';
 import { TYPES } from "../ioc/types";
 import { SettingsService } from "../services/settings-service";
 import { TranslateService } from "../services/translate-service";

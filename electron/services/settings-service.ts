@@ -1,5 +1,4 @@
 import { injectable } from "inversify";
-import 'reflect-metadata';
 
 const Store = import('electron-store')
   .then(Store => {

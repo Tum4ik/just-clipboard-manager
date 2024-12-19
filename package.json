@@ -50,11 +50,13 @@
     "i18next": "^23.16.4",
     "i18next-fs-backend": "^2.3.2",
     "inversify": "^6.1.4",
-    "just-clipboard-manager-pdk": "^4.0.5",
+    "just-clipboard-manager-pdk": "^4.0.7",
     "reflect-metadata": "^0.2.2",
     "rxjs": "~7.8.0",
+    "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.0",
+    "typeorm": "^0.3.20",
     "zone.js": "^0.14.10"
   },
   "devDependencies": {
