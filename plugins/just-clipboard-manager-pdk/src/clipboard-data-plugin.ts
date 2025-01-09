@@ -6,5 +6,5 @@ export abstract class ClipboardDataPlugin {
   abstract extractData(clipboard: Clipboard): Buffer;
   abstract insertData(clipboard: Clipboard, data: Buffer): void;
   abstract extractRepresentationData(clipboard: Clipboard): Buffer;
-  abstract getRepresentationDataElement(representationData: Buffer): HTMLElement;
+  abstract getRepresentationDataElement(representationData: Buffer, document: Document): HTMLElement;
 }

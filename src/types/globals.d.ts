@@ -2,7 +2,9 @@ export { };
 
 declare global {
   interface Window {
-    electronAPI: any;
-    pluginAPI: any;
+    // clipsServiceAPI: {
+    //   getClips(skip: number, take: number, search?: string): Promise<HTMLElement[]>;
+    // }
+    clipsServiceAPI: any;
   }
 }

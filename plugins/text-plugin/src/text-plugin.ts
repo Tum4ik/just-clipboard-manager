@@ -26,7 +26,7 @@ export class TextPlugin extends ClipboardDataPlugin {
     return Buffer.from(firstLine, 'utf-8');
   }
 
-  override getRepresentationDataElement(representationData: Buffer): HTMLElement {
+  override getRepresentationDataElement(representationData: Buffer, document: Document): HTMLElement {
     const div = document.createElement('div');
     div.textContent = representationData.toString('utf-8');
     return div;

@@ -109,7 +109,6 @@ export class AppTray {
       // titleBarStyle: 'hidden',
       webPreferences: {
         devTools: !this.app.isPackaged,
-        preload: path.join(this.appDir, 'preload.js')
       },
     });
     await this.loadWindowAsync(win, 'main-window');
@@ -121,9 +120,10 @@ export class AppTray {
       width: 400,
       height: 400,
       titleBarStyle: 'hidden',
-      opacity: .5,
+      opacity: 1,
       webPreferences: {
-        devTools: !this.app.isPackaged
+        devTools: !this.app.isPackaged,
+        preload: path.join(this.appDir, 'preload.js')
       }
     });
     await this.loadWindowAsync(win, 'paste-window');

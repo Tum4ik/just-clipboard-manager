@@ -9,6 +9,7 @@ import { PluginsService } from './services/plugins-service';
 import { SettingsService } from './services/settings-service';
 import { TranslateService } from './services/translate-service';
 import { AppTray } from './tray/app-tray';
+import { ClipsService } from './services/clips-service';
 
 if (electronSquirrelStartup) {
   app.quit();
@@ -28,10 +29,12 @@ Promise.all([electronAppReady, dataSourceInitialized]).then(async () => {
   container.bind<ClipboardListener>(ClipboardListener).toSelf().inSingletonScope();
   container.bind<AppTray>(AppTray).toSelf().inSingletonScope();
   container.bind<PluginsService>(PluginsService).toSelf().inSingletonScope();
+  container.bind<ClipsService>(ClipsService).toSelf().inSingletonScope();
 
   await container.get<SettingsService>(SettingsService).initAsync();
   await container.get<TranslateService>(TranslateService).initAsync();
   container.get<AppTray>(AppTray);
   await container.get<PluginsService>(PluginsService).loadPluginsAsync();
   container.get<ClipboardListener>(ClipboardListener).start();
+  container.get<ClipsService>(ClipsService).init();
 });
