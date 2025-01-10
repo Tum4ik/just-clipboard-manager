@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    just_clipboard_manager_lib::run()
+  just_clipboard_manager_lib::run()
 }
