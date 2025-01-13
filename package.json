@@ -1,7 +1,7 @@
 {
   "name": "just-clipboard-manager",
   "version": "4.0.0",
-  "description": "Just a clipboard manager.",
+  "description": "Just a clipboard manager",
   "author": {
     "name": "Yevheniy Tymchishin",
     "email": "timchishinevgeniy@gmail.com"
@@ -26,17 +26,19 @@
     "@angular/platform-browser-dynamic": "^19.0.5",
     "@angular/router": "^19.0.5",
     "@primeng/themes": "^19.0.1",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-fs": "^2.2.0",
+    "@tauri-apps/plugin-opener": "^2",
     "primeng": "^19.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.8.1",
-    "zone.js": "^0.15.0",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2"
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.6",
     "@angular/cli": "^19.0.6",
     "@angular/compiler-cli": "^19.0.5",
+    "@tauri-apps/cli": "^2",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -44,7 +46,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.3",
-    "@tauri-apps/cli": "^2"
+    "typescript": "~5.6.3"
   }
 }

@@ -16,7 +16,7 @@
         "url": "paste-window",
         "width": 400,
         "height": 400,
-        "create": true,
+        "create": false,
         "decorations": false,
         "skipTaskbar": true,
         "alwaysOnTop": true
@@ -27,7 +27,8 @@
         "title": "Just Clipboard Manager",
         "width": 1000,
         "height": 753,
-        "create": true
+        "create": true,
+        "devtools": true
       }
     ],
     "security": {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { invoke } from "@tauri-apps/api/core";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,5 +19,6 @@ export class AppComponent {
     invoke<string>("greet", { name }).then((text) => {
       this.greetingMessage = text;
     });
+
   }
 }
