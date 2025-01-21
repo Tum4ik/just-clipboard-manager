@@ -16,10 +16,10 @@
         "url": "paste-window",
         "width": 400,
         "height": 400,
-        "create": false,
         "decorations": false,
         "skipTaskbar": true,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "visible": false
       },
       {
         "label": "main-window",
@@ -27,8 +27,7 @@
         "title": "Just Clipboard Manager",
         "width": 1000,
         "height": 753,
-        "create": true,
-        "devtools": true
+        "create": false
       }
     ],
     "security": {
@@ -37,7 +36,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": "nsis",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

@@ -3,11 +3,13 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "main-window"
+    "paste-window"
   ],
   "permissions": [
     "core:default",
     "opener:default",
-    "fs:allow-resource-read-recursive"
+    "fs:allow-resource-read-recursive",
+    "core:app:allow-default-window-icon",
+    "process:default"
   ]
 }

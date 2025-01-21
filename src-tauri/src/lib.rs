@@ -4,34 +4,17 @@ fn greet(name: &str) -> String {
   format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-use libloading::Error;
-use libloading::Library;
+mod clipboard_listener;
+
+use clipboard_listener::clipboard_listener;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  unsafe {
-    println!("=============== start unsafe");
-    let lib = Library::new("text_plugin.dll").expect("lib error");
-
-    // let test_func: libloading::Symbol<unsafe extern "C" fn() -> String> = lib.get(b"test");
-    let test_func: Result<libloading::Symbol<unsafe extern "C" fn() -> u32>, Error> =
-      lib.get(b"test");
-    match test_func {
-      Ok(func) => {
-        let str = func();
-        println!("{str}");
-      }
-      Err(e) => {
-        println!("=============== func error");
-        println!("{e}");
-        // GetProcAddress failed
-      }
-    }
-  }
-
   tauri::Builder::default()
+    .setup(clipboard_listener)
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_process::init())
     .invoke_handler(tauri::generate_handler![greet])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
