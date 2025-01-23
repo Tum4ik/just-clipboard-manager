@@ -11,11 +11,11 @@
   "author": "Yevheniy Tymchishin",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-typescript": "^12.1.1",
-    "@types/node": "^22.9.0",
-    "rollup": "^4.27.3",
-    "typescript": "^5.6.3"
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "just-clipboard-manager-pdk": "^4.0.9",
+    "rollup": "^4.31.0",
+    "typescript": "^5.7.3"
   }
 }
