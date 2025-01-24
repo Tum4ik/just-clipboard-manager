@@ -19,7 +19,7 @@
         "decorations": false,
         "skipTaskbar": true,
         "alwaysOnTop": true,
-        "visible": false
+        "visible": true
       },
       {
         "label": "main-window",
