@@ -1,4 +1,5 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { BaseDirectory, readFile } from '@tauri-apps/plugin-fs';
 
 @Component({
@@ -10,7 +11,8 @@ import { BaseDirectory, readFile } from '@tauri-apps/plugin-fs';
 export class MainWindowComponent {
   constructor(
     private readonly renderer: Renderer2,
-    private readonly element: ElementRef
+    private readonly element: ElementRef,
+    @Inject(DOCUMENT) private readonly document: Document
   ) { }
 
   async testPlugin() {
@@ -22,6 +24,6 @@ export class MainWindowComponent {
     const url = URL.createObjectURL(blob);
     const pluginModule = await import(url);
     const pluginInstance: any = pluginModule.pluginInstance;
-    this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Uint8Array.from([])));
+    this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Uint8Array.from([]), this.document));
   }
 }

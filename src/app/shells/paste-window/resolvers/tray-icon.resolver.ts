@@ -1,10 +1,11 @@
+import { ResolveFn } from '@angular/router';
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { Image } from "@tauri-apps/api/image";
 import { Menu } from "@tauri-apps/api/menu";
 import { TrayIcon } from '@tauri-apps/api/tray';
 import { exit } from '@tauri-apps/plugin-process';
 
-export async function initializeTrayIconAsync() {
+export const trayIconResolver: ResolveFn<void> = async (route, state) => {
   const appName = "Just Clipboard Manager";
   const menu = await Menu.new({
     items: [
@@ -23,4 +24,4 @@ export async function initializeTrayIconAsync() {
     menu: menu,
     showMenuOnLeftClick: false,
   });
-}
+};

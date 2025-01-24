@@ -5,7 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 export default {
   input: 'index.ts',
   output: {
-    file: './dist/plugins/text-plugin/plugin-bundle.mjs',
+    file: '../../src-tauri/resources/plugins/text-plugin/plugin-bundle.mjs',
     format: 'esm'
   },
   plugins: [

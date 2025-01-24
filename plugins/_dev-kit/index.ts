@@ -1,1 +1,1 @@
-export * from './src/clipboard-data-plugin';
+export { ClipboardDataPlugin } from './src/clipboard-data-plugin';

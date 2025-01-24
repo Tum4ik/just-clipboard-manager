@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/plugins/text-plugin",
-    "target": "ES2022",
+    "outDir": "../../src-tauri/resources/plugins/text-plugin",
+    "target": "ES2024",
     "module": "NodeNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

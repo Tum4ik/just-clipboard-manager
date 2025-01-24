@@ -11,7 +11,8 @@
     "tauri-dev": "tauri dev",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run build-text-plugin && ng build",
+    "build-text-plugin": "cd plugins/text-plugin && npm run build && cd ../..",
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri"
   },
