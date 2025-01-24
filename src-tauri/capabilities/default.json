@@ -7,9 +7,13 @@
   ],
   "permissions": [
     "core:default",
+    "core:app:allow-default-window-icon",
+    "core:window:allow-show",
+    "core:window:allow-hide",
     "opener:default",
     "fs:allow-resource-read-recursive",
-    "core:app:allow-default-window-icon",
-    "process:default"
+    "process:default",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister"
   ]
 }

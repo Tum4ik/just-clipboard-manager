@@ -1,10 +1,10 @@
 import { ApplicationConfig, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
-
 import { providePrimeNG } from 'primeng/config';
 import { routes } from "./app.routes";
-import { initializeClipboardListener } from "./initializers/clipboard-listener.initializer";
+import { initializeClipboardListenerAsync } from "./initializers/clipboard-listener.initializer";
+import { initializeGlobalShortcutsAsync } from "./initializers/global-shortcuts.initializer";
 import { initializeTrayIconAsync } from "./initializers/tray-icon.initializer";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
@@ -29,5 +29,6 @@ export const appConfig: ApplicationConfig = {
 
 async function appInitializer() {
   await initializeTrayIconAsync();
-  initializeClipboardListener();
+  await initializeClipboardListenerAsync();
+  await initializeGlobalShortcutsAsync();
 }

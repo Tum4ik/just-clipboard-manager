@@ -15,6 +15,7 @@ pub fn run() {
     .plugin(tauri_plugin_opener::init())
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_global_shortcut::Builder::new().build())
     .invoke_handler(tauri::generate_handler![greet])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
