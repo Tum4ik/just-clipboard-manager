@@ -4,8 +4,7 @@ import { provideRouter, withComponentInputBinding, withRouterConfig } from "@ang
 
 import { providePrimeNG } from 'primeng/config';
 import { routes } from "./app.routes";
-import { initializeClipboardListener } from "./initializers/clipboard-listener.initializer";
-import { initializeTrayIconAsync } from "./initializers/tray-icon.initializer";
+// import { initializeClipboardListener } from "./initializers/clipboard-listener.initializer";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
 export const appConfig: ApplicationConfig = {
@@ -28,6 +27,6 @@ export const appConfig: ApplicationConfig = {
 
 
 async function appInitializer() {
-  await initializeTrayIconAsync();
-  initializeClipboardListener();
+  // await initializeTrayIconAsync();
+  // initializeClipboardListener();
 }

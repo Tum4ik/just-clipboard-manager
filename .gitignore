@@ -2,6 +2,7 @@
 
 # Compiled output
 dist/
+bin/
 /tmp
 /out-tsc
 /bazel-out

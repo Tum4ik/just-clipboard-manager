@@ -1,4 +1,4 @@
-import { defaultWindowIcon } from '@tauri-apps/api/app';
+/* import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { Image } from "@tauri-apps/api/image";
 import { Menu } from "@tauri-apps/api/menu";
 import { TrayIcon } from '@tauri-apps/api/tray';
@@ -24,3 +24,4 @@ export async function initializeTrayIconAsync() {
     showMenuOnLeftClick: false,
   });
 }
+ */

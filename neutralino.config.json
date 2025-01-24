@@ -1,0 +1,31 @@
+{
+  "applicationId": "just-clipboard-manager",
+  "version": "4.0.0",
+  "defaultMode": "window",
+  "documentRoot": "/dist/just-clipboard-manager/browser/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "nativeAllowList": [
+    "app.*"
+  ],
+  "modes": {
+    "window": {
+      "title": "Hello Neutralinojs",
+      "width": 800,
+      "height": 500,
+      "minWidth": 400,
+      "minHeight": 200,
+      "icon": "/assets/tray-dev.ico",
+      "borderless": true
+    }
+  },
+  "cli": {
+    "binaryName": "just-clipboard-manager",
+    "resourcesPath": "/dist/just-clipboard-manager/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/dist/just-clipboard-manager/neutralino.js",
+    "binaryVersion": "5.5.0",
+    "clientVersion": "5.5.0"
+  }
+}
