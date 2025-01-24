@@ -1,7 +1,7 @@
 use clipboard_win::formats;
 use clipboard_win::raw::{close, format_name_big, get, open, set, EnumFormats};
 use std::sync::OnceLock;
-use tauri::{App, AppHandle, Emitter, Manager};
+use tauri::{App, AppHandle, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::System::DataExchange::AddClipboardFormatListener;
 use windows::Win32::UI::WindowsAndMessaging::{
@@ -13,7 +13,12 @@ static APP_HANDLE: OnceLock<AppHandle> = OnceLock::new();
 pub fn clipboard_listener(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
   APP_HANDLE.set(app.handle().clone()).unwrap();
 
-  let wind = app.get_webview_window("paste-window").unwrap();
+  let wind_builder = WebviewWindowBuilder::new(
+    app,
+    "hidden-window-for-clipboard-listener",
+    WebviewUrl::default(),
+  );
+  let wind = wind_builder.visible(false).build().unwrap();
   let hwnd = wind.hwnd().unwrap();
   let hwnd = HWND(hwnd.0);
 
