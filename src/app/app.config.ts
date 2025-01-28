@@ -1,6 +1,9 @@
+import { HttpClient, provideHttpClient } from "@angular/common/http";
 import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
+import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from "./app.routes";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
@@ -18,6 +21,19 @@ export const appConfig: ApplicationConfig = {
         preset: AuraBluePreset
       },
       ripple: true
+    }),
+    provideHttpClient(),
+    provideTranslateService({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
     })
   ]
 };
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
