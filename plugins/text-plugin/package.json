@@ -10,11 +10,13 @@
   },
   "author": "Yevheniy Tymchishin",
   "license": "MIT",
+  "dependencies": {
+    "just-clipboard-manager-pdk": "^4.0.10"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.1.2",
-    "just-clipboard-manager-pdk": "^4.0.10",
     "rollup": "^4.32.0",
     "typescript": "^5.7.3"
   }

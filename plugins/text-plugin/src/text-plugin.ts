@@ -6,7 +6,7 @@ export class TextPlugin extends ClipboardDataPlugin {
   }
 
   override get formats(): readonly string[] {
-    return ['text/plain'];
+    return ['CF_UNICODETEXT', 'CF_TEXT'];
   }
 
   override extractRepresentationData(data: Uint8Array): Uint8Array {

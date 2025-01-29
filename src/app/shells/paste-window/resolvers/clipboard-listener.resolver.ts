@@ -1,9 +1,8 @@
+import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { listen } from '@tauri-apps/api/event';
+import { ClipboardListener } from '../services/clipboard-listener.service';
 
 export const clipboardListenerResolver: ResolveFn<void> = async (route, state) => {
-  await listen<string[]>('clipboard-listener::available-formats', e => {
-    const availableFormats = e.payload;
-    console.log(availableFormats);
-  });
+  const clipboardListener = inject(ClipboardListener);
+  await clipboardListener.startListenAsync();
 };

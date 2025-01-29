@@ -1,10 +1,5 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-  format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 mod clipboard_listener;
+mod commands;
 
 use clipboard_listener::clipboard_listener;
 
@@ -16,7 +11,7 @@ pub fn run() {
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
-    .invoke_handler(tauri::generate_handler![greet])
+    .invoke_handler(tauri::generate_handler![commands::get_clipboard_data_bytes])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

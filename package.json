@@ -12,7 +12,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "npm run build-text-plugin && ng build",
-    "build-text-plugin": "cd plugins/text-plugin && npm run build && cd ../..",
+    "build-text-plugin": "cd plugins/text-plugin && npm run build",
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri"
   },
@@ -32,6 +32,7 @@
     "@tauri-apps/plugin-global-shortcut": "^2.2.0",
     "@tauri-apps/plugin-opener": "^2.2.5",
     "@tauri-apps/plugin-process": "^2.2.0",
+    "just-clipboard-manager-pdk": "^4.0.10",
     "primeng": "^19.0.5",
     "rxjs": "~7.8.1",
     "tslib": "^2.8.1",

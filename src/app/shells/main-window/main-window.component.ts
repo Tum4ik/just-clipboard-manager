@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, Inject, Renderer2 } from '@angular/core';
-import { BaseDirectory, readFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readFile, readDir } from '@tauri-apps/plugin-fs';
+import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
 
 @Component({
   selector: 'jcm-main-window',
@@ -23,7 +24,7 @@ export class MainWindowComponent {
     const blob = new Blob([pluginFileBytes], { type: 'application/javascript' });
     const url = URL.createObjectURL(blob);
     const pluginModule = await import(url);
-    const pluginInstance: any = pluginModule.pluginInstance;
+    const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
     this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Uint8Array.from([]), this.document));
   }
 }

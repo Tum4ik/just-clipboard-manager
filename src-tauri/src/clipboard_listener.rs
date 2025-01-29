@@ -1,7 +1,7 @@
-use clipboard_win::formats;
-use clipboard_win::raw::{close, format_name_big, get, open, set, EnumFormats};
+use clipboard_win::raw::{close, format_name_big, open, EnumFormats};
+use std::collections::HashMap;
 use std::sync::OnceLock;
-use tauri::{App, AppHandle, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, AppHandle, Emitter, WebviewUrl, WebviewWindowBuilder};
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::System::DataExchange::AddClipboardFormatListener;
 use windows::Win32::UI::WindowsAndMessaging::{
@@ -41,41 +41,30 @@ unsafe extern "system" fn wnd_proc(
   lparam: LPARAM,
 ) -> LRESULT {
   match msg {
-    WM_CLIPBOARDUPDATE => {
-      match open() {
-        Err(_e) => {}
-        Ok(()) => {
-          let available_formats = EnumFormats::new();
-          let mut result_formats = Vec::<String>::new();
-          for format in available_formats {
-            match format_name_big(format) {
-              Some(name) => result_formats.push(name),
-              None => {}
-            }
-          }
-
-          match APP_HANDLE.get() {
-            Some(app) => {
-              let _ = app.emit("clipboard-listener::available-formats", result_formats);
+    WM_CLIPBOARDUPDATE => match open() {
+      Err(_e) => {}
+      Ok(()) => {
+        let available_formats = EnumFormats::new();
+        let mut result_formats = HashMap::<String, u32>::new();
+        for format in available_formats {
+          match format_name_big(format) {
+            Some(name) => {
+              result_formats.insert(name, format);
             }
             None => {}
           }
-
-          /* let mut bytes = vec![0u8; 1024];
-          match get(formats::CF_UNICODETEXT, &mut bytes) {
-            Ok(size) => {
-              bytes.truncate(size);
-              println!("{bytes:?}");
-              let app = APP_HANDLE.get().unwrap();
-              app.emit("bytes", bytes);
-            }
-            Err(_e) => {},
-          } */
-
-          let _ = close();
         }
+
+        match APP_HANDLE.get() {
+          Some(app) => {
+            let _ = app.emit("clipboard-listener::available-formats", result_formats);
+          }
+          None => {}
+        }
+
+        let _ = close();
       }
-    }
+    },
     _ => {}
   }
 
