@@ -16,6 +16,7 @@ pub fn run() {
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+    .plugin(tauri_plugin_store::Builder::new().build())
     .setup(clipboard_listener)
     .invoke_handler(tauri::generate_handler![commands::get_clipboard_data_bytes])
     .run(tauri::generate_context!())
