@@ -1,7 +1,6 @@
 {
-  "tray": {
-    "settings": "Settings",
-    "about": "About",
-    "exit": "Exit"
-  }
+  "settings": "Settings",
+  "about": "About",
+  "language": "Language",
+  "exit": "Exit"
 }
