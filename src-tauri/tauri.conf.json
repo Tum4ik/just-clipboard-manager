@@ -34,6 +34,13 @@
       "csp": null
     }
   },
+  "plugins": {
+    "sql": {
+      "preload": [
+        "sqlite:jcm-database.db"
+      ]
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "nsis",

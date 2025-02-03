@@ -25,6 +25,6 @@ export class MainWindowComponent {
     const url = URL.createObjectURL(blob);
     const pluginModule = await import(url);
     const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
-    this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Uint8Array.from([]), this.document));
+    // this.renderer.appendChild(this.element.nativeElement, pluginInstance.getRepresentationDataElement(Uint8Array.from([]), this.document));
   }
 }

@@ -14,6 +14,10 @@
     "fs:allow-resource-read-recursive",
     "process:default",
     "global-shortcut:allow-register",
-    "global-shortcut:allow-unregister"
+    "global-shortcut:allow-unregister",
+    "sql:allow-close",
+    "sql:allow-execute",
+    "sql:allow-load",
+    "sql:allow-select"
   ]
 }
