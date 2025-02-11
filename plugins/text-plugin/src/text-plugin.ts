@@ -1,6 +1,7 @@
 import { ClipboardDataPlugin } from "just-clipboard-manager-pdk";
 
 export class TextPlugin extends ClipboardDataPlugin {
+
   private readonly _id = 'd930d2cd-3fd9-4012-a363-120676e22afa';
   override get id(): `${string}-${string}-${string}-${string}-${string}` {
     return this._id;
@@ -30,12 +31,23 @@ export class TextPlugin extends ClipboardDataPlugin {
     }
 
     const firstLine = text.split(/\r?\n/)[0];
-    return this.encoder.encode(firstLine);
+    let encoded = this.encoder.encode(firstLine);
+    if (encoded[encoded.length - 1] === 0) {
+      encoded = encoded.subarray(0, encoded.length - 1);
+    }
+    return encoded;
   }
 
   override getRepresentationDataElement(representationData: Uint8Array, format: string, document: Document): HTMLElement {
     const div = document.createElement('div');
     div.textContent = this.utf8decoder.decode(representationData);
     return div;
+  }
+
+  override getSearchLabel(data: Uint8Array, format: string): string {
+    if (format === 'CF_TEXT') {
+      return this.utf8decoder.decode(data);
+    }
+    return this.utf16decoder.decode(data);
   }
 }

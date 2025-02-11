@@ -3,16 +3,18 @@
   <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
        [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
     <p-panel [style]="{ overflow: 'hidden' }">
+      <!-- @for(item of items(); track item){
+        <div>{{item}}</div>
+      } -->
       <p-virtual-scroller [items]="items | async"
                           [itemSize]="21"
                           [scrollHeight]="scrollableAreaHeight"
-                          [lazy]="true"
                           [autoSize]="true"
                           [trackBy]="trackByFn"
                           [appendOnly]="true"
-                          (onLazyLoad)="onLazyLoad($event)">
-        <ng-template #item let-item let-options="options">
-          <div>{{ item }}</div>
+                          (onScroll)="onScroll($event)">
+        <ng-template #item let-item>
+          <jcm-clip-item [htmlElement]="item" />
         </ng-template>
       </p-virtual-scroller>
     </p-panel>

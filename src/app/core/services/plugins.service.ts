@@ -1,27 +1,34 @@
 import { Injectable } from '@angular/core';
+import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
-import { BaseDirectory, readFile, readDir } from '@tauri-apps/plugin-fs';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PluginsService {
-  constructor(){
+  constructor() {
     this.detectPluginsAsync().then(plugins => this._plugins = plugins);
   }
-  
-  private _plugins?: ClipboardDataPlugin[];
-  get plugins(): readonly ClipboardDataPlugin[]{
-    return this._plugins ??[];
+
+  private _plugins?: Map<string, ClipboardDataPlugin>;
+  get plugins(): readonly ClipboardDataPlugin[] {
+    if (this._plugins) {
+      return Array.from(this._plugins.values());
+    }
+    return [];
   }
-  
-  
-  private async detectPluginsAsync(): Promise<ClipboardDataPlugin[]>{
+
+  getPlugin(id: string): ClipboardDataPlugin | undefined {
+    return this._plugins?.get(id);
+  }
+
+
+  private async detectPluginsAsync(): Promise<Map<string, ClipboardDataPlugin>> {
     const pluginDirs = await readDir('plugins', {
       baseDir: BaseDirectory.Resource
     });
-    const plugins: ClipboardDataPlugin[] = [];
-    for (const pluginDir of pluginDirs){
+    const plugins = new Map<string, ClipboardDataPlugin>();
+    for (const pluginDir of pluginDirs) {
       const pluginBundlePath = `plugins/${pluginDir.name}/plugin-bundle.mjs`;
-      try{
+      try {
         const pluginFileBytes = await readFile(pluginBundlePath, {
           baseDir: BaseDirectory.Resource
         });
@@ -29,8 +36,8 @@ export class PluginsService {
         const url = URL.createObjectURL(blob);
         const pluginModule = await import(url);
         const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
-        plugins.push(pluginInstance);
-      } catch (e){
+        plugins.set(pluginInstance.id, pluginInstance);
+      } catch (e) {
         // todo: log error
         console.error(`Failed to load plugin from ${pluginBundlePath}`, e);
       }

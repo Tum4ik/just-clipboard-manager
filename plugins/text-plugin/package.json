@@ -11,7 +11,7 @@
   "author": "Yevheniy Tymchishin",
   "license": "MIT",
   "dependencies": {
-    "just-clipboard-manager-pdk": "^4.0.12"
+    "just-clipboard-manager-pdk": "^4.0.13"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",

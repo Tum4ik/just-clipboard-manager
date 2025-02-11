@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
 import { clipboardListenerResolver } from "./shells/paste-window/resolvers/clipboard-listener.resolver";
 import { globalShortcutsResolver } from "./shells/paste-window/resolvers/global-shortcuts.resolver";
@@ -12,7 +11,7 @@ export const routes: Routes = [
     loadComponent: () => import('./shells/paste-window/paste-window.component').then(c => c.PasteWindowComponent),
     providers: [
       ClipboardListener,
-      PluginsService,
+      // PluginsService,
       SettingsService
     ],
     resolve: {
@@ -25,7 +24,7 @@ export const routes: Routes = [
     path: 'main-window',
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
     providers: [
-      PluginsService,
+      // PluginsService,
       SettingsService
     ]
   }

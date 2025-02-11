@@ -1,9 +1,12 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, ElementRef, NgZone, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
-import { Scroller } from 'primeng/scroller';
-import { of } from 'rxjs';
+import { Scroller, ScrollerScrollEvent } from 'primeng/scroller';
+import { BehaviorSubject } from 'rxjs';
+import { ClipsRepository } from '../../core/data/repositories/clips.repository';
+import { PluginsService } from '../../core/services/plugins.service';
+import { ClipItemComponent } from './components/clip-item/clip-item.component';
 
 @Component({
   selector: 'jcm-paste-window',
@@ -13,15 +16,19 @@ import { of } from 'rxjs';
     InputText,
     Scroller,
     Panel,
-    AsyncPipe
+    AsyncPipe,
+    ClipItemComponent,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy {
   constructor(
-    private readonly ngZone: NgZone
+    private readonly ngZone: NgZone,
+    private readonly pluginsService: PluginsService,
+    @Inject(DOCUMENT) private readonly document: Document
   ) { }
 
   private resizeObserver?: ResizeObserver;
+  private readonly clipsRepository = new ClipsRepository();
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 
@@ -30,8 +37,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
 
   scrollableAreaHeight = '0px';
 
-  private _items: HTMLElement[] = [];
-  items = of(this._items);
+  private _items = new BehaviorSubject<HTMLElement[]>([]);
+  items = this._items.asObservable();
 
   ngOnInit(): void {
     this.resizeObserver = new ResizeObserver(entries => {
@@ -47,17 +54,43 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
       });
     });
     this.resizeObserver.observe(this.rootElement().nativeElement);
+
+    this.clipsRepository.getClipsAsync(0, 18).then(clips => {
+      for (const clip of clips) {
+        const plugin = this.pluginsService.getPlugin(clip.pluginId);
+        const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
+        if (item) {
+          this._items.next([...this._items.value, item]);
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+    this.clipsRepository.disposeAsync();
   }
 
   trackByFn(index: number, item: string): number {
     return index;
   }
 
-  onLazyLoad(e: { first: number, last: number; }): void {
 
+  /* const clips = await this.clipsRepository.getClipsAsync(e.first, e.last - e.first);
+  console.log(clips);
+  for (const clip of clips) {
+    const plugin = this.pluginsService.getPlugin(clip.pluginId);
+    const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
+    if (item) {
+      this._items.next([...this._items.value, item]);
+    }
+  } */
+
+
+  onScroll(e: ScrollerScrollEvent) {
+    const target = e.originalEvent?.target as HTMLElement;
+    if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
+
+    }
   }
 }
