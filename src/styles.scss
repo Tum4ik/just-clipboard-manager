@@ -9,3 +9,18 @@ body {
   margin: 0px;
   padding: 4px;
 }
+
+p-virtual-scroller.clips-scroller {
+  .p-virtualscroller-content {
+    width: 100%;
+  }
+}
+
+jcm-clip-item {
+  p-button {
+    button.p-button {
+      width: 100%;
+      justify-content: left;
+    }
+  }
+}

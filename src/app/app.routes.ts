@@ -11,7 +11,6 @@ export const routes: Routes = [
     loadComponent: () => import('./shells/paste-window/paste-window.component').then(c => c.PasteWindowComponent),
     providers: [
       ClipboardListener,
-      // PluginsService,
       SettingsService
     ],
     resolve: {
@@ -24,7 +23,6 @@ export const routes: Routes = [
     path: 'main-window',
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
     providers: [
-      // PluginsService,
       SettingsService
     ]
   }

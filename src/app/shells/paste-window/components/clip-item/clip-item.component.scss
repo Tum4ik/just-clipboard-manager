@@ -1,3 +1,11 @@
+:host {
+  display: block;
+}
+
 p-button {
   --p-button-text-primary-color: var(--p-text-color);
+}
+
+.content {
+  overflow: hidden;
 }

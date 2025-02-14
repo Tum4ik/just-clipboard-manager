@@ -31,14 +31,20 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
   private readonly clipsRepository = new ClipsRepository();
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly scroller = viewChild.required<Scroller>(Scroller);
+
+  private loadedClipsCount = 0;
+  private isClipsLoading = false;
 
   readonly SCROLLABLE_AREA_MARGIN_TOP = 4;
   readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
 
   scrollableAreaHeight = '0px';
+  // scrollableAreaWidth = 0;
 
   private _items = new BehaviorSubject<HTMLElement[]>([]);
   items = this._items.asObservable();
+
 
   ngOnInit(): void {
     this.resizeObserver = new ResizeObserver(entries => {
@@ -49,21 +55,16 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
             const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
             const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
             this.scrollableAreaHeight = `${windowHeight - searchInputHeight - topBottomMargins}px`;
+
+            // const scrollerElement = this.scroller().el.nativeElement as HTMLElement;
+            // this.scrollableAreaWidth = scrollerElement.getElementsByClassName('p-virtualscroller')[0].clientWidth;
           }
         }
       });
     });
     this.resizeObserver.observe(this.rootElement().nativeElement);
 
-    this.clipsRepository.getClipsAsync(0, 18).then(clips => {
-      for (const clip of clips) {
-        const plugin = this.pluginsService.getPlugin(clip.pluginId);
-        const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
-        if (item) {
-          this._items.next([...this._items.value, item]);
-        }
-      }
-    });
+    this.loadClipsAsync(0, 15);
   }
 
   ngOnDestroy(): void {
@@ -76,21 +77,31 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
   }
 
 
-  /* const clips = await this.clipsRepository.getClipsAsync(e.first, e.last - e.first);
-  console.log(clips);
-  for (const clip of clips) {
-    const plugin = this.pluginsService.getPlugin(clip.pluginId);
-    const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
-    if (item) {
-      this._items.next([...this._items.value, item]);
-    }
-  } */
-
-
   onScroll(e: ScrollerScrollEvent) {
     const target = e.originalEvent?.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
-
+      this.loadClipsAsync(this.loadedClipsCount, 10);
     }
+  }
+
+
+  private async loadClipsAsync(skip: number, take: number) {
+    if (this.isClipsLoading) {
+      return;
+    }
+
+    this.isClipsLoading = true;
+
+    const clips = await this.clipsRepository.getClipsAsync(skip, take);
+    this.loadedClipsCount += clips.length;
+    for (const clip of clips) {
+      const plugin = this.pluginsService.getPlugin(clip.pluginId);
+      const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
+      if (item) {
+        this._items.next([...this._items.value, item]);
+      }
+    }
+
+    this.isClipsLoading = false;
   }
 }

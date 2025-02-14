@@ -2,11 +2,9 @@
   <input #searchInput pInputText pSize="small" type="text" placeholder="Search" />
   <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
        [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
-    <p-panel [style]="{ overflow: 'hidden' }">
-      <!-- @for(item of items(); track item){
-        <div>{{item}}</div>
-      } -->
-      <p-virtual-scroller [items]="items | async"
+    <p-panel>
+      <p-virtual-scroller class="clips-scroller"
+                          [items]="items | async"
                           [itemSize]="21"
                           [scrollHeight]="scrollableAreaHeight"
                           [autoSize]="true"
