@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'jcm-paste-window',
@@ -17,6 +18,7 @@ import { ClipItemComponent } from './components/clip-item/clip-item.component';
     Scroller,
     Panel,
     AsyncPipe,
+    TranslatePipe,
     ClipItemComponent,
   ]
 })

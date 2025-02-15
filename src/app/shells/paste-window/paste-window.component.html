@@ -1,5 +1,5 @@
 <div #root class="root">
-  <input #searchInput pInputText pSize="small" type="text" placeholder="Search" />
+  <input #searchInput pInputText pSize="small" type="text" placeholder="{{ 'search' | translate }}" />
   <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
        [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
     <p-panel>

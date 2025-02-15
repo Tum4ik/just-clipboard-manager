@@ -1,11 +1,13 @@
 import { HttpClient, provideHttpClient } from "@angular/common/http";
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
-import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
+import { provideTranslateService, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
+import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
+import { SettingsService } from "./core/services/settings.service";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
 export const appConfig: ApplicationConfig = {
@@ -30,6 +32,11 @@ export const appConfig: ApplicationConfig = {
         useFactory: createTranslateLoader,
         deps: [HttpClient]
       }
+    }),
+    provideAppInitializer(async () => {
+      const settings = inject(SettingsService);
+      const translate = inject(TranslateService);
+      await firstValueFrom(translate.use(await settings.getLanguageAsync()));
     })
   ]
 };
