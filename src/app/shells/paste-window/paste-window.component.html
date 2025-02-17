@@ -3,18 +3,9 @@
   <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
        [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
     <p-panel>
-      <p-virtual-scroller class="clips-scroller"
-                          [items]="items | async"
-                          [itemSize]="21"
-                          [scrollHeight]="scrollableAreaHeight"
-                          [autoSize]="true"
-                          [trackBy]="trackByFn"
-                          [appendOnly]="true"
-                          (onScroll)="onScroll($event)">
-        <ng-template #item let-item>
-          <jcm-clip-item [htmlElement]="item" />
-        </ng-template>
-      </p-virtual-scroller>
+      <p-scroll-panel #scrollPanel [style]="{ height: scrollableAreaHeight }">
+        <ng-container #clipsContainer />
+      </p-scroll-panel>
     </p-panel>
   </div>
 </div>

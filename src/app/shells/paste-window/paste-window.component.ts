@@ -1,13 +1,12 @@
-import { AsyncPipe, DOCUMENT } from '@angular/common';
-import { Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
-import { Scroller, ScrollerScrollEvent } from 'primeng/scroller';
-import { BehaviorSubject } from 'rxjs';
+import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'jcm-paste-window',
@@ -15,25 +14,26 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrl: './paste-window.component.scss',
   imports: [
     InputText,
-    Scroller,
     Panel,
-    AsyncPipe,
+    ScrollPanelModule,
     TranslatePipe,
-    ClipItemComponent,
   ]
 })
-export class PasteWindowComponent implements OnInit, OnDestroy {
+export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private readonly ngZone: NgZone,
     private readonly pluginsService: PluginsService,
-    @Inject(DOCUMENT) private readonly document: Document
+    @Inject(DOCUMENT) private readonly document: Document,
+    private readonly renderer: Renderer2,
   ) { }
 
   private resizeObserver?: ResizeObserver;
+  private scrollListenUnsubscriber?: () => void;
   private readonly clipsRepository = new ClipsRepository();
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
-  private readonly scroller = viewChild.required<Scroller>(Scroller);
+  private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
+  private readonly clipsContainer = viewChild.required<unknown, ViewContainerRef>('clipsContainer', { read: ViewContainerRef });
 
   private loadedClipsCount = 0;
   private isClipsLoading = false;
@@ -42,10 +42,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
   readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
 
   scrollableAreaHeight = '0px';
-  // scrollableAreaWidth = 0;
-
-  private _items = new BehaviorSubject<HTMLElement[]>([]);
-  items = this._items.asObservable();
 
 
   ngOnInit(): void {
@@ -57,9 +53,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
             const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
             const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
             this.scrollableAreaHeight = `${windowHeight - searchInputHeight - topBottomMargins}px`;
-
-            // const scrollerElement = this.scroller().el.nativeElement as HTMLElement;
-            // this.scrollableAreaWidth = scrollerElement.getElementsByClassName('p-virtualscroller')[0].clientWidth;
           }
         }
       });
@@ -69,18 +62,21 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
     this.loadClipsAsync(0, 15);
   }
 
+  ngAfterViewInit(): void {
+    const scrollPanelElement = this.scrollPanel().containerViewChild?.nativeElement as HTMLElement;
+    const scrollPanelContent = scrollPanelElement.querySelector('.p-scrollpanel-content');
+    this.scrollListenUnsubscriber = this.renderer.listen(scrollPanelContent, 'scroll', this.onScroll.bind(this));
+  }
+
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+    this.scrollListenUnsubscriber?.();
     this.clipsRepository.disposeAsync();
   }
 
-  trackByFn(index: number, item: string): number {
-    return index;
-  }
 
-
-  onScroll(e: ScrollerScrollEvent) {
-    const target = e.originalEvent?.target as HTMLElement;
+  onScroll(e: Event) {
+    const target = e.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
       this.loadClipsAsync(this.loadedClipsCount, 10);
     }
@@ -95,12 +91,15 @@ export class PasteWindowComponent implements OnInit, OnDestroy {
     this.isClipsLoading = true;
 
     const clips = await this.clipsRepository.getClipsAsync(skip, take);
-    this.loadedClipsCount += clips.length;
-    for (const clip of clips) {
-      const plugin = this.pluginsService.getPlugin(clip.pluginId);
-      const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
-      if (item) {
-        this._items.next([...this._items.value, item]);
+    if (clips.length > 0) {
+      this.loadedClipsCount += clips.length;
+      for (const clip of clips) {
+        const plugin = this.pluginsService.getPlugin(clip.pluginId);
+        const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
+        if (item) {
+          const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
+          clipItem.setInput('htmlElement', item);
+        }
       }
     }
 
