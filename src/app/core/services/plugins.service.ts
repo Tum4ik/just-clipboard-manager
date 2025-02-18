@@ -4,9 +4,6 @@ import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
 
 @Injectable({providedIn: 'root'})
 export class PluginsService {
-  constructor() {
-    this.detectPluginsAsync().then(plugins => this._plugins = plugins);
-  }
 
   private _plugins?: Map<string, ClipboardDataPlugin>;
   get plugins(): readonly ClipboardDataPlugin[] {
@@ -21,7 +18,14 @@ export class PluginsService {
   }
 
 
-  private async detectPluginsAsync(): Promise<Map<string, ClipboardDataPlugin>> {
+  private isInitialized = false;
+  async initAsync(): Promise<void> {
+    if (this.isInitialized){
+      return;
+    }
+
+    this.isInitialized = true;
+
     const pluginDirs = await readDir('plugins', {
       baseDir: BaseDirectory.Resource
     });
@@ -42,6 +46,7 @@ export class PluginsService {
         console.error(`Failed to load plugin from ${pluginBundlePath}`, e);
       }
     }
-    return plugins;
+
+    this._plugins = plugins;
   }
 }

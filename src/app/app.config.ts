@@ -9,6 +9,7 @@ import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
 import { SettingsService } from "./core/services/settings.service";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
+import { PluginsService } from "./core/services/plugins.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,7 +37,10 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       const settings = inject(SettingsService);
       const translate = inject(TranslateService);
+      const pluginsService = inject(PluginsService)
+      
       await firstValueFrom(translate.use(await settings.getLanguageAsync()));
+      await pluginsService.initAsync();
     })
   ]
 };

@@ -41,6 +41,8 @@ export class TextPlugin extends ClipboardDataPlugin {
   override getRepresentationDataElement(representationData: Uint8Array, format: string, document: Document): HTMLElement {
     const div = document.createElement('div');
     div.textContent = this.utf8decoder.decode(representationData);
+    div.style.overflow = 'hidden';
+    div.style.textOverflow = 'ellipsis';
     return div;
   }
 

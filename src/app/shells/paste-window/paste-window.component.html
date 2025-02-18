@@ -3,7 +3,7 @@
   <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
        [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
     <p-panel>
-      <p-scroll-panel #scrollPanel [style]="{ height: scrollableAreaHeight }">
+      <p-scroll-panel #scrollPanel [style]="{ height: scrollableAreaHeight, 'padding-right': 'var(--p-scrollpanel-bar-size)' }">
         <ng-container #clipsContainer />
       </p-scroll-panel>
     </p-panel>
