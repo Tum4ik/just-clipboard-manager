@@ -11,6 +11,7 @@ pub fn v1() -> Migration {
       plugin_id TEXT,
       representation_data BLOB,
       data BLOB,
+      format_id INTEGER,
       format TEXT,
       search_label TEXT,
       clipped_at TEXT

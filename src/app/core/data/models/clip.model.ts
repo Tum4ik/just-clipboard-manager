@@ -1,9 +1,6 @@
-export interface Clip {
-  id?: number;
-  pluginId: `${string}-${string}-${string}-${string}-${string}`;
-  representationData: Uint8Array;
+import { ClipPreview } from "./clip-preview.model";
+
+export interface Clip extends ClipPreview {
   data: Uint8Array;
-  format: string;
-  searchLabel?: string;
   clippedAt: Date;
 }

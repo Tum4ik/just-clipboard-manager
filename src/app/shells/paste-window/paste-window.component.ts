@@ -90,7 +90,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isClipsLoading = true;
 
-    const clips = await this.clipsRepository.getClipsAsync(skip, take);
+    const clips = await this.clipsRepository.getClipPreviewsAsync(skip, take);
     if (clips.length > 0) {
       this.loadedClipsCount += clips.length;
       for (const clip of clips) {
@@ -98,6 +98,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
         if (item) {
           const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
+          clipItem.setInput('clipId', clip.id);
+          clipItem.setInput('formatId', clip.formatId);
           clipItem.setInput('htmlElement', item);
         }
       }

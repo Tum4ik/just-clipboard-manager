@@ -43,6 +43,7 @@ export class ClipboardListener {
       pluginId: pickResult.plugin.id,
       representationData: representationData,
       data: bytes,
+      formatId: pickResult.formatId,
       format: pickResult.format,
       searchLabel: searchLabel,
       clippedAt: new Date(),
