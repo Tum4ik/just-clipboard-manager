@@ -61,23 +61,20 @@ pub fn paste_data_bytes(format: u32, bytes: Vec<u8>, target_window_ptr: usize) {
             let _ = AttachThreadInput(current_thread, hwnd_thread, false);
           }
 
-          let ctrl = VK_LCONTROL;
-          let v = VK_V;
-
           let mut inputs = vec![INPUT::default(); 4];
 
           inputs[0].r#type = INPUT_KEYBOARD;
-          inputs[0].Anonymous.ki.wVk = ctrl;
+          inputs[0].Anonymous.ki.wVk = VK_LCONTROL;
 
           inputs[1].r#type = INPUT_KEYBOARD;
-          inputs[1].Anonymous.ki.wVk = v;
+          inputs[1].Anonymous.ki.wVk = VK_V;
 
           inputs[2].r#type = INPUT_KEYBOARD;
-          inputs[2].Anonymous.ki.wVk = v;
+          inputs[2].Anonymous.ki.wVk = VK_V;
           inputs[2].Anonymous.ki.dwFlags = KEYEVENTF_KEYUP;
 
           inputs[3].r#type = INPUT_KEYBOARD;
-          inputs[3].Anonymous.ki.wVk = ctrl;
+          inputs[3].Anonymous.ki.wVk = VK_LCONTROL;
           inputs[3].Anonymous.ki.dwFlags = KEYEVENTF_KEYUP;
 
           SendInput(&inputs, size_of::<INPUT>() as i32);
