@@ -1,12 +1,16 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
+import { Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
+import { ClipboardListener } from './services/clipboard-listener.service';
+import { PasteDataService } from './services/paste-data.service';
+import { PasteWindowVisibilityService } from './services/paste-window-visibility.service';
 
 @Component({
   selector: 'jcm-paste-window',
@@ -25,18 +29,24 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly pluginsService: PluginsService,
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
+    private readonly pasteDataService: PasteDataService,
+    private readonly pasteWindowVisibilityService: PasteWindowVisibilityService,
+    private readonly clipboardListener: ClipboardListener
   ) { }
 
   private resizeObserver?: ResizeObserver;
   private scrollListenUnsubscriber?: () => void;
+  private windowVisibilitySubscriber?: Subscription;
+  private clipboardUpdatedSubscriber?: Subscription;
   private readonly clipsRepository = new ClipsRepository();
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
   private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
   private readonly clipsContainer = viewChild.required<unknown, ViewContainerRef>('clipsContainer', { read: ViewContainerRef });
 
-  private loadedClipsCount = 0;
   private isClipsLoading = false;
+  private isWindowVisible = false;
+  private isClipsListUpToDate = false;
 
   readonly SCROLLABLE_AREA_MARGIN_TOP = 4;
   readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
@@ -59,7 +69,27 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.resizeObserver.observe(this.rootElement().nativeElement);
 
+    this.windowVisibilitySubscriber = this.pasteWindowVisibilityService.visibility$.subscribe(isVisible => {
+      this.isWindowVisible = isVisible;
+      if (isVisible && !this.isClipsListUpToDate) {
+        this.loadClipsAsync(0, 15);
+        this.isClipsListUpToDate = true;
+      }
+      else if (isVisible) {
+        this.scrollPanel().scrollTop(0);
+      }
+    });
+    this.clipboardUpdatedSubscriber = this.clipboardListener.clipboardUpdated$.subscribe(() => {
+      this.isClipsListUpToDate = false;
+      if (!this.isWindowVisible) {
+        while (this.clipsContainer().length > 0) {
+          this.clipsContainer().detach();
+        }
+      }
+    });
+
     this.loadClipsAsync(0, 15);
+    this.isClipsListUpToDate = true;
   }
 
   ngAfterViewInit(): void {
@@ -71,17 +101,24 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
     this.scrollListenUnsubscriber?.();
+    this.windowVisibilitySubscriber?.unsubscribe();
+    this.clipboardUpdatedSubscriber?.unsubscribe();
     this.clipsRepository.disposeAsync();
   }
 
 
   onScroll(e: Event) {
+    if (!this.isWindowVisible) {
+      return;
+    }
     const target = e.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
-      this.loadClipsAsync(this.loadedClipsCount, 10);
+      this.loadClipsAsync(this.clipsContainer().length, 10);
     }
   }
 
+
+  private loadedClips: Map<number, { formatId: number, component: ComponentRef<ClipItemComponent>; }> = new Map();
 
   private async loadClipsAsync(skip: number, take: number) {
     if (this.isClipsLoading) {
@@ -92,19 +129,35 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const clips = await this.clipsRepository.getClipPreviewsAsync(skip, take);
     if (clips.length > 0) {
-      this.loadedClipsCount += clips.length;
       for (const clip of clips) {
-        const plugin = this.pluginsService.getPlugin(clip.pluginId);
-        const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
-        if (item) {
-          const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
-          clipItem.setInput('clipId', clip.id);
-          clipItem.setInput('formatId', clip.formatId);
-          clipItem.setInput('htmlElement', item);
+        if (this.loadedClips.has(clip.id!)) {
+          const component = this.loadedClips.get(clip.id!)!.component;
+          this.clipsContainer().insert(component.hostView);
+        }
+        else {
+          const plugin = this.pluginsService.getPlugin(clip.pluginId);
+          const item = plugin?.getRepresentationDataElement(clip.representationData, clip.format, this.document);
+          if (item) {
+            const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
+            this.loadedClips.set(clip.id!, { formatId: clip.formatId, component: clipItem });
+            clipItem.setInput('clipId', clip.id);
+            clipItem.setInput('htmlElement', item);
+            clipItem.instance.pasteDataRequested.subscribe(this.onPasteDataRequested.bind(this));
+          }
         }
       }
     }
 
     this.isClipsLoading = false;
+  }
+
+
+  async onPasteDataRequested(clipId: number) {
+    const data = await this.clipsRepository.getClipDataAsync(clipId);
+    if (data) {
+      await this.pasteDataService.pasteDataAsync(data, this.loadedClips.get(clipId)!.formatId);
+      await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
+      this.clipsContainer().move(this.loadedClips.get(clipId)!.component.hostView, 0);
+    }
   }
 }

@@ -57,6 +57,17 @@ export class ClipsRepository extends BaseDatabaseRepository {
   }
 
 
+  async updateClippedAtAsync(id: number, clippedAt: Date): Promise<void> {
+    await this.db.execute(`
+      UPDATE clips
+      SET clipped_at = $1
+      WHERE id = $2
+      `,
+      [clippedAt, id]
+    );
+  }
+
+
   /* async getClipAsync(id: number): Promise<Clip | null> {
     return await this.db.queryFirstAsync<Clip>('SELECT * FROM clips WHERE id = ?', id);
   }

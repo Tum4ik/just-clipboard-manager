@@ -1,8 +1,8 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from '@tauri-apps/api/event';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
+import { Subject } from 'rxjs';
 import { ClipsRepository } from '../../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../../core/services/plugins.service';
 
@@ -10,17 +10,29 @@ import { PluginsService } from '../../../core/services/plugins.service';
 export class ClipboardListener {
   constructor(
     private readonly pluginsService: PluginsService,
-    @Inject(DOCUMENT) private readonly document: Document
   ) { }
 
   private isListening = false;
   private readonly clipsRepository = new ClipsRepository();
+
+  private clipboardUpdatedSubject = new Subject<void>();
+  readonly clipboardUpdated$ = this.clipboardUpdatedSubject.asObservable();
+
+  /**
+   * The property is used to temporarily pause listening to the clipboard.
+   * It is usually useful when the user pastes the data from the paste window and you don't want
+   * to handle the data you have already in the database again.
+   */
+  isListeningPaused = false;
 
   async startListenAsync() {
     if (this.isListening) {
       return;
     }
     await listen<Map<string, number>>('clipboard-listener::available-formats', async e => {
+      if (this.isListeningPaused) {
+        return;
+      }
       const availableFormatsMap = new Map<string, number>(Object.entries(e.payload));
       await this.onClipboardUpdated(availableFormatsMap);
     });
@@ -48,6 +60,7 @@ export class ClipboardListener {
       searchLabel: searchLabel,
       clippedAt: new Date(),
     });
+    this.clipboardUpdatedSubject.next();
   }
 
 
