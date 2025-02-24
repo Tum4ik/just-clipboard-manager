@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { PasteDataService } from './paste-data.service';
 import { BehaviorSubject } from 'rxjs';
+import { PasteDataService } from './paste-data.service';
 
 @Injectable()
 export class PasteWindowVisibilityService {
   constructor(private readonly pasteDataService: PasteDataService) { }
 
   private pasteWindow?: WebviewWindow | null;
-  
+
   private visibilitySubject = new BehaviorSubject<boolean>(false);
   readonly visibility$ = this.visibilitySubject.asObservable();
 
