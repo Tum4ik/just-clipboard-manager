@@ -16,6 +16,7 @@
         "url": "paste-window",
         "width": 400,
         "height": 400,
+        "resizable": false,
         "decorations": false,
         "skipTaskbar": true,
         "alwaysOnTop": true,

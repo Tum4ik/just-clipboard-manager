@@ -87,6 +87,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       else if (isVisible) {
         this.scrollPanel().scrollTop(0);
+        this.searchInputElement().nativeElement.focus();
       }
       else if (!isVisible) {
         this.searchSubject.next('');
