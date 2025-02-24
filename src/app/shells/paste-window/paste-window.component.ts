@@ -10,7 +10,7 @@ import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
 import { PasteDataService } from './services/paste-data.service';
-import { PasteWindowVisibilityService } from './services/paste-window-visibility.service';
+import { PasteWindowService } from './services/paste-window.service';
 
 @Component({
   selector: 'jcm-paste-window',
@@ -30,7 +30,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
     private readonly pasteDataService: PasteDataService,
-    private readonly pasteWindowVisibilityService: PasteWindowVisibilityService,
+    private readonly pasteWindowService: PasteWindowService,
     private readonly clipboardListener: ClipboardListener
   ) { }
 
@@ -79,7 +79,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadClipsAsync(0, 15, search);
     });
 
-    this.windowVisibilitySubscriber = this.pasteWindowVisibilityService.visibility$.subscribe(isVisible => {
+    this.windowVisibilitySubscriber = this.pasteWindowService.visibility$.subscribe(isVisible => {
       this.isWindowVisible = isVisible;
       if (isVisible && !this.isClipsListUpToDate) {
         this.loadClipsAsync(0, 15);

@@ -1,13 +1,13 @@
 import { Routes } from "@angular/router";
 import { clipboardListenerResolver } from "./shells/paste-window/resolvers/clipboard-listener.resolver";
 import { globalShortcutsResolver } from "./shells/paste-window/resolvers/global-shortcuts.resolver";
+import { pasteWindowServiceResolver } from "./shells/paste-window/resolvers/paste-window-visibility.resolver";
 import { trayIconResolver } from "./shells/paste-window/resolvers/tray-icon.resolver";
 import { ClipboardListener } from "./shells/paste-window/services/clipboard-listener.service";
 import { GlobalShortcutsService } from "./shells/paste-window/services/global-shortcuts.service";
 import { PasteDataService } from "./shells/paste-window/services/paste-data.service";
-import { PasteWindowVisibilityService } from "./shells/paste-window/services/paste-window-visibility.service";
+import { PasteWindowService } from "./shells/paste-window/services/paste-window.service";
 import { AppTray } from "./shells/tray/app-tray";
-import { pasteWindowVisibilityResolver } from "./shells/paste-window/resolvers/paste-window-visibility.resolver";
 
 export const routes: Routes = [
   {
@@ -18,13 +18,13 @@ export const routes: Routes = [
       AppTray,
       PasteDataService,
       GlobalShortcutsService,
-      PasteWindowVisibilityService,
+      PasteWindowService,
     ],
     resolve: {
       trayIcon: trayIconResolver,
       clipboardListener: clipboardListenerResolver,
       globalShortcuts: globalShortcutsResolver,
-      pasteWindowVisibility: pasteWindowVisibilityResolver,
+      pasteWindow: pasteWindowServiceResolver,
     }
   },
   {

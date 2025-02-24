@@ -22,6 +22,7 @@ pub fn run() {
       commands::get_clipboard_data_bytes,
       commands::paste_data_bytes,
       commands::get_foreground_window,
+      commands::get_cursor_pos,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

@@ -1,12 +1,12 @@
 use clipboard_win::raw::{close, get, open, set, size};
 use std::ffi::c_void;
-use windows::Win32::Foundation::HWND;
+use windows::Win32::Foundation::{HWND, POINT};
 use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
 use windows::Win32::UI::Input::KeyboardAndMouse::{
   SendInput, SetFocus, INPUT, INPUT_KEYBOARD, KEYEVENTF_KEYUP, VK_LCONTROL, VK_V,
 };
 use windows::Win32::UI::WindowsAndMessaging::{
-  GetForegroundWindow, GetWindowThreadProcessId, SetForegroundWindow,
+  GetCursorPos, GetForegroundWindow, GetWindowThreadProcessId, SetForegroundWindow, SetWindowPos,
 };
 
 #[tauri::command]
@@ -89,4 +89,13 @@ pub fn paste_data_bytes(format: u32, bytes: Vec<u8>, target_window_ptr: usize) {
 #[tauri::command]
 pub fn get_foreground_window() -> usize {
   unsafe { GetForegroundWindow().0 as usize }
+}
+
+#[tauri::command]
+pub fn get_cursor_pos() -> (i32, i32) {
+  let mut point = POINT::default();
+  unsafe {
+    GetCursorPos(&mut point);
+  }
+  (point.x, point.y)
 }

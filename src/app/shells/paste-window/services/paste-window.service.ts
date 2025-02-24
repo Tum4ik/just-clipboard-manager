@@ -3,9 +3,10 @@ import { invoke } from '@tauri-apps/api/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { BehaviorSubject } from 'rxjs';
 import { PasteDataService } from './paste-data.service';
+import { LogicalPosition } from '@tauri-apps/api/dpi';
 
 @Injectable()
-export class PasteWindowVisibilityService {
+export class PasteWindowService {
   constructor(private readonly pasteDataService: PasteDataService) { }
 
   private pasteWindow?: WebviewWindow | null;
@@ -14,6 +15,10 @@ export class PasteWindowVisibilityService {
   readonly visibility$ = this.visibilitySubject.asObservable();
 
   async initAsync(): Promise<void> {
+    if (this.pasteWindow) {
+      return;
+    }
+
     this.pasteWindow = await WebviewWindow.getByLabel('paste-window');
     await this.pasteWindow?.onFocusChanged(async e => {
       if (!e.payload) {
@@ -26,6 +31,9 @@ export class PasteWindowVisibilityService {
     const hwnd = await invoke<number>('get_foreground_window');
     this.pasteDataService.setPasteTargetWindowHwnd(hwnd);
 
+    const [x, y] = await invoke<[x: number, y: number]>('get_cursor_pos');
+
+    // await this.pasteWindow?.setPosition(new LogicalPosition(x, y));
     await this.pasteWindow?.show();
     await this.pasteWindow?.setFocus();
     this.visibilitySubject.next(true);
