@@ -22,6 +22,6 @@ export class MonitoringService implements ErrorHandler {
 
   async error(message: string, error?: any) {
     console.error(message, error);
-    await invoke('sentry_capture_error', { message: `${message}\n${error?.stack ?? error}` });
+    await invoke('sentry_capture_error', { message: `${message}${error ? '\n' + (error?.stack ?? error) : ''}` });
   }
 }
