@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
+import { MonitoringService } from './monitoring.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PluginsService {
-  constructor() {
+  constructor(private readonly monitoringService: MonitoringService) {
     this.detectPluginsAsync().then(plugins => this._plugins = plugins);
   }
 
@@ -38,8 +39,7 @@ export class PluginsService {
         const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
         plugins.set(pluginInstance.id, pluginInstance);
       } catch (e) {
-        // todo: log error
-        console.error(`Failed to load plugin from ${pluginBundlePath}`, e);
+        this.monitoringService.error(`Failed to load plugin from ${pluginBundlePath}`, e);
       }
     }
     return plugins;

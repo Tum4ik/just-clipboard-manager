@@ -1,11 +1,12 @@
 import { HttpClient, provideHttpClient } from "@angular/common/http";
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, ErrorHandler, provideZoneChangeDetection } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from "./app.routes";
+import { MonitoringService } from "./core/services/monitoring.service";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
 export const appConfig: ApplicationConfig = {
@@ -30,7 +31,8 @@ export const appConfig: ApplicationConfig = {
         useFactory: createTranslateLoader,
         deps: [HttpClient]
       }
-    })
+    }),
+    { provide: ErrorHandler, useExisting: MonitoringService }
   ]
 };
 

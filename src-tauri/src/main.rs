@@ -2,8 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use config::{Config, File};
-use machine_uid;
-use sentry::{types::Dsn, User};
+use sentry::{protocol::IpAddress, types::Dsn, User};
 use std::str::FromStr;
 
 fn main() {
@@ -26,6 +25,7 @@ fn main() {
   sentry::configure_scope(|scope| {
     scope.set_user(Some(User {
       id: machine_uid::get().ok(),
+      ip_address: Some(IpAddress::Auto),
       ..User::default()
     }));
   });
