@@ -1,9 +1,10 @@
 [package]
 name = "just-clipboard-manager"
-version = "4.0.0"
+version = "4.0.0-dev"
 description = "Just a clipboard manager"
 authors = ["Yevheniy Tymchishin"]
 edition = "2021"
+license-file = "../LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -22,8 +23,8 @@ tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri-plugin-fs = "2.2.0"
-windows = { version = "0.59", features = [
+tauri-plugin-fs = "2"
+windows = { version = "0.60", features = [
   "Win32_System_DataExchange",
   "Win32_UI_WindowsAndMessaging",
   "Win32_UI_Input_KeyboardAndMouse",
@@ -33,6 +34,9 @@ clipboard-win = { version = "5.4.0", features = [] }
 tauri-plugin-process = "2"
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
 tauri-plugin-store = "2"
+config = "0.15.8"
+sentry = "0.36.0"
+machine-uid = "0.5.3"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2"

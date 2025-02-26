@@ -1,7 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "just-clipboard-manager",
-  "version": "4.0.0",
   "identifier": "com.just-clipboard-manager.app",
   "build": {
     "beforeDevCommand": "npm run start",
@@ -53,7 +52,8 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "resources/plugins/": "plugins/"
+      "resources/plugins/": "plugins/",
+      "config/*.toml": "config/"
     }
   }
 }

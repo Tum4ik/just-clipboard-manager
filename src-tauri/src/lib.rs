@@ -1,12 +1,13 @@
 mod clipboard_listener;
 mod commands;
 mod migrations;
+mod sentry_commands;
 
 use clipboard_listener::clipboard_listener;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  tauri::Builder::default()
+  match tauri::Builder::default()
     .plugin(
       tauri_plugin_sql::Builder::new()
         .add_migrations("sqlite:jcm-database.db", migrations::migrations())
@@ -23,7 +24,15 @@ pub fn run() {
       commands::paste_data_bytes,
       commands::get_foreground_window,
       commands::open_main_window,
+      sentry_commands::sentry_capture_info,
+      sentry_commands::sentry_capture_warning,
+      sentry_commands::sentry_capture_error,
     ])
     .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+  {
+    Ok(()) => {}
+    Err(e) => {
+      sentry::capture_error(&e);
+    }
+  }
 }
