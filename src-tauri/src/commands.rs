@@ -90,3 +90,28 @@ pub fn paste_data_bytes(format: u32, bytes: Vec<u8>, target_window_ptr: usize) {
 pub fn get_foreground_window() -> usize {
   unsafe { GetForegroundWindow().0 as usize }
 }
+
+#[tauri::command]
+pub fn open_main_window(app: tauri::AppHandle, section: Option<&str>) {
+  let handle = app.clone();
+  match handle
+    .config()
+    .app
+    .windows
+    .iter()
+    .find(|c| c.label == "main-window")
+    .cloned()
+  {
+    Some(config) => {
+      std::thread::spawn(move || {
+        tauri::WebviewWindowBuilder::from_config(&handle, &config)
+          .unwrap()
+          .build()
+          .unwrap();
+      });
+    }
+    None => {
+      // sentry report
+    }
+  }
+}

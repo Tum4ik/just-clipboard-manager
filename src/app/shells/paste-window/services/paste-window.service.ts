@@ -59,11 +59,11 @@ export class PasteWindowService {
     if (!monitor) {
       return position;
     }
-    if (position.x + windowSize.width > monitor?.position.x + monitor?.size.width) {
-      position.x = monitor?.position.x + monitor?.size.width - windowSize.width;
+    if (position.x + windowSize.width > monitor.position.x + monitor.size.width) {
+      position.x = monitor.position.x + monitor.size.width - windowSize.width;
     }
-    if (position.y + windowSize.height > monitor?.position.y + monitor?.size.height) {
-      position.y = monitor?.position.y + monitor?.size.height - windowSize.height;
+    if (position.y + windowSize.height > monitor.position.y + monitor.size.height) {
+      position.y = monitor.position.y + monitor.size.height - windowSize.height;
     }
     return position;
   }

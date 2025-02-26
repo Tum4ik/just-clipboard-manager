@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { TranslateService, _ } from "@ngx-translate/core";
+import { _, TranslateService } from "@ngx-translate/core";
 import { defaultWindowIcon } from '@tauri-apps/api/app';
+import { invoke } from "@tauri-apps/api/core";
 import { Image } from "@tauri-apps/api/image";
 import { CheckMenuItem, Menu, MenuItem, Submenu } from "@tauri-apps/api/menu";
 import { TrayIcon } from '@tauri-apps/api/tray';
@@ -25,6 +26,7 @@ export class AppTray {
   async initAsync() {
     this.settingsMenuItem = await MenuItem.new({
       text: 'Settings',
+      action: () => this.showMainWindowAsync()
     });
     this.aboutMenuItem = await MenuItem.new({
       text: 'About',
@@ -92,5 +94,10 @@ export class AppTray {
         }
       }
     });
+  }
+
+
+  private async showMainWindowAsync() {
+    await invoke('open_main_window');
   }
 }
