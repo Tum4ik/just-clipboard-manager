@@ -37,6 +37,8 @@ tauri-plugin-store = "2"
 config = "0.15.8"
 sentry = "0.36.0"
 machine-uid = "0.5.3"
+log = "0.4"
+tauri-plugin-log = { version = "2", features = ["colored"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2"

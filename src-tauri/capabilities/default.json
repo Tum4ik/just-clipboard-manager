@@ -23,6 +23,7 @@
     "sql:allow-execute",
     "sql:allow-load",
     "sql:allow-select",
-    "store:default"
+    "store:default",
+    "log:default"
   ]
 }

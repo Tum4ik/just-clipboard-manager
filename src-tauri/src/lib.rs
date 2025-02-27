@@ -4,10 +4,18 @@ mod migrations;
 mod sentry_commands;
 
 use clipboard_listener::clipboard_listener;
+use log::LevelFilter;
+use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  match tauri::Builder::default()
+  tauri::Builder::default()
+    .plugin(
+      tauri_plugin_log::Builder::new()
+        .level(LevelFilter::Info)
+        .with_colors(ColoredLevelConfig::default())
+        .build(),
+    )
     .plugin(
       tauri_plugin_sql::Builder::new()
         .add_migrations("sqlite:jcm-database.db", migrations::migrations())
@@ -29,10 +37,5 @@ pub fn run() {
       sentry_commands::sentry_capture_error,
     ])
     .run(tauri::generate_context!())
-  {
-    Ok(()) => {}
-    Err(e) => {
-      sentry::capture_error(&e);
-    }
-  }
+    .expect("error while running tauri application");
 }

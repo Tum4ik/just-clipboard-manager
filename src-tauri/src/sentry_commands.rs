@@ -2,7 +2,7 @@
 pub fn sentry_capture_info(message: &str) {
   #[cfg(dev)]
   {
-    println!("{message}");
+    log::info!("{message}");
   }
   sentry::capture_message(message, sentry::Level::Info);
 }
@@ -11,7 +11,7 @@ pub fn sentry_capture_info(message: &str) {
 pub fn sentry_capture_warning(message: &str) {
   #[cfg(dev)]
   {
-    println!("{message}");
+    log::warn!("{message}");
   }
   sentry::capture_message(message, sentry::Level::Warning);
 }
@@ -20,7 +20,7 @@ pub fn sentry_capture_warning(message: &str) {
 pub fn sentry_capture_error(message: &str) {
   #[cfg(dev)]
   {
-    eprintln!("{message}");
+    log::error!("{message}");
   }
   sentry::capture_message(message, sentry::Level::Error);
 }

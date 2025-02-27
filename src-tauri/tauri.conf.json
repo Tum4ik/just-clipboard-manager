@@ -27,6 +27,7 @@
         "title": "Just Clipboard Manager",
         "width": 1000,
         "height": 753,
+        "decorations": false,
         "create": false
       }
     ],

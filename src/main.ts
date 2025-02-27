@@ -5,5 +5,5 @@ import { appConfig } from "./app/app.config";
 
 bootstrapApplication(AppComponent, appConfig).catch((err) => {
   console.error(err);
-  invoke('sentry_capture_error', { message: err.stack ?? err });
+  invoke('sentry_capture_error', { message: `Bootstrap application error\n${err.stack ?? err}` });
 });
