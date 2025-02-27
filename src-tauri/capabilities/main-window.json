@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-window",
+  "description": "Capability for the main window",
+  "windows": [
+    "main-window"
+  ],
+  "permissions": [
+    "core:default",
+    "core:app:allow-default-window-icon",
+    "core:window:allow-start-dragging",
+    "fs:allow-resource-read-recursive",
+    "store:default",
+    "log:default"
+  ]
+}
