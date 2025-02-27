@@ -35,10 +35,7 @@ export class PasteWindowService {
     const hwnd = await invoke<number>('get_foreground_window');
     this.pasteDataService.setPasteTargetWindowHwnd(hwnd);
 
-
-
     const size = await this.pasteWindow.outerSize();
-
     const position = await this.getWindowPosition(size);
 
     await this.pasteWindow.setPosition(position);

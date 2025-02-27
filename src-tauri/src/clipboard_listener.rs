@@ -1,7 +1,7 @@
 use clipboard_win::raw::{close, format_name_big, open, EnumFormats};
 use std::collections::HashMap;
 use std::sync::OnceLock;
-use tauri::{App, AppHandle, Emitter, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, AppHandle, Emitter, Url, WebviewUrl, WebviewWindowBuilder};
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::System::DataExchange::AddClipboardFormatListener;
 use windows::Win32::UI::WindowsAndMessaging::{
@@ -16,18 +16,19 @@ pub fn clipboard_listener(app: &mut App) -> Result<(), Box<dyn std::error::Error
   let wind_builder = WebviewWindowBuilder::new(
     app,
     "hidden-window-for-clipboard-listener",
-    WebviewUrl::default(),
+    // We need that app://empty to prevent useless bootstrapping of Angular app
+    WebviewUrl::CustomProtocol(Url::parse("app://empty").unwrap()),
   );
   let wind = wind_builder.visible(false).build().unwrap();
   let hwnd = wind.hwnd().unwrap();
   let hwnd = HWND(hwnd.0);
 
   unsafe {
-    AddClipboardFormatListener(hwnd).expect("add failed");
+    AddClipboardFormatListener(hwnd).expect("failed to add clipboard format listener");
 
     let prev_proc = SetWindowLongPtrW(hwnd, GWLP_WNDPROC, wnd_proc as _);
     if prev_proc == 0 {
-      eprintln!("Failed to set window procedure.");
+      panic!("Failed to set window procedure.");
     }
   }
 
