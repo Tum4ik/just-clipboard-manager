@@ -5,6 +5,11 @@ p-menubar {
 }
 
 p-button {
+  &.close-button {
+    --p-button-text-primary-hover-background: var(--p-button-text-danger-active-background);
+    --p-button-text-primary-active-background: var(--p-button-text-danger-active-background);
+  }
+
   svg {
     path {
       fill: var(--p-button-text-secondary-color);
