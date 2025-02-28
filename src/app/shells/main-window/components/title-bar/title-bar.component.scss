@@ -1,0 +1,13 @@
+p-menubar {
+  --p-menubar-background: transparent;
+  --p-button-border-radius: 0;
+  --p-menubar-padding: 0;
+}
+
+p-button {
+  svg {
+    path {
+      fill: var(--p-button-text-secondary-color);
+    }
+  }
+}

@@ -35,6 +35,7 @@ pub fn run() {
       sentry_commands::sentry_capture_info,
       sentry_commands::sentry_capture_warning,
       sentry_commands::sentry_capture_error,
+      sentry_commands::sentry_capture_fatal,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

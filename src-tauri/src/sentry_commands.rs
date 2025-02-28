@@ -24,3 +24,12 @@ pub fn sentry_capture_error(message: &str) {
   }
   sentry::capture_message(message, sentry::Level::Error);
 }
+
+#[tauri::command]
+pub fn sentry_capture_fatal(message: &str) {
+  #[cfg(dev)]
+  {
+    log::error!("{message}");
+  }
+  sentry::capture_message(message, sentry::Level::Fatal);
+}
