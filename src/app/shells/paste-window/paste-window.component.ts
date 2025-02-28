@@ -64,7 +64,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
             const windowHeight = this.rootElement().nativeElement.clientHeight;
             const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
             const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
-            this.scrollableAreaHeight = `${windowHeight - searchInputHeight - topBottomMargins}px`;
+            this.scrollableAreaHeight = `${windowHeight - searchInputHeight - 2 * topBottomMargins}px`;
           }
         }
       });

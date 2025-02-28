@@ -1,8 +1,16 @@
-<p-menubar data-tauri-drag-region>
+<p-menubar #titleBar [style]="{ 'border-width': '0' }">
   <ng-template #start>
 
   </ng-template>
   <ng-template #end>
-    <p-button>Close</p-button>
+    <p-button size="small">
+      <span class="material-symbols-rounded">minimize</span>
+    </p-button>
+    <p-button size="small">
+      <span class="material-symbols-rounded">square</span>
+    </p-button>
+    <p-button size="small">
+      <span class="material-symbols-rounded">close</span>
+    </p-button>
   </ng-template>
 </p-menubar>

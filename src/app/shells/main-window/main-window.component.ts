@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2, viewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Menubar } from 'primeng/menubar';
 
@@ -11,10 +11,16 @@ import { Menubar } from 'primeng/menubar';
     Button
   ]
 })
-export class MainWindowComponent {
+export class MainWindowComponent implements AfterViewInit {
   constructor(
+    private readonly renderer: Renderer2
+  ) {
+  }
 
-  ) { }
+  private readonly titleBar = viewChild.required<unknown, ElementRef>('titleBar', { read: ElementRef });
 
-
+  ngAfterViewInit(): void {
+    const menubarContent = this.titleBar().nativeElement.querySelector('.p-menubar');
+    this.renderer.setAttribute(menubarContent, 'data-tauri-drag-region', '');
+  }
 }
