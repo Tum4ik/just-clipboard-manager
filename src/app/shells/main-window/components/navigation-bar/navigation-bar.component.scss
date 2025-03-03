@@ -1,0 +1,38 @@
+p-menu {
+  --p-menu-background: transparent;
+  --p-menu-border-color: transparent;
+}
+
+a.navigation-item {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  min-width: 64px;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  gap: 4px;
+  position: relative;
+
+  .selection-marker {
+    visibility: collapse;
+    position: absolute;
+    left: 0;
+    background-color: var(--p-primary-color);
+    width: 4px;
+    height: 48px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  &.selected {
+    .selection-marker {
+      visibility: visible;
+    }
+  }
+
+  .label {
+    font-size: 10px;
+  }
+}

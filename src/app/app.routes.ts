@@ -30,5 +30,15 @@ export const routes: Routes = [
   {
     path: 'main-window',
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
+    children: [
+      {
+        path: 'settings',
+        loadComponent: () => import('./shells/main-window/components/navigation-view/navigation-view.component').then(c => c.NavigationViewComponent)
+      },
+      {
+        path: 'plugins',
+        loadComponent: () => import('./shells/main-window/components/navigation-view/navigation-view.component').then(c => c.NavigationViewComponent)
+      }
+    ]
   }
 ];

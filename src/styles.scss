@@ -41,3 +41,47 @@ jcm-clip-item {
     }
   }
 }
+
+jcm-navigation-bar {
+  p-menu {
+    .p-menu {
+      height: 100%;
+      min-width: unset;
+    }
+
+    ul.p-menu-list {
+      height: 100%;
+      padding-top: 0;
+
+      li:last-child {
+        margin-top: auto;
+      }
+    }
+  }
+
+  /* p-dock {
+    .p-dock-list-container {
+      height: 100%;
+      padding-top: 0;
+    }
+
+    li {
+      // background-color: red;
+    }
+
+    li:last-child {
+      margin-top: auto;
+    }
+
+    a.p-dock-item-link {
+      text-decoration: none;
+      color: inherit;
+      border-radius: var(--p-dock-item-border-radius);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--p-button-text-primary-hover-background);
+      }
+    }
+  } */
+}

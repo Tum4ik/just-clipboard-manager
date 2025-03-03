@@ -111,7 +111,7 @@ pub fn open_main_window(app: tauri::AppHandle, section: Option<&str>) {
       });
     }
     None => {
-      // sentry report
+      sentry::capture_message("Config for main window is not found", sentry::Level::Fatal);
     }
   }
 }

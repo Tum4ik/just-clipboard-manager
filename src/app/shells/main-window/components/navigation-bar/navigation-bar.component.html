@@ -1,0 +1,11 @@
+<p-menu [model]="navigationItems">
+  <ng-template #item let-item>
+    <a class="navigation-item"
+       [routerLink]="item.routerLink"
+       routerLinkActive="selected">
+      <div class="selection-marker"></div>
+      <div class="material-symbols-rounded">{{ item.icon }}</div>
+      <div class="label">{{ item.label | translate }}</div>
+    </a>
+  </ng-template>
+</p-menu>
