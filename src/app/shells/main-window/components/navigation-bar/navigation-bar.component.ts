@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
+import { Ripple } from 'primeng/ripple';
 
 @Component({
   selector: 'jcm-navigation-bar',
@@ -10,6 +11,7 @@ import { Menu } from 'primeng/menu';
   styleUrl: './navigation-bar.component.scss',
   imports: [
     Menu,
+    Ripple,
     RouterLink,
     RouterLinkActive,
     TranslatePipe
