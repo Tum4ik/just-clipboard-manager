@@ -33,7 +33,9 @@ export const routes: Routes = [
     children: [
       {
         path: 'settings',
-        loadComponent: () => import('./shells/main-window/components/navigation-view/navigation-view.component').then(c => c.NavigationViewComponent)
+        loadComponent: () =>
+          import('./shells/main-window/components/settings-navigation-view/settings-navigation-view.component')
+            .then(c => c.SettingsNavigationViewComponent)
       },
       {
         path: 'plugins',

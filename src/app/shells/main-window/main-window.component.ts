@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Panel } from 'primeng/panel';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { TitleBarComponent } from './components/title-bar/title-bar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'jcm-main-window',
@@ -10,7 +11,8 @@ import { TitleBarComponent } from './components/title-bar/title-bar.component';
   imports: [
     TitleBarComponent,
     NavigationBarComponent,
-    Panel
+    Panel,
+    RouterOutlet
   ]
 })
 export class MainWindowComponent {
