@@ -14,11 +14,11 @@ export const routes: Routes = [
     path: 'paste-window',
     loadComponent: () => import('./shells/paste-window/paste-window.component').then(c => c.PasteWindowComponent),
     providers: [
-      ClipboardListener,
       AppTray,
-      PasteDataService,
+      ClipboardListener,
       GlobalShortcutsService,
       PasteWindowService,
+      PasteDataService,
     ],
     resolve: {
       trayIcon: trayIconResolver,
@@ -39,7 +39,9 @@ export const routes: Routes = [
       },
       {
         path: 'plugins',
-        loadComponent: () => import('./shells/main-window/components/navigation-view/navigation-view.component').then(c => c.NavigationViewComponent)
+        loadComponent: () =>
+          import('./shells/main-window/components/plugins-navigation-view/plugins-navigation-view.component')
+            .then(c => c.PluginsNavigationViewComponent)
       }
     ]
   }
