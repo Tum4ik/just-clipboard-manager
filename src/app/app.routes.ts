@@ -35,7 +35,33 @@ export const routes: Routes = [
         path: 'settings',
         loadComponent: () =>
           import('./shells/main-window/components/settings-navigation-view/settings-navigation-view.component')
-            .then(c => c.SettingsNavigationViewComponent)
+            .then(c => c.SettingsNavigationViewComponent),
+        children: [
+          {
+            path: 'general',
+            loadComponent: () =>
+              import('./shells/main-window/components/settings-navigation-view/components/general-settings/general-settings.component')
+                .then(c => c.GeneralSettingsComponent)
+          },
+          {
+            path: 'interface',
+            loadComponent: () =>
+              import('./shells/main-window/components/settings-navigation-view/components/interface-settings/interface-settings.component')
+                .then(c => c.InterfaceSettingsComponent)
+          },
+          {
+            path: 'paste-window',
+            loadComponent: () =>
+              import('./shells/main-window/components/settings-navigation-view/components/paste-window-settings/paste-window-settings.component')
+                .then(c => c.PasteWindowSettingsComponent)
+          },
+          {
+            path: 'hot-keys',
+            loadComponent: () =>
+              import('./shells/main-window/components/settings-navigation-view/components/hot-keys-settings/hot-keys-settings.component')
+                .then(c => c.HotKeysSettingsComponent)
+          }
+        ]
       },
       {
         path: 'plugins',

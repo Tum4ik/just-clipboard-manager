@@ -6,6 +6,7 @@ body {
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
   margin: 0;
   padding: 0;
 }
@@ -57,5 +58,20 @@ jcm-navigation-bar {
         margin-top: auto;
       }
     }
+  }
+}
+
+jcm-navigation-view {
+  p-menu {
+    .p-menu {
+      height: 100%;
+      min-width: unset;
+    }
+  }
+}
+
+p-panel {
+  .p-panel-content {
+    height: 100%;
   }
 }

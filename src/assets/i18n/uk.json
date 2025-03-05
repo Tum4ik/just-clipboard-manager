@@ -1,5 +1,9 @@
 {
   "settings": "Налаштування",
+  "settings.general": "Загальні",
+  "settings.interface": "Інтерфейс",
+  "settings.paste-window": "Вікно вставки",
+  "settings.hot-keys": "Гарячі клавіші",
   "about": "Про програму",
   "language": "Мова",
   "exit": "Вихід",

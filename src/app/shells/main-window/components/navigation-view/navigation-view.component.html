@@ -1,3 +1,24 @@
-<p-menu [model]="items()">
-
-</p-menu>
+<div class="root">
+  <p-menu [model]="items()"
+          [style]="{
+            'border-top-right-radius': '0',
+            'border-bottom-right-radius': '0',
+            'border-top-width': '0',
+            'border-bottom-width': '0',
+            'border-left-width': '0',
+          }">
+    <ng-template #item let-item>
+      <a #anchor
+         class="navigation-item"
+         pRipple
+         [routerLink]="item.routerLink"
+         routerLinkActive="selected"
+         (click)="navigationItemClicked(anchor.href)">
+        <!-- <div class="selection-marker"></div> -->
+        <span class="material-symbols-rounded">{{ item.icon }}</span>
+        <span class="label">{{ item.label | translate }}</span>
+      </a>
+    </ng-template>
+  </p-menu>
+  <router-outlet />
+</div>

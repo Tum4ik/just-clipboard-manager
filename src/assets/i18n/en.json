@@ -1,5 +1,9 @@
 {
   "settings": "Settings",
+  "settings.general": "General",
+  "settings.interface": "Interface",
+  "settings.paste-window": "Paste window",
+  "settings.hot-keys": "Hot keys",
   "about": "About",
   "language": "Language",
   "exit": "Exit",

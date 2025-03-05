@@ -1,5 +1,7 @@
 use clipboard_win::raw::{close, get, open, set, size};
 use std::ffi::c_void;
+use std::path::PathBuf;
+use tauri::WebviewUrl;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
 use windows::Win32::UI::Input::KeyboardAndMouse::{
@@ -102,7 +104,11 @@ pub fn open_main_window(app: tauri::AppHandle, section: Option<&str>) {
     .find(|c| c.label == "main-window")
     .cloned()
   {
-    Some(config) => {
+    Some(mut config) => {
+      if section.is_some() {
+        let new_url = config.url.to_string() + "/" + section.unwrap();
+        config.url = WebviewUrl::App(PathBuf::from(new_url));
+      }
       std::thread::spawn(move || {
         tauri::WebviewWindowBuilder::from_config(&handle, &config)
           .unwrap()

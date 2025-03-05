@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  height: 100%;
+}
+
+a.navigation-item {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 8px 16px 8px 8px;
+  gap: 16px;
+  position: relative;
+  border-radius: inherit;
+  cursor: pointer;
+
+  &.selected {
+    background: var(--p-highlight-background);
+
+    .material-symbols-rounded {
+      color: var(--p-primary-color);
+    }
+  }
+
+  &:active {
+    background-color: var(--p-button-text-primary-active-background);
+  }
+
+  .material-symbols-rounded {
+    font-size: 20px;
+  }
+}

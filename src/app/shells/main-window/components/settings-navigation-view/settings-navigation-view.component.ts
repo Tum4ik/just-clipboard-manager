@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { OnRouterAttached } from '../../../../router/notifying-router-outlet';
 import { NavigationViewComponent } from '../navigation-view/navigation-view.component';
 
 @Component({
@@ -10,19 +12,41 @@ import { NavigationViewComponent } from '../navigation-view/navigation-view.comp
     NavigationViewComponent
   ]
 })
-export class SettingsNavigationViewComponent {
+export class SettingsNavigationViewComponent implements OnRouterAttached {
+  constructor(private readonly router: Router) { }
+
+  private activatedHref?: string;
+
   items: MenuItem[] = [
     {
-      label: 'general',
+      label: 'settings.general',
+      icon: 'tune',
+      routerLink: 'general'
     },
     {
-      label: 'interface',
+      label: 'settings.interface',
+      icon: 'display_settings',
+      routerLink: 'interface'
     },
     {
-      label: 'paste-window',
+      label: 'settings.paste-window',
+      icon: 'wysiwyg',
+      routerLink: 'paste-window'
     },
     {
-      label: 'hot-keys',
+      label: 'settings.hot-keys',
+      icon: 'keyboard',
+      routerLink: 'hot-keys'
     }
   ];
+
+  onRouterAttached(): void {
+    if (this.activatedHref) {
+      this.router.navigateByUrl(this.activatedHref);
+    }
+  }
+
+  onHrefActivated(href: string) {
+    this.activatedHref = href;
+  }
 }

@@ -98,6 +98,6 @@ export class AppTray {
 
 
   private async showMainWindowAsync() {
-    await invoke('open_main_window');
+    await invoke('open_main_window', { section: 'settings' });
   }
 }
