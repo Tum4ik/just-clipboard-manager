@@ -19,12 +19,18 @@ import { Ripple } from 'primeng/ripple';
   ]
 })
 export class NavigationViewComponent {
+  private urlToPathname: Map<string, string> = new Map();
+
   readonly items = input.required<MenuItem[]>();
   readonly hrefActivated = output<string>();
 
   navigationItemClicked(url: string) {
-    // todo: cache "url -> href"
-    const href = new URL(url).pathname;
+    let href = this.urlToPathname.get(url);
+    if (!href) {
+      href = new URL(url).pathname;
+      this.urlToPathname.set(url, href);
+    }
+
     this.hrefActivated.emit(href);
   }
 }

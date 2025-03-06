@@ -68,6 +68,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./shells/main-window/components/plugins-navigation-view/plugins-navigation-view.component')
             .then(c => c.PluginsNavigationViewComponent)
+      },
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./shells/main-window/components/about-view/about-view.component')
+            .then(c => c.AboutViewComponent)
       }
     ]
   }

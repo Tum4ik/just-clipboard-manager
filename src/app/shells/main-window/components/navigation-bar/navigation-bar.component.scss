@@ -20,8 +20,8 @@ a.navigation-item {
   &.selected {
     background: var(--p-highlight-background);
 
-    .selection-marker {
-      visibility: visible;
+    .material-symbols-rounded {
+      color: var(--p-primary-color);
     }
   }
 
