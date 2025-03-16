@@ -12,33 +12,20 @@ export class SettingsService {
   private readonly store: LazyStore;
 
 
-  private language?: string;
-
   async getLanguageAsync(): Promise<string> {
-    if (!this.language) {
-      let language = await this.store.get<string>(LANGUAGE);
-      if (!language) {
-        language = 'en';
-        await this.saveLanguageAsync(language);
-      }
-      this.language = language;
-    }
-
-    return this.language;
+    return await this.store.get<string>(LANGUAGE) ?? 'en';
   }
 
   async setLanguageAsync(language: string): Promise<void> {
-    if (this.language === language) {
-      return;
-    }
-
-    this.language = language;
-    await this.saveLanguageAsync(language);
-  }
-
-
-  private async saveLanguageAsync(language: string): Promise<void> {
     await this.store.set(LANGUAGE, language);
     await this.store.save();
+  }
+
+  onLanguageChanged(cb: (value: string | undefined) => void): Promise<() => void> {
+    return this.store.onChange<string>((k, v) => {
+      if (k === LANGUAGE) {
+        cb(v);
+      }
+    });
   }
 }

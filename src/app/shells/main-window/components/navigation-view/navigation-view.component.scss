@@ -1,6 +1,11 @@
 .root {
   display: flex;
   height: 100%;
+
+  .content {
+    width: 100%;
+    padding: 4px;
+  }
 }
 
 a.navigation-item {

@@ -10,6 +10,7 @@ import { routes } from "./app.routes";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
+import { registerSvgIcons } from "./initializers/register-svg-icons";
 import { AppRouteReuseStrategy } from "./router/app-route-reuse-strategy";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
@@ -37,11 +38,16 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideAppInitializer(async () => {
+      registerSvgIcons();
+
       const settings = inject(SettingsService);
       const translate = inject(TranslateService);
       const pluginsService = inject(PluginsService);
 
+      translate.addLangs(['en', 'uk']);
       await firstValueFrom(translate.use(await settings.getLanguageAsync()));
+      await settings.onLanguageChanged(l => translate.use(l ?? 'en'));
+
       await pluginsService.initAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },

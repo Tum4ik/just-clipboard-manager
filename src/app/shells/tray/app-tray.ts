@@ -7,6 +7,7 @@ import { CheckMenuItem, Menu, MenuItem, Submenu } from "@tauri-apps/api/menu";
 import { TrayIcon } from '@tauri-apps/api/tray';
 import { exit } from '@tauri-apps/plugin-process';
 import { firstValueFrom } from "rxjs";
+import { LANGUAGE_INFO } from "../../core/constants/language-info";
 import { SettingsService } from "../../core/services/settings.service";
 
 @Injectable()
@@ -31,27 +32,28 @@ export class AppTray {
     this.aboutMenuItem = await MenuItem.new({
       text: 'About',
     });
+
+    const languageItems: CheckMenuItem[] = [];
+    for (const lang of this.translateService.getLangs()) {
+      const langItem = await CheckMenuItem.new({
+        id: lang,
+        text: LANGUAGE_INFO[lang].nativeName,
+        action: () => this.settingsService.setLanguageAsync(lang)
+      });
+      languageItems.push(langItem);
+    }
     this.languageMenuItem = await Submenu.new({
       text: 'Language',
-      items: [
-        await CheckMenuItem.new({
-          id: 'en',
-          text: 'English (United States)',
-          action: () => this.setLanguageAsync('en')
-        }),
-        await CheckMenuItem.new({
-          id: 'uk',
-          text: 'українська (Україна)',
-          action: () => this.setLanguageAsync('uk')
-        }),
-      ]
+      items: languageItems
     });
+
     this.exitMenuItem = await MenuItem.new({
       text: 'Exit',
       action: () => exit()
     });
 
-    this.updateTranslations();
+    this.translateService.onLangChange.subscribe(() => this.updateTranslationsAsync());
+    await this.updateTranslationsAsync();
 
     const menu = await Menu.new({
       items: [
@@ -75,22 +77,17 @@ export class AppTray {
   }
 
 
-  private async setLanguageAsync(lang: string) {
-    await firstValueFrom(this.translateService.use(lang));
-    await this.settingsService.setLanguageAsync(lang);
-    this.updateTranslations();
-  }
-
-
-  private updateTranslations() {
-    this.translateService.get(_('settings')).subscribe(text => this.settingsMenuItem?.setText(text));
-    this.translateService.get(_('about')).subscribe(text => this.aboutMenuItem?.setText(text));
-    this.translateService.get(_('language')).subscribe(text => this.languageMenuItem?.setText(text));
-    this.translateService.get(_('exit')).subscribe(text => this.exitMenuItem?.setText(text));
+  private async updateTranslationsAsync() {
+    this.settingsMenuItem?.setText(await firstValueFrom(this.translateService.get(_('settings'))));
+    this.aboutMenuItem?.setText(await firstValueFrom(this.translateService.get(_('about'))));
+    this.languageMenuItem?.setText(await firstValueFrom(this.translateService.get(_('language'))));
+    this.exitMenuItem?.setText(await firstValueFrom(this.translateService.get(_('exit'))));
     this.languageMenuItem?.items().then(items => {
       for (const item of items) {
         if (item instanceof CheckMenuItem) {
-          item.setChecked(item.id === this.translateService.currentLang);
+          const checked = item.id === this.translateService.currentLang;
+          item.setChecked(checked);
+          item.setEnabled(!checked);
         }
       }
     });

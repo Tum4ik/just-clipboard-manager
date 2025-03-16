@@ -2,6 +2,7 @@
   "settings": "Settings",
   "settings.general": "General",
   "settings.interface": "Interface",
+  "language-setting-descriptions": "The language of the user interface",
   "settings.paste-window": "Paste window",
   "settings.hot-keys": "Hot keys",
   "about": "About",

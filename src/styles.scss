@@ -9,6 +9,7 @@ body {
   font-size: 14px;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 @font-face {
@@ -65,13 +66,23 @@ jcm-navigation-view {
   p-menu {
     .p-menu {
       height: 100%;
-      min-width: unset;
     }
   }
 }
 
-p-panel {
-  .p-panel-content {
-    height: 100%;
+jcm-main-window {
+  p-panel {
+    .p-panel-content-container {
+      width: 100%;
+
+      .p-panel-content {
+        height: 100%;
+      }
+    }
+
+    p-card {
+      --p-card-background: var(--p-surface-800);
+      --p-card-border-radius: var(--p-content-border-radius);
+    }
   }
 }
