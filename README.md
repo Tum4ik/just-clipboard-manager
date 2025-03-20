@@ -1,7 +1,24 @@
-# Tauri + Angular
+<h1 align="center">
+  <img src="src-tauri/icons/icon.ico" alt="Just Clipboard Manager" style="width:128px;" />
+  <br/>
+  Just Clipboard Manager
+</h1>
+<h1 align="center">
+  <img src=".attachments/paste-window-light.png" alt="Paste Window Light" width="400" />
+  <img src=".attachments/paste-window-dark.png" alt="Paste Window Dark" width="400" />
+</h1>
+<h1 align="center">
 
-This template should help get you started developing with Tauri and Angular.
+  [![License: MIT](https://img.shields.io/github/license/Tum4ik/just-clipboard-manager)](LICENSE)
+  [![Platform: Windows](https://img.shields.io/badge/platform-windows-%23373737)]()
+  [![Latest release](https://img.shields.io/github/v/release/Tum4ik/just-clipboard-manager)](https://github.com/Tum4ik/just-clipboard-manager/releases)
 
-## Recommended IDE Setup
+  [![Gated application build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
+  [![Gated plugin dev kit build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml)
+</h1>
 
-[VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) + [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template).
+<p align="right">
+  <a href="https://www.buymeacoffee.com/tum4ik">
+    <img src=".attachments/bmc-button.svg" alt="Buy me a coffee" width="195" />
+  </a>
+</p>
