@@ -1,13 +1,18 @@
 {
-  "settings": "Settings",
-  "settings.general": "General",
-  "settings.interface": "Interface",
-  "language-setting-descriptions": "The language of the user interface",
-  "settings.paste-window": "Paste window",
-  "settings.hot-keys": "Hot keys",
   "about": "About",
   "language": "Language",
   "exit": "Exit",
   "search": "Search",
-  "plugins": "Plugins"
+  "plugins": "Plugins",
+  "settings": "Settings",
+  "settings.general": "General",
+  "settings.interface": "Interface",
+  "settings.paste-window": "Paste window",
+  "settings.hot-keys": "Hot keys",
+  "language-setting-descriptions": "The language of the user interface",
+  "theme-mode": "Theme mode",
+  "theme-mode.system": "System",
+  "theme-mode.light": "Light",
+  "theme-mode.dark": "Dark",
+  "theme-mode-setting-description": "The visual appearance of the user interface"
 }

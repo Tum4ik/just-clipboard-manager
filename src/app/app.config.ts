@@ -24,7 +24,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: AuraBluePreset
+        preset: AuraBluePreset,
+        options: {
+          darkModeSelector: 'system'
+        }
       },
       ripple: true
     }),

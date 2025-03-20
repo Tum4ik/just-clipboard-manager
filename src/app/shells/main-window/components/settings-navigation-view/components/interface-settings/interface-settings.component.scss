@@ -8,7 +8,8 @@
   display: flex;
   align-items: center;
 
-  mat-icon.option-icon {
+  mat-icon.option-icon,
+  .material-symbols-rounded {
     margin-right: 12px;
   }
 }

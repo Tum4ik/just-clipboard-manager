@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { LazyStore } from '@tauri-apps/plugin-store';
 
 const LANGUAGE = 'language';
+const THEME_MODE = 'theme-mode';
+const THEME_PRESET = 'theme-preset';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -28,4 +30,25 @@ export class SettingsService {
       }
     });
   }
+
+
+  async getThemeModeAsync(): Promise<ThemeMode> {
+    return await this.store.get<ThemeMode>(THEME_MODE) ?? 'system';
+  }
+
+  async setThemeModeAsync(themeMode: ThemeMode): Promise<void> {
+    await this.store.set(THEME_MODE, themeMode);
+    await this.store.save();
+  }
+
+  onThemeModeChanged(cb: (value: ThemeMode | undefined) => void): Promise<() => void> {
+    return this.store.onChange<ThemeMode>((k, v) => {
+      if (k === THEME_MODE) {
+        cb(v);
+      }
+    });
+  }
 }
+
+
+export type ThemeMode = 'system' | 'light' | 'dark';

@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { Subscription } from 'rxjs';
 import { LANGUAGE_INFO } from '../../../../../../core/constants/language-info';
-import { SettingsService } from '../../../../../../core/services/settings.service';
+import { SettingsService, ThemeMode } from '../../../../../../core/services/settings.service';
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
 
 @Component({
@@ -34,11 +34,15 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   readonly languages: LanguageItem[];
   selectedLanguage: LanguageItem | undefined;
 
-  ngOnInit(): void {
+  readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
+  selectedThemeMode: ThemeMode | undefined;
+
+  async ngOnInit(): Promise<void> {
     this.selectedLanguage = this.languages.find(l => l.code === this.translateService.currentLang);
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
       this.selectedLanguage = this.languages.find(l => l.code === e.lang);
     });
+    this.selectedThemeMode = await this.settingsService.getThemeModeAsync();
   }
 
   ngOnDestroy(): void {
@@ -48,6 +52,12 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   onLanguageChanged(e: SelectChangeEvent) {
     if (this.selectedLanguage?.code) {
       this.settingsService.setLanguageAsync(this.selectedLanguage.code);
+    }
+  }
+
+  onThemeModeChanged(e: SelectChangeEvent) {
+    if (this.selectedThemeMode) {
+      this.settingsService.setThemeModeAsync(this.selectedThemeMode);
     }
   }
 }
