@@ -1,0 +1,19 @@
+p-card {
+  --p-card-body-padding: 0;
+  --p-card-border-radius: var(--p-content-border-radius);
+}
+
+p-menubar {
+  --p-menubar-background: transparent;
+  --p-menubar-gap: 12px;
+}
+
+.title-description {
+  display: flex;
+  flex-direction: column;
+  margin-left: 14px;
+
+  .description {
+    font-size: 12px;
+  }
+}

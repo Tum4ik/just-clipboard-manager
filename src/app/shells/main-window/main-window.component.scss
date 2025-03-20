@@ -1,0 +1,28 @@
+.root {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  height: 100%;
+
+  jcm-title-bar {
+    grid-row: 1;
+    grid-column: span 2;
+  }
+
+  jcm-navigation-bar {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .content {
+    grid-row: 2;
+    grid-column: 2;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+
+  p-panel {
+    --p-panel-header-padding: 0;
+    --p-panel-content-padding: 0;
+  }
+}

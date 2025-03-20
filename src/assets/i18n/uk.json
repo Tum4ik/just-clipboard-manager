@@ -1,0 +1,18 @@
+{
+  "about": "Про програму",
+  "language": "Мова",
+  "exit": "Вихід",
+  "search": "Пошук",
+  "plugins": "Плагіни",
+  "settings": "Налаштування",
+  "settings.general": "Загальні",
+  "settings.interface": "Інтерфейс",
+  "settings.paste-window": "Вікно вставки",
+  "settings.hot-keys": "Гарячі клавіші",
+  "language-setting-descriptions": "Мова Інтерфейсу користувача",
+  "theme-mode": "Режим теми",
+  "theme-mode.system": "Системний",
+  "theme-mode.light": "Світлий",
+  "theme-mode.dark": "Темний",
+  "theme-mode-setting-description": "Зовнішній вигляд інтерфейсу користувача"
+}

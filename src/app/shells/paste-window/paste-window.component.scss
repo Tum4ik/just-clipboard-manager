@@ -1,0 +1,9 @@
+.root {
+  height: 100%;
+  padding: 4px;
+
+  p-panel {
+    --p-panel-header-padding: 0;
+    --p-panel-content-padding: 0;
+  }
+}

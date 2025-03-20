@@ -1,0 +1,37 @@
+<div class="root">
+  <jcm-settings-card icon="language"
+                     title="{{ 'language' | translate }}"
+                     description="{{ 'language-setting-descriptions' | translate }}">
+    <p-select [options]="languages"
+              [(ngModel)]="selectedLanguage"
+              (onChange)="onLanguageChanged($event)">
+      <ng-template #item #selectedItem let-item>
+        <div class="option-root">
+          <mat-icon class="option-icon" svgIcon="flags:{{ item.code }}" />
+          <span>{{ item.nativeName }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+
+  </jcm-settings-card>
+  <jcm-settings-card icon="routine"
+                     title="{{ 'theme-mode' | translate }}"
+                     description="{{ 'theme-mode-setting-description' | translate }}">
+    <p-select [options]="themeModes"
+              [(ngModel)]="selectedThemeMode"
+              (onChange)="onThemeModeChanged($event)">
+      <ng-template #item #selectedItem let-item>
+        <div class="option-root">
+          <span class="material-symbols-rounded">
+            @switch (item) {
+            @case ('system') { computer }
+            @case ('light') { light_mode }
+            @case ('dark') { dark_mode }
+            }
+          </span>
+          <span>{{ 'theme-mode.' + item | translate }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+  </jcm-settings-card>
+</div>

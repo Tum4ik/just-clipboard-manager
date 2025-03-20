@@ -1,0 +1,14 @@
+<p-card [style]="cardStyle">
+  <p-menubar [style]="{ 'border-width': '0' }">
+    <ng-template #start>
+      <span class="material-symbols-rounded">{{ icon() }}</span>
+      <div class="title-description">
+        <div class="title">{{ title() }}</div>
+        <div class="description">{{ description() }}</div>
+      </div>
+    </ng-template>
+    <ng-template #end>
+      <ng-content />
+    </ng-template>
+  </p-menubar>
+</p-card>

@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="Tum4ik.JustClipboardManager/Resources/Icons/tray.ico" alt="Just Clipboard Manager" style="width:128px;" />
+  <img src="src-tauri/icons/icon.ico" alt="Just Clipboard Manager" style="width:128px;" />
   <br/>
   Just Clipboard Manager
 </h1>
@@ -15,14 +15,6 @@
 
   [![Gated application build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
   [![Gated plugin dev kit build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml)
-</h1>
-
-<h1 align="center">
-
-  [![Coverage update status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/codecov-update.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/codecov-update.yml)
-  [![codecov](https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graph/badge.svg?token=ISPY8ADZZ8)](https://codecov.io/gh/Tum4ik/just-clipboard-manager)
-  <br/>
-  <img src="https://codecov.io/gh/Tum4ik/just-clipboard-manager/branch/main/graphs/sunburst.svg?token=ISPY8ADZZ8" />
 </h1>
 
 <p align="right">

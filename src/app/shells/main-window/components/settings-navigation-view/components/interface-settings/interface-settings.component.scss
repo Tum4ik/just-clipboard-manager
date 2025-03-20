@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.option-root {
+  display: flex;
+  align-items: center;
+
+  mat-icon.option-icon,
+  .material-symbols-rounded {
+    margin-right: 12px;
+  }
+}

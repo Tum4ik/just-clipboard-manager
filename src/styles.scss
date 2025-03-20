@@ -1,0 +1,83 @@
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/assets/fonts/google-material-icons.woff2) format('woff2');
+}
+
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+jcm-clip-item {
+  p-button {
+    button.p-button {
+      width: 100%;
+      justify-content: left;
+    }
+  }
+}
+
+jcm-navigation-bar {
+  p-menu {
+    .p-menu {
+      height: 100%;
+      min-width: unset;
+    }
+
+    ul.p-menu-list {
+      height: 100%;
+      padding-top: 0;
+
+      li:last-child {
+        margin-top: auto;
+      }
+    }
+  }
+}
+
+jcm-navigation-view {
+  p-menu {
+    .p-menu {
+      height: 100%;
+    }
+  }
+}
+
+jcm-main-window {
+  p-panel {
+    .p-panel-content-container {
+      width: 100%;
+
+      .p-panel-content {
+        height: 100%;
+      }
+    }
+  }
+}
