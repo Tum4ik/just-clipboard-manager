@@ -2,7 +2,7 @@ import { ComponentRef, Directive } from "@angular/core";
 import { ActivatedRoute, RouterOutlet } from "@angular/router";
 
 @Directive({
-  selector: 'notifying-router-outlet'
+  selector: 'jcm-notifying-router-outlet'
 })
 export class NotifyingRouterOutlet extends RouterOutlet {
   override attach(ref: ComponentRef<any>, activatedRoute: ActivatedRoute): void {

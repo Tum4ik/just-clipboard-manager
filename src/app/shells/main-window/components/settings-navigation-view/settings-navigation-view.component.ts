@@ -1,22 +1,12 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { OnRouterAttached } from '../../../../router/notifying-router-outlet';
-import { NavigationViewComponent } from '../navigation-view/navigation-view.component';
+import { NavigationView } from '../navigation-view/navigation-view';
 
 @Component({
   selector: 'jcm-settings-navigation-view',
-  templateUrl: './settings-navigation-view.component.html',
-  styleUrl: './settings-navigation-view.component.scss',
-  imports: [
-    NavigationViewComponent
-  ]
+  template: '',
 })
-export class SettingsNavigationViewComponent implements OnRouterAttached {
-  constructor(private readonly router: Router) { }
-
-  private activatedHref?: string;
-
+export class SettingsNavigationViewComponent extends NavigationView {
   items: MenuItem[] = [
     {
       label: 'settings.general',
@@ -39,14 +29,4 @@ export class SettingsNavigationViewComponent implements OnRouterAttached {
       routerLink: 'hot-keys'
     }
   ];
-
-  onRouterAttached(): void {
-    if (this.activatedHref) {
-      this.router.navigateByUrl(this.activatedHref);
-    }
-  }
-
-  onHrefActivated(href: string) {
-    this.activatedHref = href;
-  }
 }
