@@ -1,28 +1,24 @@
 import { Component, input, OnDestroy, OnInit } from '@angular/core';
 import { Card } from 'primeng/card';
-import { Menubar } from 'primeng/menubar';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '../../../../../../../../core/services/theme.service';
 
 @Component({
-  selector: 'jcm-settings-card',
-  templateUrl: './settings-card.component.html',
-  styleUrl: './settings-card.component.scss',
+  selector: 'jcm-plugin-pipeline-card',
+  templateUrl: './plugin-pipeline-card.component.html',
+  styleUrl: './plugin-pipeline-card.component.scss',
   imports: [
-    Card,
-    Menubar
+    Card
   ]
 })
-export class SettingsCardComponent implements OnInit, OnDestroy {
+export class PluginPipelineCardComponent implements OnInit, OnDestroy {
   constructor(
     private readonly themeService: ThemeService
   ) { }
 
   private themeChangedSubscription?: Subscription;
 
-  readonly icon = input<string>();
   readonly title = input.required<string>();
-  readonly description = input<string>();
 
   surfaceShade = 100;
 

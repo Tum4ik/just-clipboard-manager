@@ -67,7 +67,15 @@ export const routes: Routes = [
         path: 'plugins',
         loadComponent: () =>
           import('./shells/main-window/components/plugins-navigation-view/plugins-navigation-view.component')
-            .then(c => c.PluginsNavigationViewComponent)
+            .then(c => c.PluginsNavigationViewComponent),
+        children: [
+          {
+            path: 'pipeline',
+            loadComponent: () =>
+              import('./shells/main-window/components/plugins-navigation-view/components/plugins-pipeline/plugins-pipeline.component')
+                .then(c => c.PluginsPipelineComponent)
+          }
+        ]
       },
       {
         path: 'about',

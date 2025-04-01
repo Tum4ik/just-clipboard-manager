@@ -80,4 +80,12 @@ jcm-main-window {
       }
     }
   }
+
+  jcm-plugins-pipeline {
+    .p-scrollpanel-content-container {
+      max-width: 694px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
 }

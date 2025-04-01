@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 import { NavigationViewComponent } from '../navigation-view/navigation-view.component';
 
 @Component({
@@ -10,5 +11,11 @@ import { NavigationViewComponent } from '../navigation-view/navigation-view.comp
   ]
 })
 export class PluginsNavigationViewComponent {
-
+  items: MenuItem[] = [
+    {
+      label: 'data-processing-pipeline',
+      icon: 'move_down',
+      routerLink: 'pipeline'
+    }
+  ];
 }
