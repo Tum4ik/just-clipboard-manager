@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { NavigationViewComponent } from '../navigation-view/navigation-view.component';
+import { NavigationView } from '../navigation-view/navigation-view';
 
 @Component({
   selector: 'jcm-plugins-navigation-view',
-  templateUrl: './plugins-navigation-view.component.html',
-  styleUrl: './plugins-navigation-view.component.scss',
-  imports: [
-    NavigationViewComponent
-  ]
+  template: '',
 })
-export class PluginsNavigationViewComponent {
+export class PluginsNavigationViewComponent extends NavigationView {
   items: MenuItem[] = [
     {
       label: 'data-processing-pipeline',
