@@ -14,5 +14,7 @@
   "theme-mode.system": "Системний",
   "theme-mode.light": "Світлий",
   "theme-mode.dark": "Темний",
-  "theme-mode-setting-description": "Зовнішній вигляд інтерфейсу користувача"
+  "theme-mode-setting-description": "Зовнішній вигляд інтерфейсу користувача",
+  "clipboard-data": "Дані буфера обміну",
+  "data-processing-pipeline": "Конвеєр обробки даних"
 }

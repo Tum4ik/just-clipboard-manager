@@ -14,5 +14,7 @@
   "theme-mode.system": "System",
   "theme-mode.light": "Light",
   "theme-mode.dark": "Dark",
-  "theme-mode-setting-description": "The visual appearance of the user interface"
+  "theme-mode-setting-description": "The visual appearance of the user interface",
+  "clipboard-data": "Clipboard data",
+  "data-processing-pipeline": "Data processing pipeline"
 }
