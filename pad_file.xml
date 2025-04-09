@@ -5,23 +5,23 @@
 		<MASTER_PAD_EDITOR>PADGen 3.1.1.50 http://www.padgen.org</MASTER_PAD_EDITOR>
 		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://pad.asp-software.org</MASTER_PAD_INFO>
 	</MASTER_PAD_VERSION_INFO>
-	<Company_Info>
-		<Company_Name>YT</Company_Name>
+	<COMPANY_INFO>
+		<COMPANY_NAME>Tum4ik</COMPANY_NAME>
 		<Address_1 />
 		<Address_2 />
 		<City_Town />
 		<State_Province />
 		<Zip_Postal_Code />
 		<Country>Ukraine</Country>
-		<Company_WebSite_URL>https://github.com/Tum4ik</Company_WebSite_URL>
-		<Contact_Info>
+		<COMPANY_WEBSITE_URL>https://github.com/Tum4ik</COMPANY_WEBSITE_URL>
+		<CONTACT_INFO>
 			<Author_First_Name>Yevheniy</Author_First_Name>
 			<Author_Last_Name>Tymchishin</Author_Last_Name>
 			<Author_Email>timchishinevgeniy@gmail.com</Author_Email>
 			<Contact_First_Name />
 			<Contact_Last_Name />
-			<Contact_Email>timchishinevgeniy@gmail.com</Contact_Email>
-		</Contact_Info>
+			<CONTACT_EMAIL>timchishinevgeniy@gmail.com</CONTACT_EMAIL>
+		</CONTACT_INFO>
 		<Support_Info>
 			<Sales_Email />
 			<Support_Email />
@@ -31,20 +31,20 @@
 			<General_Phone />
 			<Fax_Phone />
 		</Support_Info>
-	</Company_Info>
-	<Program_Info>
-		<Program_Name>Just Clipboard Manager</Program_Name>
-		<Program_Version>3.2.24317.13</Program_Version>
+	</COMPANY_INFO>
+	<PROGRAM_INFO>
+		<PROGRAM_NAME>Just Clipboard Manager</PROGRAM_NAME>
+		<PROGRAM_VERSION>3.2.24317.13</PROGRAM_VERSION>
 		<Program_Release_Month>11</Program_Release_Month>
 		<Program_Release_Day>12</Program_Release_Day>
 		<Program_Release_Year>2024</Program_Release_Year>
 		<Program_Cost_Dollars />
 		<Program_Cost_Other_Code />
 		<Program_Cost_Other />
-		<Program_Type>Freeware</Program_Type>
+		<PROGRAM_TYPE>Freeware</PROGRAM_TYPE>
 		<Program_Release_Status>New Release</Program_Release_Status>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
-		<Program_OS_Support>Win7 x32,Win7 x64,WinOther</Program_OS_Support>
+		<PROGRAM_OS_SUPPORT>Win7 x32,Win7 x64,Win8 x32,Win8 x64,WinOther</PROGRAM_OS_SUPPORT>
 		<Program_Language>English,Ukrainian</Program_Language>
 		<Program_Change_Info>UI Design (WinUI 3).</Program_Change_Info>
 		<Program_Specific_Category>Utilities</Program_Specific_Category>
@@ -64,32 +64,32 @@
 			<Expire_Day />
 			<Expire_Year />
 		</Expire_Info>
-	</Program_Info>
-	<Program_Descriptions>
-		<English>
-			<Keywords>clipboard, clipboard-manager, just-clipboard-manager, windows-desktop</Keywords>
-			<Char_Desc_45>Yet another clipboard manager for Windows.</Char_Desc_45>
+	</PROGRAM_INFO>
+	<PROGRAM_DESCRIPTIONS>
+		<ENGLISH>
+			<KEYWORDS>clipboard, clipboard-manager, just-clipboard-manager, windows-desktop</KEYWORDS>
+			<CHAR_DESC_45>Yet another clipboard manager for Windows.</CHAR_DESC_45>
 			<Char_Desc_80>Yet another clipboard manager for Windows.</Char_Desc_80>
 			<Char_Desc_250>Yet another clipboard manager for Windows.</Char_Desc_250>
 			<Char_Desc_450>Yet another clipboard manager for Windows.</Char_Desc_450>
 			<Char_Desc_2000>Yet another clipboard manager for Windows.</Char_Desc_2000>
-		</English>
-	</Program_Descriptions>
-	<Web_Info>
-		<Application_URLs>
-			<Application_Info_URL>https://github.com/Tum4ik/just-clipboard-manager#readme</Application_Info_URL>
+		</ENGLISH>
+	</PROGRAM_DESCRIPTIONS>
+	<WEB_INFO>
+		<APPLICATION_URLS>
+			<APPLICATION_INFO_URL>https://github.com/Tum4ik/just-clipboard-manager#readme</APPLICATION_INFO_URL>
 			<Application_Order_URL />
 			<Application_Screenshot_URL>https://github.com/Tum4ik/just-clipboard-manager/blob/main/.attachments/paste-window-light.png</Application_Screenshot_URL>
 			<Application_Icon_URL>https://github.com/Tum4ik/just-clipboard-manager/blob/main/src-tauri/icons/icon.ico</Application_Icon_URL>
 			<Application_XML_File_URL />
-		</Application_URLs>
-		<Download_URLs>
-			<Primary_Download_URL>https://github.com/Tum4ik/just-clipboard-manager/releases/download/3.2.24317.13/JustClipboardManager-3.2.24317.13-x64.exe</Primary_Download_URL>
+		</APPLICATION_URLS>
+		<DOWNLOAD_URLS>
+			<PRIMARY_DOWNLOAD_URL>https://github.com/Tum4ik/just-clipboard-manager/releases/download/3.2.24317.13/JustClipboardManager-3.2.24317.13-x64.exe</Primary_Download_URL>
 			<Secondary_Download_URL>https://github.com/Tum4ik/just-clipboard-manager/releases/download/3.2.24317.13/JustClipboardManager-3.2.24317.13-x86.exe</Secondary_Download_URL>
 			<Additional_Download_URL_1 />
 			<Additional_Download_URL_2 />
-		</Download_URLs>
-	</Web_Info>
+		</DOWNLOAD_URLS>
+	</WEB_INFO>
 	<Permissions>
 		<Distribution_Permissions />
 		<EULA />
