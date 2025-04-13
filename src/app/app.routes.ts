@@ -74,6 +74,12 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./shells/main-window/components/plugins-navigation-view/components/plugins-pipeline/plugins-pipeline.component')
                 .then(c => c.PluginsPipelineComponent)
+          },
+          {
+            path: 'search',
+            loadComponent: () =>
+              import('./shells/main-window/components/plugins-navigation-view/components/search-plugins/search-plugins.component')
+                .then(c => c.SearchPluginsComponent)
           }
         ]
       },

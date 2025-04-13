@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
+import { GithubService } from '../../shells/main-window/services/github.service';
+import { SearchPluginInfo } from '../data/dto/search-plugin-info.dto';
 import { MonitoringService } from './monitoring.service';
 
 @Injectable({ providedIn: 'root' })
 export class PluginsService {
-  constructor(private readonly monitoringService: MonitoringService) {
+  constructor(
+    private readonly monitoringService: MonitoringService,
+    private readonly githubService: GithubService
+  ) {
   }
 
   private _plugins?: Map<string, ClipboardDataPlugin>;
@@ -50,5 +55,20 @@ export class PluginsService {
     }
 
     this._plugins = plugins;
+  }
+
+
+  async searchPluginsAsync(): Promise<SearchPluginInfo[]> {
+    const base64Content = await this.githubService.getPluginsListAsBase64ContentAsync();
+    if (!base64Content) {
+      return [];
+    }
+
+    const jsonString = atob(base64Content);
+    const jsonBytes = Uint8Array.from(jsonString, ch => ch.charCodeAt(0));
+    const decodedJsonString = new TextDecoder().decode(jsonBytes);
+    const jsonObject: SearchPluginInfo[] = JSON.parse(decodedJsonString);
+
+    return jsonObject;
   }
 }

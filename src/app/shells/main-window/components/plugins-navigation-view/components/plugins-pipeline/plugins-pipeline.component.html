@@ -1,16 +1,10 @@
 <div class="root">
-  <div class="header">
+  <div #header class="header">
     <span class="material-symbols-rounded icon">assignment</span>
     {{ 'clipboard-data' | translate }}
   </div>
-  <div class="material-symbols-rounded">arrow_downward</div>
-  <p-scroll-panel [style]="{
-    position: 'absolute',
-    top: '0',
-    width: '100%',
-    height: '100%',
-    'padding-top': '50px'
-  }">
+  <div #arrowIcon class="material-symbols-rounded">arrow_downward</div>
+  <jcm-scroll-view [style]="`height: calc(100% - ${header.clientHeight + arrowIcon.clientHeight + 4}px);`">
     <div cdkDropList>
       <div class="vertical-line"></div>
       <jcm-plugin-pipeline-card cdkDrag title="Files Plugin" />
@@ -25,5 +19,5 @@
       <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
       <jcm-plugin-pipeline-card cdkDrag title="Last Plugin" />
     </div>
-  </p-scroll-panel>
+  </jcm-scroll-view>
 </div>

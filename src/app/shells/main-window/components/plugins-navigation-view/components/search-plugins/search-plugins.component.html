@@ -1,0 +1,22 @@
+<jcm-scroll-view>
+  @for (plugin of plugins; track plugin.id) {
+  <jcm-shaded-card>
+    <ng-template #title>
+      <div class="title">
+        {{ plugin.name}}
+      </div>
+    </ng-template>
+    <ng-template #subtitle>{{ plugin.version }}</ng-template>
+    {{ plugin.description!['en'] }}
+  </jcm-shaded-card>
+  }
+  <jcm-shaded-card>
+    <ng-template #title>
+      <div class="title">
+        Test
+      </div>
+    </ng-template>
+    <ng-template #subtitle>{{ 0.0.0 }}</ng-template>
+    Description
+  </jcm-shaded-card>
+</jcm-scroll-view>

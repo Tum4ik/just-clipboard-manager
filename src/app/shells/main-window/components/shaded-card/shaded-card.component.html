@@ -1,0 +1,14 @@
+<p-card [style]="{ 'background': `var(--p-surface-${surfaceShade}})` }">
+  @if (titleTemplate()){
+  <ng-template #title>
+    <ng-container *ngTemplateOutlet="titleTemplate()!" />
+  </ng-template>
+  }
+  <ng-template #subtitle>
+    <ng-container *ngTemplateOutlet="subtitleTemplate()!" />
+  </ng-template>
+  <ng-content />
+  <ng-template #footer>
+    <ng-container *ngTemplateOutlet="footerTemplate()!" />
+  </ng-template>
+</p-card>

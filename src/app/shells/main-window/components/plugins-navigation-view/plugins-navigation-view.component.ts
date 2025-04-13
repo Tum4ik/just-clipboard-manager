@@ -12,6 +12,11 @@ export class PluginsNavigationViewComponent extends NavigationView {
       label: 'data-processing-pipeline',
       icon: 'move_down',
       routerLink: 'pipeline'
+    },
+    {
+      label: 'search',
+      icon: 'manage_search',
+      routerLink: 'search'
     }
   ];
 }

@@ -82,11 +82,15 @@ jcm-main-window {
     }
   }
 
-  jcm-plugins-pipeline {
+  jcm-scroll-view {
     .p-scrollpanel-content-container {
       max-width: 694px;
       left: 50%;
       transform: translateX(-50%);
     }
   }
+}
+
+p-card {
+  --p-card-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 2px -1px rgba(0, 0, 0, 0.1)
 }
