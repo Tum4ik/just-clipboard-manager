@@ -1,6 +1,6 @@
 {
   "name": "just-clipboard-manager-pdk",
-  "version": "4.0.13",
+  "version": "4.0.14",
   "description": "Plugin development kit for Just Clipboard Manager",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,6 +16,6 @@
   "author": "Yevheniy Tymchishin",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   }
 }

@@ -1,3 +1,18 @@
-.title {
-  font-size: 18px;
+.title-root {
+  display: flex;
+
+  .title {
+    font-size: 18px;
+  }
+
+  .version {
+    margin-left: auto;
+    font-size: 16px;
+    font-weight: normal;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: end;
 }

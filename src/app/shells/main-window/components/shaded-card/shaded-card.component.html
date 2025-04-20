@@ -1,4 +1,7 @@
-<p-card [style]="{ 'background': `var(--p-surface-${surfaceShade}})` }">
+<p-card [style]="{
+  'background': `var(--p-surface-${surfaceShade}})`,
+  '--p-card-body-padding': cardBodyPadding(),
+}">
   @if (titleTemplate()){
   <ng-template #title>
     <ng-container *ngTemplateOutlet="titleTemplate()!" />

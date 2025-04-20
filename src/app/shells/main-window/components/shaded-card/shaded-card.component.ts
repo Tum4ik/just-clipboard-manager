@@ -38,6 +38,7 @@ export class ShadedCardComponent implements OnInit, OnDestroy {
   readonly footerTemplate = contentChild('footer', { read: TemplateRef });
 
   readonly shadeLevel = input<Level>(1);
+  readonly cardBodyPadding = input<string>('12px');
 
   surfaceShade = 100;
 
