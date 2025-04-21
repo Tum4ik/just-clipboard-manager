@@ -1,13 +1,15 @@
+import { PluginId } from "./plugin-id";
+
 export abstract class ClipboardDataPlugin {
   constructor(packageJson: PackageJson) {
-    this._id = packageJson.pluginMetadata.id;
+    this._id = packageJson.pluginMetadata.id as PluginId;
     this._name = packageJson.pluginMetadata.name;
     this._description = packageJson.pluginMetadata.description;
     this._author = packageJson.author;
   }
 
-  private _id: `${string}-${string}-${string}-${string}-${string}`;
-  get id(): `${string}-${string}-${string}-${string}-${string}` {
+  private _id: PluginId;
+  get id(): PluginId {
     return this._id;
   }
 
@@ -36,7 +38,7 @@ export abstract class ClipboardDataPlugin {
 type PackageJson = {
   version: string;
   pluginMetadata: {
-    id: `${string}-${string}-${string}-${string}-${string}`;
+    id: string;
     name: string;
     description?: { [lang: string]: string; };
   };
