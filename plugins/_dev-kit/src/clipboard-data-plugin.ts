@@ -31,7 +31,7 @@ export abstract class ClipboardDataPlugin {
   abstract get formats(): readonly string[];
   abstract extractRepresentationData(data: Uint8Array, format: string): Uint8Array;
   abstract getRepresentationDataElement(representationData: Uint8Array, format: string, document: Document): HTMLElement;
-  abstract getSearchLabel(data: Uint8Array, format: string): string;
+  abstract getSearchLabel(data: Uint8Array, format: string): string | null;
 }
 
 
