@@ -1,4 +1,4 @@
-import { PluginId } from "./plugin-id";
+import { Author, PackageJson, PluginId, RepresentationData } from "./types";
 
 export abstract class ClipboardDataPlugin {
   constructor(packageJson: PackageJson) {
@@ -33,17 +33,3 @@ export abstract class ClipboardDataPlugin {
   abstract getRepresentationDataElement(representationData: RepresentationData, format: string, document: Document): HTMLElement;
   abstract getSearchLabel(data: Uint8Array, format: string): string | null;
 }
-
-
-type PackageJson = {
-  version: string;
-  pluginMetadata: {
-    id: string;
-    name: string;
-    description?: { [lang: string]: string; };
-  };
-  author?: Author;
-};
-
-type Author = { name?: string; email?: string; };
-type RepresentationData = { data: Uint8Array; metadata?: Object; };
