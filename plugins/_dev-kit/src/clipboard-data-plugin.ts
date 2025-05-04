@@ -29,8 +29,8 @@ export abstract class ClipboardDataPlugin {
   }
 
   abstract get formats(): readonly string[];
-  abstract extractRepresentationData(data: Uint8Array, format: string): Uint8Array;
-  abstract getRepresentationDataElement(representationData: Uint8Array, format: string, document: Document): HTMLElement;
+  abstract extractRepresentationData(data: Uint8Array, format: string): RepresentationData;
+  abstract getRepresentationDataElement(representationData: RepresentationData, format: string, document: Document): HTMLElement;
   abstract getSearchLabel(data: Uint8Array, format: string): string | null;
 }
 
@@ -46,3 +46,4 @@ type PackageJson = {
 };
 
 type Author = { name?: string; email?: string; };
+type RepresentationData = { data: Uint8Array; metadata?: Object; };
