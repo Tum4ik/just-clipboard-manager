@@ -29,6 +29,7 @@ pub fn run() {
     .setup(clipboard_listener)
     .invoke_handler(tauri::generate_handler![
       commands::get_clipboard_data_bytes,
+      commands::insert_bytes_data,
       commands::paste_data_bytes,
       commands::get_foreground_window,
       commands::open_main_window,

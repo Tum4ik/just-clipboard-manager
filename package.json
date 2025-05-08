@@ -38,7 +38,7 @@
     "@tauri-apps/plugin-process": "^2.2.0",
     "@tauri-apps/plugin-sql": "^2.2.0",
     "@tauri-apps/plugin-store": "^2.2.0",
-    "just-clipboard-manager-pdk": "^4.0.13",
+    "just-clipboard-manager-pdk": "^4.0.21",
     "primeng": "^19.0.9",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1",

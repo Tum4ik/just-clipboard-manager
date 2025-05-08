@@ -47,13 +47,17 @@ export class ClipboardListener {
     }
 
     const bytesArr = await invoke<number[]>('get_clipboard_data_bytes', { format: pickResult.formatId });
+    if (!bytesArr || bytesArr.length <= 0) {
+      return;
+    }
     const bytes = Uint8Array.from(bytesArr);
     const representationData = pickResult.plugin.extractRepresentationData(bytes, pickResult.format);
     const searchLabel = pickResult.plugin.getSearchLabel(bytes, pickResult.format);
 
     await this.clipsRepository.insertAsync({
       pluginId: pickResult.plugin.id,
-      representationData: representationData,
+      representationData: representationData.data,
+      representationMetadata: representationData.metadata,
       data: bytes,
       formatId: pickResult.formatId,
       format: pickResult.format,

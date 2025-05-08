@@ -1,27 +1,29 @@
+import { invoke } from '@tauri-apps/api/core';
 import { ClipPreview } from "../models/clip-preview.model";
 import { Clip } from "../models/clip.model";
 import { BaseDatabaseRepository } from "./base-database.repository";
 
-const decoder = new TextDecoder();
-const encoder = new TextEncoder();
-
 export class ClipsRepository extends BaseDatabaseRepository {
 
   async insertAsync(clip: Clip): Promise<void> {
-    const representationData = decoder.decode(clip.representationData);
-    const data = decoder.decode(clip.data);
-    await this.db.execute(`
-      INSERT INTO clips (plugin_id, representation_data, data, format_id, format, search_label, clipped_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      `,
-      [clip.pluginId, representationData, data, clip.formatId, clip.format, clip.searchLabel, clip.clippedAt]
-    );
+    const metadataObject = clip.representationMetadata ?? {};
+    await invoke('insert_bytes_data', {
+      dbPath: this.db.path,
+      pluginId: clip.pluginId,
+      representationData: clip.representationData,
+      representationMetadata: JSON.stringify(metadataObject),
+      data: clip.data,
+      formatId: clip.formatId,
+      format: clip.format,
+      searchLabel: clip.searchLabel,
+      clippedAt: clip.clippedAt,
+    });
   }
 
 
   async getClipPreviewsAsync(skip: number, take: number, search?: string): Promise<readonly ClipPreview[]> {
     const result = await this.db.select<any[]>(`
-      SELECT id, plugin_id, representation_data, format_id, format, search_label
+      SELECT id, plugin_id, representation_data, representation_metadata, format_id, format, search_label
       FROM clips
       ${search ? "WHERE search_label LIKE '%' || $1 || '%'" : ''}
       ORDER BY clipped_at DESC
@@ -33,7 +35,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
       return {
         id: r.id,
         pluginId: r.plugin_id,
-        representationData: encoder.encode(r.representation_data),
+        representationData: new Uint8Array(r.representation_data),
+        representationMetadata: JSON.parse(r.representation_metadata),
         formatId: r.format_id,
         format: r.format,
         searchLabel: r.search_label,
@@ -42,6 +45,7 @@ export class ClipsRepository extends BaseDatabaseRepository {
   }
 
 
+  // todo: move to rust (command)
   async getClipDataAsync(id: number): Promise<Uint8Array | null> {
     const result = await this.db.select<any[]>(`
       SELECT data
@@ -53,7 +57,7 @@ export class ClipsRepository extends BaseDatabaseRepository {
     if (result.length <= 0) {
       return null;
     }
-    return encoder.encode(result[0].data);
+    return new Uint8Array(result[0].data);
   }
 
 

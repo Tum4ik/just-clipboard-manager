@@ -1,5 +1,7 @@
+import { PluginId } from "just-clipboard-manager-pdk";
+
 export interface SearchPluginInfo {
-  id: `${string}-${string}-${string}-${string}-${string}`;
+  id: PluginId;
   name: string;
   version: string;
   downloadLink: URL;

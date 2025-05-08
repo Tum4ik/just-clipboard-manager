@@ -1,7 +1,9 @@
 use clipboard_win::raw::{close, get, open, set, size};
 use std::ffi::c_void;
 use std::path::PathBuf;
-use tauri::WebviewUrl;
+use tauri::{State, WebviewUrl};
+use tauri_plugin_sql::DbInstances;
+use tauri_plugin_sql::DbPool::Sqlite;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
 use windows::Win32::UI::Input::KeyboardAndMouse::{
@@ -38,6 +40,54 @@ pub fn get_clipboard_data_bytes(format: u32) -> Vec<u8> {
   }
 
   vec![]
+}
+
+#[tauri::command]
+pub async fn insert_bytes_data(
+  db_instances: State<'_, DbInstances>,
+  db_path: &str,
+  plugin_id: String,
+  representation_data: Vec<u8>,
+  representation_metadata: String,
+  data: Vec<u8>,
+  format_id: i64,
+  format: String,
+  search_label: Option<String>,
+  clipped_at: String,
+) -> Result<(), ()> {
+  let db_instances = db_instances.0.read().await;
+  let db_pool = db_instances.get(db_path).unwrap();
+  match db_pool {
+    Sqlite(db) => {
+      sqlx::query(
+        "
+      INSERT INTO clips (
+        plugin_id,
+        representation_data,
+        representation_metadata,
+        data,
+        format_id,
+        format,
+        search_label,
+        clipped_at
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ",
+      )
+      .bind(plugin_id)
+      .bind(representation_data)
+      .bind(representation_metadata)
+      .bind(data)
+      .bind(format_id)
+      .bind(format)
+      .bind(search_label)
+      .bind(clipped_at)
+      .execute(db)
+      .await
+      .unwrap();
+    }
+  }
+  Ok(())
 }
 
 #[tauri::command]
