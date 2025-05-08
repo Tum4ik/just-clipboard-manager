@@ -1,12 +1,6 @@
-import { ClipboardDataPlugin } from "just-clipboard-manager-pdk";
+import { ClipboardDataPlugin, RepresentationData } from "just-clipboard-manager-pdk";
 
 export class TextPlugin extends ClipboardDataPlugin {
-
-  private readonly _id = 'd930d2cd-3fd9-4012-a363-120676e22afa';
-  override get id(): `${string}-${string}-${string}-${string}-${string}` {
-    return this._id;
-  }
-
   private readonly _formats = ['CF_UNICODETEXT', 'CF_TEXT'];
   override get formats(): readonly string[] {
     // the statement should be verified when Linux is supported
@@ -17,9 +11,9 @@ export class TextPlugin extends ClipboardDataPlugin {
   private readonly encoder = new TextEncoder();
   private readonly utf8decoder = new TextDecoder();
   private readonly utf16decoder = new TextDecoder('utf-16');
-  override extractRepresentationData(data: Uint8Array, format: string): Uint8Array {
+  override extractRepresentationData(data: Uint8Array, format: string): RepresentationData {
     if (data.length <= 0) {
-      return data;
+      return { data };
     }
 
     let text: string;
@@ -35,18 +29,18 @@ export class TextPlugin extends ClipboardDataPlugin {
     if (encoded[encoded.length - 1] === 0) {
       encoded = encoded.subarray(0, encoded.length - 1);
     }
-    return encoded;
+    return { data: encoded };
   }
 
-  override getRepresentationDataElement(representationData: Uint8Array, format: string, document: Document): HTMLElement {
+  override getRepresentationDataElement(representationData: RepresentationData, format: string, document: Document): HTMLElement {
     const div = document.createElement('div');
-    div.textContent = this.utf8decoder.decode(representationData);
+    div.textContent = this.utf8decoder.decode(representationData.data);
     div.style.overflow = 'hidden';
     div.style.textOverflow = 'ellipsis';
     return div;
   }
 
-  override getSearchLabel(data: Uint8Array, format: string): string {
+  override getSearchLabel(data: Uint8Array, format: string): string | null {
     if (format === 'CF_TEXT') {
       return this.utf8decoder.decode(data);
     }
