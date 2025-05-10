@@ -1,0 +1,30 @@
+<jcm-scroll-view>
+  @for (plugin of plugins; track plugin.id) {
+  <jcm-shaded-card>
+    <ng-template #title>
+      <div class="title-root">
+        <div class="title">
+          {{ plugin.name }}
+        </div>
+        <div class="version">
+          {{ plugin.version }}
+        </div>
+      </div>
+    </ng-template>
+    @if (plugin.author){
+    <ng-template #subtitle>
+      {{ 'plugin.by' | translate }} {{ plugin.author.name }}
+    </ng-template>
+    }
+    {{ plugin.description![lang] }}
+    <ng-template #footer>
+      <div class="footer">
+        <p-button label="{{ 'install' | translate }}"
+                  size="small"
+                  variant="outlined"
+                  raised="true" />
+      </div>
+    </ng-template>
+  </jcm-shaded-card>
+  }
+</jcm-scroll-view>

@@ -1,6 +1,18 @@
 {
   "name": "text-plugin",
-  "version": "2.0.0",
+  "version": "1.0.0",
+  "pluginMetadata": {
+    "id": "d930d2cd-3fd9-4012-a363-120676e22afa",
+    "name": "Text plugin",
+    "description": {
+      "en": "Plugin for Just Clipboard Manager that allows you to save text from the clipboard",
+      "uk": "Плагін для Just Clipboard Manager, який дозволяє зберігати текст з буфера обміну"
+    }
+  },
+  "author": {
+    "name": "Yevheniy Tymchishin",
+    "email": "timchishinevgeniy@gmail.com"
+  },
   "description": "A simple plugin to deal with plain text",
   "main": "index.js",
   "type": "module",
@@ -8,16 +20,16 @@
     "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Yevheniy Tymchishin",
   "license": "MIT",
   "dependencies": {
-    "just-clipboard-manager-pdk": "^4.0.13"
+    "just-clipboard-manager-pdk": "^4.0.21"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
-    "rollup": "^4.34.0",
-    "typescript": "^5.7.3"
+    "@rollup/plugin-json": "^6.1.0",
+    "rollup": "^4.40.0",
+    "typescript": "^5.8.3"
   }
 }

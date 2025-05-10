@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ScrollPanel } from 'primeng/scrollpanel';
+import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/plugin-pipeline-card.component";
 
 @Component({
@@ -13,7 +13,7 @@ import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/p
     CdkDrag,
     PluginPipelineCardComponent,
     TranslatePipe,
-    ScrollPanel
+    ScrollViewComponent
   ]
 })
 export class PluginsPipelineComponent {

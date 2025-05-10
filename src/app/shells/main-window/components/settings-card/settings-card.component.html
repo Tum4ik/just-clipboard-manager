@@ -1,4 +1,4 @@
-<p-card [style]="{ 'background': `var(--p-surface-${surfaceShade}})` }">
+<jcm-shaded-card cardBodyPadding="0">
   <p-menubar [style]="{ 'border-width': '0' }">
     <ng-template #start>
       <span class="material-symbols-rounded">{{ icon() }}</span>
@@ -11,4 +11,4 @@
       <ng-content />
     </ng-template>
   </p-menubar>
-</p-card>
+</jcm-shaded-card>

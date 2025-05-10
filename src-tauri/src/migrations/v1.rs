@@ -10,6 +10,7 @@ pub fn v1() -> Migration {
       id INTEGER PRIMARY KEY,
       plugin_id TEXT,
       representation_data BLOB,
+      representation_metadata TEXT,
       data BLOB,
       format_id INTEGER,
       format TEXT,

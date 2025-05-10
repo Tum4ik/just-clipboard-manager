@@ -15,6 +15,14 @@
     "core:window:allow-close",
     "fs:allow-resource-read-recursive",
     "store:default",
-    "log:default"
+    "log:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "https://github.com"
+        }
+      ]
+    }
   ]
 }

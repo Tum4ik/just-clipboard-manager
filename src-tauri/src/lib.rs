@@ -10,6 +10,7 @@ use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
+    .plugin(tauri_plugin_http::init())
     .plugin(
       tauri_plugin_log::Builder::new()
         .level(LevelFilter::Info)
@@ -29,6 +30,7 @@ pub fn run() {
     .setup(clipboard_listener)
     .invoke_handler(tauri::generate_handler![
       commands::get_clipboard_data_bytes,
+      commands::insert_bytes_data,
       commands::paste_data_bytes,
       commands::get_foreground_window,
       commands::open_main_window,

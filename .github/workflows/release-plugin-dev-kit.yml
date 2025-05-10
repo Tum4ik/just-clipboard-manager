@@ -7,6 +7,11 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./plugins/_dev-kit
+    permissions:
+      id-token: write
 
     steps:
     - name: Checkout
@@ -16,6 +21,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 22
+        registry-url: https://registry.npmjs.org/
         cache: 'npm'
 
     - name: Clean Install

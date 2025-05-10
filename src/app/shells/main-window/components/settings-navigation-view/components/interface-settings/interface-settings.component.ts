@@ -6,6 +6,7 @@ import { Select, SelectChangeEvent } from 'primeng/select';
 import { Subscription } from 'rxjs';
 import { LANGUAGE_INFO } from '../../../../../../core/constants/language-info';
 import { SettingsService, ThemeMode } from '../../../../../../core/services/settings.service';
+import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
 
 @Component({
@@ -17,7 +18,8 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     TranslatePipe,
     Select,
     MatIcon,
-    FormsModule
+    FormsModule,
+    ScrollViewComponent
   ]
 })
 export class InterfaceSettingsComponent implements OnInit, OnDestroy {

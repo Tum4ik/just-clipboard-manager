@@ -4,6 +4,7 @@
   "exit": "Exit",
   "search": "Search",
   "plugins": "Plugins",
+  "plugin.by": "by",
   "settings": "Settings",
   "settings.general": "General",
   "settings.interface": "Interface",
@@ -16,5 +17,6 @@
   "theme-mode.dark": "Dark",
   "theme-mode-setting-description": "The visual appearance of the user interface",
   "clipboard-data": "Clipboard data",
-  "data-processing-pipeline": "Data processing pipeline"
+  "data-processing-pipeline": "Data processing pipeline",
+  "install": "Install"
 }

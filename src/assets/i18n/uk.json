@@ -4,6 +4,7 @@
   "exit": "Вихід",
   "search": "Пошук",
   "plugins": "Плагіни",
+  "plugin.by": "від",
   "settings": "Налаштування",
   "settings.general": "Загальні",
   "settings.interface": "Інтерфейс",
@@ -16,5 +17,6 @@
   "theme-mode.dark": "Темний",
   "theme-mode-setting-description": "Зовнішній вигляд інтерфейсу користувача",
   "clipboard-data": "Дані буфера обміну",
-  "data-processing-pipeline": "Конвеєр обробки даних"
+  "data-processing-pipeline": "Конвеєр обробки даних",
+  "install": "Встановити"
 }
