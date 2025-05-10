@@ -13,7 +13,7 @@
     </ng-template>
     @if (plugin.author){
     <ng-template #subtitle>
-      {{ 'plugin.by' | translate }} {{ plugin.author }}
+      {{ 'plugin.by' | translate }} {{ plugin.author.name }}
     </ng-template>
     }
     {{ plugin.description![lang] }}
