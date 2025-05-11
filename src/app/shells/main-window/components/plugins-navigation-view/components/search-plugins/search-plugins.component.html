@@ -19,10 +19,23 @@
     {{ plugin.description![lang] }}
     <ng-template #footer>
       <div class="footer">
+        @if (plugin.isInstalling){
+        <p-progressbar mode="indeterminate" />
+        }
+        @if (plugin.isInstalled){
+        <p-tag severity="success">
+          <span class="material-symbols-rounded">check</span>
+          <span>{{ 'installed' | translate }}</span>
+        </p-tag>
+        }
+        @else {
         <p-button label="{{ 'install' | translate }}"
                   size="small"
                   variant="outlined"
-                  raised="true" />
+                  raised="true"
+                  [disabled]="plugin.isInstalling"
+                  (onClick)="install(plugin)" />
+        }
       </div>
     </ng-template>
   </jcm-shaded-card>

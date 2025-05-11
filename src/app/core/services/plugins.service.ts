@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
@@ -12,7 +11,6 @@ export class PluginsService {
   constructor(
     private readonly monitoringService: MonitoringService,
     private readonly githubService: GithubService,
-    private readonly httpClient: HttpClient
   ) {
   }
 
@@ -87,5 +85,10 @@ export class PluginsService {
     }
 
     return pluginsInfo;
+  }
+
+
+  async installPluginAsync(url: URL): Promise<boolean> {
+    return true;
   }
 }
