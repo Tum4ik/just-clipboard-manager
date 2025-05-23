@@ -19,5 +19,6 @@
   "clipboard-data": "Clipboard data",
   "data-processing-pipeline": "Data processing pipeline",
   "install": "Install",
-  "installed": "Installed"
+  "installed": "Installed",
+  "installation-failed": "Installation failed"
 }

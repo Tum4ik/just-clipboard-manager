@@ -39,7 +39,7 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
     this.plugins = (await this.pluginsService.searchPluginsAsync()).map(p => {
       // todo: move "isInstalled" detection to plugins service
       const pluginView = p as SearchPluginViewModel;
-      pluginView.isInstalled = this.pluginsService.plugins
+      pluginView.isInstalled = this.pluginsService.installedPlugins
         .map(installedPlugin => installedPlugin.id)
         .includes(p.id);
       return pluginView;
@@ -61,9 +61,9 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
 
     plugin.isInstalling = true;
 
-    plugin.isInstalled = await this.pluginsService.installPluginAsync(plugin.downloadLink);
+    plugin.isInstalled = await this.pluginsService.installPluginAsync(plugin.id, plugin.downloadLink);
     if (!plugin.isInstalled) {
-      // todo: show install error
+      plugin.isInstallationFailed = true;
     }
 
     plugin.isInstalling = false;
@@ -72,6 +72,7 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
 
 
 export interface SearchPluginViewModel extends SearchPluginInfo {
-  isInstalled: boolean;
   isInstalling: boolean;
+  isInstalled: boolean;
+  isInstallationFailed: boolean;
 }

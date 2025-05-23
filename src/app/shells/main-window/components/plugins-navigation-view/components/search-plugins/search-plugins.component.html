@@ -29,6 +29,12 @@
         </p-tag>
         }
         @else {
+        @if (plugin.isInstallationFailed && !plugin.isInstalling){
+        <p-tag severity="danger">
+          <span class="material-symbols-rounded">error</span>
+          <span>{{ 'installation-failed' | translate }}</span>
+        </p-tag>
+        }
         <p-button label="{{ 'install' | translate }}"
                   size="small"
                   variant="outlined"
