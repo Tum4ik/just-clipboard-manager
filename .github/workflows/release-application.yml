@@ -60,8 +60,8 @@ jobs:
         if-no-files-found: error
         name: build-output
         path: |
-          ./src-tauri/target/release/bundle/nsis/
-          ./release-notes.md
+          src-tauri/target/release/bundle/nsis
+          release-notes.md
 
     # - name: Build Tauri application
     #   uses: tauri-apps/tauri-action@v0
