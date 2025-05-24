@@ -36,7 +36,7 @@ jobs:
     - name: Get version
       id: get-version
       run: |
-        Install-Module -Name PSToml
+        Install-Module -Name PSToml -Force
         $cargoToml = Get-Content ./src-tauri/Cargo.toml -Raw | ConvertFrom-Toml
         $version = $cargoToml.package.version
         Write-Host "$version"
