@@ -13,11 +13,11 @@ fn main() {
     .expect("Failed to load config");
 
   let sentry_dsn = config.get::<String>("sentry.dsn").unwrap();
-  let sentry_environment = config.get::<String>("sentry.environment").unwrap();
+  let environment = config.get::<String>("environment").unwrap();
 
   let _guard = sentry::init(sentry::ClientOptions {
     dsn: Dsn::from_str(&sentry_dsn).ok(),
-    environment: Some(sentry_environment.into()),
+    environment: Some(environment.into()),
     release: sentry::release_name!(),
     auto_session_tracking: true,
     ..sentry::ClientOptions::default()
@@ -30,5 +30,5 @@ fn main() {
     }));
   });
 
-  just_clipboard_manager_lib::run();
+  just_clipboard_manager_lib::run(config);
 }

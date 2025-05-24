@@ -7,6 +7,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
+import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
@@ -43,9 +44,12 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       registerSvgIcons();
 
+      const environmentService = inject(EnvironmentService);
       const settings = inject(SettingsService);
       const translate = inject(TranslateService);
       const pluginsService = inject(PluginsService);
+
+      await environmentService.initAsync();
 
       translate.addLangs(['en', 'uk']);
       await firstValueFrom(translate.use(await settings.getLanguageAsync()));

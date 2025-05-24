@@ -15,4 +15,11 @@
 .footer {
   display: flex;
   justify-content: end;
+  align-items: center;
+  gap: 12px;
+
+  p-progressbar {
+    width: 100%;
+    --p-progressbar-height: 2px;
+  }
 }

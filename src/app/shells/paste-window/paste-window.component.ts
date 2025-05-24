@@ -36,10 +36,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private resizeObserver?: ResizeObserver;
   private searchSubject = new BehaviorSubject<string>('');
-  private searchTextSubscription?: Subscription;
-  private scrollListenUnsubscriber?: () => void;
-  private windowVisibilitySubscriber?: Subscription;
-  private clipboardUpdatedSubscriber?: Subscription;
+  private subscriptions = new Subscription();
   private readonly clipsRepository = new ClipsRepository();
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
@@ -56,7 +53,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   scrollableAreaHeight = '0px';
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.resizeObserver = new ResizeObserver(entries => {
       this.ngZone.run(() => {
         for (const entry of entries) {
@@ -71,35 +68,52 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.resizeObserver.observe(this.rootElement().nativeElement);
 
-    this.searchTextSubscription = this.searchSubject.pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-    ).subscribe(search => {
-      this.detachAllClips();
-      this.loadClipsAsync(0, 15, search);
-    });
-
-    this.windowVisibilitySubscriber = this.pasteWindowService.visibility$.subscribe(isVisible => {
-      this.isWindowVisible = isVisible;
-      if (isVisible && !this.isClipsListUpToDate) {
-        this.loadClipsAsync(0, 15);
-        this.isClipsListUpToDate = true;
-      }
-      else if (isVisible) {
-        this.scrollPanel().scrollTop(0);
-        this.searchInputElement().nativeElement.focus();
-      }
-      else if (!isVisible) {
-        this.searchSubject.next('');
-        this.searchInputElement().nativeElement.value = '';
-      }
-    });
-    this.clipboardUpdatedSubscriber = this.clipboardListener.clipboardUpdated$.subscribe(() => {
-      this.isClipsListUpToDate = false;
-      if (!this.isWindowVisible) {
+    this.subscriptions.add(
+      this.searchSubject.pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+      ).subscribe(search => {
         this.detachAllClips();
-      }
-    });
+        this.loadClipsAsync(0, 15, search);
+      })
+    );
+    this.subscriptions.add(
+      this.pasteWindowService.visibility$.subscribe(isVisible => {
+        this.isWindowVisible = isVisible;
+        if (isVisible && !this.isClipsListUpToDate) {
+          this.loadClipsAsync(0, 15);
+          this.isClipsListUpToDate = true;
+        }
+        else if (isVisible) {
+          this.scrollPanel().scrollTop(0);
+          this.searchInputElement().nativeElement.focus();
+        }
+        else if (!isVisible) {
+          this.searchSubject.next('');
+          this.searchInputElement().nativeElement.value = '';
+        }
+      })
+    );
+    this.subscriptions.add(
+      this.clipboardListener.clipboardUpdated$.subscribe(() => {
+        this.isClipsListUpToDate = false;
+        if (!this.isWindowVisible) {
+          this.detachAllClips();
+        }
+      })
+    );
+    this.subscriptions.add(
+      this.pluginsService.pluginInstalled$.subscribe(() => {
+        this.isClipsListUpToDate = false;
+        this.detachAllClips();
+      })
+    );
+    this.subscriptions.add(
+      this.pluginsService.pluginSettingsChanged$.subscribe(() => {
+        this.isClipsListUpToDate = false;
+        this.detachAllClips();
+      })
+    );
 
     this.loadClipsAsync(0, 15);
     this.isClipsListUpToDate = true;
@@ -108,15 +122,12 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     const scrollPanelElement = this.scrollPanel().containerViewChild?.nativeElement as HTMLElement;
     const scrollPanelContent = scrollPanelElement.querySelector('.p-scrollpanel-content');
-    this.scrollListenUnsubscriber = this.renderer.listen(scrollPanelContent, 'scroll', this.onScroll.bind(this));
+    this.subscriptions.add(this.renderer.listen(scrollPanelContent, 'scroll', this.onScroll.bind(this)));
   }
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
-    this.scrollListenUnsubscriber?.();
-    this.searchTextSubscription?.unsubscribe();
-    this.windowVisibilitySubscriber?.unsubscribe();
-    this.clipboardUpdatedSubscriber?.unsubscribe();
+    this.subscriptions.unsubscribe();
     this.clipsRepository.disposeAsync();
   }
 
@@ -137,7 +148,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private loadedClips: Map<number, { formatId: number, component: ComponentRef<ClipItemComponent>; }> = new Map();
+  private loadedClips = new Map<number, { formatId: number, component: ComponentRef<ClipItemComponent>; }>();
 
   private async loadClipsAsync(skip: number, take: number, search?: string) {
     if (this.isClipsLoading) {
@@ -146,7 +157,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isClipsLoading = true;
 
-    const clips = await this.clipsRepository.getClipPreviewsAsync(skip, take, search);
+    const enabledPluginIds = this.pluginsService.enabledPlugins.map(ep => ep.id);
+    const clips = await this.clipsRepository.getClipPreviewsAsync(enabledPluginIds, skip, take, search);
     if (clips.length > 0) {
       for (const clip of clips) {
         if (this.loadedClips.has(clip.id!)) {
@@ -154,8 +166,11 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.clipsContainer().insert(component.hostView);
         }
         else {
-          const plugin = this.pluginsService.getPlugin(clip.pluginId);
-          const item = plugin?.getRepresentationDataElement(
+          const { plugin } = this.pluginsService.getPlugin(clip.pluginId) ?? {};
+          if (!plugin) {
+            continue;
+          }
+          const item = plugin.getRepresentationDataElement(
             { data: clip.representationData, metadata: clip.representationMetadata },
             clip.format, this.document
           );

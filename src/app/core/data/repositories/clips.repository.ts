@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { PluginId } from 'just-clipboard-manager-pdk';
 import { ClipPreview } from "../models/clip-preview.model";
 import { Clip } from "../models/clip.model";
 import { BaseDatabaseRepository } from "./base-database.repository";
@@ -21,11 +22,12 @@ export class ClipsRepository extends BaseDatabaseRepository {
   }
 
 
-  async getClipPreviewsAsync(skip: number, take: number, search?: string): Promise<readonly ClipPreview[]> {
+  async getClipPreviewsAsync(enabledPluginIds: PluginId[], skip: number, take: number, search?: string): Promise<readonly ClipPreview[]> {
     const result = await this.db.select<any[]>(`
       SELECT id, plugin_id, representation_data, representation_metadata, format_id, format, search_label
       FROM clips
-      ${search ? "WHERE search_label LIKE '%' || $1 || '%'" : ''}
+      WHERE plugin_id IN ('${enabledPluginIds.join("','")}')
+      ${search ? "AND search_label LIKE '%' || $1 || '%'" : ''}
       ORDER BY clipped_at DESC
       LIMIT $2 OFFSET $3
       `,

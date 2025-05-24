@@ -1,6 +1,8 @@
 use clipboard_win::raw::{close, get, open, set, size};
+use config::Config;
 use std::ffi::c_void;
-use std::path::PathBuf;
+use std::fs::{remove_file, File};
+use std::path::{Path, PathBuf};
 use tauri::{State, WebviewUrl};
 use tauri_plugin_sql::DbInstances;
 use tauri_plugin_sql::DbPool::Sqlite;
@@ -12,6 +14,7 @@ use windows::Win32::UI::Input::KeyboardAndMouse::{
 use windows::Win32::UI::WindowsAndMessaging::{
   GetForegroundWindow, GetWindowThreadProcessId, SetForegroundWindow,
 };
+use zip::ZipArchive;
 
 #[tauri::command]
 pub fn get_clipboard_data_bytes(format: u32) -> Vec<u8> {
@@ -170,4 +173,20 @@ pub fn open_main_window(app: tauri::AppHandle, section: Option<&str>) {
       sentry::capture_message("Config for main window is not found", sentry::Level::Fatal);
     }
   }
+}
+
+#[tauri::command]
+pub fn environment(config: State<'_, Config>) -> String {
+  config.get_string("environment").unwrap()
+}
+
+#[tauri::command]
+pub fn extract_and_remove_zip(zip_file_path: String, plugin_extraction_folder: String) {
+  let file_path = Path::new(&zip_file_path);
+  let file = File::open(file_path).unwrap();
+  let mut archive = ZipArchive::new(file).unwrap();
+  archive
+    .extract(Path::new(&plugin_extraction_folder))
+    .unwrap();
+  remove_file(file_path).unwrap();
 }

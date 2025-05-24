@@ -18,5 +18,7 @@
   "theme-mode-setting-description": "The visual appearance of the user interface",
   "clipboard-data": "Clipboard data",
   "data-processing-pipeline": "Data processing pipeline",
-  "install": "Install"
+  "install": "Install",
+  "installed": "Installed",
+  "installation-failed": "Installation failed"
 }
