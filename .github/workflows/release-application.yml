@@ -42,13 +42,31 @@ jobs:
         Write-Host "$version"
         echo "version=$version" >> $env:GITHUB_OUTPUT
 
+    - name: Build Text plugin
+      working-directory: ./plugins/text-plugin
+      run: |
+        npm ci
+        npm run build
+
     - name: NPM clean install
       run: npm ci
 
     - name: Build Tauri application
-      uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run tauri build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        if-no-files-found: error
+        name: build-output
+        path: ./src-tauri/target/release/bundle/*
+
+    # - name: Build Tauri application
+    #   uses: tauri-apps/tauri-action@v0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     releaseDraft: true
 
 
   github-release:
