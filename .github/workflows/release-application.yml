@@ -60,7 +60,7 @@ jobs:
         if-no-files-found: error
         name: build-output
         path: |
-          src-tauri/target/release/bundle/nsis
+          src-tauri/target/release/bundle/*
           release-notes.md
 
     # - name: Build Tauri application
@@ -90,7 +90,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       run: |
         gh release create ${{ needs.build.outputs.version }} `
-          build-output/*.(exe|msi) `
+          'build-output/**/*.(exe|msi)' `
           --draft `
           --title ${{ needs.build.outputs.version }} `
           --notes-file 'build-output/release-notes.md'
