@@ -42,18 +42,38 @@ jobs:
         Write-Host "$version"
         echo "version=$version" >> $env:GITHUB_OUTPUT
 
+    - name: Build Text plugin
+      working-directory: ./plugins/text-plugin
+      run: |
+        npm ci
+        npm run build
+
     - name: NPM clean install
       run: npm ci
 
     - name: Build Tauri application
-      uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run tauri build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        if-no-files-found: error
+        name: build-output
+        path: |
+          ./src-tauri/target/release/bundle/*
+          ./release-notes.md
+
+    # - name: Build Tauri application
+    #   uses: tauri-apps/tauri-action@v0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     releaseDraft: true
 
 
   github-release:
-    if: false
-    name: Release ${{ needs.build.outputs.version}}
+    # if: false
+    name: Release ${{ needs.build.outputs.version }}
     needs: build
     runs-on: ubuntu-latest
     defaults:
@@ -63,3 +83,14 @@ jobs:
     steps:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
+
+    - name: GitHub release
+      env:
+        GH_REPO: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release create ${{ needs.build.outputs.version }} `
+          (Get-ChildItem -Path . -Recurse -File -Include *.exe, *.msi) `
+          --draft `
+          --title ${{ needs.build.outputs.version }} `
+          --notes-file 'build-output/release-notes.md'
