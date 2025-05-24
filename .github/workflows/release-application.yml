@@ -59,7 +59,9 @@ jobs:
       with:
         if-no-files-found: error
         name: build-output
-        path: ./src-tauri/target/release/bundle/*
+        path: |
+          ./src-tauri/target/release/bundle/nsis/*
+          ./release-notes.md
 
     # - name: Build Tauri application
     #   uses: tauri-apps/tauri-action@v0
@@ -70,8 +72,8 @@ jobs:
 
 
   github-release:
-    if: false
-    name: Release ${{ needs.build.outputs.version}}
+    # if: false
+    name: Release ${{ needs.build.outputs.version }}
     needs: build
     runs-on: ubuntu-latest
     defaults:
@@ -81,3 +83,14 @@ jobs:
     steps:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
+
+    - name: GitHub release
+      env:
+        GH_REPO: ${{ github.repository }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release create ${{ needs.build.outputs.version }} `
+          build-output/*.(exe|msi) `
+          --draft `
+          --title ${{ needs.build.outputs.version }} `
+          --notes-file 'build-output/release-notes.md'
