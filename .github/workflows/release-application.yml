@@ -76,6 +76,9 @@ jobs:
     name: Release ${{ needs.build.outputs.version }}
     needs: build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
 
     steps:
     - name: Download build artifacts
@@ -87,7 +90,7 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       run: |
         gh release create ${{ needs.build.outputs.version }} `
-          'build-output/**/*.@(exe|msi)' `
+          (Get-ChildItem -Path . -Recurse -File -Include *.exe, *.msi) `
           --draft `
           --title ${{ needs.build.outputs.version }} `
           --notes-file 'build-output/release-notes.md'
