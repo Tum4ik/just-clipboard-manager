@@ -15,6 +15,10 @@ import { MonitoringService } from './monitoring.service';
 const PLUGIN_INSTALLED_EVENT_NAME = 'plugin-loaded-event';
 const PLUGIN_SETTINGS_CHANGED_EVENT_NAME = 'plugin-settings-changed-event';
 
+const PLUGINS_ORDER_KEY = 'plugins-order';
+
+const TEXT_PLUGIN_ID = 'd930d2cd-3fd9-4012-a363-120676e22afa';
+
 @Injectable({ providedIn: 'root' })
 export class PluginsService {
   constructor(
@@ -27,12 +31,18 @@ export class PluginsService {
   private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { autoSave: false });
   private readonly textDecoder = new TextDecoder();
 
-  private _plugins = new Map<PluginId, { plugin: ClipboardDataPlugin; isEnabled: boolean; }>();
+  private pluginsOrder: PluginId[] | undefined;
+  private readonly _plugins = new Map<PluginId, { plugin: ClipboardDataPlugin; isEnabled: boolean; }>();
 
-  private _installedPlugins: readonly ClipboardDataPlugin[] | undefined;
-  get installedPlugins(): readonly ClipboardDataPlugin[] {
+  private _installedPlugins: readonly PluginWithAdditionalInfo[] | undefined;
+  get installedPlugins(): readonly PluginWithAdditionalInfo[] {
     if (!this._installedPlugins) {
-      this._installedPlugins = Array.from(this._plugins.values()).map(p => p.plugin);
+      const orderedInstalledPlugins: PluginWithAdditionalInfo[] = [];
+      for (const pluginId of this.pluginsOrder!) {
+        const pluginItem = this._plugins.get(pluginId)!;
+        orderedInstalledPlugins.push({ plugin: pluginItem.plugin, get isEnabled() { return pluginItem.isEnabled; } });
+      }
+      this._installedPlugins = orderedInstalledPlugins;
     }
     return this._installedPlugins;
   }
@@ -40,7 +50,14 @@ export class PluginsService {
   private _enabledPlugins: readonly ClipboardDataPlugin[] | undefined;
   get enabledPlugins(): readonly ClipboardDataPlugin[] {
     if (!this._enabledPlugins) {
-      this._enabledPlugins = Array.from(this._plugins.values()).filter(p => p.isEnabled).map(p => p.plugin);
+      const orderedEnabledPlugins: ClipboardDataPlugin[] = [];
+      for (const pluginId of this.pluginsOrder!) {
+        const pluginItem = this._plugins.get(pluginId)!;
+        if (pluginItem.isEnabled) {
+          orderedEnabledPlugins.push(pluginItem.plugin);
+        }
+      }
+      this._enabledPlugins = orderedEnabledPlugins;
     }
     return this._enabledPlugins;
   }
@@ -61,15 +78,30 @@ export class PluginsService {
 
     this.isInitialized = true;
 
-    const pluginDirs = await readDir('plugins', {
-      baseDir: BaseDirectory.Resource
-    });
+    this.pluginsOrder = await this.pluginSettingsStore.get<PluginId[]>(PLUGINS_ORDER_KEY);
+    let shouldSavePluginsOrder = false;
+    if (!this.pluginsOrder) {
+      this.pluginsOrder = [TEXT_PLUGIN_ID];
+      shouldSavePluginsOrder = true;
+    }
+
+    const pluginDirs = await readDir('plugins', { baseDir: BaseDirectory.Resource });
     for (const pluginDir of pluginDirs) {
       if (!pluginDir.isDirectory) {
         continue;
       }
-      await this.loadPluginAsync(pluginDir.name);
+      const pluginId = await this.loadPluginAsync(pluginDir.name);
+      if (pluginId && !this.pluginsOrder.includes(pluginId)) {
+        this.pluginsOrder.unshift(pluginId);
+        shouldSavePluginsOrder = true;
+      }
     }
+
+    if (shouldSavePluginsOrder) {
+      await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+      await this.pluginSettingsStore.save();
+    }
+
     await listen<PluginId>(PLUGIN_INSTALLED_EVENT_NAME, async (e) => {
       await this.loadPluginAsync(e.payload);
       this.pluginInstalledSubject.next();
@@ -154,7 +186,7 @@ export class PluginsService {
   }
 
 
-  private async loadPluginAsync(pluginDirName: string): Promise<void> {
+  private async loadPluginAsync(pluginDirName: string): Promise<PluginId | undefined> {
     const pluginBundlePath = `plugins/${pluginDirName}/plugin-bundle.mjs`;
     try {
       const pluginFileBytes = await readFile(pluginBundlePath, {
@@ -173,9 +205,12 @@ export class PluginsService {
       this._plugins.set(pluginId, { plugin: pluginInstance, isEnabled: enabled });
       this._installedPlugins = undefined;
       this._enabledPlugins = undefined;
+      return pluginId;
     } catch (e) {
       this.monitoringService.error(`Failed to load plugin from ${pluginBundlePath}`, e);
     }
+
+    return undefined;
   }
 
 
@@ -188,6 +223,11 @@ export class PluginsService {
   }
 }
 
+
+export interface PluginWithAdditionalInfo {
+  plugin: ClipboardDataPlugin;
+  get isEnabled(): boolean;
+}
 
 export interface PluginSettings {
   enabled: boolean;

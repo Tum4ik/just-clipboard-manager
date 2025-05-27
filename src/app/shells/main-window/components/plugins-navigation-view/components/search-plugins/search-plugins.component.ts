@@ -40,7 +40,7 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
       // todo: move "isInstalled" detection to plugins service
       const pluginView = p as SearchPluginViewModel;
       pluginView.isInstalled = this.pluginsService.installedPlugins
-        .map(installedPlugin => installedPlugin.id)
+        .map(installedPlugin => installedPlugin.plugin.id)
         .includes(p.id);
       return pluginView;
     });

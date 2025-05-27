@@ -71,7 +71,7 @@ export class ClipboardListener {
   private pickPlugin(availableFormats: Map<string, number>)
     : { plugin: ClipboardDataPlugin, format: string, formatId: number; } | null {
 
-    for (const plugin of this.pluginsService.installedPlugins) {
+    for (const plugin of this.pluginsService.enabledPlugins) {
       for (const format of plugin.formats) {
         if (availableFormats.has(format)) {
           return { plugin, format, formatId: availableFormats.get(format)! };
