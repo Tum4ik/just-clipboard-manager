@@ -39,8 +39,10 @@ export class PluginsService {
     if (!this._installedPlugins) {
       const orderedInstalledPlugins: PluginWithAdditionalInfo[] = [];
       for (const pluginId of this.pluginsOrder!) {
-        const pluginItem = this._plugins.get(pluginId)!;
-        orderedInstalledPlugins.push({ plugin: pluginItem.plugin, get isEnabled() { return pluginItem.isEnabled; } });
+        const pluginItem = this._plugins.get(pluginId);
+        if (pluginItem) {
+          orderedInstalledPlugins.push({ plugin: pluginItem.plugin, get isEnabled() { return pluginItem.isEnabled; } });
+        }
       }
       this._installedPlugins = orderedInstalledPlugins;
     }
@@ -52,8 +54,8 @@ export class PluginsService {
     if (!this._enabledPlugins) {
       const orderedEnabledPlugins: ClipboardDataPlugin[] = [];
       for (const pluginId of this.pluginsOrder!) {
-        const pluginItem = this._plugins.get(pluginId)!;
-        if (pluginItem.isEnabled) {
+        const pluginItem = this._plugins.get(pluginId);
+        if (pluginItem && pluginItem.isEnabled) {
           orderedEnabledPlugins.push(pluginItem.plugin);
         }
       }
