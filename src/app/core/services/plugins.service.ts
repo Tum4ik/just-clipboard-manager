@@ -99,6 +99,11 @@ export class PluginsService {
       }
     }
 
+    if (this._plugins.size < this.pluginsOrder.length) {
+      this.pluginsOrder = this.pluginsOrder.filter(id => this._plugins.has(id));
+      shouldSavePluginsOrder = true;
+    }
+
     if (shouldSavePluginsOrder) {
       await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
       await this.pluginSettingsStore.save();
