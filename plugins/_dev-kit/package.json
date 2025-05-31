@@ -1,6 +1,6 @@
 {
   "name": "just-clipboard-manager-pdk",
-  "version": "4.0.21",
+  "version": "4.0.22",
   "description": "Plugin development kit for Just Clipboard Manager",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,10 @@
     "clipboard-manager",
     "just-clipboard-manager"
   ],
-  "author": "Yevheniy Tymchishin",
+  "author": {
+    "name": "Yevheniy Tymchishin",
+    "email": "timchishinevgeniy@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Tum4ik/just-clipboard-manager"
