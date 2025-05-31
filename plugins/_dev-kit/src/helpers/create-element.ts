@@ -1,12 +1,12 @@
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   document: Document,
   tagName: K,
-  props?: HTMLElementTagNameMap[K] | Record<string, any>,
-  style?: CSSStyleDeclaration | Record<string, any>,
-  children?: Node[],
-  options?: ElementCreationOptions
+  options?: CreateElementOptions<K>
 ): HTMLElementTagNameMap[K] {
   const el = document.createElement(tagName, options);
+  const props = options?.props;
+  const style = options?.style;
+  const children = options?.children;
   if (props) {
     for (const key in props) {
       (el as any)[key] = (props as any)[key];
@@ -23,4 +23,10 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
     }
   }
   return el;
+}
+
+export interface CreateElementOptions<K extends keyof HTMLElementTagNameMap> extends ElementCreationOptions {
+  props?: HTMLElementTagNameMap[K] | Record<string, any>;
+  style?: CSSStyleDeclaration | Record<string, any>;
+  children?: Node[];
 }
