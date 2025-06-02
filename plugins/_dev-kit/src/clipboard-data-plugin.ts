@@ -28,7 +28,8 @@ export abstract class ClipboardDataPlugin {
     return this._author;
   }
 
-  abstract get formats(): readonly string[];
+  abstract get representationFormats(): readonly string[];
+  abstract get formatsToSave(): readonly string[];
   abstract extractRepresentationData(data: Uint8Array, format: string): RepresentationData;
   abstract getRepresentationDataElement(representationData: RepresentationData, format: string, document: Document): HTMLElement;
   abstract getSearchLabel(data: Uint8Array, format: string): string | null;
