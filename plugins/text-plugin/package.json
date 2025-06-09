@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "just-clipboard-manager-pdk": "^4.0.21"
+    "just-clipboard-manager-pdk": "^4.0.25"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",

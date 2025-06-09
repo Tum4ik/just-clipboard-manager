@@ -1,11 +1,14 @@
 import { ClipboardDataPlugin, RepresentationData } from "just-clipboard-manager-pdk";
 
 export class TextPlugin extends ClipboardDataPlugin {
-  private readonly _formats = ['CF_UNICODETEXT', 'CF_TEXT'];
-  override get formats(): readonly string[] {
-    // the statement should be verified when Linux is supported
-    // UNICODETEXT typically is UTF-16 with CRLF on Windows and UTF-8 with LF on Linux
-    return this._formats;
+  private readonly _representationFormats = ['CF_UNICODETEXT', 'CF_TEXT'];
+  override get representationFormats(): readonly string[] {
+    return this._representationFormats;
+  }
+
+  private readonly _formatsToSave = ['CF_UNICODETEXT', 'CF_TEXT'];
+  override get formatsToSave(): readonly string[] {
+    return this._formatsToSave;
   }
 
   private readonly encoder = new TextEncoder();
@@ -24,7 +27,7 @@ export class TextPlugin extends ClipboardDataPlugin {
       text = this.utf16decoder.decode(data);
     }
 
-    const firstLine = text.split(/\r?\n/)[0];
+    const firstLine = text.split(/\r?\n/).find(line => line.trim().length > 0) || '';
     let encoded = this.encoder.encode(firstLine);
     if (encoded[encoded.length - 1] === 0) {
       encoded = encoded.subarray(0, encoded.length - 1);
@@ -35,6 +38,7 @@ export class TextPlugin extends ClipboardDataPlugin {
   override getRepresentationDataElement(representationData: RepresentationData, format: string, document: Document): HTMLElement {
     const div = document.createElement('div');
     div.textContent = this.utf8decoder.decode(representationData.data);
+    div.style.textWrapMode = 'nowrap';
     div.style.overflow = 'hidden';
     div.style.textOverflow = 'ellipsis';
     return div;
