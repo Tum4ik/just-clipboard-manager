@@ -1,6 +1,10 @@
-import { ClipPreview } from "./clip-preview.model";
+import { PluginId } from "just-clipboard-manager-pdk";
 
-export interface Clip extends ClipPreview {
-  data: Uint8Array;
-  clippedAt: Date;
+export interface Clip {
+  id?: number;
+  pluginId: PluginId;
+  representationData: Uint8Array;
+  representationMetadata: Object | undefined;
+  representationFormat: string;
+  searchLabel: string | undefined;
 }

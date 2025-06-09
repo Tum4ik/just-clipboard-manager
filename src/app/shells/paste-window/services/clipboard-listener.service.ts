@@ -4,11 +4,13 @@ import { listen } from '@tauri-apps/api/event';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
 import { Subject } from 'rxjs';
 import { ClipsRepository } from '../../../core/data/repositories/clips.repository';
+import { MonitoringService } from '../../../core/services/monitoring.service';
 import { PluginsService } from '../../../core/services/plugins.service';
 
 @Injectable()
 export class ClipboardListener {
   constructor(
+    private readonly monitoringService: MonitoringService,
     private readonly pluginsService: PluginsService,
   ) { }
 
@@ -46,35 +48,41 @@ export class ClipboardListener {
       return;
     }
 
-    const bytesArr = await invoke<number[]>('get_clipboard_data_bytes', { format: pickResult.formatId });
-    if (!bytesArr || bytesArr.length <= 0) {
-      return;
-    }
-    const bytes = Uint8Array.from(bytesArr);
-    const representationData = pickResult.plugin.extractRepresentationData(bytes, pickResult.format);
-    const searchLabel = pickResult.plugin.getSearchLabel(bytes, pickResult.format);
+    try {
+      const [clipId, representationBytes] = await invoke<[clipId: number, representationBytes: number[]]>(
+        'save_data_objects_and_get_representation_bytes',
+        {
+          representationFormat: pickResult.formatId,
+          formatsToSave: pickResult.plugin.formatsToSave.map(f => availableFormats.get(f))
+        }
+      );
 
-    await this.clipsRepository.insertAsync({
-      pluginId: pickResult.plugin.id,
-      representationData: representationData.data,
-      representationMetadata: representationData.metadata,
-      data: bytes,
-      formatId: pickResult.formatId,
-      format: pickResult.format,
-      searchLabel: searchLabel,
-      clippedAt: new Date(),
-    });
-    this.clipboardUpdatedSubject.next();
+      const bytes = Uint8Array.from(representationBytes);
+      const representationData = pickResult.plugin.extractRepresentationData(bytes, pickResult.formatName);
+      const searchLabel = pickResult.plugin.getSearchLabel(bytes, pickResult.formatName);
+
+      await this.clipsRepository.updateAsync({
+        id: clipId,
+        pluginId: pickResult.plugin.id,
+        representationData: representationData.data,
+        representationMetadata: representationData.metadata,
+        representationFormat: pickResult.formatName,
+        searchLabel: searchLabel ?? undefined,
+      });
+      this.clipboardUpdatedSubject.next();
+    } catch (error) {
+      this.monitoringService.error('Clipboard item handling failed.', error);
+    }
   }
 
 
   private pickPlugin(availableFormats: Map<string, number>)
-    : { plugin: ClipboardDataPlugin, format: string, formatId: number; } | null {
+    : { plugin: ClipboardDataPlugin, formatName: string, formatId: number; } | null {
 
     for (const plugin of this.pluginsService.enabledPlugins) {
-      for (const format of plugin.formats) {
+      for (const format of plugin.representationFormats) {
         if (availableFormats.has(format)) {
-          return { plugin, format, formatId: availableFormats.get(format)! };
+          return { plugin, formatName: format, formatId: availableFormats.get(format)! };
         }
       }
     }

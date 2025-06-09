@@ -92,11 +92,7 @@ export class PluginsService {
       if (!pluginDir.isDirectory) {
         continue;
       }
-      const pluginId = await this.loadPluginAsync(pluginDir.name);
-      if (pluginId && !this.pluginsOrder.includes(pluginId)) {
-        this.pluginsOrder.unshift(pluginId);
-        shouldSavePluginsOrder = true;
-      }
+      await this.loadPluginAsync(pluginDir.name);
     }
 
     if (this._plugins.size < this.pluginsOrder.length) {
@@ -193,7 +189,7 @@ export class PluginsService {
   }
 
 
-  private async loadPluginAsync(pluginDirName: string): Promise<PluginId | undefined> {
+  private async loadPluginAsync(pluginDirName: string): Promise<void> {
     const pluginBundlePath = `plugins/${pluginDirName}/plugin-bundle.mjs`;
     try {
       const pluginFileBytes = await readFile(pluginBundlePath, {
@@ -212,12 +208,15 @@ export class PluginsService {
       this._plugins.set(pluginId, { plugin: pluginInstance, isEnabled: enabled });
       this._installedPlugins = undefined;
       this._enabledPlugins = undefined;
-      return pluginId;
+
+      if (this.pluginsOrder && !this.pluginsOrder.includes(pluginId)) {
+        this.pluginsOrder.unshift(pluginId);
+        await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+        await this.pluginSettingsStore.save();
+      }
     } catch (e) {
       this.monitoringService.error(`Failed to load plugin from ${pluginBundlePath}`, e);
     }
-
-    return undefined;
   }
 
 

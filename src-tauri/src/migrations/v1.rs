@@ -11,11 +11,19 @@ pub fn v1() -> Migration {
       plugin_id TEXT,
       representation_data BLOB,
       representation_metadata TEXT,
-      data BLOB,
-      format_id INTEGER,
-      format TEXT,
+      representation_format TEXT,
       search_label TEXT,
-      clipped_at TEXT
+      clipped_at DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
+    );
+    CREATE INDEX idx_clips_search_label ON clips (search_label);
+
+    CREATE TABLE data_objects (
+      id INTEGER PRIMARY KEY,
+      format_id INTEGER NOT NULL,
+      data BLOB NOT NULL,
+
+      clip_id INTEGER NOT NULL,
+      FOREIGN KEY (clip_id) REFERENCES clips(id) ON DELETE CASCADE
     );
     ",
   }

@@ -148,7 +148,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private loadedClips = new Map<number, { formatId: number, component: ComponentRef<ClipItemComponent>; }>();
+  private loadedClips = new Map<number, ComponentRef<ClipItemComponent>>();
 
   private async loadClipsAsync(skip: number, take: number, search?: string) {
     if (this.isClipsLoading) {
@@ -158,11 +158,11 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isClipsLoading = true;
 
     const enabledPluginIds = this.pluginsService.enabledPlugins.map(ep => ep.id);
-    const clips = await this.clipsRepository.getClipPreviewsAsync(enabledPluginIds, skip, take, search);
+    const clips = await this.clipsRepository.getClipsAsync(enabledPluginIds, skip, take, search);
     if (clips.length > 0) {
       for (const clip of clips) {
         if (this.loadedClips.has(clip.id!)) {
-          const component = this.loadedClips.get(clip.id!)!.component;
+          const component = this.loadedClips.get(clip.id!)!;
           this.clipsContainer().insert(component.hostView);
         }
         else {
@@ -172,11 +172,11 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           const item = plugin.getRepresentationDataElement(
             { data: clip.representationData, metadata: clip.representationMetadata },
-            clip.format, this.document
+            clip.representationFormat, this.document
           );
           if (item) {
             const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
-            this.loadedClips.set(clip.id!, { formatId: clip.formatId, component: clipItem });
+            this.loadedClips.set(clip.id!, clipItem);
             clipItem.setInput('clipId', clip.id);
             clipItem.setInput('htmlElement', item);
             clipItem.instance.pasteDataRequested.subscribe(this.onPasteDataRequested.bind(this));
@@ -190,12 +190,9 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   private async onPasteDataRequested(clipId: number) {
-    const data = await this.clipsRepository.getClipDataAsync(clipId);
-    if (data) {
-      await this.pasteDataService.pasteDataAsync(data, this.loadedClips.get(clipId)!.formatId);
-      await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
-      this.clipsContainer().move(this.loadedClips.get(clipId)!.component.hostView, 0);
-    }
+    await this.pasteDataService.pasteDataAsync(clipId);
+    await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
+    this.clipsContainer().move(this.loadedClips.get(clipId)!.hostView, 0);
   }
 
 

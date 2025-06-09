@@ -1,30 +1,26 @@
 import { invoke } from '@tauri-apps/api/core';
 import { PluginId } from 'just-clipboard-manager-pdk';
-import { ClipPreview } from "../models/clip-preview.model";
-import { Clip } from "../models/clip.model";
+import { Clip } from '../models/clip.model';
 import { BaseDatabaseRepository } from "./base-database.repository";
 
 export class ClipsRepository extends BaseDatabaseRepository {
 
-  async insertAsync(clip: Clip): Promise<void> {
-    const metadataObject = clip.representationMetadata ?? {};
-    await invoke('insert_bytes_data', {
+  async updateAsync(clip: Clip): Promise<void> {
+    await invoke('update_clip', {
       dbPath: this.db.path,
+      clipId: clip.id,
       pluginId: clip.pluginId,
       representationData: clip.representationData,
-      representationMetadata: JSON.stringify(metadataObject),
-      data: clip.data,
-      formatId: clip.formatId,
-      format: clip.format,
+      representationMetadata: JSON.stringify(clip.representationMetadata ?? {}),
+      representationFormat: clip.representationFormat,
       searchLabel: clip.searchLabel,
-      clippedAt: clip.clippedAt,
     });
   }
 
 
-  async getClipPreviewsAsync(enabledPluginIds: PluginId[], skip: number, take: number, search?: string): Promise<readonly ClipPreview[]> {
+  async getClipsAsync(enabledPluginIds: PluginId[], skip: number, take: number, search?: string): Promise<readonly Clip[]> {
     const result = await this.db.select<any[]>(`
-      SELECT id, plugin_id, representation_data, representation_metadata, format_id, format, search_label
+      SELECT id, plugin_id, representation_data, representation_metadata, representation_format, search_label
       FROM clips
       WHERE plugin_id IN ('${enabledPluginIds.join("','")}')
       ${search ? "AND search_label LIKE '%' || $1 || '%'" : ''}
@@ -39,10 +35,9 @@ export class ClipsRepository extends BaseDatabaseRepository {
         pluginId: r.plugin_id,
         representationData: new Uint8Array(r.representation_data),
         representationMetadata: JSON.parse(r.representation_metadata),
-        formatId: r.format_id,
-        format: r.format,
+        representationFormat: r.representation_format,
         searchLabel: r.search_label,
-      } as ClipPreview;
+      } as Clip;
     });
   }
 
@@ -66,7 +61,7 @@ export class ClipsRepository extends BaseDatabaseRepository {
   async updateClippedAtAsync(id: number, clippedAt: Date): Promise<void> {
     await this.db.execute(`
       UPDATE clips
-      SET clipped_at = $1
+      SET clipped_at = datetime($1, 'localtime')
       WHERE id = $2
       `,
       [clippedAt, id]
