@@ -9,7 +9,7 @@ const DARK_MODE_SELECTOR = 'dark-mode';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   constructor(
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
   ) { }
 
   private isInitialized = false;
@@ -18,8 +18,10 @@ export class ThemeService {
   themeChanged$ = this.themeChangedSubject.asObservable();
 
   get isDarkMode(): boolean {
-    return (Theme.getTheme().options.darkModeSelector === 'system' && window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches)
-      || (window.document.documentElement.classList.contains(DARK_MODE_SELECTOR));
+    const isSystemDarkModeSelector = Theme.getTheme().options.darkModeSelector === 'system';
+    const prefersColorSchemeDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
+    const containsDarkModeSelector = document.documentElement.classList.contains(DARK_MODE_SELECTOR);
+    return (isSystemDarkModeSelector && prefersColorSchemeDark) || containsDarkModeSelector;
   }
 
 
