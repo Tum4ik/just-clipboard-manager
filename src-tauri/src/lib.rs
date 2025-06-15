@@ -2,7 +2,6 @@ mod clipboard_listener;
 mod commands;
 mod constants;
 mod migrations;
-mod sentry_commands;
 
 use clipboard_listener::clipboard_listener;
 use config::Config;
@@ -33,19 +32,7 @@ pub fn run(config: Config) {
     .plugin(tauri_plugin_store::Builder::new().build())
     .manage(config)
     .setup(clipboard_listener)
-    .invoke_handler(tauri::generate_handler![
-      commands::save_data_objects_and_get_representation_bytes,
-      commands::update_clip,
-      commands::paste_clip,
-      commands::get_foreground_window,
-      commands::open_main_window,
-      commands::environment,
-      commands::extract_and_remove_zip,
-      sentry_commands::sentry_capture_info,
-      sentry_commands::sentry_capture_warning,
-      sentry_commands::sentry_capture_error,
-      sentry_commands::sentry_capture_fatal,
-    ])
+    .invoke_handler(all_commands!())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
