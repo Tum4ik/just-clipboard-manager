@@ -11,4 +11,4 @@ export type PackageJson = {
 };
 
 export type Author = { name?: string; email?: string; };
-export type RepresentationData = { data: Uint8Array; metadata?: Object | undefined; };
+export type RepresentationData = { data: Uint8Array; metadata?: Object; };
