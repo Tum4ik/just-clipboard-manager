@@ -172,7 +172,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           const item = plugin.getRepresentationDataElement(
             { data: clip.representationData, metadata: clip.representationMetadata },
-            clip.representationFormat, this.document
+            clip.representationFormatName, this.document
           );
           if (item) {
             const clipItem = this.clipsContainer().createComponent(ClipItemComponent);

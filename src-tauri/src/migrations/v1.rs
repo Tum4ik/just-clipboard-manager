@@ -11,7 +11,8 @@ pub fn v1() -> Migration {
       plugin_id TEXT,
       representation_data BLOB,
       representation_metadata TEXT,
-      representation_format TEXT,
+      representation_format_id INTEGER,
+      representation_format_name TEXT,
       search_label TEXT,
       clipped_at DATETIME NOT NULL DEFAULT (datetime('now','localtime'))
     );

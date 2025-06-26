@@ -9,7 +9,7 @@ use crate::constants::DB_PATH;
 #[tauri::command]
 pub async fn save_data_objects_and_get_representation_bytes(
   db_instances: State<'_, DbInstances>,
-  representation_format: u32,
+  representation_format_id: u32,
   formats_to_save: Vec<u32>,
 ) -> Result<(i64, Vec<u8>), String> {
   let mut representation_bytes: Vec<u8> = vec![];
@@ -50,7 +50,7 @@ pub async fn save_data_objects_and_get_representation_bytes(
       continue;
     }
 
-    if format == representation_format {
+    if format == representation_format_id {
       representation_bytes = bytes.clone();
     }
 
@@ -61,7 +61,7 @@ pub async fn save_data_objects_and_get_representation_bytes(
 
   if representation_bytes.len() <= 0 {
     return Err(format!(
-      "Can't get bytes for representation format: {representation_format}"
+      "Can't get bytes for representation format: {representation_format_id}"
     ));
   }
 

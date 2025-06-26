@@ -12,15 +12,24 @@ export class ClipsRepository extends BaseDatabaseRepository {
       pluginId: clip.pluginId,
       representationData: clip.representationData,
       representationMetadata: JSON.stringify(clip.representationMetadata ?? {}),
-      representationFormat: clip.representationFormat,
+      representationFormatId: clip.representationFormatId,
+      representationFormatName: clip.representationFormatName,
       searchLabel: clip.searchLabel,
     });
   }
 
 
   async getClipsAsync(enabledPluginIds: PluginId[], skip: number, take: number, search?: string): Promise<readonly Clip[]> {
-    const result = await this.db.select<any[]>(`
-      SELECT id, plugin_id, representation_data, representation_metadata, representation_format, search_label
+    const result = await this.db.select<any[]>(
+      /* sql */`
+      SELECT
+        id,
+        plugin_id,
+        representation_data,
+        representation_metadata,
+        representation_format_id,
+        representation_format_name,
+        search_label
       FROM clips
       WHERE plugin_id IN ('${enabledPluginIds.join("','")}')
       ${search ? "AND search_label LIKE '%' || $1 || '%'" : ''}
@@ -35,37 +44,44 @@ export class ClipsRepository extends BaseDatabaseRepository {
         pluginId: r.plugin_id,
         representationData: new Uint8Array(r.representation_data),
         representationMetadata: JSON.parse(r.representation_metadata),
-        representationFormat: r.representation_format,
+        representationFormatId: r.representation_format_id,
+        representationFormatName: r.representation_format_name,
         searchLabel: r.search_label,
       } as Clip;
     });
   }
 
 
-  // todo: move to rust (command)
-  async getClipDataAsync(id: number): Promise<Uint8Array | null> {
-    const result = await this.db.select<any[]>(`
-      SELECT data
-      FROM clips
-      WHERE id = $1
-      `,
-      [id]
-    );
-    if (result.length <= 0) {
-      return null;
-    }
-    return new Uint8Array(result[0].data);
-  }
-
-
   async updateClippedAtAsync(id: number, clippedAt: Date): Promise<void> {
-    await this.db.execute(`
+    await this.db.execute(
+      /* sql */`
       UPDATE clips
       SET clipped_at = datetime($1, 'localtime')
       WHERE id = $2
       `,
       [clippedAt, id]
     );
+  }
+
+
+  async getClipFullDataPreviewAsync(clipId: number): Promise<{ pluginId: PluginId; data: Uint8Array; format: string; } | null> {
+    const result = await this.db.select<any[]>(
+      /* sql */`
+      SELECT clips.plugin_id, clips.representation_format_name, data_objects.data
+      FROM clips
+      JOIN data_objects
+        ON
+          clips.id = data_objects.clip_id
+          AND clips.representation_format_id = data_objects.format_id
+      WHERE clips.id = $1
+      `,
+      [clipId]
+    );
+    return {
+      pluginId: result[0].plugin_id,
+      data: new Uint8Array(result[0].data),
+      format: result[0].representation_format_name
+    };
   }
 
 

@@ -1,3 +1,17 @@
 <p-button variant="text" size="small" (onClick)="paste()">
   <div #buttonContent class="content"></div>
 </p-button>
+@if (isActionButtonsVisible) {
+<div class="action-buttons">
+  <p-button class="preview-btn"
+            variant="text" size="small"
+            (onClick)="preview()">
+    <span class="material-symbols-rounded">open_in_new</span>
+  </p-button>
+  <p-button class="delete-btn"
+            variant="text" size="small"
+            (onClick)="delete()">
+    <span class="material-symbols-rounded">delete</span>
+  </p-button>
+</div>
+}

@@ -5,6 +5,7 @@ export interface Clip {
   pluginId: PluginId;
   representationData: Uint8Array;
   representationMetadata: Object | undefined;
-  representationFormat: string;
+  representationFormatId: number;
+  representationFormatName: string;
   searchLabel: string | undefined;
 }

@@ -52,22 +52,22 @@ export class ClipboardListener {
       const [clipId, representationBytes] = await invoke<[clipId: number, representationBytes: number[]]>(
         'save_data_objects_and_get_representation_bytes',
         {
-          representationFormat: pickResult.formatId,
+          representationFormatId: pickResult.formatId,
           formatsToSave: pickResult.plugin.formatsToSave.map(f => availableFormats.get(f))
         }
       );
 
       const bytes = Uint8Array.from(representationBytes);
-      const representationData = pickResult.plugin.extractRepresentationData(bytes, pickResult.formatName);
-      const searchLabel = pickResult.plugin.getSearchLabel(bytes, pickResult.formatName);
+      const { representationData, searchLabel } = pickResult.plugin.extractRepresentationData(bytes, pickResult.formatName);
 
       await this.clipsRepository.updateAsync({
         id: clipId,
         pluginId: pickResult.plugin.id,
         representationData: representationData.data,
         representationMetadata: representationData.metadata,
-        representationFormat: pickResult.formatName,
-        searchLabel: searchLabel ?? undefined,
+        representationFormatId: pickResult.formatId,
+        representationFormatName: pickResult.formatName,
+        searchLabel: searchLabel,
       });
       this.clipboardUpdatedSubject.next();
     } catch (error) {

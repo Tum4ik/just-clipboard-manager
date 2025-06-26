@@ -28,6 +28,11 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'full-data-preview/:clipId',
+    loadComponent: () => import('./shells/paste-window/components/clip-full-data-preview/clip-full-data-preview')
+      .then(c => c.ClipFullDataPreview)
+  },
+  {
     path: 'main-window',
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
     children: [

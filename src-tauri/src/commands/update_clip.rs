@@ -10,7 +10,8 @@ pub async fn update_clip(
   plugin_id: String,
   representation_data: Vec<u8>,
   representation_metadata: String,
-  representation_format: String,
+  representation_format_id: u32,
+  representation_format_name: String,
   search_label: Option<String>,
 ) -> Result<(), String> {
   let db_instances = db_instances.0.read().await;
@@ -21,7 +22,8 @@ pub async fn update_clip(
     SET plugin_id = ?,
         representation_data = ?,
         representation_metadata = ?,
-        representation_format = ?,
+        representation_format_id = ?,
+        representation_format_name = ?,
         search_label = ?
     WHERE id = ?
     ",
@@ -29,7 +31,8 @@ pub async fn update_clip(
   .bind(plugin_id)
   .bind(representation_data)
   .bind(representation_metadata)
-  .bind(representation_format)
+  .bind(representation_format_id)
+  .bind(representation_format_name)
   .bind(search_label)
   .bind(clip_id)
   .execute(db)
