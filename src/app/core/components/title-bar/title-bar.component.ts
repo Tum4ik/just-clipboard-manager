@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
+import { MonitoringService } from '@core/services/monitoring.service';
 import { UnlistenFn } from '@tauri-apps/api/event';
 import { Window } from '@tauri-apps/api/window';
 import { Button } from 'primeng/button';
 import { Menubar } from 'primeng/menubar';
-import { MonitoringService } from '../../../../core/services/monitoring.service';
 
 @Component({
   selector: 'jcm-title-bar',
