@@ -1,5 +1,4 @@
 import { Component, effect, ElementRef, input, output, Renderer2, viewChild } from '@angular/core';
-import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -29,6 +28,7 @@ export class ClipItemComponent {
   readonly htmlElement = input.required<HTMLElement>();
 
   readonly pasteDataRequested = output<number>();
+  readonly previewDataRequested = output<number>();
   readonly deleteItemRequested = output<number>();
 
   isActionButtonsVisible = false;
@@ -46,15 +46,10 @@ export class ClipItemComponent {
   }
 
   preview() {
-    const appWindow = new WebviewWindow('clip-preview-window', {
-      decorations: false,
-      skipTaskbar: true,
-      alwaysOnTop: true,
-      url: `full-data-preview/${this.clipId()}`
-    });
-
+    this.previewDataRequested.emit(this.clipId());
   }
 
   delete() {
+    this.deleteItemRequested.emit(this.clipId());
   }
 }

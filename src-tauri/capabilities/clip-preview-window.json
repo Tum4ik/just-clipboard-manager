@@ -1,9 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "paste-window",
+  "identifier": "clip-preview-window",
   "description": "Capability for the paste window",
   "windows": [
-    "paste-window",
     "clip-preview-window"
   ],
   "permissions": [
@@ -13,14 +12,14 @@
     "core:window:allow-hide",
     "core:window:allow-set-focus",
     "core:window:allow-set-position",
-    "core:window:allow-destroy",
+    "core:window:allow-start-dragging",
+    "core:window:allow-maximize",
+    "core:window:allow-unmaximize",
+    "core:window:allow-close",
     "core:webview:allow-create-webview-window",
     "opener:default",
     "fs:allow-resource-read-recursive",
     "process:default",
-    "global-shortcut:allow-register",
-    "global-shortcut:allow-unregister",
-    "global-shortcut:allow-is-registered",
     "sql:allow-close",
     "sql:allow-execute",
     "sql:allow-load",

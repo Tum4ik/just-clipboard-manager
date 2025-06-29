@@ -14,6 +14,9 @@ export class PasteWindowService {
   private visibilitySubject = new BehaviorSubject<boolean>(false);
   readonly visibility$ = this.visibilitySubject.asObservable();
 
+  private isBlockedSubject = new BehaviorSubject<boolean>(false);
+  readonly isBlocked$ = this.isBlockedSubject.asObservable();
+
   async initAsync(): Promise<void> {
     if (this.pasteWindow) {
       return;
@@ -45,8 +48,19 @@ export class PasteWindowService {
   }
 
   async hideAsync() {
-    await this.pasteWindow?.hide();
-    this.visibilitySubject.next(false);
+    if (!this.isBlockedSubject.value) {
+      await this.pasteWindow?.hide();
+      this.visibilitySubject.next(false);
+    }
+  }
+
+
+  block() {
+    this.isBlockedSubject.next(true);
+  }
+
+  unblock() {
+    this.isBlockedSubject.next(false);
   }
 
 

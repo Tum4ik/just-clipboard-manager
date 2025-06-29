@@ -1,5 +1,5 @@
 import { Component, DOCUMENT, ElementRef, Inject, input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Button } from 'primeng/button';
+import { TitleBarComponent } from '@core/components/title-bar/title-bar.component';
 import { ClipsRepository } from '../../../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../../../core/services/plugins.service';
 
@@ -7,7 +7,9 @@ import { PluginsService } from '../../../../core/services/plugins.service';
   selector: 'jcm-clip-full-data-preview',
   templateUrl: './clip-full-data-preview.html',
   styleUrl: './clip-full-data-preview.scss',
-  imports: [Button],
+  imports: [
+    TitleBarComponent
+  ],
 })
 export class ClipFullDataPreview implements OnInit, OnDestroy {
   constructor(
@@ -19,7 +21,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
 
   private readonly clipsRepository = new ClipsRepository();
 
-  clipId = input.required<number>();
+  readonly clipId = input.required<number>();
 
   ngOnInit(): void {
     this.loadDataPreviewElement();

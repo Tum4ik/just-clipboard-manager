@@ -3,6 +3,7 @@
 
   </ng-template>
   <ng-template #end>
+    @if (isMinimizeAvailable()) {
     <p-button [text]="true" (onClick)="minimize()">
       <svg width="10" height="10" viewBox="0 -9 10 10" xmlns="http://www.w3.org/2000/svg">
         <path d="M0.498047 1C0.429688 1 0.364583 0.986979 0.302734 0.960938C0.244141 0.934896 0.192057 0.899089
@@ -16,6 +17,7 @@
                  0.986979 9.57031 1 9.50195 1H0.498047Z" />
       </svg>
     </p-button>
+    }
     <p-button [text]="true" (onClick)="maximizeOrRestore()">
       @if (isWindowMaximized){
       <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">

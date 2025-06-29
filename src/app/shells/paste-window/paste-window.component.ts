@@ -1,6 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ComponentRef, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ComponentRef, ElementRef, Inject, inputBinding, NgZone, OnDestroy, OnInit, outputBinding, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { BlockUIModule } from 'primeng/blockui';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
@@ -21,6 +23,7 @@ import { PasteWindowService } from './services/paste-window.service';
     Panel,
     ScrollPanelModule,
     TranslatePipe,
+    BlockUIModule,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -51,6 +54,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
 
   scrollableAreaHeight = '0px';
+  isWindowBlocked = false;
 
 
   async ngOnInit(): Promise<void> {
@@ -92,6 +96,11 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.searchSubject.next('');
           this.searchInputElement().nativeElement.value = '';
         }
+      })
+    );
+    this.subscriptions.add(
+      this.pasteWindowService.isBlocked$.subscribe(isBlocked => {
+        this.isWindowBlocked = isBlocked;
       })
     );
     this.subscriptions.add(
@@ -175,11 +184,15 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
             clip.representationFormatName, this.document
           );
           if (item) {
-            const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
+            const clipItem = this.clipsContainer().createComponent(ClipItemComponent, {
+              bindings: [
+                inputBinding('clipId', () => clip.id),
+                inputBinding('htmlElement', () => item),
+                outputBinding<number>('pasteDataRequested', clipId => this.onPasteDataRequested(clipId)),
+                outputBinding<number>('previewDataRequested', clipId => this.onPreviewDataRequested(clipId)),
+              ]
+            });
             this.loadedClips.set(clip.id!, clipItem);
-            clipItem.setInput('clipId', clip.id);
-            clipItem.setInput('htmlElement', item);
-            clipItem.instance.pasteDataRequested.subscribe(this.onPasteDataRequested.bind(this));
           }
         }
       }
@@ -193,6 +206,20 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.pasteDataService.pasteDataAsync(clipId);
     await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
     this.clipsContainer().move(this.loadedClips.get(clipId)!.hostView, 0);
+  }
+
+
+  private async onPreviewDataRequested(clipId: number) {
+    this.pasteWindowService.block();
+    const appWindow = new WebviewWindow('clip-preview-window', {
+      decorations: false,
+      skipTaskbar: true,
+      alwaysOnTop: true,
+      url: `full-data-preview/${clipId}`
+    });
+    await appWindow.onCloseRequested(e => {
+      this.ngZone.run(() => this.pasteWindowService.unblock());
+    });
   }
 
 

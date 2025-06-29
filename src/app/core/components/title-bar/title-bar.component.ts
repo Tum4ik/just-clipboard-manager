@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
 import { MonitoringService } from '@core/services/monitoring.service';
 import { UnlistenFn } from '@tauri-apps/api/event';
-import { Window } from '@tauri-apps/api/window';
+import { getCurrentWindow, Window } from '@tauri-apps/api/window';
 import { Button } from 'primeng/button';
 import { Menubar } from 'primeng/menubar';
 
@@ -26,10 +26,12 @@ export class TitleBarComponent implements OnInit, AfterViewInit, OnDestroy {
   private window?: Window;
   private windowResizeListener?: UnlistenFn | undefined;
 
+  readonly isMinimizeAvailable = input(true);
+
   isWindowMaximized = false;
 
   async ngOnInit() {
-    const window = await Window.getByLabel('main-window');
+    const window = getCurrentWindow();
     if (!window) {
       this.monitoringService.fatal('Main window instance is not found');
       return;
