@@ -63,6 +63,10 @@ export class PasteWindowService {
     this.isBlockedSubject.next(false);
   }
 
+  focus() {
+    this.pasteWindow?.setFocus();
+  }
+
 
   private async getWindowPosition(windowSize: PhysicalSize): Promise<PhysicalPosition> {
     const position = await cursorPosition();

@@ -56,6 +56,7 @@ export class TextPlugin extends ClipboardDataPlugin {
     const pre = document.createElement('pre');
     pre.textContent = text;
     pre.style.textWrap = 'nowrap';
+    pre.style.margin = '0';
     return pre;
   }
 }

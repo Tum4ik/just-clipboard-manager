@@ -44,7 +44,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
   private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
-  private readonly clipsContainer = viewChild.required<unknown, ViewContainerRef>('clipsContainer', { read: ViewContainerRef });
+  private readonly clipsContainer = viewChild.required('clipsContainer', { read: ViewContainerRef });
 
   private isClipsLoading = false;
   private isWindowVisible = false;
@@ -58,19 +58,20 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   async ngOnInit(): Promise<void> {
+    const rootElement = this.rootElement().nativeElement;
     this.resizeObserver = new ResizeObserver(entries => {
-      this.ngZone.run(() => {
-        for (const entry of entries) {
-          if (entry.target === this.rootElement().nativeElement) {
-            const windowHeight = this.rootElement().nativeElement.clientHeight;
-            const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
-            const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
+      for (const entry of entries) {
+        if (entry.target === rootElement) {
+          const windowHeight = rootElement.clientHeight;
+          const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
+          const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
+          this.ngZone.run(() => {
             this.scrollableAreaHeight = `${windowHeight - searchInputHeight - 2 * topBottomMargins}px`;
-          }
+          });
         }
-      });
+      }
     });
-    this.resizeObserver.observe(this.rootElement().nativeElement);
+    this.resizeObserver.observe(rootElement);
 
     this.subscriptions.add(
       this.searchSubject.pipe(
@@ -218,7 +219,10 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       url: `full-data-preview/${clipId}`
     });
     await appWindow.onCloseRequested(e => {
-      this.ngZone.run(() => this.pasteWindowService.unblock());
+      this.ngZone.run(() => {
+        this.pasteWindowService.unblock();
+        this.pasteWindowService.focus();
+      });
     });
   }
 
