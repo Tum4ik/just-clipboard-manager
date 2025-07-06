@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Theme, useTheme } from '@primeng/themes';
+import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsService, ThemeMode } from './settings.service';
 
@@ -10,15 +10,16 @@ const DARK_MODE_SELECTOR = 'dark-mode';
 export class ThemeService {
   constructor(
     private readonly settingsService: SettingsService,
+    private readonly primeNg: PrimeNG,
   ) { }
 
   private isInitialized = false;
 
-  private themeChangedSubject = new BehaviorSubject<'light' | 'dark'>(this.isDarkMode ? 'dark' : 'light');
+  private themeChangedSubject = new BehaviorSubject<'light' | 'dark'>('dark');
   themeChanged$ = this.themeChangedSubject.asObservable();
 
   get isDarkMode(): boolean {
-    const isSystemDarkModeSelector = Theme.getTheme().options.darkModeSelector === 'system';
+    const isSystemDarkModeSelector = this.primeNg.theme().options.darkModeSelector === 'system';
     const prefersColorSchemeDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
     const containsDarkModeSelector = document.documentElement.classList.contains(DARK_MODE_SELECTOR);
     return (isSystemDarkModeSelector && prefersColorSchemeDark) || containsDarkModeSelector;
@@ -45,7 +46,7 @@ export class ThemeService {
 
 
   private setMode(mode: ThemeMode) {
-    const currentTheme = Theme.getTheme();
+    const currentTheme = this.primeNg.theme();
     const htmlElement = document.querySelector('html');
     switch (mode) {
       case 'system':
@@ -61,7 +62,8 @@ export class ThemeService {
         htmlElement?.classList?.add(DARK_MODE_SELECTOR);
         break;
     }
-    useTheme(currentTheme);
+
+    this.primeNg.onThemeChange(currentTheme);
     this.notifyThemeChanged();
   }
 

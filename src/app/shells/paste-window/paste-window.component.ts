@@ -130,9 +130,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const scrollPanelElement = this.scrollPanel().containerViewChild?.nativeElement as HTMLElement;
-    const scrollPanelContent = scrollPanelElement.querySelector('.p-scrollpanel-content');
-    this.subscriptions.add(this.renderer.listen(scrollPanelContent, 'scroll', this.onScroll.bind(this)));
+    const scrollPanelElement = this.scrollPanel().contentViewChild?.nativeElement as HTMLElement;
+    this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
   }
 
   ngOnDestroy(): void {

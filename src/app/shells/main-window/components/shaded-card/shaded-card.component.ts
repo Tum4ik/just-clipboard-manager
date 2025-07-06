@@ -15,7 +15,7 @@ import { ThemeService } from '../../../../core/services/theme.service';
 })
 export class ShadedCardComponent implements OnInit, OnDestroy {
   constructor(
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
   ) { }
 
   private themeChangedSubscription?: Subscription;

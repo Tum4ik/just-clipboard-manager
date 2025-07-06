@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
+import { Component, input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { MonitoringService } from '@core/services/monitoring.service';
 import { UnlistenFn } from '@tauri-apps/api/event';
 import { getCurrentWindow, Window } from '@tauri-apps/api/window';
@@ -14,14 +14,11 @@ import { Menubar } from 'primeng/menubar';
     Button,
   ]
 })
-export class TitleBarComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TitleBarComponent implements OnInit, OnDestroy {
   constructor(
-    private readonly renderer: Renderer2,
     private readonly ngZone: NgZone,
     private readonly monitoringService: MonitoringService,
   ) { }
-
-  private readonly titleBar = viewChild.required<Button, ElementRef>('titleBar', { read: ElementRef });
 
   private window?: Window;
   private windowResizeListener?: UnlistenFn | undefined;
@@ -41,11 +38,6 @@ export class TitleBarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.windowResizeListener = await window.onResized(async () => {
       await this.ngZone.run(async () => this.isWindowMaximized = await window.isMaximized());
     });
-  }
-
-  ngAfterViewInit(): void {
-    const menubarContent = this.titleBar().nativeElement.querySelector('.p-menubar');
-    this.renderer.setAttribute(menubarContent, 'data-tauri-drag-region', '');
   }
 
   ngOnDestroy(): void {
