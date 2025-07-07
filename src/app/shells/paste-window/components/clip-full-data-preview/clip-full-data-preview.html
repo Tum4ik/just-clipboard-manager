@@ -1,7 +1,7 @@
 <jcm-title-bar [isMinimizeAvailable]="false" />
 <div #panelWrapper class="panel">
-  <p-panel [style]="{ width: '100%', height: '100%', padding: '4px' }">
-    <p-scroll-panel [style]="{ height: scrollHeight }">
+  <p-panel>
+    <p-scroll-panel [style.height.px]="scrollHeight">
       @if (isLoading) {
       <p-progress-spinner />
       }

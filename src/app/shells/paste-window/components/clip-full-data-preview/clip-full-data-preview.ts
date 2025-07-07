@@ -35,7 +35,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
   readonly clipId = input.required<number>();
 
   isLoading = true;
-  scrollHeight = '0';
+  scrollHeight = 0;
 
   ngOnInit(): void {
     const panelWrapperElement = this.panelWrapper().nativeElement;
@@ -43,7 +43,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
       for (const entry of entries) {
         if (entry.target === panelWrapperElement) {
           this.ngZone.run(() => {
-            this.scrollHeight = `${panelWrapperElement.clientHeight - 6 - 2 * 4}px`;
+            this.scrollHeight = panelWrapperElement.clientHeight - 6 - 2 * 4;
           });
         }
       }

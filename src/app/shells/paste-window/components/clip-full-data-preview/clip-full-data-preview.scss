@@ -11,7 +11,9 @@
 
   p-panel {
     --p-panel-header-padding: 0;
-    --p-panel-content-padding: 0;
+    --p-panel-content-padding: 4px;
+    width: 100%;
+    height: 100%;
   }
 
   p-progress-spinner {
