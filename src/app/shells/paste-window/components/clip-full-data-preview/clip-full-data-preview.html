@@ -2,7 +2,10 @@
 <div #panelWrapper class="panel">
   <p-panel [style]="{ width: '100%', height: '100%', padding: '4px' }">
     <p-scroll-panel [style]="{ height: scrollHeight }">
-      <div #previewContent></div>
+      @if (isLoading) {
+      <p-progress-spinner />
+      }
+      <div #previewContent [hidden]="isLoading"></div>
     </p-scroll-panel>
   </p-panel>
 </div>

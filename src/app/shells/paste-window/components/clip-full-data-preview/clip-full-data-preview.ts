@@ -1,6 +1,7 @@
 import { Component, DOCUMENT, ElementRef, Inject, input, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
 import { TitleBarComponent } from '@core/components/title-bar/title-bar.component';
 import { Panel } from 'primeng/panel';
+import { ProgressSpinner } from 'primeng/progressspinner';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ClipsRepository } from '../../../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../../../core/services/plugins.service';
@@ -13,6 +14,7 @@ import { PluginsService } from '../../../../core/services/plugins.service';
     TitleBarComponent,
     Panel,
     ScrollPanelModule,
+    ProgressSpinner,
   ],
 })
 export class ClipFullDataPreview implements OnInit, OnDestroy {
@@ -32,6 +34,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
 
   readonly clipId = input.required<number>();
 
+  isLoading = true;
   scrollHeight = '0';
 
   ngOnInit(): void {
@@ -46,7 +49,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
       }
     });
     this.resizeObserver.observe(panelWrapperElement);
-    this.loadDataPreviewElement();
+    this.loadDataPreviewElementAsync();
   }
 
   ngOnDestroy(): void {
@@ -54,7 +57,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
     this.resizeObserver?.disconnect();
   }
 
-  private async loadDataPreviewElement() {
+  private async loadDataPreviewElementAsync() {
     const result = await this.clipsRepository.getClipFullDataPreviewAsync(this.clipId());
     if (!result) {
       return;
@@ -68,5 +71,7 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
 
     const dataPreviewElement = plugin.plugin.getFullDataPreviewElement(data, format, this.document);
     this.renderer.appendChild(this.contentContainer().nativeElement, dataPreviewElement);
+
+    this.isLoading = false;
   }
 }

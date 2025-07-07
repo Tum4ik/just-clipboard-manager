@@ -13,4 +13,10 @@
     --p-panel-header-padding: 0;
     --p-panel-content-padding: 0;
   }
+
+  p-progress-spinner {
+    position: absolute;
+    left: calc(50% - 50px);
+    top: calc(50% - 60px);
+  }
 }
