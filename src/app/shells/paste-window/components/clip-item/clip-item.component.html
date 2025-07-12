@@ -1,7 +1,7 @@
 <p-button variant="text" size="small" (onClick)="paste()">
   <div #buttonContent class="content"></div>
 </p-button>
-@if (isActionButtonsVisible) {
+@if (isActionButtonsVisible()) {
 <div class="action-buttons">
   <p-button class="preview-btn"
             variant="text" size="small"

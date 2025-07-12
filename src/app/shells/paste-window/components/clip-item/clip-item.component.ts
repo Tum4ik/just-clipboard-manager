@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, input, output, Renderer2, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, input, output, Renderer2, signal, viewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -31,14 +31,14 @@ export class ClipItemComponent {
   readonly previewDataRequested = output<number>();
   readonly deleteItemRequested = output<number>();
 
-  isActionButtonsVisible = false;
+  readonly isActionButtonsVisible = signal(false);
 
   onMouseenter() {
-    this.isActionButtonsVisible = true;
+    this.isActionButtonsVisible.set(true);
   }
 
   onMouseleave() {
-    this.isActionButtonsVisible = false;
+    this.isActionButtonsVisible.set(false);
   }
 
   paste() {
