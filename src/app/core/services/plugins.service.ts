@@ -101,6 +101,11 @@ export class PluginsService {
       this.pluginsOrder = this.pluginsOrder.filter(id => this._plugins.has(id));
       shouldSavePluginsOrder = true;
     }
+    else if (this._plugins.size > this.pluginsOrder.length) {
+      const missingIds = [...this._plugins.keys()].filter(id => !this.pluginsOrder?.includes(id));
+      this.pluginsOrder = [...this.pluginsOrder, ...missingIds];
+      shouldSavePluginsOrder = true;
+    }
 
     if (shouldSavePluginsOrder) {
       await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
