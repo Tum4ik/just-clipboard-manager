@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
+import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
 import { Subscription } from 'rxjs';
 import { SearchPluginInfo } from '../../../../../../core/data/dto/search-plugin-info.dto';
@@ -19,7 +20,8 @@ import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component"
     Button,
     TranslatePipe,
     ProgressBar,
-    Tag
+    Tag,
+    Skeleton
   ]
 })
 export class SearchPluginsComponent implements OnInit, OnDestroy {
@@ -32,6 +34,7 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
 
   private langChangedSubscription?: Subscription;
 
+  isLoading = true;
   plugins?: readonly SearchPluginViewModel[];
   lang: string;
 
@@ -44,6 +47,7 @@ export class SearchPluginsComponent implements OnInit, OnDestroy {
         .includes(p.id);
       return pluginView;
     });
+    this.isLoading = false;
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
       this.lang = e.lang;
     });

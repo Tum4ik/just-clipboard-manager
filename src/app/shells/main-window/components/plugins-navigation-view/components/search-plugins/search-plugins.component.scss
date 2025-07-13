@@ -1,3 +1,24 @@
+.skeleton {
+  position: relative;
+  max-width: 685px;
+  height: 142px;
+
+  .container {
+    position: absolute !important;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 8px;
+
+    .button {
+      align-self: end;
+    }
+  }
+}
+
 .title-root {
   display: flex;
 
