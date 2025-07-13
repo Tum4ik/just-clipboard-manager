@@ -1,3 +1,4 @@
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { emit, listen } from '@tauri-apps/api/event';
@@ -14,6 +15,7 @@ import { MonitoringService } from './monitoring.service';
 
 const PLUGIN_INSTALLED_EVENT_NAME = 'plugin-loaded-event';
 const PLUGIN_SETTINGS_CHANGED_EVENT_NAME = 'plugin-settings-changed-event';
+const PLUGINS_ORDER_CHANGED_EVENT_NAME = 'plugins-order-changed-event';
 
 const PLUGINS_ORDER_KEY = 'plugins-order';
 
@@ -113,6 +115,9 @@ export class PluginsService {
       this.pluginSettingsChanged(e.payload);
       this.pluginSettingsChangedSubject.next();
     });
+    await listen<PluginId[]>(PLUGINS_ORDER_CHANGED_EVENT_NAME, e => {
+      this.pluginsOrderChanged(e.payload);
+    });
   }
 
 
@@ -163,7 +168,7 @@ export class PluginsService {
     try {
       await download(url.toString(), zipFilePath);
       await invoke('extract_and_remove_zip', { zipFilePath: zipFilePath, pluginExtractionFolder: pluginExtractionFolder });
-      await emit(PLUGIN_INSTALLED_EVENT_NAME, id);
+      await emit<PluginId>(PLUGIN_INSTALLED_EVENT_NAME, id);
       return true;
     } catch (e) {
       this.monitoringService.error(`Failed to install plugin. URL: ${url}`, e);
@@ -177,7 +182,7 @@ export class PluginsService {
     const settings = { enabled: true } as PluginSettings;
     await this.pluginSettingsStore.set(id, settings);
     await this.pluginSettingsStore.save();
-    await emit(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, { id, settings } as PluginSettingsChangedPayload);
+    await emit<PluginSettingsChangedPayload>(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, { id, settings });
   }
 
 
@@ -185,7 +190,19 @@ export class PluginsService {
     const settings = { enabled: false } as PluginSettings;
     await this.pluginSettingsStore.set(id, settings);
     await this.pluginSettingsStore.save();
-    await emit(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, { id, settings } as PluginSettingsChangedPayload);
+    await emit<PluginSettingsChangedPayload>(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, { id, settings });
+  }
+
+
+  async changePluginsOrderAsync(fromIndex: number, toIndex: number) {
+    if (!this.pluginsOrder) {
+      return;
+    }
+
+    moveItemInArray(this.pluginsOrder, fromIndex, toIndex);
+    await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+    await this.pluginSettingsStore.save();
+    await emit<PluginId[]>(PLUGINS_ORDER_CHANGED_EVENT_NAME, this.pluginsOrder);
   }
 
 
@@ -226,6 +243,16 @@ export class PluginsService {
       plugin.isEnabled = payload.settings.enabled;
       this._enabledPlugins = undefined;
     }
+  }
+
+
+  private pluginsOrderChanged(pluginsOrder: PluginId[]) {
+    if (!this.pluginsOrder) {
+      return;
+    }
+    this._installedPlugins = undefined;
+    this._enabledPlugins = undefined;
+    this.pluginsOrder = pluginsOrder;
   }
 }
 

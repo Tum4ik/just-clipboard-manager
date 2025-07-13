@@ -28,7 +28,8 @@ export class PluginsPipelineComponent implements OnInit {
     this.plugins = [...this.pluginsService.installedPlugins];
   }
 
-  pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
+  async pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
     moveItemInArray(this.plugins, e.previousIndex, e.currentIndex);
+    await this.pluginsService.changePluginsOrderAsync(e.previousIndex, e.currentIndex);
   }
 }
