@@ -16,7 +16,7 @@ body {
   font-family: 'Material Symbols Rounded';
   font-style: normal;
   font-weight: 400;
-  src: url(/assets/fonts/google-material-icons.woff2) format('woff2');
+  src: url(/assets/fonts/material-symbols-rounded.woff2) format('woff2');
 }
 
 .material-symbols-rounded {
@@ -34,6 +34,12 @@ body {
   -webkit-font-feature-settings: 'liga';
   font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 jcm-clip-item {
