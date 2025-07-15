@@ -1,0 +1,11 @@
+:host {
+  cursor: move;
+}
+
+.content {
+  display: flex;
+
+  google-icon {
+    margin-inline-start: auto;
+  }
+}

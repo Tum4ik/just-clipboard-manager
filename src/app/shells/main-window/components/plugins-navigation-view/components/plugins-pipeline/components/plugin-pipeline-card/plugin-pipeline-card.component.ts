@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { GoogleIcon } from '@core/components/google-icon/google-icon';
 import { ShadedCardComponent } from "../../../../../shaded-card/shaded-card.component";
 
 @Component({
@@ -6,7 +7,8 @@ import { ShadedCardComponent } from "../../../../../shaded-card/shaded-card.comp
   templateUrl: './plugin-pipeline-card.component.html',
   styleUrl: './plugin-pipeline-card.component.scss',
   imports: [
-    ShadedCardComponent
+    ShadedCardComponent,
+    GoogleIcon,
   ]
 })
 export class PluginPipelineCardComponent {

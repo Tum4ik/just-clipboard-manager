@@ -1,5 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
 import { PluginsService, PluginWithAdditionalInfo } from '../../../../../../core/services/plugins.service';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
@@ -14,7 +15,8 @@ import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/p
     CdkDrag,
     PluginPipelineCardComponent,
     TranslatePipe,
-    ScrollViewComponent
+    ScrollViewComponent,
+    GoogleIcon
   ]
 })
 export class PluginsPipelineComponent implements OnInit {
