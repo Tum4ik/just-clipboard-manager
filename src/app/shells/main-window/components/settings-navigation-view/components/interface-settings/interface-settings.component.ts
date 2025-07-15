@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { Subscription } from 'rxjs';
@@ -19,7 +20,8 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     Select,
     MatIcon,
     FormsModule,
-    ScrollViewComponent
+    ScrollViewComponent,
+    GoogleIcon
   ]
 })
 export class InterfaceSettingsComponent implements OnInit, OnDestroy {
@@ -38,6 +40,13 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
 
   readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
   selectedThemeMode: ThemeMode | undefined;
+  getThemeModeIconName(themeMode: ThemeMode): string {
+    switch (themeMode) {
+      case 'light': return 'light_mode';
+      case 'dark': return 'dark_mode';
+      default: return 'computer';
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     this.selectedLanguage = this.languages.find(l => l.code === this.translateService.currentLang);

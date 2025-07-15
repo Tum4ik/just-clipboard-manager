@@ -23,16 +23,12 @@ a.navigation-item {
   &.selected {
     background: var(--p-highlight-background);
 
-    .material-symbols-rounded {
+    google-icon {
       color: var(--p-primary-color);
     }
   }
 
   &:active {
     background-color: var(--p-button-text-primary-active-background);
-  }
-
-  .material-symbols-rounded {
-    font-size: 20px;
   }
 }

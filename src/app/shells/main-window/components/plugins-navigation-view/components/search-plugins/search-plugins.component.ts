@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
@@ -21,7 +22,8 @@ import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component"
     TranslatePipe,
     ProgressBar,
     Tag,
-    Skeleton
+    Skeleton,
+    GoogleIcon
   ]
 })
 export class SearchPluginsComponent implements OnInit, OnDestroy {

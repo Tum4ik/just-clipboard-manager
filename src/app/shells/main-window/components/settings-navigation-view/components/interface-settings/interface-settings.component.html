@@ -22,13 +22,7 @@
               (onChange)="onThemeModeChanged($event)">
       <ng-template #item #selectedItem let-item>
         <div class="option-root">
-          <span class="material-symbols-rounded">
-            @switch (item) {
-            @case ('system') { computer }
-            @case ('light') { light_mode }
-            @case ('dark') { dark_mode }
-            }
-          </span>
+          <google-icon [iconName]="getThemeModeIconName(item)" />
           <span>{{ 'theme-mode.' + item | translate }}</span>
         </div>
       </ng-template>

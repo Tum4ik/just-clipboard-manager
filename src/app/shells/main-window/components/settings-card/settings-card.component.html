@@ -1,7 +1,9 @@
 <jcm-shaded-card cardBodyPadding="0">
   <p-menubar [style]="{ 'border-width': '0' }">
     <ng-template #start>
-      <span class="material-symbols-rounded">{{ icon() }}</span>
+      @if (icon()) {
+      <google-icon [iconName]="icon()!" />
+      }
       <div class="title-description">
         <div class="title">{{ title() }}</div>
         <div class="description">{{ description() }}</div>

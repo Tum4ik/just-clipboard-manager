@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
@@ -15,7 +16,8 @@ import { Ripple } from 'primeng/ripple';
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
-    TranslatePipe
+    TranslatePipe,
+    GoogleIcon
   ]
 })
 export class NavigationViewComponent {
