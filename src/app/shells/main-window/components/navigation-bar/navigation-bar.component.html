@@ -3,8 +3,9 @@
     <a class="navigation-item"
        pRipple
        [routerLink]="item.routerLink"
-       routerLinkActive="selected">
-      <div class="material-symbols-rounded">{{ item.icon }}</div>
+       routerLinkActive="selected"
+       #rla="routerLinkActive">
+      <google-icon [iconName]="item.icon" [isFilled]="rla.isActive" />
       <div class="label">{{ item.label | translate }}</div>
     </a>
   </ng-template>
