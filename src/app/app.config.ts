@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideTranslateService({
       defaultLanguage: 'en',
       loader: {
