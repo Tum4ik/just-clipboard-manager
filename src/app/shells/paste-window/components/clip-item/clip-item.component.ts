@@ -1,4 +1,5 @@
 import { Component, effect, ElementRef, input, output, Renderer2, signal, viewChild } from '@angular/core';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -6,7 +7,8 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './clip-item.component.html',
   styleUrl: './clip-item.component.scss',
   imports: [
-    ButtonModule
+    ButtonModule,
+    GoogleIcon
   ],
   host: {
     '(mouseenter)': 'onMouseenter()',
