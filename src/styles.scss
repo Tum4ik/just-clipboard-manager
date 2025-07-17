@@ -77,10 +77,12 @@ jcm-navigation-view {
   }
 }
 
-jcm-main-window {
+jcm-main-window,
+jcm-paste-window {
   p-panel {
     .p-panel-content-container {
       width: 100%;
+      height: 100%;
 
       .p-panel-content {
         height: 100%;

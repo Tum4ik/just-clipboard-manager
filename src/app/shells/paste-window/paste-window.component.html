@@ -1,19 +1,25 @@
-<div #root class="root">
+<div class="root">
   <p-block-ui [blocked]="isWindowBlocked" />
-  <input #searchInput
-         pInputText
-         [fluid]="true"
-         pSize="small"
-         type="text"
-         placeholder="{{ 'search' | translate }}"
-         (input)="onSearchChanged(searchInput.value)" />
-  <div [style.margin-top.px]="SCROLLABLE_AREA_MARGIN_TOP"
-       [style.margin-bottom.px]="SCROLLABLE_AREA_MARGIN_BOTTOM">
-    <p-panel>
-      <p-scroll-panel #scrollPanel
-                      [style]="{ height: scrollableAreaHeight, 'padding-right': 'var(--p-scrollpanel-bar-size)' }">
-        <ng-container #clipsContainer />
-      </p-scroll-panel>
-    </p-panel>
-  </div>
+  <p-icon-field>
+    <p-inputicon>
+      <google-icon iconName="search" />
+    </p-inputicon>
+    <input #searchInput
+           pInputText
+           [fluid]="true"
+           pSize="small"
+           type="text"
+           placeholder="{{ 'search' | translate }}"
+           (input)="onSearchChanged(searchInput.value)" />
+    @if (searchInput.value) {
+    <p-inputicon (click)="clearSearch()">
+      <google-icon iconName="close" />
+    </p-inputicon>
+    }
+  </p-icon-field>
+  <p-panel>
+    <p-scroll-panel #scrollPanel>
+      <ng-container #clipsContainer />
+    </p-scroll-panel>
+  </p-panel>
 </div>

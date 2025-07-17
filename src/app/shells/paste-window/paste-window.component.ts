@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ComponentRef, ElementRef, Inject, inputBinding, NgZone, OnDestroy, OnInit, outputBinding, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
+import { GoogleIcon } from "@core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { BlockUIModule } from 'primeng/blockui';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
+import { BehaviorSubject, debounce, distinctUntilChanged, interval, Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
@@ -24,6 +27,9 @@ import { PasteWindowService } from './services/paste-window.service';
     ScrollPanelModule,
     TranslatePipe,
     BlockUIModule,
+    IconField,
+    InputIcon,
+    GoogleIcon,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -37,11 +43,12 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly clipboardListener: ClipboardListener
   ) { }
 
-  private resizeObserver?: ResizeObserver;
-  private searchSubject = new BehaviorSubject<string>('');
-  private subscriptions = new Subscription();
+
+  private readonly searchSubject = new BehaviorSubject<{ text: string; shouldDebounce: boolean; }>(
+    { text: '', shouldDebounce: true }
+  );
+  private readonly subscriptions = new Subscription();
   private readonly clipsRepository = new ClipsRepository();
-  private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
   private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
   private readonly clipsContainer = viewChild.required('clipsContainer', { read: ViewContainerRef });
@@ -50,36 +57,17 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   private isWindowVisible = false;
   private isClipsListUpToDate = false;
 
-  readonly SCROLLABLE_AREA_MARGIN_TOP = 4;
-  readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
-
-  scrollableAreaHeight = '0px';
   isWindowBlocked = false;
 
 
   async ngOnInit(): Promise<void> {
-    const rootElement = this.rootElement().nativeElement;
-    this.resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        if (entry.target === rootElement) {
-          const windowHeight = rootElement.clientHeight;
-          const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
-          const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
-          this.ngZone.run(() => {
-            this.scrollableAreaHeight = `${windowHeight - searchInputHeight - 2 * topBottomMargins}px`;
-          });
-        }
-      }
-    });
-    this.resizeObserver.observe(rootElement);
-
     this.subscriptions.add(
       this.searchSubject.pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
+        distinctUntilChanged((prev, curr) => prev.text === curr.text),
+        debounce(search => interval(search.shouldDebounce ? 1000 : 0)),
       ).subscribe(search => {
         this.detachAllClips();
-        this.loadClipsAsync(0, 15, search);
+        this.loadClipsAsync(0, 15, search.text);
       })
     );
     this.subscriptions.add(
@@ -94,8 +82,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           this.searchInputElement().nativeElement.focus();
         }
         else if (!isVisible) {
-          this.searchSubject.next('');
-          this.searchInputElement().nativeElement.value = '';
+          this.clearSearch();
         }
       })
     );
@@ -135,14 +122,18 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
     this.subscriptions.unsubscribe();
     this.clipsRepository.disposeAsync();
   }
 
 
   onSearchChanged(search: string) {
-    this.searchSubject.next(search);
+    this.searchSubject.next({ text: search, shouldDebounce: true });
+  }
+
+  clearSearch() {
+    this.searchInputElement().nativeElement.value = '';
+    this.searchSubject.next({ text: '', shouldDebounce: false });
   }
 
 
@@ -152,7 +143,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const target = e.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
-      this.loadClipsAsync(this.clipsContainer().length, 10, this.searchSubject.value);
+      this.loadClipsAsync(this.clipsContainer().length, 10, this.searchSubject.value.text);
     }
   }
 

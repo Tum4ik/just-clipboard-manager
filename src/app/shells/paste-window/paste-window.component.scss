@@ -1,9 +1,42 @@
 .root {
   height: 100%;
   padding: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 4px;
+
+  p-inputicon {
+    --p-icon-size: 24px;
+
+    &:first-child {
+      inset-inline-start: 10px;
+    }
+
+    &:last-child {
+      inset-inline-end: 6px;
+      cursor: pointer;
+      border-radius: var(--p-button-border-radius);
+
+      &:hover {
+        background: var(--p-button-text-primary-hover-background);
+      }
+
+      &:active {
+        background: var(--p-button-text-primary-active-background);
+      }
+    }
+  }
 
   p-panel {
     --p-panel-header-padding: 0;
     --p-panel-content-padding: 0;
+    flex: 1;
+    overflow: hidden;
+
+    p-scroll-panel {
+      height: 100%;
+      padding-right: var(--p-scrollpanel-bar-size);
+    }
   }
 }
