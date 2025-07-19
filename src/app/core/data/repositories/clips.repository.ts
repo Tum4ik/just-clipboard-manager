@@ -85,6 +85,17 @@ export class ClipsRepository extends BaseDatabaseRepository {
   }
 
 
+  async deleteClipAsync(id: number): Promise<void> {
+    await this.db.execute(
+      /* sql */`
+      DELETE FROM clips
+      WHERE id = $1
+      `,
+      [id]
+    );
+  }
+
+
   /* async getClipAsync(id: number): Promise<Clip | null> {
     return await this.db.queryFirstAsync<Clip>('SELECT * FROM clips WHERE id = ?', id);
   }
@@ -97,7 +108,5 @@ export class ClipsRepository extends BaseDatabaseRepository {
     await this.db.executeAsync('UPDATE clips SET title = ?, url = ? WHERE id = ?', clip.title, clip.url, clip.id);
   }
 
-  async deleteClipAsync(id: number): Promise<void> {
-    await this.db.executeAsync('DELETE FROM clips WHERE id = ?', id);
-  } */
+   */
 }

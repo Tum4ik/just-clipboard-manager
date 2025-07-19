@@ -53,6 +53,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
   private readonly clipsContainer = viewChild.required('clipsContainer', { read: ViewContainerRef });
 
+  private readonly loadedClips = new Map<number, ComponentRef<ClipItemComponent>>();
+
   private isClipsLoading = false;
   private isWindowVisible = false;
   private isClipsListUpToDate = false;
@@ -148,8 +150,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private loadedClips = new Map<number, ComponentRef<ClipItemComponent>>();
-
   private async loadClipsAsync(skip: number, take: number, search?: string) {
     if (this.isClipsLoading) {
       return;
@@ -181,6 +181,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
                 inputBinding('htmlElement', () => item),
                 outputBinding<number>('pasteDataRequested', clipId => this.onPasteDataRequested(clipId)),
                 outputBinding<number>('previewDataRequested', clipId => this.onPreviewDataRequested(clipId)),
+                outputBinding<number>('deleteItemRequested', clipId => this.onDeleteItemRequested(clipId)),
               ]
             });
             this.loadedClips.set(clip.id!, clipItem);
@@ -214,6 +215,15 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pasteWindowService.focus();
       });
     });
+  }
+
+
+  private async onDeleteItemRequested(clipId: number) {
+    const index = this.clipsContainer().indexOf(this.loadedClips.get(clipId)!.hostView);
+    this.clipsContainer().remove(index);
+    this.loadedClips.delete(clipId);
+    await this.clipsRepository.deleteClipAsync(clipId);
+    await this.loadClipsAsync(this.clipsContainer().length, 1, this.searchSubject.value.text);
   }
 
 
