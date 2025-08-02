@@ -17,6 +17,7 @@
     </p-inputicon>
     }
   </p-icon-field>
+  @if (pinnedClips().length > 0){
   <p-panel class="pinned-clips" [style.max-height.px]="pinnedClipsPanelMaxHeight">
     <p-scroll-panel>
       @for (pinnedClip of pinnedClips(); track pinnedClip.clipId) {
@@ -30,6 +31,7 @@
       }
     </p-scroll-panel>
   </p-panel>
+  }
   <p-panel class="clips">
     <p-scroll-panel #regularClipsScrollPanel>
       @for (clip of regularClips(); track clip.clipId) {
