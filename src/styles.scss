@@ -99,6 +99,20 @@ jcm-paste-window {
   }
 }
 
+jcm-paste-window {
+  p-scroll-panel {
+    .p-scrollpanel-content-container {
+      margin-bottom: calc(-2 * var(--p-scrollpanel-bar-size));
+    }
+
+    .p-scrollpanel-bar-y {
+      inset-inline-end: unset !important;
+      width: 2px;
+      left: 100% !important;
+    }
+  }
+}
+
 p-card {
   --p-card-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 2px -1px rgba(0, 0, 0, 0.1)
 }

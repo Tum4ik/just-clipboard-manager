@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TitleBarComponent } from '@core/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@app/core/components/title-bar/title-bar.component';
 import { Panel } from 'primeng/panel';
 import { NotifyingRouterOutlet } from '../../router/notifying-router-outlet';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';

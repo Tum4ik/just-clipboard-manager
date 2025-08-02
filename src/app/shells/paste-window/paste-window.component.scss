@@ -31,12 +31,20 @@
   p-panel {
     --p-panel-header-padding: 0;
     --p-panel-content-padding: 0;
-    flex: 1;
-    overflow: hidden;
+
+    &.pinned-clips {
+      overflow: hidden;
+    }
+
+    &.clips {
+      flex: 1;
+      overflow: hidden;
+    }
 
     p-scroll-panel {
       height: 100%;
-      padding-right: var(--p-scrollpanel-bar-size);
+      padding-right: 4px;
+      --p-scrollpanel-bar-background: var(--p-panel-border-color);
     }
   }
 }

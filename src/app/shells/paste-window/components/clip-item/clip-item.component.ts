@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, input, output, Renderer2, signal, viewChild } from '@angular/core';
-import { GoogleIcon } from "@core/components/google-icon/google-icon";
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -28,19 +28,24 @@ export class ClipItemComponent {
 
   readonly clipId = input.required<number>();
   readonly htmlElement = input.required<HTMLElement>();
+  readonly isPinButtonVisible = input<boolean>(true);
+  readonly isUnpinButtonVisible = input<boolean>(false);
+  readonly isDeleteButtonVisible = input<boolean>(true);
 
   readonly pasteDataRequested = output<number>();
   readonly previewDataRequested = output<number>();
+  readonly pinItemRequested = output<number>();
+  readonly unpinItemRequested = output<number>();
   readonly deleteItemRequested = output<number>();
 
-  readonly isActionButtonsVisible = signal(false);
+  readonly isMouseOver = signal(false);
 
   onMouseenter() {
-    this.isActionButtonsVisible.set(true);
+    this.isMouseOver.set(true);
   }
 
   onMouseleave() {
-    this.isActionButtonsVisible.set(false);
+    this.isMouseOver.set(false);
   }
 
   paste() {
@@ -49,6 +54,14 @@ export class ClipItemComponent {
 
   preview() {
     this.previewDataRequested.emit(this.clipId());
+  }
+
+  pin() {
+    this.pinItemRequested.emit(this.clipId());
+  }
+
+  unpin() {
+    this.unpinItemRequested.emit(this.clipId());
   }
 
   delete() {

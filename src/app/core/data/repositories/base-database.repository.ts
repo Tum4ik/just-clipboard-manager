@@ -7,6 +7,18 @@ export abstract class BaseDatabaseRepository {
 
   protected readonly db: Database;
 
+  async beginTransactionAsync(): Promise<void> {
+    await this.db.execute("BEGIN TRANSACTION");
+  }
+
+  async commitAsync(): Promise<void> {
+    await this.db.execute("COMMIT");
+  }
+
+  async rollbackAsync(): Promise<void> {
+    await this.db.execute("ROLLBACK");
+  }
+
   async disposeAsync(): Promise<void> {
     await this.db.close();
   }

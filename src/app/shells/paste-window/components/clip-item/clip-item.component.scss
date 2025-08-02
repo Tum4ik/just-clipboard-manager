@@ -1,5 +1,6 @@
 :host {
   display: flex;
+  align-items: center;
 }
 
 p-button {
@@ -21,12 +22,16 @@ p-button {
   p-button {
     --p-button-sm-padding-x: 6px;
 
-    &.preview-btn:hover {
+    &:hover {
       --p-button-text-primary-color: var(--p-button-text-info-color);
     }
 
     &.delete-btn:hover {
       --p-button-text-primary-color: var(--p-button-text-danger-color);
+    }
+
+    &.unpin-btn {
+      --p-button-text-primary-color: var(--p-button-text-info-color);
     }
   }
 }

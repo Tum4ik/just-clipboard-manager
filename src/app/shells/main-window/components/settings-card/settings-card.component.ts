@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { GoogleIcon } from "@core/components/google-icon/google-icon";
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { Menubar } from 'primeng/menubar';
 import { ShadedCardComponent } from "../shaded-card/shaded-card.component";
 

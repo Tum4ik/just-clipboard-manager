@@ -30,9 +30,9 @@
     ],
     "baseUrl": "src",
     "paths": {
-      "@core/*": [
-        "app/core/*"
-      ],
+      "@app/*": [
+        "app/*"
+      ]
     }
   },
   "angularCompilerOptions": {

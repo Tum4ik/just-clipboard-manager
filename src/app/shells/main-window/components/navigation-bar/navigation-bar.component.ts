@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { GoogleIcon } from "@core/components/google-icon/google-icon";
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';

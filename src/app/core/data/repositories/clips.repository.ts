@@ -23,17 +23,20 @@ export class ClipsRepository extends BaseDatabaseRepository {
     const result = await this.db.select<any[]>(
       /* sql */`
       SELECT
-        id,
-        plugin_id,
-        representation_data,
-        representation_metadata,
-        representation_format_id,
-        representation_format_name,
-        search_label
+        clips.id,
+        clips.plugin_id,
+        clips.representation_data,
+        clips.representation_metadata,
+        clips.representation_format_id,
+        clips.representation_format_name,
+        clips.search_label
       FROM clips
-      WHERE plugin_id IN ('${enabledPluginIds.join("','")}')
-      ${search ? "AND search_label LIKE '%' || $1 || '%'" : ''}
-      ORDER BY clipped_at DESC
+      LEFT JOIN pinned_clips ON clips.id = pinned_clips.id
+      WHERE
+        pinned_clips.id IS NULL
+        AND clips.plugin_id IN ('${enabledPluginIds.join("','")}')
+        ${search ? "AND clips.search_label LIKE '%' || $1 || '%'" : ''}
+      ORDER BY clips.clipped_at DESC
       LIMIT $2 OFFSET $3
       `,
       [search, take, skip]
@@ -94,19 +97,4 @@ export class ClipsRepository extends BaseDatabaseRepository {
       [id]
     );
   }
-
-
-  /* async getClipAsync(id: number): Promise<Clip | null> {
-    return await this.db.queryFirstAsync<Clip>('SELECT * FROM clips WHERE id = ?', id);
-  }
-
-  async getClipsAsync(): Promise<Clip[]> {
-    return await this.db.queryAsync<Clip>('SELECT * FROM clips');
-  }
-
-  async updateClipAsync(clip: Clip): Promise<void> {
-    await this.db.executeAsync('UPDATE clips SET title = ?, url = ? WHERE id = ?', clip.title, clip.url, clip.id);
-  }
-
-   */
 }

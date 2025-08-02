@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { GoogleIcon } from "@core/components/google-icon/google-icon";
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { Subscription } from 'rxjs';

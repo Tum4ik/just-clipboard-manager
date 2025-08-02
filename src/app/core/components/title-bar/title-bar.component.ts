@@ -1,5 +1,5 @@
 import { Component, input, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { MonitoringService } from '@core/services/monitoring.service';
+import { MonitoringService } from '@app/core/services/monitoring.service';
 import { UnlistenFn } from '@tauri-apps/api/event';
 import { getCurrentWindow, Window } from '@tauri-apps/api/window';
 import { Button } from 'primeng/button';

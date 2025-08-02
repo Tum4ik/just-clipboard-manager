@@ -1,5 +1,5 @@
 import { Component, DOCUMENT, ElementRef, Inject, input, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
-import { TitleBarComponent } from '@core/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@app/core/components/title-bar/title-bar.component';
 import { Panel } from 'primeng/panel';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { ScrollPanelModule } from 'primeng/scrollpanel';

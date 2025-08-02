@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GoogleIcon } from "@core/components/google-icon/google-icon";
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
