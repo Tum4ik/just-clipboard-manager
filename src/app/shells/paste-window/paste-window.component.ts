@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, viewChild, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, viewChild } from '@angular/core';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { PluginsService } from '@app/core/services/plugins.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { BlockUIModule } from 'primeng/blockui';
+import { Button } from "primeng/button";
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
@@ -30,6 +31,7 @@ import { PasteWindowService } from './services/paste-window.service';
     InputIcon,
     GoogleIcon,
     ClipItemComponent,
+    Button
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -50,15 +52,16 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private isClipsListUpToDate = false;
 
-  isWindowBlocked = false;
-
   readonly pinnedClipsPanelMaxHeight = 138;
 
-  get pinnedClips(): WritableSignal<PasteWindowClip[]> {
+  isWindowBlocked = false;
+  isSettingsMode = false;
+
+  get pinnedClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.orderedPinnedClips;
   }
 
-  get regularClips(): WritableSignal<PasteWindowClip[]> {
+  get regularClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.regularClips;
   }
 
@@ -94,11 +97,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       })
     );
-    this.subscriptions.add(
-      this.pasteWindowService.isBlocked$.subscribe(isBlocked => {
-        this.isWindowBlocked = isBlocked;
-      })
-    );
 
     this.pasteWindowClipsService.loadPinnedClipsAsync();
   }
@@ -111,6 +109,19 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.clipsRepository.disposeAsync();
+  }
+
+
+  async settingsMode() {
+    this.isSettingsMode = !this.isSettingsMode;
+    if (this.isSettingsMode) {
+      this.pasteWindowService.disallowHide();
+      await this.pasteWindowService.enableResizeAsync();
+    }
+    else {
+      this.pasteWindowService.allowHide();
+      await this.pasteWindowService.disableResizeAsync();
+    }
   }
 
 
@@ -138,7 +149,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   async onPreviewDataRequested(clipId: number) {
-    this.pasteWindowService.block();
+    this.isWindowBlocked = true;
+    this.pasteWindowService.disallowHide();
     const appWindow = new WebviewWindow('clip-preview-window', {
       decorations: false,
       skipTaskbar: true,
@@ -147,7 +159,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     await appWindow.onCloseRequested(e => {
       this.ngZone.run(() => {
-        this.pasteWindowService.unblock();
+        this.isWindowBlocked = false;
+        this.pasteWindowService.allowHide();
         this.pasteWindowService.focus();
       });
     });

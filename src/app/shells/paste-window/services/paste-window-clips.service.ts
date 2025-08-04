@@ -31,8 +31,11 @@ export class PasteWindowClipsService {
 
   private readonly clipHtmlElements = new Map<number, HTMLElement>();
 
-  readonly orderedPinnedClips = signal<PasteWindowClip[]>([]);
-  readonly regularClips = signal<PasteWindowClip[]>([]);
+  private readonly _orderedPinnedClips = signal<PasteWindowClip[]>([]);
+  readonly orderedPinnedClips = this._orderedPinnedClips.asReadonly();
+
+  private readonly _regularClips = signal<PasteWindowClip[]>([]);
+  readonly regularClips = this._regularClips.asReadonly();
 
 
   async loadPinnedClipsAsync() {
@@ -83,20 +86,20 @@ export class PasteWindowClipsService {
       }
     }
 
-    this.orderedPinnedClips.set(orderedClips);
+    this._orderedPinnedClips.set(orderedClips);
   }
 
 
   async loadClipsFromScratchAsync() {
     // todo: adjust items count to the height of the paste window
     const clips = await this.loadClipsAsync({ skip: 0, take: 15 });
-    this.regularClips.set(clips);
+    this._regularClips.set(clips);
   }
 
 
   async loadMoreClipsAsync(amount: number) {
     const clipsToAdd = await this.loadClipsAsync({ skip: this.regularClips().length, take: amount });
-    this.regularClips.update(clips => {
+    this._regularClips.update(clips => {
       clips.push(...clipsToAdd);
       return clips;
     });
@@ -114,7 +117,7 @@ export class PasteWindowClipsService {
 
     const currIndex = this.regularClips().findIndex(c => c.clipId === clipId);
     if (currIndex > 0) {
-      this.regularClips.update(rc => {
+      this._regularClips.update(rc => {
         moveItemInArray(rc, currIndex, 0);
         return rc;
       });
@@ -129,12 +132,12 @@ export class PasteWindowClipsService {
       await this.pinnedClipsRepository.updatePinnedClipOrderNextIdAsync(lastPinnedClip.clipId, clipId);
     }
 
-    this.regularClips.update(rc => {
+    this._regularClips.update(rc => {
       const clipToPin = rc.find(c => c.clipId === clipId)!;
       const index = rc.indexOf(clipToPin);
       rc.splice(index, 1);
 
-      this.orderedPinnedClips.update(opc => {
+      this._orderedPinnedClips.update(opc => {
         opc.push(clipToPin);
         return opc;
       });
@@ -153,12 +156,12 @@ export class PasteWindowClipsService {
     await this.pinnedClipsRepository.deletePinnedClipAsync(clipId);
     await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
 
-    this.orderedPinnedClips.update(opc => {
+    this._orderedPinnedClips.update(opc => {
       const clipToUnpin = opc.find(c => c.clipId === clipId)!;
       const index = opc.indexOf(clipToUnpin);
       opc.splice(index, 1);
 
-      this.regularClips.update(rc => {
+      this._regularClips.update(rc => {
         rc.unshift(clipToUnpin);
         return rc;
       });
@@ -172,7 +175,7 @@ export class PasteWindowClipsService {
     this.clipHtmlElements.delete(clipId);
     await this.clipsRepository.deleteClipAsync(clipId);
     const clipsToAdd = await this.loadClipsAsync({ skip: this.regularClips().length, take: 1 });
-    this.regularClips.update(rc => {
+    this._regularClips.update(rc => {
       const currIndex = rc.findIndex(c => c.clipId === clipId);
       if (currIndex >= 0) {
         rc.splice(currIndex, 1);

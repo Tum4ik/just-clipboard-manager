@@ -13,6 +13,7 @@
     "core:window:allow-hide",
     "core:window:allow-set-focus",
     "core:window:allow-set-position",
+    "core:window:allow-set-resizable",
     "core:window:allow-destroy",
     "core:webview:allow-create-webview-window",
     "opener:default",
