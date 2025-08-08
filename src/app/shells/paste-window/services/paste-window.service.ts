@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SettingsService } from '@app/core/services/settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { PhysicalPosition, PhysicalSize } from '@tauri-apps/api/dpi';
 import { cursorPosition, monitorFromPoint, Window } from '@tauri-apps/api/window';
@@ -7,7 +8,10 @@ import { PasteDataService } from './paste-data.service';
 
 @Injectable()
 export class PasteWindowService {
-  constructor(private readonly pasteDataService: PasteDataService) { }
+  constructor(
+    private readonly pasteDataService: PasteDataService,
+    private readonly settingsService: SettingsService,
+  ) { }
 
   private pasteWindow?: Window | null;
 
@@ -37,8 +41,10 @@ export class PasteWindowService {
     const hwnd = await invoke<number>('get_foreground_window');
     this.pasteDataService.setPasteTargetWindowHwnd(hwnd);
 
-    const size = await this.pasteWindow.outerSize();
-    const position = await this.getWindowPosition(size);
+    const size = await this.settingsService.getPasteWindowSizeAsync();
+    await this.pasteWindow.setSize(size);
+
+    const position = await this.getWindowPosition(await this.pasteWindow.outerSize());
 
     await this.pasteWindow.setPosition(position);
     await this.pasteWindow.show();
@@ -72,6 +78,11 @@ export class PasteWindowService {
 
   async disableResizeAsync(): Promise<void> {
     await this.pasteWindow?.setResizable(false);
+  }
+
+  async rememberWindowSizeAsync(): Promise<void> {
+    const currSize = await this.pasteWindow!.innerSize();
+    await this.settingsService.setPasteWindowSizeAsync(currSize);
   }
 
 

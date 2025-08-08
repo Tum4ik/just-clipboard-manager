@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, TemplateRef, viewChild } from '@angular/core';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { PluginsService } from '@app/core/services/plugins.service';
+import { SettingsService } from '@app/core/services/settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { BlockUIModule } from 'primeng/blockui';
+import { BlockUI } from 'primeng/blockui';
 import { Button } from "primeng/button";
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
-import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
+import { ScrollPanel } from 'primeng/scrollpanel';
+import { Splitter } from 'primeng/splitter';
 import { Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
@@ -24,14 +26,15 @@ import { PasteWindowService } from './services/paste-window.service';
   imports: [
     InputText,
     Panel,
-    ScrollPanelModule,
+    ScrollPanel,
     TranslatePipe,
-    BlockUIModule,
+    BlockUI,
     IconField,
     InputIcon,
     GoogleIcon,
     ClipItemComponent,
-    Button
+    Button,
+    Splitter,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -42,20 +45,22 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly pasteWindowClipsService: PasteWindowClipsService,
     private readonly clipboardListener: ClipboardListener,
     private readonly pluginsService: PluginsService,
+    private readonly settingsService: SettingsService,
   ) { }
 
 
   private readonly subscriptions = new Subscription();
   private readonly clipsRepository = new ClipsRepository();
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly splitter = viewChild.required<Splitter>('splitter');
   private readonly regularClipsScrollPanel = viewChild.required<ScrollPanel>('regularClipsScrollPanel');
 
   private isClipsListUpToDate = false;
-
-  readonly pinnedClipsPanelMaxHeight = 138;
+  private pinnedClipsPanelTemplate?: TemplateRef<HTMLElement>;
 
   isWindowBlocked = false;
   isSettingsMode = false;
+  splitterPanelSizes: number[] = [];
 
   get pinnedClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.orderedPinnedClips;
@@ -98,12 +103,16 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
+    this.settingsService.getPasteWindowPanelSizesAsync().then(sizes => this.splitterPanelSizes = sizes);
+
     this.pasteWindowClipsService.loadPinnedClipsAsync();
   }
 
   ngAfterViewInit(): void {
     const scrollPanelElement = this.regularClipsScrollPanel().contentViewChild?.nativeElement as HTMLElement;
     this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
+
+    this.pinnedClipsPanelTemplate = this.splitter().panels[0];
   }
 
   ngOnDestroy(): void {
@@ -121,6 +130,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.pasteWindowService.allowHide();
       await this.pasteWindowService.disableResizeAsync();
+      await this.pasteWindowService.rememberWindowSizeAsync();
+      await this.settingsService.setPasteWindowPanelSizesAsync(this.splitter().panelSizes);
     }
   }
 
@@ -169,15 +180,27 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async onPinItemRequested(clipId: number) {
     await this.pasteWindowClipsService.pinClipAsync(clipId);
+    this.trackPinnedClipsPanelVisibility();
   }
 
 
   async onUnpinItemRequested(clipId: number) {
     await this.pasteWindowClipsService.unpinClipAsync(clipId);
+    this.trackPinnedClipsPanelVisibility();
   }
 
 
   async onDeleteItemRequested(clipId: number) {
     await this.pasteWindowClipsService.deleteClipAsync(clipId);
+  }
+
+
+  private trackPinnedClipsPanelVisibility() {
+    if (this.splitter().panels.length === 1 && this.pinnedClips().length > 0 && this.pinnedClipsPanelTemplate) {
+      this.splitter().panels.unshift(this.pinnedClipsPanelTemplate);
+    }
+    else if (this.pinnedClips().length <= 0 && this.splitter().panels.length === 2) {
+      this.splitter().panels.splice(0, 1);
+    }
   }
 }

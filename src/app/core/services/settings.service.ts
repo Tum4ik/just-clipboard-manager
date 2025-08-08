@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { PhysicalSize } from '@tauri-apps/api/dpi';
 import { LazyStore } from '@tauri-apps/plugin-store';
 
 const LANGUAGE = 'language';
 const THEME_MODE = 'theme-mode';
 const THEME_PRESET = 'theme-preset';
+const PASTE_WINDOW_SIZE = 'paste-window-size';
+const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -48,7 +51,29 @@ export class SettingsService {
       }
     });
   }
+
+
+  async getPasteWindowSizeAsync(): Promise<PhysicalSize> {
+    const size = await this.store.get<Size>(PASTE_WINDOW_SIZE);
+    return new PhysicalSize(size?.width ?? 400, size?.height ?? 400);
+  }
+
+  async setPasteWindowSizeAsync(size: PhysicalSize): Promise<void> {
+    await this.store.set(PASTE_WINDOW_SIZE, size);
+    await this.store.save();
+  }
+
+
+  async getPasteWindowPanelSizesAsync(): Promise<number[]> {
+    return await this.store.get<number[]>(PASTE_WINDOW_PANEL_SIZES) ?? [40, 60];
+  }
+
+  async setPasteWindowPanelSizesAsync(sizes: number[]): Promise<void> {
+    await this.store.set(PASTE_WINDOW_PANEL_SIZES, sizes);
+    await this.store.save();
+  }
 }
 
 
 export type ThemeMode = 'system' | 'light' | 'dark';
+export interface Size { width: number; height: number; }

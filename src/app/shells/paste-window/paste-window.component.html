@@ -1,5 +1,11 @@
 <div class="root">
   <p-block-ui [blocked]="isWindowBlocked" />
+  @if (isSettingsMode){
+  <div class="resize-handle top"></div>
+  <div class="resize-handle bottom"></div>
+  <div class="resize-handle left"></div>
+  <div class="resize-handle right"></div>
+  }
   <div class="top-bar">
     <p-icon-field #iconField>
       <p-inputicon>
@@ -19,37 +25,45 @@
       </p-inputicon>
       }
     </p-icon-field>
-    <p-button class="settings-btn" variant="text" size="small"
+    <p-button class="settings-btn" [class.activated]="isSettingsMode"
+              variant="text" size="small"
               (onClick)="settingsMode()">
       <google-icon iconName="settings" [size]="23" [isFilled]="isSettingsMode" />
     </p-button>
   </div>
-  @if (pinnedClips().length > 0){
-  <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode" />
-  <p-panel #pinnedClipsPanel class="pinned-clips" [style.max-height.px]="pinnedClipsPanelMaxHeight">
-    <p-scroll-panel>
-      @for (pinnedClip of pinnedClips(); track pinnedClip.clipId) {
-      <jcm-clip-item [clipId]="pinnedClip.clipId" [htmlElement]="pinnedClip.htmlElement"
-                     [isPinButtonVisible]="false"
-                     [isUnpinButtonVisible]="true"
-                     [isDeleteButtonVisible]="false"
-                     (pasteDataRequested)="onPasteDataRequested(pinnedClip.clipId)"
-                     (previewDataRequested)="onPreviewDataRequested(pinnedClip.clipId)"
-                     (unpinItemRequested)="onUnpinItemRequested(pinnedClip.clipId)" />
-      }
-    </p-scroll-panel>
-  </p-panel>
-  }
-  <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode" />
-  <p-panel #regularClipsPanel class="clips">
-    <p-scroll-panel #regularClipsScrollPanel>
-      @for (clip of regularClips(); track clip.clipId) {
-      <jcm-clip-item [clipId]="clip.clipId" [htmlElement]="clip.htmlElement"
-                     (pasteDataRequested)="onPasteDataRequested(clip.clipId)"
-                     (previewDataRequested)="onPreviewDataRequested(clip.clipId)"
-                     (pinItemRequested)="onPinItemRequested(clip.clipId)"
-                     (deleteItemRequested)="onDeleteItemRequested(clip.clipId)" />
-      }
-    </p-scroll-panel>
-  </p-panel>
+  <p-splitter #splitter layout="vertical"
+              [gutterSize]="isSettingsMode ? 2 : 0"
+              [style.gap.px]="isSettingsMode ? 1 : 2"
+              [panelSizes]="splitterPanelSizes">
+    <ng-template #panel>
+      <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode" />
+      <p-panel #pinnedClipsPanel class="pinned-clips">
+        <p-scroll-panel>
+          @for (pinnedClip of pinnedClips(); track pinnedClip.clipId) {
+          <jcm-clip-item [clipId]="pinnedClip.clipId" [htmlElement]="pinnedClip.htmlElement"
+                         [isPinButtonVisible]="false"
+                         [isUnpinButtonVisible]="true"
+                         [isDeleteButtonVisible]="false"
+                         (pasteDataRequested)="onPasteDataRequested(pinnedClip.clipId)"
+                         (previewDataRequested)="onPreviewDataRequested(pinnedClip.clipId)"
+                         (unpinItemRequested)="onUnpinItemRequested(pinnedClip.clipId)" />
+          }
+        </p-scroll-panel>
+      </p-panel>
+    </ng-template>
+    <ng-template #panel>
+      <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode" />
+      <p-panel #regularClipsPanel class="clips">
+        <p-scroll-panel #regularClipsScrollPanel>
+          @for (clip of regularClips(); track clip.clipId) {
+          <jcm-clip-item [clipId]="clip.clipId" [htmlElement]="clip.htmlElement"
+                         (pasteDataRequested)="onPasteDataRequested(clip.clipId)"
+                         (previewDataRequested)="onPreviewDataRequested(clip.clipId)"
+                         (pinItemRequested)="onPinItemRequested(clip.clipId)"
+                         (deleteItemRequested)="onDeleteItemRequested(clip.clipId)" />
+          }
+        </p-scroll-panel>
+      </p-panel>
+    </ng-template>
+  </p-splitter>
 </div>

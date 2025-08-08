@@ -219,7 +219,7 @@ export class PluginsService {
       });
       const blob = new Blob([pluginFileBytes], { type: 'application/javascript' });
       const url = URL.createObjectURL(blob);
-      const pluginModule = await import(url);
+      const pluginModule = await import(/* @vite-ignore */url);
       const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
       const pluginId = pluginInstance.id;
       let enabled = true;
