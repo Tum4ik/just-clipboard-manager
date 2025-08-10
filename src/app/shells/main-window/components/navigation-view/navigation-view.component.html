@@ -14,7 +14,7 @@
          [routerLink]="item.routerLink"
          routerLinkActive="selected"
          (click)="navigationItemClicked(anchor.href)">
-        <span class="material-symbols-rounded">{{ item.icon }}</span>
+        <google-icon [iconName]="item.icon" [size]="20" />
         <span class="label">{{ item.label | translate }}</span>
       </a>
     </ng-template>

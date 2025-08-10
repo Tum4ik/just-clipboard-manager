@@ -14,16 +14,15 @@
     grid-column: 1;
   }
 
-  .content {
+  p-panel {
+    --p-panel-header-padding: 0;
+    --p-panel-content-padding: 0;
+
     grid-row: 2;
     grid-column: 2;
     margin-right: 4px;
     margin-bottom: 4px;
     overflow: hidden;
-  }
-
-  p-panel {
-    --p-panel-header-padding: 0;
-    --p-panel-content-padding: 0;
+    display: flex;
   }
 }

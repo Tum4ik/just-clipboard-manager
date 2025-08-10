@@ -1,23 +1,17 @@
 <div class="root">
   <div #header class="header">
-    <span class="material-symbols-rounded icon">assignment</span>
+    <google-icon iconName="assignment" />
     {{ 'clipboard-data' | translate }}
   </div>
-  <div #arrowIcon class="material-symbols-rounded">arrow_downward</div>
-  <jcm-scroll-view [style]="`height: calc(100% - ${header.clientHeight + arrowIcon.clientHeight + 4}px);`">
-    <div cdkDropList>
+  <google-icon #arrowIcon iconName="arrow_downward" />
+  <jcm-scroll-view>
+    <div cdkDropList (cdkDropListDropped)="pluginsPipelineChanged($event)">
       <div class="vertical-line"></div>
-      <jcm-plugin-pipeline-card cdkDrag title="Files Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Images Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Text Plugin" />
-      <jcm-plugin-pipeline-card cdkDrag title="Last Plugin" />
+      @for(pluginInfo of plugins; track pluginInfo.plugin.id){
+      <jcm-plugin-pipeline-card cdkDrag
+                                cdkDragLockAxis="y"
+                                [title]="pluginInfo.plugin.name" />
+      }
     </div>
   </jcm-scroll-view>
 </div>

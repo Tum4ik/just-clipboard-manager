@@ -1,0 +1,30 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "clip-preview-window",
+  "description": "Capability for the paste window",
+  "windows": [
+    "clip-preview-window"
+  ],
+  "permissions": [
+    "core:default",
+    "core:app:allow-default-window-icon",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-set-position",
+    "core:window:allow-start-dragging",
+    "core:window:allow-maximize",
+    "core:window:allow-unmaximize",
+    "core:window:allow-close",
+    "core:webview:allow-create-webview-window",
+    "opener:default",
+    "fs:allow-resource-read-recursive",
+    "process:default",
+    "sql:allow-close",
+    "sql:allow-execute",
+    "sql:allow-load",
+    "sql:allow-select",
+    "store:default",
+    "log:default"
+  ]
+}

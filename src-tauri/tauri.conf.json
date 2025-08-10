@@ -26,7 +26,9 @@
         "url": "main-window",
         "title": "Just Clipboard Manager",
         "width": 1000,
-        "height": 753,
+        "height": 700,
+        "minWidth": 750,
+        "minHeight": 250,
         "decorations": false,
         "create": false
       }

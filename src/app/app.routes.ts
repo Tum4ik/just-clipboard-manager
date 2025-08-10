@@ -6,6 +6,7 @@ import { trayIconResolver } from "./shells/paste-window/resolvers/tray-icon.reso
 import { ClipboardListener } from "./shells/paste-window/services/clipboard-listener.service";
 import { GlobalShortcutsService } from "./shells/paste-window/services/global-shortcuts.service";
 import { PasteDataService } from "./shells/paste-window/services/paste-data.service";
+import { PasteWindowClipsService } from "./shells/paste-window/services/paste-window-clips.service";
 import { PasteWindowService } from "./shells/paste-window/services/paste-window.service";
 import { AppTray } from "./shells/tray/app-tray";
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
       ClipboardListener,
       GlobalShortcutsService,
       PasteWindowService,
+      PasteWindowClipsService,
       PasteDataService,
     ],
     resolve: {
@@ -26,6 +28,11 @@ export const routes: Routes = [
       globalShortcuts: globalShortcutsResolver,
       pasteWindow: pasteWindowServiceResolver,
     }
+  },
+  {
+    path: 'full-data-preview/:clipId',
+    loadComponent: () => import('./shells/paste-window/components/clip-full-data-preview/clip-full-data-preview')
+      .then(c => c.ClipFullDataPreview)
   },
   {
     path: 'main-window',

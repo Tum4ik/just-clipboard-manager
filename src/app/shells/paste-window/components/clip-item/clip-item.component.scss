@@ -1,12 +1,37 @@
 :host {
-  display: block;
+  display: flex;
+  align-items: center;
 }
 
 p-button {
+  flex: 1;
+  min-width: 0;
   --p-button-text-primary-color: var(--p-text-color);
+  --p-button-focus-ring-offset: -1px;
 }
 
 .content {
   overflow: hidden;
-  min-height: 19px;
+  min-height: 20px;
+  max-height: 48px;
+}
+
+.action-buttons {
+  display: flex;
+
+  p-button {
+    --p-button-sm-padding-x: 6px;
+
+    &:hover {
+      --p-button-text-primary-color: var(--p-button-text-info-color);
+    }
+
+    &.delete-btn:hover {
+      --p-button-text-primary-color: var(--p-button-text-danger-color);
+    }
+
+    &.unpin-btn {
+      --p-button-text-primary-color: var(--p-button-text-info-color);
+    }
+  }
 }

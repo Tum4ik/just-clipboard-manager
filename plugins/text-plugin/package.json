@@ -22,14 +22,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "just-clipboard-manager-pdk": "^4.0.21"
+    "just-clipboard-manager-pdk": "^4.0.26"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.2",
+    "@rollup/plugin-typescript": "^12.1.3",
     "@rollup/plugin-json": "^6.1.0",
-    "rollup": "^4.40.0",
+    "rollup": "^4.44.0",
     "typescript": "^5.8.3",
     "tslib": "^2.8.1"
   }

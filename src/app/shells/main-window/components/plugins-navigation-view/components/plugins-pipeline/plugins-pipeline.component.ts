@@ -1,6 +1,8 @@
-import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, OnInit } from '@angular/core';
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
+import { PluginsService, PluginWithAdditionalInfo } from '../../../../../../core/services/plugins.service';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/plugin-pipeline-card.component";
 
@@ -13,9 +15,23 @@ import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/p
     CdkDrag,
     PluginPipelineCardComponent,
     TranslatePipe,
-    ScrollViewComponent
+    ScrollViewComponent,
+    GoogleIcon
   ]
 })
-export class PluginsPipelineComponent {
+export class PluginsPipelineComponent implements OnInit {
+  constructor(
+    private readonly pluginsService: PluginsService,
+  ) { }
 
+  plugins: PluginWithAdditionalInfo[] = [];
+
+  ngOnInit(): void {
+    this.plugins = [...this.pluginsService.installedPlugins];
+  }
+
+  async pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
+    moveItemInArray(this.plugins, e.previousIndex, e.currentIndex);
+    await this.pluginsService.changePluginsOrderAsync(e.previousIndex, e.currentIndex);
+  }
 }

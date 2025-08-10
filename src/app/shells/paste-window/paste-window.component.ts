@@ -1,15 +1,23 @@
-import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ComponentRef, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, viewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, TemplateRef, viewChild } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { PluginsService } from '@app/core/services/plugins.service';
+import { SettingsService } from '@app/core/services/settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { BlockUI } from 'primeng/blockui';
+import { Button } from "primeng/button";
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
-import { ScrollPanel, ScrollPanelModule } from 'primeng/scrollpanel';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
+import { ScrollPanel } from 'primeng/scrollpanel';
+import { Splitter } from 'primeng/splitter';
+import { Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
-import { PluginsService } from '../../core/services/plugins.service';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
-import { PasteDataService } from './services/paste-data.service';
+import { PasteWindowClip, PasteWindowClipsService } from './services/paste-window-clips.service';
 import { PasteWindowService } from './services/paste-window.service';
 
 @Component({
@@ -19,189 +27,193 @@ import { PasteWindowService } from './services/paste-window.service';
   imports: [
     InputText,
     Panel,
-    ScrollPanelModule,
+    ScrollPanel,
     TranslatePipe,
+    BlockUI,
+    IconField,
+    InputIcon,
+    GoogleIcon,
+    ClipItemComponent,
+    Button,
+    Splitter,
+    MatTooltip,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
-    private readonly ngZone: NgZone,
-    private readonly pluginsService: PluginsService,
-    @Inject(DOCUMENT) private readonly document: Document,
     private readonly renderer: Renderer2,
-    private readonly pasteDataService: PasteDataService,
+    private readonly ngZone: NgZone,
     private readonly pasteWindowService: PasteWindowService,
-    private readonly clipboardListener: ClipboardListener
+    private readonly pasteWindowClipsService: PasteWindowClipsService,
+    private readonly clipboardListener: ClipboardListener,
+    private readonly pluginsService: PluginsService,
+    private readonly settingsService: SettingsService,
   ) { }
 
-  private resizeObserver?: ResizeObserver;
-  private searchSubject = new BehaviorSubject<string>('');
-  private subscriptions = new Subscription();
+
+  private readonly subscriptions = new Subscription();
   private readonly clipsRepository = new ClipsRepository();
-  private readonly rootElement = viewChild.required<ElementRef<HTMLElement>>('root');
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
-  private readonly scrollPanel = viewChild.required<ScrollPanel>('scrollPanel');
-  private readonly clipsContainer = viewChild.required<unknown, ViewContainerRef>('clipsContainer', { read: ViewContainerRef });
+  private readonly splitter = viewChild.required<Splitter>('splitter');
+  private readonly regularClipsScrollPanel = viewChild.required<ScrollPanel>('regularClipsScrollPanel');
 
-  private isClipsLoading = false;
-  private isWindowVisible = false;
   private isClipsListUpToDate = false;
+  private pinnedClipsPanelTemplate?: TemplateRef<HTMLElement>;
+  private splitterHandleElement?: HTMLElement | null;
 
-  readonly SCROLLABLE_AREA_MARGIN_TOP = 4;
-  readonly SCROLLABLE_AREA_MARGIN_BOTTOM = 4;
+  isWindowBlocked = false;
+  isSettingsMode = false;
+  splitterPanelSizes: number[] = [];
 
-  scrollableAreaHeight = '0px';
+  get pinnedClips(): Signal<PasteWindowClip[]> {
+    return this.pasteWindowClipsService.orderedPinnedClips;
+  }
+
+  get regularClips(): Signal<PasteWindowClip[]> {
+    return this.pasteWindowClipsService.regularClips;
+  }
 
 
-  async ngOnInit(): Promise<void> {
-    this.resizeObserver = new ResizeObserver(entries => {
-      this.ngZone.run(() => {
-        for (const entry of entries) {
-          if (entry.target === this.rootElement().nativeElement) {
-            const windowHeight = this.rootElement().nativeElement.clientHeight;
-            const searchInputHeight = this.searchInputElement().nativeElement.clientHeight;
-            const topBottomMargins = this.SCROLLABLE_AREA_MARGIN_TOP + this.SCROLLABLE_AREA_MARGIN_BOTTOM;
-            this.scrollableAreaHeight = `${windowHeight - searchInputHeight - 2 * topBottomMargins}px`;
-          }
-        }
-      });
-    });
-    this.resizeObserver.observe(this.rootElement().nativeElement);
-
-    this.subscriptions.add(
-      this.searchSubject.pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      ).subscribe(search => {
-        this.detachAllClips();
-        this.loadClipsAsync(0, 15, search);
-      })
-    );
-    this.subscriptions.add(
-      this.pasteWindowService.visibility$.subscribe(isVisible => {
-        this.isWindowVisible = isVisible;
-        if (isVisible && !this.isClipsListUpToDate) {
-          this.loadClipsAsync(0, 15);
-          this.isClipsListUpToDate = true;
-        }
-        else if (isVisible) {
-          this.scrollPanel().scrollTop(0);
-          this.searchInputElement().nativeElement.focus();
-        }
-        else if (!isVisible) {
-          this.searchSubject.next('');
-          this.searchInputElement().nativeElement.value = '';
-        }
-      })
-    );
+  ngOnInit() {
     this.subscriptions.add(
       this.clipboardListener.clipboardUpdated$.subscribe(() => {
         this.isClipsListUpToDate = false;
-        if (!this.isWindowVisible) {
-          this.detachAllClips();
-        }
       })
     );
     this.subscriptions.add(
       this.pluginsService.pluginInstalled$.subscribe(() => {
         this.isClipsListUpToDate = false;
-        this.detachAllClips();
       })
     );
     this.subscriptions.add(
       this.pluginsService.pluginSettingsChanged$.subscribe(() => {
         this.isClipsListUpToDate = false;
-        this.detachAllClips();
+      })
+    );
+    this.subscriptions.add(
+      this.pasteWindowService.visibility$.subscribe(isVisible => {
+        if (isVisible) {
+          if (!this.isClipsListUpToDate) {
+            this.pasteWindowClipsService.loadClipsFromScratchAsync();
+            this.isClipsListUpToDate = true;
+          }
+          this.regularClipsScrollPanel().scrollTop(0);
+          this.searchInputElement().nativeElement.focus();
+        }
+        else if (!isVisible) {
+          this.clearSearch();
+        }
       })
     );
 
-    this.loadClipsAsync(0, 15);
-    this.isClipsListUpToDate = true;
+    this.settingsService.getPasteWindowPanelSizesAsync().then(sizes => this.splitterPanelSizes = sizes);
+
+    this.pasteWindowClipsService.loadPinnedClipsAsync();
   }
 
   ngAfterViewInit(): void {
-    const scrollPanelElement = this.scrollPanel().containerViewChild?.nativeElement as HTMLElement;
-    const scrollPanelContent = scrollPanelElement.querySelector('.p-scrollpanel-content');
-    this.subscriptions.add(this.renderer.listen(scrollPanelContent, 'scroll', this.onScroll.bind(this)));
+    const scrollPanelElement = this.regularClipsScrollPanel().contentViewChild?.nativeElement as HTMLElement;
+    this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
+
+    this.pinnedClipsPanelTemplate = this.splitter().panels[0];
+    this.splitterHandleElement = this.splitter().el.nativeElement.querySelector('.p-splitter-gutter-handle');
+    if (this.splitterHandleElement) {
+      this.splitterHandleElement.tabIndex = -1;
+    }
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
     this.subscriptions.unsubscribe();
     this.clipsRepository.disposeAsync();
   }
 
 
+  async settingsMode() {
+    this.isSettingsMode = !this.isSettingsMode;
+    if (this.isSettingsMode) {
+      this.pasteWindowService.disallowHide();
+      await this.pasteWindowService.enableResizeAsync();
+      if (this.splitterHandleElement) {
+        this.splitterHandleElement.tabIndex = 0;
+      }
+    }
+    else {
+      this.pasteWindowService.allowHide();
+      await this.pasteWindowService.disableResizeAsync();
+      await this.pasteWindowService.rememberWindowSizeAsync();
+      await this.settingsService.setPasteWindowPanelSizesAsync(this.splitter().panelSizes);
+      if (this.splitterHandleElement) {
+        this.splitterHandleElement.tabIndex = -1;
+      }
+    }
+  }
+
+
   onSearchChanged(search: string) {
-    this.searchSubject.next(search);
+    this.pasteWindowClipsService.filter(search);
+  }
+
+  clearSearch() {
+    this.searchInputElement().nativeElement.value = '';
+    this.pasteWindowClipsService.filter('');
   }
 
 
   onScroll(e: Event) {
-    if (!this.isWindowVisible) {
-      return;
-    }
     const target = e.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
-      this.loadClipsAsync(this.clipsContainer().length, 10, this.searchSubject.value);
+      this.pasteWindowClipsService.loadMoreClipsAsync(10);
     }
   }
 
 
-  private loadedClips = new Map<number, { formatId: number, component: ComponentRef<ClipItemComponent>; }>();
-
-  private async loadClipsAsync(skip: number, take: number, search?: string) {
-    if (this.isClipsLoading) {
-      return;
-    }
-
-    this.isClipsLoading = true;
-
-    const enabledPluginIds = this.pluginsService.enabledPlugins.map(ep => ep.id);
-    const clips = await this.clipsRepository.getClipPreviewsAsync(enabledPluginIds, skip, take, search);
-    if (clips.length > 0) {
-      for (const clip of clips) {
-        if (this.loadedClips.has(clip.id!)) {
-          const component = this.loadedClips.get(clip.id!)!.component;
-          this.clipsContainer().insert(component.hostView);
-        }
-        else {
-          const { plugin } = this.pluginsService.getPlugin(clip.pluginId) ?? {};
-          if (!plugin) {
-            continue;
-          }
-          const item = plugin.getRepresentationDataElement(
-            { data: clip.representationData, metadata: clip.representationMetadata },
-            clip.format, this.document
-          );
-          if (item) {
-            const clipItem = this.clipsContainer().createComponent(ClipItemComponent);
-            this.loadedClips.set(clip.id!, { formatId: clip.formatId, component: clipItem });
-            clipItem.setInput('clipId', clip.id);
-            clipItem.setInput('htmlElement', item);
-            clipItem.instance.pasteDataRequested.subscribe(this.onPasteDataRequested.bind(this));
-          }
-        }
-      }
-    }
-
-    this.isClipsLoading = false;
+  async onPasteDataRequested(clipId: number) {
+    await this.pasteWindowClipsService.pasteClipAsync(clipId);
   }
 
 
-  private async onPasteDataRequested(clipId: number) {
-    const data = await this.clipsRepository.getClipDataAsync(clipId);
-    if (data) {
-      await this.pasteDataService.pasteDataAsync(data, this.loadedClips.get(clipId)!.formatId);
-      await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
-      this.clipsContainer().move(this.loadedClips.get(clipId)!.component.hostView, 0);
-    }
+  async onPreviewDataRequested(clipId: number) {
+    this.isWindowBlocked = true;
+    this.pasteWindowService.disallowHide();
+    const appWindow = new WebviewWindow('clip-preview-window', {
+      decorations: false,
+      skipTaskbar: true,
+      alwaysOnTop: true,
+      url: `full-data-preview/${clipId}`
+    });
+    await appWindow.onCloseRequested(e => {
+      this.ngZone.run(() => {
+        this.isWindowBlocked = false;
+        this.pasteWindowService.allowHide();
+        this.pasteWindowService.focus();
+      });
+    });
   }
 
 
-  private detachAllClips(): void {
-    while (this.clipsContainer().length > 0) {
-      this.clipsContainer().detach();
+  async onPinItemRequested(clipId: number) {
+    await this.pasteWindowClipsService.pinClipAsync(clipId);
+    this.trackPinnedClipsPanelVisibility();
+  }
+
+
+  async onUnpinItemRequested(clipId: number) {
+    await this.pasteWindowClipsService.unpinClipAsync(clipId);
+    this.trackPinnedClipsPanelVisibility();
+  }
+
+
+  async onDeleteItemRequested(clipId: number) {
+    await this.pasteWindowClipsService.deleteClipAsync(clipId);
+  }
+
+
+  private trackPinnedClipsPanelVisibility() {
+    if (this.splitter().panels.length === 1 && this.pinnedClips().length > 0 && this.pinnedClipsPanelTemplate) {
+      this.splitter().panels.unshift(this.pinnedClipsPanelTemplate);
+    }
+    else if (this.pinnedClips().length <= 0 && this.splitter().panels.length === 2) {
+      this.splitter().panels.splice(0, 1);
     }
   }
 }

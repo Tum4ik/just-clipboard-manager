@@ -1,5 +1,6 @@
-import { HttpClient, provideHttpClient } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateLoader, TranslateService } from "@ngx-translate/core";
@@ -7,6 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
+import { TOOLTIP_OPTIONS } from "./core/config/tooltip.config";
 import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
@@ -32,7 +34,7 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideTranslateService({
       defaultLanguage: 'en',
       loader: {
@@ -58,7 +60,8 @@ export const appConfig: ApplicationConfig = {
       await pluginsService.initAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
-    { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }
+    { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: TOOLTIP_OPTIONS },
   ]
 };
 

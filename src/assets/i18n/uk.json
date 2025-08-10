@@ -20,5 +20,9 @@
   "data-processing-pipeline": "Конвеєр обробки даних",
   "install": "Встановити",
   "installed": "Встановлено",
-  "installation-failed": "Помилка встановлення"
+  "installation-failed": "Помилка встановлення",
+  "full-data-view": "Перегляд повних даних",
+  "pin": "Закріпити",
+  "unpin": "Відкріпити",
+  "delete": "Видалити"
 }

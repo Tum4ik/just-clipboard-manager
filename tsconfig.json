@@ -27,12 +27,19 @@
       "ES2024",
       "DOM",
       "DOM.Iterable"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": [
+        "app/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "typeCheckHostBindings": true
   }
 }

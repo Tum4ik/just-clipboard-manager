@@ -1,10 +1,11 @@
 mod clipboard_listener;
 mod commands;
+mod constants;
 mod migrations;
-mod sentry_commands;
 
 use clipboard_listener::clipboard_listener;
 use config::Config;
+use constants::*;
 use log::LevelFilter;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 
@@ -21,7 +22,7 @@ pub fn run(config: Config) {
     )
     .plugin(
       tauri_plugin_sql::Builder::new()
-        .add_migrations("sqlite:jcm-database.db", migrations::migrations())
+        .add_migrations(DB_PATH, migrations::migrations())
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
@@ -31,19 +32,7 @@ pub fn run(config: Config) {
     .plugin(tauri_plugin_store::Builder::new().build())
     .manage(config)
     .setup(clipboard_listener)
-    .invoke_handler(tauri::generate_handler![
-      commands::get_clipboard_data_bytes,
-      commands::insert_bytes_data,
-      commands::paste_data_bytes,
-      commands::get_foreground_window,
-      commands::open_main_window,
-      commands::environment,
-      commands::extract_and_remove_zip,
-      sentry_commands::sentry_capture_info,
-      sentry_commands::sentry_capture_warning,
-      sentry_commands::sentry_capture_error,
-      sentry_commands::sentry_capture_fatal,
-    ])
+    .invoke_handler(all_commands!())
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

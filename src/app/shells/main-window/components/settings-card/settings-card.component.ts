@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { Menubar } from 'primeng/menubar';
 import { ShadedCardComponent } from "../shaded-card/shaded-card.component";
 
@@ -8,7 +9,8 @@ import { ShadedCardComponent } from "../shaded-card/shaded-card.component";
   styleUrl: './settings-card.component.scss',
   imports: [
     Menubar,
-    ShadedCardComponent
+    ShadedCardComponent,
+    GoogleIcon
   ]
 })
 export class SettingsCardComponent {

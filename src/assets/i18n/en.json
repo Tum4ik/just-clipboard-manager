@@ -20,5 +20,9 @@
   "data-processing-pipeline": "Data processing pipeline",
   "install": "Install",
   "installed": "Installed",
-  "installation-failed": "Installation failed"
+  "installation-failed": "Installation failed",
+  "full-data-view": "Full data view",
+  "pin": "Pin",
+  "unpin": "Unpin",
+  "delete": "Delete"
 }

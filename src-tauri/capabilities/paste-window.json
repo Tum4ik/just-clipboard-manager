@@ -3,7 +3,8 @@
   "identifier": "paste-window",
   "description": "Capability for the paste window",
   "windows": [
-    "paste-window"
+    "paste-window",
+    "clip-preview-window"
   ],
   "permissions": [
     "core:default",
@@ -12,6 +13,10 @@
     "core:window:allow-hide",
     "core:window:allow-set-focus",
     "core:window:allow-set-position",
+    "core:window:allow-set-resizable",
+    "core:window:allow-set-size",
+    "core:window:allow-destroy",
+    "core:webview:allow-create-webview-window",
     "opener:default",
     "fs:allow-resource-read-recursive",
     "process:default",

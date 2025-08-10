@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .panel {
+    flex: 1;
+    padding: 0 4px 4px 4px;
+    overflow: hidden;
+  }
+
+  p-panel {
+    --p-panel-header-padding: 0;
+    --p-panel-content-padding: 4px;
+    width: 100%;
+    height: 100%;
+  }
+
+  p-progress-spinner {
+    position: absolute;
+    left: calc(50% - 50px);
+    top: calc(50% - 60px);
+  }
+}
