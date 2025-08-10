@@ -59,6 +59,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private isClipsListUpToDate = false;
   private pinnedClipsPanelTemplate?: TemplateRef<HTMLElement>;
+  private splitterHandleElement?: HTMLElement | null;
 
   isWindowBlocked = false;
   isSettingsMode = false;
@@ -115,6 +116,10 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
 
     this.pinnedClipsPanelTemplate = this.splitter().panels[0];
+    this.splitterHandleElement = this.splitter().el.nativeElement.querySelector('.p-splitter-gutter-handle');
+    if (this.splitterHandleElement) {
+      this.splitterHandleElement.tabIndex = -1;
+    }
   }
 
   ngOnDestroy(): void {
@@ -128,12 +133,18 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isSettingsMode) {
       this.pasteWindowService.disallowHide();
       await this.pasteWindowService.enableResizeAsync();
+      if (this.splitterHandleElement) {
+        this.splitterHandleElement.tabIndex = 0;
+      }
     }
     else {
       this.pasteWindowService.allowHide();
       await this.pasteWindowService.disableResizeAsync();
       await this.pasteWindowService.rememberWindowSizeAsync();
       await this.settingsService.setPasteWindowPanelSizesAsync(this.splitter().panelSizes);
+      if (this.splitterHandleElement) {
+        this.splitterHandleElement.tabIndex = -1;
+      }
     }
   }
 
