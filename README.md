@@ -13,8 +13,6 @@
   [![Platform: Windows](https://img.shields.io/badge/platform-windows-%23373737)]()
   [![Latest release](https://img.shields.io/github/v/release/Tum4ik/just-clipboard-manager)](https://github.com/Tum4ik/just-clipboard-manager/releases)
 
-  [![Gated application build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_application.yml)
-  [![Gated plugin dev kit build status](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml/badge.svg)](https://github.com/Tum4ik/just-clipboard-manager/actions/workflows/gated_plugin-dev-kit.yml)
 </h1>
 
 <p align="right">
@@ -22,3 +20,4 @@
     <img src=".attachments/bmc-button.svg" alt="Buy me a coffee" width="195" />
   </a>
 </p>
+
