@@ -27,6 +27,7 @@
     </p-icon-field>
     <p-button class="settings-btn" [class.activated]="isSettingsMode"
               variant="text" size="small"
+              [matTooltip]="'settings' | translate"
               (onClick)="settingsMode()">
       <google-icon iconName="settings" [size]="23" [isFilled]="isSettingsMode" />
     </p-button>

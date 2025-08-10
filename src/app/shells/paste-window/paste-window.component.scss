@@ -7,7 +7,7 @@
   gap: 4px;
 
   .resize-handle {
-    background: var(--p-splitter-gutter-background);
+    background: var(--p-primary-color);
     position: absolute;
 
     &.top,
@@ -81,6 +81,7 @@
   }
 
   p-splitter {
+    --p-splitter-gutter-background: var(--p-primary-color);
     flex: 1;
     overflow: hidden;
     border: none;

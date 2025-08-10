@@ -4,12 +4,14 @@
 <div class="action-buttons">
   @if (isMouseOver()) {
   <p-button variant="text" size="small"
+            [matTooltip]="'full-data-view' | translate"
             (onClick)="preview()">
     <google-icon iconName="open_in_new" [size]="20" />
   </p-button>
   }
   @if (isMouseOver() && isPinButtonVisible()) {
   <p-button variant="text" size="small"
+            [matTooltip]="'pin' | translate"
             (onClick)="pin()">
     <google-icon iconName="keep" [size]="20" />
   </p-button>
@@ -17,6 +19,7 @@
   @if (isMouseOver() && isDeleteButtonVisible()) {
   <p-button class="delete-btn"
             variant="text" size="small"
+            [matTooltip]="'delete' | translate"
             (onClick)="delete()">
     <google-icon iconName="delete" [size]="20" />
   </p-button>
@@ -24,6 +27,7 @@
   @if (isUnpinButtonVisible()){
   <p-button class="unpin-btn"
             variant="text" size="small"
+            [matTooltip]="'unpin' | translate"
             (onClick)="unpin()">
     <google-icon iconName="keep" [size]="20" [isFilled]="true" />
   </p-button>

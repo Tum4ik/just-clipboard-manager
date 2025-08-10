@@ -1,5 +1,7 @@
 import { Component, effect, ElementRef, input, output, Renderer2, signal, viewChild } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -8,7 +10,9 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './clip-item.component.scss',
   imports: [
     ButtonModule,
-    GoogleIcon
+    GoogleIcon,
+    TranslatePipe,
+    MatTooltip,
   ],
   host: {
     '(mouseenter)': 'onMouseenter()',

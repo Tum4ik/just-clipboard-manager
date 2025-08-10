@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, TemplateRef, viewChild } from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { PluginsService } from '@app/core/services/plugins.service';
 import { SettingsService } from '@app/core/services/settings.service';
@@ -35,6 +36,7 @@ import { PasteWindowService } from './services/paste-window.service';
     ClipItemComponent,
     Button,
     Splitter,
+    MatTooltip,
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {

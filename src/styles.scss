@@ -1,7 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-html,
-body {
-  height: 100%;
+@use '@angular/material' as mat;
+
+html {
+  @include mat.tooltip-overrides((container-color: var(--p-surface-700),
+      container-shape: 4px,
+      supporting-text-color: var(--p-surface-0),
+    ));
 }
 
 body {
@@ -10,6 +14,11 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 @font-face {
