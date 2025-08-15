@@ -6,7 +6,7 @@ import { ProgressBar } from 'primeng/progressbar';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
 import { Subscription } from 'rxjs';
-import { SearchPluginInfo } from '../../../../../../core/data/dto/search-plugin-info.dto';
+import { SearchPluginInfo } from '../../../../../../core/dto/search-plugin-info.dto';
 import { PluginsService } from '../../../../../../core/services/plugins.service';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component";

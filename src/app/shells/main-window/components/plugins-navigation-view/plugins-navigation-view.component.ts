@@ -9,14 +9,19 @@ import { NavigationView } from '../navigation-view/navigation-view';
 export class PluginsNavigationViewComponent extends NavigationView {
   items: MenuItem[] = [
     {
-      label: 'data-processing-pipeline',
-      icon: 'move_down',
-      routerLink: 'pipeline'
+      label: 'installed',
+      icon: 'list_alt_check',
+      routerLink: 'installed'
     },
     {
       label: 'search',
       icon: 'manage_search',
       routerLink: 'search'
-    }
+    },
+    {
+      label: 'data-processing-pipeline',
+      icon: 'move_down',
+      routerLink: 'pipeline'
+    },
   ];
 }

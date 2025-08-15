@@ -9,7 +9,7 @@ import { download } from '@tauri-apps/plugin-upload';
 import { ClipboardDataPlugin, PluginId } from 'just-clipboard-manager-pdk';
 import { Subject } from 'rxjs';
 import { GithubService } from '../../shells/main-window/services/github.service';
-import { SearchPluginInfo } from '../data/dto/search-plugin-info.dto';
+import { SearchPluginInfo } from '../dto/search-plugin-info.dto';
 import { EnvironmentService } from './environment.service';
 import { MonitoringService } from './monitoring.service';
 

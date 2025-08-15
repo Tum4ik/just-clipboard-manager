@@ -19,6 +19,7 @@
   "clipboard-data": "Дані буфера обміну",
   "data-processing-pipeline": "Конвеєр обробки даних",
   "install": "Встановити",
+  "uninstall": "Видалити",
   "installed": "Встановлено",
   "installation-failed": "Помилка встановлення",
   "full-data-view": "Перегляд повних даних",

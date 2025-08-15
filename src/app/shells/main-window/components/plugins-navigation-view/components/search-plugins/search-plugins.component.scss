@@ -1,7 +1,7 @@
 .skeleton {
   position: relative;
   max-width: 685px;
-  height: 142px;
+  height: 154px;
 
   .container {
     position: absolute !important;
@@ -15,6 +15,7 @@
 
     .button {
       align-self: end;
+      margin-top: 12px;
     }
   }
 }
@@ -38,6 +39,7 @@
   justify-content: end;
   align-items: center;
   gap: 12px;
+  margin-top: 12px;
 
   p-progressbar {
     width: 100%;

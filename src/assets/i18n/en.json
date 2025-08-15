@@ -19,6 +19,7 @@
   "clipboard-data": "Clipboard data",
   "data-processing-pipeline": "Data processing pipeline",
   "install": "Install",
+  "uninstall": "Uninstall",
   "installed": "Installed",
   "installation-failed": "Installation failed",
   "full-data-view": "Full data view",
