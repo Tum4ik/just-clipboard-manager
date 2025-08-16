@@ -16,5 +16,18 @@ export const AuraBluePreset = definePreset(Aura, {
       900: '{blue.900}',
       950: '{blue.950}'
     }
+  },
+  components: {
+    togglebutton: {
+      colorScheme: {
+        light: {
+          root: {
+            background: '{surface.200}',
+            hoverBackground: '{surface.200}',
+            checkedBackground: '{surface.200}',
+          }
+        }
+      }
+    }
   }
 });
