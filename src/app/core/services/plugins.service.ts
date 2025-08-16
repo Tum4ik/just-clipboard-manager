@@ -2,7 +2,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { emit, listen } from '@tauri-apps/api/event';
-import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readDir, readFile, remove } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { download } from '@tauri-apps/plugin-upload';
@@ -180,6 +180,41 @@ export class PluginsService {
     }
 
     return false;
+  }
+
+
+  async uninstallPluginAsync(id: PluginId): Promise<void> {
+    try {
+      // Remove plugin from memory
+      this._plugins.delete(id);
+
+      // Remove from plugins order
+      if (this.pluginsOrder) {
+        const index = this.pluginsOrder.indexOf(id);
+        if (index >= 0) {
+          this.pluginsOrder.splice(index, 1);
+          await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+          await this.pluginSettingsStore.save();
+        }
+      }
+
+      // Remove plugin settings
+      await this.pluginSettingsStore.delete(id);
+      await this.pluginSettingsStore.save();
+
+      // Clear cached lists
+      this._installedPlugins = undefined;
+      this._enabledPlugins = undefined;
+
+      // Emit event for UI updates
+      await emit<PluginSettingsChangedPayload>(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, { id, settings: { enabled: false } });
+
+      // Remove plugin files from disk (this will be handled by Tauri)
+      await remove(`plugins/${id}`, { baseDir: BaseDirectory.Resource, recursive: true });
+
+    } catch (e) {
+      this.monitoringService.error(`Failed to uninstall plugin ${id}`, e);
+    }
   }
 
 

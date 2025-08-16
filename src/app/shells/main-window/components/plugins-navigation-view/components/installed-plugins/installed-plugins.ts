@@ -49,7 +49,27 @@ export class InstalledPlugins implements OnInit, OnDestroy {
   }
 
 
-  uninstall(plugin: ClipboardDataPlugin) {
+  async uninstall(plugin: ClipboardDataPlugin) {
+    // todo: Show normal confirmation dialog
+    const confirmed = confirm(
+      this.translateService.instant('plugin.uninstall.confirm', {
+        name: plugin.name
+      })
+    );
 
+    if (!confirmed) {
+      return;
+    }
+
+    this.pluginsService.uninstallPluginAsync(plugin.id);
+  }
+
+
+  async togglePlugin(plugin: ClipboardDataPlugin, enabled: boolean) {
+    if (enabled) {
+      await this.pluginsService.enablePluginAsync(plugin.id);
+    } else {
+      await this.pluginsService.disablePluginAsync(plugin.id);
+    }
   }
 }

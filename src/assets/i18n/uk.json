@@ -20,6 +20,7 @@
   "data-processing-pipeline": "Конвеєр обробки даних",
   "install": "Встановити",
   "uninstall": "Видалити",
+  "plugin.uninstall.confirm": "Ви впевнені, що хочете видалити плагін \"{{name}}\"?",
   "installed": "Встановлено",
   "installation-failed": "Помилка встановлення",
   "full-data-view": "Перегляд повних даних",

@@ -24,7 +24,9 @@
                   variant="outlined"
                   raised="true"
                   (onClick)="uninstall(pluginInfo.plugin)" />
-        <p-toggle-button size="small" [ngModel]="pluginInfo.isEnabled" />
+        <p-toggle-button size="small"
+                         [ngModel]="pluginInfo.isEnabled"
+                         (onChange)="togglePlugin(pluginInfo.plugin, $event.checked ?? false)" />
       </div>
     </ng-template>
   </jcm-shaded-card>
