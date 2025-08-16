@@ -26,6 +26,8 @@
                   (onClick)="uninstall(pluginInfo.plugin)" />
         <p-toggle-button size="small"
                          [ngModel]="pluginInfo.isEnabled"
+                         [onLabel]="'enabled' | translate"
+                         [offLabel]="'disabled' | translate"
                          (onChange)="togglePlugin(pluginInfo.plugin, $event.checked ?? false)" />
       </div>
     </ng-template>

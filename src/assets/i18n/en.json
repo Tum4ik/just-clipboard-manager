@@ -26,5 +26,7 @@
   "full-data-view": "Full data view",
   "pin": "Pin",
   "unpin": "Unpin",
-  "delete": "Delete"
+  "delete": "Delete",
+  "enabled": "Enabled",
+  "disabled": "Disabled"
 }
