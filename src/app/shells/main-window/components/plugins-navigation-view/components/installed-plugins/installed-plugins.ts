@@ -50,18 +50,8 @@ export class InstalledPlugins implements OnInit, OnDestroy {
 
 
   async uninstall(plugin: ClipboardDataPlugin) {
-    // todo: Show normal confirmation dialog
-    const confirmed = confirm(
-      this.translateService.instant('plugin.uninstall.confirm', {
-        name: plugin.name
-      })
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    this.pluginsService.uninstallPluginAsync(plugin.id);
+    // todo: go with PrimeNG DialogService to confirm the action
+    // this.pluginsService.uninstallPluginAsync(plugin.id);
   }
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { _, TranslateService } from "@ngx-translate/core";
+import { TranslateService } from "@ngx-translate/core";
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { invoke } from "@tauri-apps/api/core";
 import { Image } from "@tauri-apps/api/image";
@@ -78,10 +78,10 @@ export class AppTray {
 
 
   private async updateTranslationsAsync() {
-    this.settingsMenuItem?.setText(await firstValueFrom(this.translateService.get(_('settings'))));
-    this.aboutMenuItem?.setText(await firstValueFrom(this.translateService.get(_('about'))));
-    this.languageMenuItem?.setText(await firstValueFrom(this.translateService.get(_('language'))));
-    this.exitMenuItem?.setText(await firstValueFrom(this.translateService.get(_('exit'))));
+    this.settingsMenuItem?.setText(await firstValueFrom(this.translateService.get('settings')));
+    this.aboutMenuItem?.setText(await firstValueFrom(this.translateService.get('about')));
+    this.languageMenuItem?.setText(await firstValueFrom(this.translateService.get('language')));
+    this.exitMenuItem?.setText(await firstValueFrom(this.translateService.get('exit')));
     this.languageMenuItem?.items().then(items => {
       for (const item of items) {
         if (item instanceof CheckMenuItem) {

@@ -9,22 +9,22 @@ import { NavigationView } from '../navigation-view/navigation-view';
 export class SettingsNavigationViewComponent extends NavigationView {
   items: MenuItem[] = [
     {
-      label: 'settings.general',
+      label: 'settings..general',
       icon: 'tune',
       routerLink: 'general'
     },
     {
-      label: 'settings.interface',
+      label: 'settings..interface',
       icon: 'display_settings',
       routerLink: 'interface'
     },
     {
-      label: 'settings.paste-window',
+      label: 'settings..paste-window',
       icon: 'wysiwyg',
       routerLink: 'paste-window'
     },
     {
-      label: 'settings.hot-keys',
+      label: 'settings..hot-keys',
       icon: 'keyboard',
       routerLink: 'hot-keys'
     }
