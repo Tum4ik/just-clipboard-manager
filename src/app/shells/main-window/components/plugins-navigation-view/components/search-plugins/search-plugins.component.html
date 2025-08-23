@@ -1,19 +1,5 @@
 <jcm-scroll-view>
-  @if (isLoading){
-  @for (i of [0, 1, 2]; track i){
-  <div class="skeleton">
-    <p-skeleton class="container" width="100%" height="100%" />
-    <div class="content">
-      <p-skeleton width="120px" height="24px" />
-      <p-skeleton width="150px" height="19px" />
-      <p-skeleton width="570px" height="19px" />
-      <p-skeleton class="button" width="136px" height="32px" />
-    </div>
-  </div>
-  }
-  }
-  @else {
-  @for (plugin of plugins; track plugin.id) {
+  @for (plugin of plugins() | async; track plugin.id) {
   <jcm-shaded-card>
     <ng-template #title>
       <div class="title-root">
@@ -30,7 +16,7 @@
       {{ 'plugin..by' | translate }} {{ plugin.author.name }}
     </ng-template>
     }
-    {{ plugin.description![lang] }}
+    {{ plugin.description![lang()] }}
     <ng-template #footer>
       <div class="footer">
         @if (plugin.isInstalling){
@@ -59,6 +45,18 @@
       </div>
     </ng-template>
   </jcm-shaded-card>
+  }
+  @empty {
+  @for (i of [0, 1, 2]; track i){
+  <div class="skeleton">
+    <p-skeleton class="container" width="100%" height="100%" />
+    <div class="content">
+      <p-skeleton width="120px" height="24px" />
+      <p-skeleton width="150px" height="19px" />
+      <p-skeleton width="570px" height="19px" />
+      <p-skeleton class="button" width="136px" height="32px" />
+    </div>
+  </div>
   }
   }
 </jcm-scroll-view>

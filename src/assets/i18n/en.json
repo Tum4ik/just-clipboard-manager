@@ -6,7 +6,9 @@
   "plugin": "Plugin",
   "plugin.": {
     "by": "by",
-    "uninstall-confirm": "Are you sure you want to uninstall the plugin?"
+    "uninstall-confirm": "Do you also want to remove the plugin related clips?",
+    "remove-plugin-and-clips": "Remove plugin and clips",
+    "remove-only-plugin": "Remove only plugin"
   },
   "plugins": "Plugins",
   "settings": "Settings",
@@ -35,5 +37,6 @@
   "unpin": "Unpin",
   "delete": "Delete",
   "enabled": "Enabled",
-  "disabled": "Disabled"
+  "disabled": "Disabled",
+  "cancel": "Cancel"
 }

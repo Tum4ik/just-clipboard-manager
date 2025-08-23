@@ -1,5 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
+import { ExtendedDialogService } from '@app/core/services/extended-dialog.service';
 import { PluginsService, PluginWithAdditionalInfo } from '@app/core/services/plugins.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
@@ -8,6 +10,7 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { Subscription } from 'rxjs';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component";
+import { ConfirmPluginUninstall, ConfirmPluginUninstallResult } from './dialogs/confirm-plugin-uninstall/confirm-plugin-uninstall';
 
 @Component({
   selector: 'jcm-installed-plugins',
@@ -20,12 +23,16 @@ import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component"
     Button,
     ToggleButton,
     FormsModule,
+  ],
+  providers: [
+    ExtendedDialogService
   ]
 })
 export class InstalledPlugins implements OnInit, OnDestroy {
   constructor(
     private readonly pluginsService: PluginsService,
     private readonly translateService: TranslateService,
+    private readonly dialogService: ExtendedDialogService,
   ) {
     this.lang = this.translateService.currentLang;
   }
@@ -34,7 +41,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
 
   lang: string;
 
-  get plugins(): readonly PluginWithAdditionalInfo[] {
+  get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
     return this.pluginsService.installedPlugins;
   }
 
@@ -50,8 +57,21 @@ export class InstalledPlugins implements OnInit, OnDestroy {
 
 
   async uninstall(plugin: ClipboardDataPlugin) {
-    // todo: go with PrimeNG DialogService to confirm the action
-    // this.pluginsService.uninstallPluginAsync(plugin.id);
+    const result = await this.dialogService.openAsync(ConfirmPluginUninstall, {
+      header: `${this.translateService.instant('uninstall')} ${plugin.name}`
+    });
+    switch (result) {
+      case ConfirmPluginUninstallResult.Cancel:
+        return;
+      case ConfirmPluginUninstallResult.RemoveOnlyPlugin:
+        this.pluginsService.uninstallPluginAsync(plugin.id);
+        return;
+      case ConfirmPluginUninstallResult.RemovePluginAndClips:
+        this.pluginsService.uninstallPluginAsync(plugin.id);
+        const repository = new ClipsRepository();
+        repository.deleteClipsForPluginAsync(plugin.id);
+        return;
+    }
   }
 
 

@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, computed, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
-import { Subscription } from 'rxjs';
+import { map } from 'rxjs';
 import { SearchPluginInfo } from '../../../../../../core/dto/search-plugin-info.dto';
 import { PluginsService } from '../../../../../../core/services/plugins.service';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
@@ -23,41 +25,36 @@ import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component"
     ProgressBar,
     Tag,
     Skeleton,
-    GoogleIcon
+    GoogleIcon,
+    AsyncPipe,
   ]
 })
-export class SearchPluginsComponent implements OnInit, OnDestroy {
+export class SearchPluginsComponent {
   constructor(
     private readonly pluginsService: PluginsService,
     private readonly translateService: TranslateService
   ) {
-    this.lang = this.translateService.currentLang;
+    this.lang = toSignal(
+      this.translateService.onLangChange.pipe(map(e => e.lang)),
+      { initialValue: translateService.currentLang }
+    );
   }
 
-  private langChangedSubscription?: Subscription;
-
-  isLoading = true;
-  plugins?: readonly SearchPluginViewModel[];
-  lang: string;
-
-  async ngOnInit(): Promise<void> {
-    this.plugins = (await this.pluginsService.searchPluginsAsync()).map(p => {
-      // todo: move "isInstalled" detection to plugins service
-      const pluginView = p as SearchPluginViewModel;
-      pluginView.isInstalled = this.pluginsService.installedPlugins
-        .map(installedPlugin => installedPlugin.plugin.id)
-        .includes(p.id);
-      return pluginView;
+  private searchPlugins?: Promise<SearchPluginInfo[]>;
+  readonly plugins = computed<Promise<readonly SearchPluginViewModel[]>>(() => {
+    const installedPlugins = this.pluginsService.installedPlugins();
+    this.searchPlugins ??= this.pluginsService.searchPluginsAsync();
+    return this.searchPlugins.then(plugins => {
+      return plugins.map(p => {
+        const pluginView = p as SearchPluginViewModel;
+        pluginView.isInstalled = installedPlugins
+          .map(installedPlugin => installedPlugin.plugin.id)
+          .includes(p.id);
+        return pluginView;
+      });
     });
-    this.isLoading = false;
-    this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
-      this.lang = e.lang;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.langChangedSubscription?.unsubscribe();
-  }
+  });
+  readonly lang: Signal<string>;
 
 
   async install(plugin: SearchPluginViewModel) {

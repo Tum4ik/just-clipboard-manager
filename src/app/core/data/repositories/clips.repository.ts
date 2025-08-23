@@ -97,4 +97,15 @@ export class ClipsRepository extends BaseDatabaseRepository {
       [id]
     );
   }
+
+
+  async deleteClipsForPluginAsync(pluginId: PluginId): Promise<void> {
+    await this.db.execute(
+      /* sql */`
+      DELETE FROM clips
+      WHERE plugin_id = $1
+      `,
+      [pluginId]
+    );
+  }
 }

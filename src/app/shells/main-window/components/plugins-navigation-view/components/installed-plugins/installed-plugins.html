@@ -1,5 +1,5 @@
 <jcm-scroll-view>
-  @for (pluginInfo of plugins; track pluginInfo.plugin.id) {
+  @for (pluginInfo of plugins(); track pluginInfo.plugin.id) {
   <jcm-shaded-card>
     <ng-template #title>
       <div class="title-root">
