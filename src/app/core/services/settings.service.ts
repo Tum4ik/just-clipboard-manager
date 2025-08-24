@@ -11,7 +11,7 @@ const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   constructor() {
-    this.store = new LazyStore('settings.json', { autoSave: false });
+    this.store = new LazyStore('settings.json', { defaults: {}, autoSave: false });
   }
 
   private readonly store: LazyStore;

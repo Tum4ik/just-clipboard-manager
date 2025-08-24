@@ -34,7 +34,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
     private readonly translateService: TranslateService,
     private readonly dialogService: ExtendedDialogService,
   ) {
-    this.lang = this.translateService.currentLang;
+    this.lang = this.translateService.getCurrentLang();
   }
 
   private langChangedSubscription?: Subscription;

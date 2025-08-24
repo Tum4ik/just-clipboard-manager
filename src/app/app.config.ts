@@ -1,10 +1,10 @@
-import { HttpClient, provideHttpClient, withFetch } from "@angular/common/http";
+import { provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
-import { provideTranslateService, TranslateLoader, TranslateService } from "@ngx-translate/core";
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService, TranslateService } from "@ngx-translate/core";
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
@@ -37,12 +37,8 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withFetch()),
     provideTranslateService({
-      defaultLanguage: 'en',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient]
-      }
+      fallbackLang: 'en',
+      loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
     }),
     provideAppInitializer(async () => {
       registerSvgIcons();
@@ -65,7 +61,3 @@ export const appConfig: ApplicationConfig = {
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: TOOLTIP_OPTIONS },
   ]
 };
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}

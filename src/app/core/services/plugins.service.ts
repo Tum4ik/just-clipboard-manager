@@ -31,7 +31,7 @@ export class PluginsService {
   ) {
   }
 
-  private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { autoSave: false });
+  private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { defaults: {}, autoSave: false });
   private readonly textDecoder = new TextDecoder();
 
   // todo: maybe extract order to a separate PluginsOrderService

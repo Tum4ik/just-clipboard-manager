@@ -49,7 +49,7 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.selectedLanguage = this.languages.find(l => l.code === this.translateService.currentLang);
+    this.selectedLanguage = this.languages.find(l => l.code === this.translateService.getCurrentLang());
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
       this.selectedLanguage = this.languages.find(l => l.code === e.lang);
     });
