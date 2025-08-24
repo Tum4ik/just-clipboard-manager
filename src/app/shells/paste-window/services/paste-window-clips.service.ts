@@ -187,7 +187,7 @@ export class PasteWindowClipsService {
 
 
   private async loadClipsAsync(options: { skip: number; take: number; }): Promise<PasteWindowClip[]> {
-    const enabledPluginIds = this.pluginsService.enabledPlugins.map(ep => ep.id);
+    const enabledPluginIds = this.pluginsService.enabledPlugins().map(ep => ep.id);
     const clips = await this.clipsRepository.getClipsAsync(
       enabledPluginIds, options.skip, options.take, this.searchSubject.value.text
     );

@@ -7,7 +7,7 @@
   <jcm-scroll-view>
     <div cdkDropList (cdkDropListDropped)="pluginsPipelineChanged($event)">
       <div class="vertical-line"></div>
-      @for(pluginInfo of plugins; track pluginInfo.plugin.id){
+      @for(pluginInfo of plugins(); track pluginInfo.plugin.id){
       <jcm-plugin-pipeline-card cdkDrag
                                 cdkDragLockAxis="y"
                                 [title]="pluginInfo.plugin.name" />

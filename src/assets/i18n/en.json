@@ -3,26 +3,40 @@
   "language": "Language",
   "exit": "Exit",
   "search": "Search",
+  "plugin": "Plugin",
+  "plugin.": {
+    "by": "by",
+    "uninstall-confirm": "Do you also want to remove the plugin related clips?",
+    "remove-plugin-and-clips": "Remove plugin and clips",
+    "remove-only-plugin": "Remove only plugin"
+  },
   "plugins": "Plugins",
-  "plugin.by": "by",
   "settings": "Settings",
-  "settings.general": "General",
-  "settings.interface": "Interface",
-  "settings.paste-window": "Paste window",
-  "settings.hot-keys": "Hot keys",
+  "settings.": {
+    "general": "General",
+    "interface": "Interface",
+    "paste-window": "Paste window",
+    "hot-keys": "Hot keys"
+  },
   "language-setting-descriptions": "The language of the user interface",
   "theme-mode": "Theme mode",
-  "theme-mode.system": "System",
-  "theme-mode.light": "Light",
-  "theme-mode.dark": "Dark",
-  "theme-mode-setting-description": "The visual appearance of the user interface",
+  "theme-mode.": {
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "setting-description": "The visual appearance of the user interface"
+  },
   "clipboard-data": "Clipboard data",
   "data-processing-pipeline": "Data processing pipeline",
   "install": "Install",
+  "uninstall": "Uninstall",
   "installed": "Installed",
   "installation-failed": "Installation failed",
   "full-data-view": "Full data view",
   "pin": "Pin",
   "unpin": "Unpin",
-  "delete": "Delete"
+  "delete": "Delete",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "cancel": "Cancel"
 }

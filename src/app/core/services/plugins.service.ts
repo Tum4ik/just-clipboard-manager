@@ -1,25 +1,26 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { emit, listen } from '@tauri-apps/api/event';
-import { BaseDirectory, readDir, readFile } from '@tauri-apps/plugin-fs';
+import { BaseDirectory, readDir, readFile, remove } from '@tauri-apps/plugin-fs';
 import { fetch } from '@tauri-apps/plugin-http';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { download } from '@tauri-apps/plugin-upload';
 import { ClipboardDataPlugin, PluginId } from 'just-clipboard-manager-pdk';
 import { Subject } from 'rxjs';
 import { GithubService } from '../../shells/main-window/services/github.service';
-import { SearchPluginInfo } from '../data/dto/search-plugin-info.dto';
+import { SearchPluginInfo } from '../dto/search-plugin-info.dto';
 import { EnvironmentService } from './environment.service';
 import { MonitoringService } from './monitoring.service';
 
-const PLUGIN_INSTALLED_EVENT_NAME = 'plugin-loaded-event';
+const PLUGIN_INSTALLED_EVENT_NAME = 'plugin-installed-event';
+const PLUGIN_UNINSTALLED_EVENT_NAME = 'plugin-uninstalled-event';
 const PLUGIN_SETTINGS_CHANGED_EVENT_NAME = 'plugin-settings-changed-event';
 const PLUGINS_ORDER_CHANGED_EVENT_NAME = 'plugins-order-changed-event';
 
 const PLUGINS_ORDER_KEY = 'plugins-order';
 
-const TEXT_PLUGIN_ID = 'd930d2cd-3fd9-4012-a363-120676e22afa';
+const TEXT_PLUGIN_ID: PluginId = 'd930d2cd-3fd9-4012-a363-120676e22afa';
 
 @Injectable({ providedIn: 'root' })
 export class PluginsService {
@@ -33,38 +34,35 @@ export class PluginsService {
   private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { autoSave: false });
   private readonly textDecoder = new TextDecoder();
 
-  private pluginsOrder: PluginId[] | undefined;
+  // todo: maybe extract order to a separate PluginsOrderService
+  private readonly pluginsOrder = signal<PluginId[]>([]);
   private readonly _plugins = new Map<PluginId, { plugin: ClipboardDataPlugin; isEnabled: boolean; }>();
 
-  private _installedPlugins: readonly PluginWithAdditionalInfo[] | undefined;
-  get installedPlugins(): readonly PluginWithAdditionalInfo[] {
-    if (!this._installedPlugins) {
-      const orderedInstalledPlugins: PluginWithAdditionalInfo[] = [];
-      for (const pluginId of this.pluginsOrder!) {
-        const pluginItem = this._plugins.get(pluginId);
-        if (pluginItem) {
-          orderedInstalledPlugins.push({ plugin: pluginItem.plugin, get isEnabled() { return pluginItem.isEnabled; } });
-        }
-      }
-      this._installedPlugins = orderedInstalledPlugins;
-    }
-    return this._installedPlugins;
-  }
 
-  private _enabledPlugins: readonly ClipboardDataPlugin[] | undefined;
-  get enabledPlugins(): readonly ClipboardDataPlugin[] {
-    if (!this._enabledPlugins) {
-      const orderedEnabledPlugins: ClipboardDataPlugin[] = [];
-      for (const pluginId of this.pluginsOrder!) {
-        const pluginItem = this._plugins.get(pluginId);
-        if (pluginItem && pluginItem.isEnabled) {
-          orderedEnabledPlugins.push(pluginItem.plugin);
-        }
+  readonly installedPlugins = computed<readonly PluginWithAdditionalInfo[]>(() => {
+    const orderedInstalledPlugins: PluginWithAdditionalInfo[] = [];
+    for (const pluginId of this.pluginsOrder()) {
+      const pluginItem = this._plugins.get(pluginId);
+      if (pluginItem) {
+        orderedInstalledPlugins.push({ plugin: pluginItem.plugin, get isEnabled() { return pluginItem.isEnabled; } });
       }
-      this._enabledPlugins = orderedEnabledPlugins;
     }
-    return this._enabledPlugins;
-  }
+    return orderedInstalledPlugins;
+  });
+
+
+  private readonly enabledPluginsTrigger = signal({});
+  readonly enabledPlugins = computed<readonly ClipboardDataPlugin[]>(() => {
+    this.enabledPluginsTrigger();
+    const orderedEnabledPlugins: ClipboardDataPlugin[] = [];
+    for (const pluginId of this.pluginsOrder()) {
+      const pluginItem = this._plugins.get(pluginId);
+      if (pluginItem && pluginItem.isEnabled) {
+        orderedEnabledPlugins.push(pluginItem.plugin);
+      }
+    }
+    return orderedEnabledPlugins;
+  });
 
 
   private readonly pluginInstalledSubject = new Subject<void>();
@@ -82,13 +80,8 @@ export class PluginsService {
 
     this.isInitialized = true;
 
-    this.pluginsOrder = await this.pluginSettingsStore.get<PluginId[]>(PLUGINS_ORDER_KEY);
-    let shouldSavePluginsOrder = false;
-    if (!this.pluginsOrder) {
-      this.pluginsOrder = [TEXT_PLUGIN_ID];
-      shouldSavePluginsOrder = true;
-    }
-
+    let pluginsOrder = await this.pluginSettingsStore.get<PluginId[]>(PLUGINS_ORDER_KEY) ?? [TEXT_PLUGIN_ID];
+    this.pluginsOrder.set(pluginsOrder);
     const pluginDirs = await readDir('plugins', { baseDir: BaseDirectory.Resource });
     for (const pluginDir of pluginDirs) {
       if (!pluginDir.isDirectory) {
@@ -97,23 +90,29 @@ export class PluginsService {
       await this.loadPluginAsync(pluginDir.name);
     }
 
-    if (this._plugins.size < this.pluginsOrder.length) {
-      this.pluginsOrder = this.pluginsOrder.filter(id => this._plugins.has(id));
+    let shouldSavePluginsOrder = false;
+    if (this._plugins.size < pluginsOrder.length) {
+      pluginsOrder = pluginsOrder.filter(id => this._plugins.has(id));
       shouldSavePluginsOrder = true;
     }
-    else if (this._plugins.size > this.pluginsOrder.length) {
-      const missingIds = [...this._plugins.keys()].filter(id => !this.pluginsOrder?.includes(id));
-      this.pluginsOrder = [...this.pluginsOrder, ...missingIds];
+    else if (this._plugins.size > pluginsOrder.length) {
+      const missingIds = [...this._plugins.keys()].filter(id => !this.pluginsOrder().includes(id));
+      pluginsOrder = [...pluginsOrder, ...missingIds];
       shouldSavePluginsOrder = true;
     }
 
     if (shouldSavePluginsOrder) {
-      await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+      this.pluginsOrder.set(pluginsOrder);
+      await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, pluginsOrder);
       await this.pluginSettingsStore.save();
     }
 
     await listen<PluginId>(PLUGIN_INSTALLED_EVENT_NAME, async (e) => {
       await this.loadPluginAsync(e.payload);
+      this.pluginInstalledSubject.next();
+    });
+    await listen<PluginId>(PLUGIN_UNINSTALLED_EVENT_NAME, async (e) => {
+      await this.unloadPluginAsync(e.payload);
       this.pluginInstalledSubject.next();
     });
     await listen<PluginSettingsChangedPayload>(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, e => {
@@ -183,6 +182,16 @@ export class PluginsService {
   }
 
 
+  async uninstallPluginAsync(id: PluginId): Promise<void> {
+    try {
+      await remove(`plugins/${id}`, { baseDir: BaseDirectory.Resource, recursive: true });
+      await emit<PluginId>(PLUGIN_UNINSTALLED_EVENT_NAME, id);
+    } catch (e) {
+      this.monitoringService.error(`Failed to uninstall plugin ${id}`, e);
+    }
+  }
+
+
   async enablePluginAsync(id: PluginId) {
     const settings = { enabled: true } as PluginSettings;
     await this.pluginSettingsStore.set(id, settings);
@@ -200,14 +209,13 @@ export class PluginsService {
 
 
   async changePluginsOrderAsync(fromIndex: number, toIndex: number) {
-    if (!this.pluginsOrder) {
-      return;
-    }
-
-    moveItemInArray(this.pluginsOrder, fromIndex, toIndex);
-    await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+    this.pluginsOrder.update(order => {
+      moveItemInArray(order, fromIndex, toIndex);
+      return order;
+    });
+    await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder());
     await this.pluginSettingsStore.save();
-    await emit<PluginId[]>(PLUGINS_ORDER_CHANGED_EVENT_NAME, this.pluginsOrder);
+    await emit<PluginId[]>(PLUGINS_ORDER_CHANGED_EVENT_NAME, this.pluginsOrder());
   }
 
 
@@ -217,7 +225,7 @@ export class PluginsService {
       const pluginFileBytes = await readFile(pluginBundlePath, {
         baseDir: BaseDirectory.Resource
       });
-      const blob = new Blob([pluginFileBytes], { type: 'application/javascript' });
+      const blob = new Blob([pluginFileBytes as BlobPart], { type: 'application/javascript' });
       const url = URL.createObjectURL(blob);
       const pluginModule = await import(/* @vite-ignore */url);
       const pluginInstance: ClipboardDataPlugin = pluginModule.pluginInstance;
@@ -228,12 +236,13 @@ export class PluginsService {
         enabled = settings.enabled;
       }
       this._plugins.set(pluginId, { plugin: pluginInstance, isEnabled: enabled });
-      this._installedPlugins = undefined;
-      this._enabledPlugins = undefined;
 
-      if (this.pluginsOrder && !this.pluginsOrder.includes(pluginId)) {
-        this.pluginsOrder.unshift(pluginId);
-        await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder);
+      if (!this.pluginsOrder().includes(pluginId)) {
+        this.pluginsOrder.update(order => {
+          order.unshift(pluginId);
+          return [...order];
+        });
+        await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder());
         await this.pluginSettingsStore.save();
       }
     } catch (e) {
@@ -242,22 +251,42 @@ export class PluginsService {
   }
 
 
+  private async unloadPluginAsync(id: PluginId): Promise<void> {
+    try {
+      // Remove plugin from memory
+      this._plugins.delete(id);
+
+      // Remove from plugins order
+      const index = this.pluginsOrder().indexOf(id);
+      if (index >= 0) {
+        this.pluginsOrder.update(order => {
+          order.splice(index, 1);
+          return [...order];
+        });
+        await this.pluginSettingsStore.set(PLUGINS_ORDER_KEY, this.pluginsOrder());
+        await this.pluginSettingsStore.save();
+      }
+
+      // Remove plugin settings
+      await this.pluginSettingsStore.delete(id);
+      await this.pluginSettingsStore.save();
+    } catch (e) {
+      this.monitoringService.error(`Failed to unload plugin ${id}`, e);
+    }
+  }
+
+
   private pluginSettingsChanged(payload: PluginSettingsChangedPayload) {
     const plugin = this._plugins.get(payload.id);
     if (plugin) {
       plugin.isEnabled = payload.settings.enabled;
-      this._enabledPlugins = undefined;
+      this.enabledPluginsTrigger.set({});
     }
   }
 
 
   private pluginsOrderChanged(pluginsOrder: PluginId[]) {
-    if (!this.pluginsOrder) {
-      return;
-    }
-    this._installedPlugins = undefined;
-    this._enabledPlugins = undefined;
-    this.pluginsOrder = pluginsOrder;
+    this.pluginsOrder.set(pluginsOrder);
   }
 }
 

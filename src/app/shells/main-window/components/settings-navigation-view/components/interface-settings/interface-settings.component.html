@@ -16,14 +16,14 @@
   </jcm-settings-card>
   <jcm-settings-card icon="routine"
                      title="{{ 'theme-mode' | translate }}"
-                     description="{{ 'theme-mode-setting-description' | translate }}">
+                     description="{{ 'theme-mode..setting-description' | translate }}">
     <p-select [options]="themeModes"
               [(ngModel)]="selectedThemeMode"
               (onChange)="onThemeModeChanged($event)">
       <ng-template #item #selectedItem let-item>
         <div class="option-root">
           <google-icon [iconName]="getThemeModeIconName(item)" />
-          <span>{{ 'theme-mode.' + item | translate }}</span>
+          <span>{{ 'theme-mode..' + item | translate }}</span>
         </div>
       </ng-template>
     </p-select>

@@ -1,0 +1,10 @@
+.buttons {
+  padding-top: var(--p-overlay-modal-padding);
+  display: flex;
+  width: 100%;
+  gap: var(--p-overlay-modal-padding);
+
+  p-button {
+    flex: 1;
+  }
+}

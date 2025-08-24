@@ -1,0 +1,36 @@
+<jcm-scroll-view>
+  @for (pluginInfo of plugins(); track pluginInfo.plugin.id) {
+  <jcm-shaded-card>
+    <ng-template #title>
+      <div class="title-root">
+        <div class="title">
+          {{ pluginInfo.plugin.name }}
+        </div>
+        <div class="version">
+          {{ pluginInfo.plugin.version }}
+        </div>
+      </div>
+    </ng-template>
+    @if (pluginInfo.plugin.author){
+    <ng-template #subtitle>
+      {{ 'plugin..by' | translate }} {{ pluginInfo.plugin.author.name }}
+    </ng-template>
+    }
+    {{ pluginInfo.plugin.description![lang] }}
+    <ng-template #footer>
+      <div class="footer">
+        <p-button label="{{ 'uninstall' | translate }}"
+                  size="small"
+                  variant="outlined"
+                  raised="true"
+                  (onClick)="uninstall(pluginInfo.plugin)" />
+        <p-toggle-button size="small"
+                         [ngModel]="pluginInfo.isEnabled"
+                         [onLabel]="'enabled' | translate"
+                         [offLabel]="'disabled' | translate"
+                         (onChange)="togglePlugin(pluginInfo.plugin, $event.checked ?? false)" />
+      </div>
+    </ng-template>
+  </jcm-shaded-card>
+  }
+</jcm-scroll-view>

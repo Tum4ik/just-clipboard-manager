@@ -4,6 +4,7 @@ export abstract class ClipboardDataPlugin {
   constructor(packageJson: PackageJson) {
     this._id = packageJson.pluginMetadata.id as PluginId;
     this._name = packageJson.pluginMetadata.name;
+    this._version = packageJson.version;
     this._description = packageJson.pluginMetadata.description;
     this._author = packageJson.author;
   }
@@ -16,6 +17,11 @@ export abstract class ClipboardDataPlugin {
   private _name: string;
   get name(): string {
     return this._name;
+  }
+
+  private _version: string;
+  get version(): string {
+    return this._version;
   }
 
   private _description: { [lang: string]: string; } | undefined;
