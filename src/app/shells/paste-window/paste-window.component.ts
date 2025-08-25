@@ -75,6 +75,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit() {
+    // todo: maybe move all these subscriptions to PasteWindowClipsService
     this.subscriptions.add(
       this.clipboardListener.clipboardUpdated$.subscribe(() => {
         this.isClipsListUpToDate = false;
@@ -83,11 +84,19 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscriptions.add(
       this.pluginsService.pluginInstalled$.subscribe(() => {
         this.isClipsListUpToDate = false;
+        this.pasteWindowClipsService.loadPinnedClipsAsync();
+      })
+    );
+    this.subscriptions.add(
+      this.pluginsService.pluginUninstalled$.subscribe(() => {
+        this.isClipsListUpToDate = false;
+        this.pasteWindowClipsService.loadPinnedClipsAsync();
       })
     );
     this.subscriptions.add(
       this.pluginsService.pluginSettingsChanged$.subscribe(() => {
         this.isClipsListUpToDate = false;
+        this.pasteWindowClipsService.loadPinnedClipsAsync();
       })
     );
     this.subscriptions.add(

@@ -31,7 +31,7 @@ export class PluginsService {
   ) {
   }
 
-  private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { autoSave: false });
+  private readonly pluginSettingsStore = new LazyStore('plugins-settings.json', { defaults: {}, autoSave: false });
   private readonly textDecoder = new TextDecoder();
 
   // todo: maybe extract order to a separate PluginsOrderService
@@ -67,6 +67,9 @@ export class PluginsService {
 
   private readonly pluginInstalledSubject = new Subject<void>();
   readonly pluginInstalled$ = this.pluginInstalledSubject.asObservable();
+
+  private readonly pluginUninstalledSubject = new Subject<void>();
+  readonly pluginUninstalled$ = this.pluginUninstalledSubject.asObservable();
 
   private readonly pluginSettingsChangedSubject = new Subject<void>();
   readonly pluginSettingsChanged$ = this.pluginSettingsChangedSubject.asObservable();
@@ -113,7 +116,7 @@ export class PluginsService {
     });
     await listen<PluginId>(PLUGIN_UNINSTALLED_EVENT_NAME, async (e) => {
       await this.unloadPluginAsync(e.payload);
-      this.pluginInstalledSubject.next();
+      this.pluginUninstalledSubject.next();
     });
     await listen<PluginSettingsChangedPayload>(PLUGIN_SETTINGS_CHANGED_EVENT_NAME, e => {
       this.pluginSettingsChanged(e.payload);

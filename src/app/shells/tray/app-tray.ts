@@ -85,7 +85,7 @@ export class AppTray {
     this.languageMenuItem?.items().then(items => {
       for (const item of items) {
         if (item instanceof CheckMenuItem) {
-          const checked = item.id === this.translateService.currentLang;
+          const checked = item.id === this.translateService.getCurrentLang();
           item.setChecked(checked);
           item.setEnabled(!checked);
         }

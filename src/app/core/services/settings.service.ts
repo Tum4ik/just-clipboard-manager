@@ -7,11 +7,12 @@ const THEME_MODE = 'theme-mode';
 const THEME_PRESET = 'theme-preset';
 const PASTE_WINDOW_SIZE = 'paste-window-size';
 const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
+const PINNED_CLIPS_ORDER = 'pinned-clips-order';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   constructor() {
-    this.store = new LazyStore('settings.json', { autoSave: false });
+    this.store = new LazyStore('settings.json', { defaults: {}, autoSave: false });
   }
 
   private readonly store: LazyStore;
@@ -70,6 +71,16 @@ export class SettingsService {
 
   async setPasteWindowPanelSizesAsync(sizes: number[]): Promise<void> {
     await this.store.set(PASTE_WINDOW_PANEL_SIZES, sizes);
+    await this.store.save();
+  }
+
+
+  async getPinnedClipsOrderAsync(): Promise<number[]> {
+    return await this.store.get<number[]>(PINNED_CLIPS_ORDER) ?? [];
+  }
+
+  async setPinnedClipsOrderAsync(order: number[]): Promise<void> {
+    await this.store.set(PINNED_CLIPS_ORDER, order);
     await this.store.save();
   }
 }
