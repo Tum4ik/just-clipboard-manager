@@ -16,6 +16,14 @@
     "general": "Загальні",
     "interface": "Інтерфейс",
     "paste-window": "Вікно вставки",
+    "paste-window.": {
+      "snapping-title": "Прив'язка",
+      "snapping-description": "Дозволяє автоматично позиціонувати вікно вставки на основі обраної опції",
+      "size-title": "Розмір",
+      "size-description": "Дозволяє вказувати розмір вікна вставки",
+      "opacity-title": "Непрозорість",
+      "opacity-description": "Дозволяє контролювати ступінь прозорості вікна вставки"
+    },
     "hot-keys": "Гарячі клавіші"
   },
   "language-setting-descriptions": "Мова Інтерфейсу користувача",

@@ -81,7 +81,6 @@ export class PasteWindowClipsService {
       await this.settingsService.setPinnedClipsOrderAsync(order);
     }
 
-    console.log(orderedClips);
     this._orderedPinnedClips.set(orderedClips);
   }
 
