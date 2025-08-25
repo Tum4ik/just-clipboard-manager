@@ -201,14 +201,15 @@ export class PasteWindowClipsService {
 
 
   private getClipHtmlElement(clip: Clip): HTMLElement | null {
-    if (this.clipHtmlElements.has(clip.id!)) {
-      return this.clipHtmlElements.get(clip.id!)!;
-    }
-
     const { plugin, isEnabled } = this.pluginsService.getPlugin(clip.pluginId) ?? {};
     if (!plugin || !isEnabled?.()) {
       return null;
     }
+
+    if (this.clipHtmlElements.has(clip.id!)) {
+      return this.clipHtmlElements.get(clip.id!)!;
+    }
+
     const item = plugin.getRepresentationDataElement(
       { data: clip.representationData, metadata: clip.representationMetadata },
       clip.representationFormatName, this.document
