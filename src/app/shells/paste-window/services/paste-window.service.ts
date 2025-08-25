@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MonitoringService } from '@app/core/services/monitoring.service';
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
 import { SettingsService, SnappingMode } from '@app/core/services/settings.service';
 import { invoke } from '@tauri-apps/api/core';
@@ -13,6 +14,7 @@ export class PasteWindowService {
     private readonly pasteDataService: PasteDataService,
     private readonly settingsService: SettingsService,
     private readonly pasteWindowSnappingService: PasteWindowSnappingService,
+    private readonly monitoringService: MonitoringService,
   ) { }
 
   private pasteWindow?: Window | null;
@@ -118,7 +120,41 @@ export class PasteWindowService {
   }
 
   private async getWindowPositionByCaretAsync(windowSize: PhysicalSize): Promise<PhysicalPosition> {
-    return new PhysicalPosition(0, 0);
+    try {
+      const caretPos = await invoke<{ x: number; y: number; }>('get_caret_position');
+      const monitor = await monitorFromPoint(caretPos.x, caretPos.y);
+
+      if (!monitor) {
+        return new PhysicalPosition(caretPos.x, caretPos.y);
+      }
+
+      let x = caretPos.x;
+      let y = caretPos.y + 20; // Add some offset below the caret
+
+      // Ensure the window stays within monitor bounds
+      if (x + windowSize.width > monitor.position.x + monitor.size.width) {
+        x = monitor.position.x + monitor.size.width - windowSize.width;
+      }
+      if (y + windowSize.height > monitor.position.y + monitor.size.height) {
+        y = caretPos.y - windowSize.height - 10; // Show above caret if no space below
+      }
+
+      // Ensure window doesn't go off-screen to the left
+      if (x < monitor.position.x) {
+        x = monitor.position.x;
+      }
+      // Ensure window doesn't go above screen
+      if (y < monitor.position.y) {
+        y = monitor.position.y;
+      }
+
+      return new PhysicalPosition(x, y);
+    } catch (err) {
+      console.log(err);
+      this.monitoringService.error('Failed to get caret position.', err);
+      // Fallback to mouse cursor position if caret position fails
+      return await this.getWindowPositionByMouseCursorAsync(windowSize);
+    }
   }
 
   private async getWindowPositionByDisplayEdgesAsync(): Promise<PhysicalPosition> {
