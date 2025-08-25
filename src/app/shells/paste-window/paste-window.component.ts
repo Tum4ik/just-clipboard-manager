@@ -75,6 +75,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit() {
+    // todo: maybe move all these subscriptions to PasteWindowClipsService
     this.subscriptions.add(
       this.clipboardListener.clipboardUpdated$.subscribe(() => {
         this.isClipsListUpToDate = false;

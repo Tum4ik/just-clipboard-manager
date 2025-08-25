@@ -29,10 +29,8 @@ pub fn v1() -> Migration {
 
     CREATE TABLE pinned_clips (
       id INTEGER PRIMARY KEY,
-      order_next_id INTEGER,
 
-      FOREIGN KEY (id) REFERENCES clips(id) ON DELETE CASCADE,
-      FOREIGN KEY (order_next_id) REFERENCES clips(id)
+      FOREIGN KEY (id) REFERENCES clips(id) ON DELETE CASCADE
     );
     ",
   }

@@ -7,7 +7,6 @@ export class PinnedClipsRepository extends BaseDatabaseRepository {
       /* sql */`
       SELECT
         pinned_clips.id,
-        pinned_clips.order_next_id,
         clips.plugin_id,
         clips.representation_data,
         clips.representation_metadata,
@@ -21,7 +20,6 @@ export class PinnedClipsRepository extends BaseDatabaseRepository {
     return result.map(r => {
       return {
         id: r.id,
-        orderNextId: r.order_next_id,
         clip: {
           id: r.id,
           pluginId: r.plugin_id,
@@ -44,50 +42,6 @@ export class PinnedClipsRepository extends BaseDatabaseRepository {
       `,
       [id]
     );
-  }
-
-
-  async updatePinnedClipOrderNextIdAsync(id: number, orderNextId: number | null): Promise<void> {
-    await this.db.execute(
-      /* sql */`
-      UPDATE pinned_clips
-      SET order_next_id = $1
-      WHERE id = $2
-      `,
-      [orderNextId, id]
-    );
-  }
-
-
-  async getPrevPinnedClipIdAsync(currClipId: number): Promise<number | null> {
-    const result = await this.db.select<any[]>(
-      /* sql */`
-      SELECT id
-      FROM pinned_clips
-      WHERE order_next_id = $1
-      `,
-      [currClipId]
-    );
-    if (result.length < 1) {
-      return null;
-    }
-    return result[0].id;
-  }
-
-
-  async getNextPinnedClipIdAsync(currClipId: number): Promise<number | null> {
-    const result = await this.db.select<any[]>(
-      /* sql */`
-      SELECT order_next_id
-      FROM pinned_clips
-      WHERE id = $1
-      `,
-      [currClipId]
-    );
-    if (result.length < 1) {
-      return null;
-    }
-    return result[0].order_next_id;
   }
 
 

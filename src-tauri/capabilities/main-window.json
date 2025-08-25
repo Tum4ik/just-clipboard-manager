@@ -17,6 +17,7 @@
     "fs:allow-remove",
     "sql:allow-close",
     "sql:allow-execute",
+    "sql:allow-select",
     "store:default",
     "log:default",
     {

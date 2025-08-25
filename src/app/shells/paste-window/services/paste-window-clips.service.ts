@@ -4,6 +4,7 @@ import { Clip } from '@app/core/data/models/clip.model';
 import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
 import { PinnedClipsRepository } from '@app/core/data/repositories/pinned-clips.repository';
 import { PluginsService } from '@app/core/services/plugins.service';
+import { SettingsService } from '@app/core/services/settings.service';
 import { BehaviorSubject, debounce, distinctUntilChanged, interval } from 'rxjs';
 import { PasteDataService } from './paste-data.service';
 
@@ -13,6 +14,7 @@ export class PasteWindowClipsService {
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly pluginsService: PluginsService,
     private readonly pasteDataService: PasteDataService,
+    private readonly settingsService: SettingsService,
   ) {
     this.searchSubject.pipe(
       distinctUntilChanged((prev, curr) => prev.text === curr.text),
@@ -41,51 +43,45 @@ export class PasteWindowClipsService {
   async loadPinnedClipsAsync() {
     const pinnedClips = await this.pinnedClipsRepository.getPinnedClipsAsync();
     const pinnedClipsMap = new Map(pinnedClips.map(pc => [pc.id, pc]));
-    const nextIds = pinnedClips.map(pc => pc.orderNextId);
-    const firstClip = pinnedClips.find(pc => !nextIds.includes(pc.id));
 
-    let orderedClips: PasteWindowClip[] = [];
+    const orderedClips: PasteWindowClip[] = [];
 
-    if (firstClip) {
-      // normal ordered loading
-      let nextClip = firstClip;
-      while (true) {
-        const htmlElement = this.getClipHtmlElement(nextClip.clip);
-        if (htmlElement) {
-          orderedClips.push({ clipId: nextClip.id, htmlElement });
-        }
+    // Get pinned clips order from settings
+    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    let shouldSaveNewOrder = false;
 
-        if (!nextClip.orderNextId || !pinnedClipsMap.has(nextClip.orderNextId)) {
-          break;
-        }
-        nextClip = pinnedClipsMap.get(nextClip.orderNextId)!;
-      }
-    }
-
-    if (!firstClip || orderedClips.length !== pinnedClips.length) {
-      // something is broken, create new order
-      orderedClips = [];
-      for (let i = 0; i < pinnedClips.length; i++) {
-        const pinnedClip = pinnedClips[i];
+    for (const pinnedClipId of order) {
+      if (pinnedClipsMap.has(pinnedClipId)) {
+        const pinnedClip = pinnedClipsMap.get(pinnedClipId)!;
         const htmlElement = this.getClipHtmlElement(pinnedClip.clip);
         if (htmlElement) {
           orderedClips.push({ clipId: pinnedClip.id, htmlElement });
         }
-
-        await this.pinnedClipsRepository.beginTransactionAsync();
-        if (i > 0) {
-          const prevPinnedClip = pinnedClips[i - 1];
-          prevPinnedClip.orderNextId = pinnedClip.id;
-          await this.pinnedClipsRepository.updatePinnedClipOrderNextIdAsync(prevPinnedClip.id, prevPinnedClip.orderNextId);
-        }
-        if (i === pinnedClips.length - 1) {
-          pinnedClip.orderNextId = null;
-          await this.pinnedClipsRepository.updatePinnedClipOrderNextIdAsync(pinnedClip.id, pinnedClip.orderNextId);
-        }
-        await this.pinnedClipsRepository.commitAsync();
+        pinnedClipsMap.delete(pinnedClipId);
+      }
+      else {
+        order.splice(order.indexOf(pinnedClipId), 1);
+        shouldSaveNewOrder = true;
       }
     }
 
+    if (pinnedClipsMap.size > 0) {
+      for (const [id, pinnedClip] of pinnedClipsMap) {
+        const htmlElement = this.getClipHtmlElement(pinnedClip.clip);
+        if (htmlElement) {
+          orderedClips.push({ clipId: pinnedClip.id, htmlElement });
+        }
+        order.push(id);
+      }
+
+      shouldSaveNewOrder = true;
+    }
+
+    if (shouldSaveNewOrder) {
+      await this.settingsService.setPinnedClipsOrderAsync(order);
+    }
+
+    console.log(orderedClips);
     this._orderedPinnedClips.set(orderedClips);
   }
 
@@ -126,11 +122,10 @@ export class PasteWindowClipsService {
 
 
   async pinClipAsync(clipId: number) {
-    const lastPinnedClip = this.orderedPinnedClips().at(-1);
     await this.pinnedClipsRepository.addPinnedClipAsync(clipId);
-    if (lastPinnedClip) {
-      await this.pinnedClipsRepository.updatePinnedClipOrderNextIdAsync(lastPinnedClip.clipId, clipId);
-    }
+    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    order.push(clipId);
+    await this.settingsService.setPinnedClipsOrderAsync(order);
 
     this._regularClips.update(rc => {
       const clipToPin = rc.find(c => c.clipId === clipId)!;
@@ -148,11 +143,10 @@ export class PasteWindowClipsService {
 
 
   async unpinClipAsync(clipId: number) {
-    const prevPinnedClipId = await this.pinnedClipsRepository.getPrevPinnedClipIdAsync(clipId);
-    const nextPinnedClipId = await this.pinnedClipsRepository.getNextPinnedClipIdAsync(clipId);
-    if (prevPinnedClipId) {
-      await this.pinnedClipsRepository.updatePinnedClipOrderNextIdAsync(prevPinnedClipId, nextPinnedClipId);
-    }
+    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    order.splice(order.indexOf(clipId), 1);
+    await this.settingsService.setPinnedClipsOrderAsync(order);
+
     await this.pinnedClipsRepository.deletePinnedClipAsync(clipId);
     await this.clipsRepository.updateClippedAtAsync(clipId, new Date());
 
@@ -193,7 +187,6 @@ export class PasteWindowClipsService {
     );
     const clipsToAdd: PasteWindowClip[] = [];
     if (clips.length > 0) {
-
       for (const clip of clips) {
         const htmlElement = this.getClipHtmlElement(clip);
         if (!htmlElement) {
