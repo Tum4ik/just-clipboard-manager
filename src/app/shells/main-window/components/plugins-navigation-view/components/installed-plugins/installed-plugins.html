@@ -19,7 +19,7 @@
     {{ pluginInfo.plugin.description![lang] }}
     <ng-template #footer>
       <div class="footer">
-        <p-button label="{{ 'uninstall' | translate }}"
+        <p-button [label]="'uninstall' | translate"
                   size="small"
                   variant="outlined"
                   raised="true"

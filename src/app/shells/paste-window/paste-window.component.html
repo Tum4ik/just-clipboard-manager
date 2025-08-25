@@ -17,7 +17,7 @@
              [disabled]="isSettingsMode"
              pSize="small"
              type="text"
-             placeholder="{{ 'search' | translate }}"
+             [placeholder]="'search' | translate"
              (input)="onSearchChanged(searchInput.value)" />
       @if (searchInput.value) {
       <p-inputicon (click)="clearSearch()">
