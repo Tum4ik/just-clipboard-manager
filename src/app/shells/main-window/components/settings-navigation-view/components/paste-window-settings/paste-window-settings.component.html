@@ -1,9 +1,18 @@
 <jcm-scroll-view>
 
   <jcm-settings-card icon="float_landscape_2"
-                     [title]="'settings..paste-window..snapping-title' | translate"
-                     [description]="'settings..paste-window..snapping-description' | translate">
-
+                     [title]="'settings..paste-window..snapping..title' | translate"
+                     [description]="'settings..paste-window..snapping..description' | translate">
+    <p-select [options]="snappingModes"
+              [(ngModel)]="selectedSnappingMode"
+              (onChange)="onSnappingModeChanges()">
+      <ng-template #item #selectedItem let-item>
+        <div class="option-root">
+          <google-icon [iconName]="getSnappingModeIconName(item)" />
+          <span>{{ 'settings..paste-window..snapping..options..' + item | translate }}</span>
+        </div>
+      </ng-template>
+    </p-select>
   </jcm-settings-card>
 
   <jcm-settings-card icon="resize"

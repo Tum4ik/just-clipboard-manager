@@ -17,6 +17,15 @@
     "interface": "Interface",
     "paste-window": "Paste window",
     "paste-window.": {
+      "snapping.": {
+        "title": "Snapping",
+        "description": "Allows you to automatically position the paste window based on the selected option",
+        "options.": {
+          "mouse-cursor": "Mouse cursor",
+          "caret": "Caret",
+          "display-edges": "Display edges"
+        }
+      },
       "snapping-title": "Snapping",
       "snapping-description": "Allows you to automatically position the paste window based on the selected option",
       "size-title": "Size",

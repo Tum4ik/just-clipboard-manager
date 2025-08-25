@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SettingsService } from '@app/core/services/settings.service';
+import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
+import { SettingsService, SnappingMode } from '@app/core/services/settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { PhysicalPosition, PhysicalSize } from '@tauri-apps/api/dpi';
 import { cursorPosition, monitorFromPoint, Window } from '@tauri-apps/api/window';
@@ -11,6 +12,7 @@ export class PasteWindowService {
   constructor(
     private readonly pasteDataService: PasteDataService,
     private readonly settingsService: SettingsService,
+    private readonly pasteWindowSnappingService: PasteWindowSnappingService,
   ) { }
 
   private pasteWindow?: Window | null;
@@ -44,7 +46,7 @@ export class PasteWindowService {
     const size = await this.settingsService.getPasteWindowSizeAsync();
     await this.pasteWindow.setSize(size);
 
-    const position = await this.getWindowPosition(await this.pasteWindow.outerSize());
+    const position = await this.getWindowPositionAsync(await this.pasteWindow.outerSize());
 
     await this.pasteWindow.setPosition(position);
     await this.pasteWindow.show();
@@ -86,7 +88,21 @@ export class PasteWindowService {
   }
 
 
-  private async getWindowPosition(windowSize: PhysicalSize): Promise<PhysicalPosition> {
+  private async getWindowPositionAsync(windowSize: PhysicalSize): Promise<PhysicalPosition> {
+    const snappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();
+    switch (snappingMode) {
+      default:
+      case SnappingMode.MouseCursor:
+        return await this.getWindowPositionByMouseCursorAsync(windowSize);
+      case SnappingMode.Caret:
+        return await this.getWindowPositionByCaretAsync(windowSize);
+      case SnappingMode.DisplayEdges:
+        return await this.getWindowPositionByDisplayEdgesAsync();
+    }
+  }
+
+
+  private async getWindowPositionByMouseCursorAsync(windowSize: PhysicalSize): Promise<PhysicalPosition> {
     const position = await cursorPosition();
     const monitor = await monitorFromPoint(position.x, position.y);
     if (!monitor) {
@@ -99,5 +115,13 @@ export class PasteWindowService {
       position.y = monitor.position.y + monitor.size.height - windowSize.height;
     }
     return position;
+  }
+
+  private async getWindowPositionByCaretAsync(windowSize: PhysicalSize): Promise<PhysicalPosition> {
+    return new PhysicalPosition(0, 0);
+  }
+
+  private async getWindowPositionByDisplayEdgesAsync(): Promise<PhysicalPosition> {
+    return new PhysicalPosition(0, 0);
   }
 }

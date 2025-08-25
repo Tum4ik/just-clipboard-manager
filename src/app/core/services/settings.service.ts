@@ -7,6 +7,7 @@ const THEME_MODE = 'theme-mode';
 const THEME_PRESET = 'theme-preset';
 const PASTE_WINDOW_SIZE = 'paste-window-size';
 const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
+const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
 
 @Injectable({ providedIn: 'root' })
@@ -75,6 +76,16 @@ export class SettingsService {
   }
 
 
+  async getPasteWindowSnappingModeAsync(): Promise<SnappingMode> {
+    return await this.store.get<SnappingMode>(PASTE_WINDOW_SNAPPING_MODE) ?? SnappingMode.MouseCursor;
+  }
+
+  async setPasteWindowSnappingModeAsync(mode: SnappingMode): Promise<void> {
+    await this.store.set(PASTE_WINDOW_SNAPPING_MODE, mode);
+    await this.store.save();
+  }
+
+
   async getPinnedClipsOrderAsync(): Promise<number[]> {
     return await this.store.get<number[]>(PINNED_CLIPS_ORDER) ?? [];
   }
@@ -88,3 +99,9 @@ export class SettingsService {
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 export interface Size { width: number; height: number; }
+
+export enum SnappingMode {
+  MouseCursor = 'mouse-cursor',
+  Caret = 'caret',
+  DisplayEdges = 'display-edges'
+}
