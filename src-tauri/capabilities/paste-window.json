@@ -28,6 +28,7 @@
     "sql:allow-load",
     "sql:allow-select",
     "store:default",
-    "log:default"
+    "log:default",
+    "positioner:default"
   ]
 }

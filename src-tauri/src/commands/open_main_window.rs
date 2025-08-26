@@ -1,5 +1,5 @@
-use std::path::{ PathBuf};
-use tauri::{ WebviewUrl};
+use std::path::PathBuf;
+use tauri::WebviewUrl;
 
 #[tauri::command]
 pub fn open_main_window(app: tauri::AppHandle, section: Option<&str>) {
