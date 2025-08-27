@@ -23,7 +23,15 @@
         "options.": {
           "mouse-cursor": "Mouse cursor",
           "caret": "Caret",
-          "display-edges": "Display edges"
+          "display-edges": "Display edges",
+          "top-left": "Top left",
+          "top-right": "Top right",
+          "bottom-left": "Bottom left",
+          "bottom-right": "Bottom right",
+          "top-center": "Top center",
+          "bottom-center": "Bottom center",
+          "left-center": "Left center",
+          "right-center": "Right center"
         }
       },
       "snapping-title": "Snapping",

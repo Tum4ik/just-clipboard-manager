@@ -6,3 +6,9 @@
     margin-right: 12px;
   }
 }
+
+.snapping-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

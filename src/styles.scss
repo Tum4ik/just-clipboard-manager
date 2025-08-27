@@ -1,24 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 html {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+
   @include mat.tooltip-overrides((container-color: var(--p-surface-700),
       container-shape: 4px,
       supporting-text-color: var(--p-surface-0),
     ));
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-html,
-body {
-  height: 100%;
 }
 
 @font-face {

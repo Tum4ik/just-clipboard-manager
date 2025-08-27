@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
-import { SnappingMode } from '@app/core/services/settings.service';
+import { DisplayEdgePosition, SnappingMode } from '@app/core/services/settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Select } from "primeng/select";
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
@@ -28,18 +28,33 @@ export class PasteWindowSettingsComponent implements OnInit {
   ) { }
 
   selectedSnappingMode?: SnappingMode;
+  selectedDisplayEdgePosition?: DisplayEdgePosition;
 
   get snappingModes() {
     return this.pasteWindowSnappingService.snappingModes;
   }
+  get displayEdgePositions() {
+    return this.pasteWindowSnappingService.displayEdgePositions;
+  }
+
+  get isDisplayEdgesSnappingMode(): boolean {
+    return this.selectedSnappingMode === SnappingMode.DisplayEdges;
+  }
 
   async ngOnInit() {
     this.selectedSnappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();
+    this.selectedDisplayEdgePosition = await this.pasteWindowSnappingService.getDisplayEdgePositionAsync();
   }
 
   onSnappingModeChanges() {
     if (this.selectedSnappingMode) {
       this.pasteWindowSnappingService.setSnappingModeAsync(this.selectedSnappingMode);
+    }
+  }
+
+  onDisplayEdgePositionChanges() {
+    if (this.selectedDisplayEdgePosition) {
+      this.pasteWindowSnappingService.setDisplayEdgePositionAsync(this.selectedDisplayEdgePosition);
     }
   }
 

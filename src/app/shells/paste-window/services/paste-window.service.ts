@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MonitoringService } from '@app/core/services/monitoring.service';
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
-import { SettingsService, SnappingMode } from '@app/core/services/settings.service';
+import { DisplayEdgePosition, SettingsService, SnappingMode } from '@app/core/services/settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { PhysicalPosition, PhysicalSize } from '@tauri-apps/api/dpi';
 import { cursorPosition, monitorFromPoint, Window } from '@tauri-apps/api/window';
+import { moveWindow, Position } from '@tauri-apps/plugin-positioner';
 import { BehaviorSubject } from 'rxjs';
 import { PasteDataService } from './paste-data.service';
 
@@ -48,9 +49,8 @@ export class PasteWindowService {
     const size = await this.settingsService.getPasteWindowSizeAsync();
     await this.pasteWindow.setSize(size);
 
-    const position = await this.getWindowPositionAsync(await this.pasteWindow.outerSize());
+    await this.setWindowPositionAsync(await this.pasteWindow.outerSize());
 
-    await this.pasteWindow.setPosition(position);
     await this.pasteWindow.show();
     await this.pasteWindow.setFocus();
     this.visibilitySubject.next(true);
@@ -90,16 +90,25 @@ export class PasteWindowService {
   }
 
 
-  private async getWindowPositionAsync(windowSize: PhysicalSize): Promise<PhysicalPosition> {
+  private async setWindowPositionAsync(windowSize: PhysicalSize): Promise<void> {
     const snappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();
     switch (snappingMode) {
       default:
       case SnappingMode.MouseCursor:
-        return await this.getWindowPositionByMouseCursorAsync(windowSize);
+        {
+          const position = await this.getWindowPositionByMouseCursorAsync(windowSize);
+          await this.pasteWindow!.setPosition(position);
+        }
+        return;
       case SnappingMode.Caret:
-        return await this.getWindowPositionByCaretAsync(windowSize);
+        {
+          const position = await this.getWindowPositionByCaretAsync(windowSize);
+          await this.pasteWindow!.setPosition(position);
+        }
+        return;
       case SnappingMode.DisplayEdges:
-        return await this.getWindowPositionByDisplayEdgesAsync();
+        await this.setWindowPositionByDisplayEdgesAsync();
+        return;
     }
   }
 
@@ -157,7 +166,34 @@ export class PasteWindowService {
     }
   }
 
-  private async getWindowPositionByDisplayEdgesAsync(): Promise<PhysicalPosition> {
-    return new PhysicalPosition(0, 0);
+  private async setWindowPositionByDisplayEdgesAsync(): Promise<void> {
+    const position = await this.pasteWindowSnappingService.getDisplayEdgePositionAsync();
+    switch (position) {
+      default:
+      case DisplayEdgePosition.TopLeft:
+        await moveWindow(Position.TopLeft);
+        return;
+      case DisplayEdgePosition.TopRight:
+        await moveWindow(Position.TopRight);
+        return;
+      case DisplayEdgePosition.BottomLeft:
+        await moveWindow(Position.BottomLeft);
+        return;
+      case DisplayEdgePosition.BottomRight:
+        await moveWindow(Position.BottomRight);
+        return;
+      case DisplayEdgePosition.TopCenter:
+        await moveWindow(Position.TopCenter);
+        return;
+      case DisplayEdgePosition.BottomCenter:
+        await moveWindow(Position.BottomCenter);
+        return;
+      case DisplayEdgePosition.LeftCenter:
+        await moveWindow(Position.LeftCenter);
+        return;
+      case DisplayEdgePosition.RightCenter:
+        await moveWindow(Position.RightCenter);
+        return;
+    }
   }
 }

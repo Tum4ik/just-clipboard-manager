@@ -20,12 +20,10 @@
     <ng-template #footer>
       <div class="footer">
         <p-button [label]="'uninstall' | translate"
-                  size="small"
                   variant="outlined"
                   raised="true"
                   (onClick)="uninstall(pluginInfo.plugin)" />
-        <p-toggle-button size="small"
-                         [ngModel]="pluginInfo.isEnabled"
+        <p-toggle-button [ngModel]="pluginInfo.isEnabled"
                          [onLabel]="'enabled' | translate"
                          [offLabel]="'disabled' | translate"
                          (onChange)="togglePlugin(pluginInfo.plugin, $event.checked ?? false)" />

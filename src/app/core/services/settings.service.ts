@@ -8,6 +8,7 @@ const THEME_PRESET = 'theme-preset';
 const PASTE_WINDOW_SIZE = 'paste-window-size';
 const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
 const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
+const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
 
 @Injectable({ providedIn: 'root' })
@@ -86,6 +87,16 @@ export class SettingsService {
   }
 
 
+  async getPasteWindowDisplayEdgePositionAsync(): Promise<DisplayEdgePosition> {
+    return await this.store.get<DisplayEdgePosition>(PASTE_WINDOW_DISPLAY_EDGE_POSITION) ?? DisplayEdgePosition.TopLeft;
+  }
+
+  async setPasteWindowDisplayEdgePositionAsync(position: DisplayEdgePosition): Promise<void> {
+    await this.store.set(PASTE_WINDOW_DISPLAY_EDGE_POSITION, position);
+    await this.store.save();
+  }
+
+
   async getPinnedClipsOrderAsync(): Promise<number[]> {
     return await this.store.get<number[]>(PINNED_CLIPS_ORDER) ?? [];
   }
@@ -104,4 +115,15 @@ export enum SnappingMode {
   MouseCursor = 'mouse-cursor',
   Caret = 'caret',
   DisplayEdges = 'display-edges'
+}
+
+export enum DisplayEdgePosition {
+  TopLeft = 'top-left',
+  TopRight = 'top-right',
+  BottomLeft = 'bottom-left',
+  BottomRight = 'bottom-right',
+  TopCenter = 'top-center',
+  BottomCenter = 'bottom-center',
+  LeftCenter = 'left-center',
+  RightCenter = 'right-center',
 }

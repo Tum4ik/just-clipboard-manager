@@ -15,7 +15,6 @@
              pInputText
              [fluid]="true"
              [disabled]="isSettingsMode"
-             pSize="small"
              type="text"
              [placeholder]="'search' | translate"
              (input)="onSearchChanged(searchInput.value)" />
@@ -29,7 +28,7 @@
               variant="text" size="small"
               [matTooltip]="'settings' | translate"
               (onClick)="settingsMode()">
-      <google-icon iconName="settings" [size]="23" [isFilled]="isSettingsMode" />
+      <google-icon iconName="settings" [size]="25" [isFilled]="isSettingsMode" />
     </p-button>
   </div>
   <p-splitter #splitter

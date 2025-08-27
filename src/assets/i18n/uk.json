@@ -23,7 +23,15 @@
         "options.": {
           "mouse-cursor": "Курсор миші",
           "caret": "Каретка",
-          "display-edges": "Краї дисплея"
+          "display-edges": "Краї дисплея",
+          "top-left": "Зверху зліва",
+          "top-right": "Зверху справа",
+          "bottom-left": "Знизу зліва",
+          "bottom-right": "Знизу справа",
+          "top-center": "Зверху по центру",
+          "bottom-center": "Знизу по центру",
+          "left-center": "Зліва по центру",
+          "right-center": "Справа по центру"
         }
       },
       "size-title": "Розмір",

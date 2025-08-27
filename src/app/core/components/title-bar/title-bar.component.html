@@ -4,7 +4,7 @@
   </ng-template>
   <ng-template #end>
     @if (isMinimizeAvailable()) {
-    <p-button [text]="true" (onClick)="minimize()">
+    <p-button [text]="true" size="large" (onClick)="minimize()">
       <svg width="10" height="10" viewBox="0 -9 10 10" xmlns="http://www.w3.org/2000/svg">
         <path d="M0.498047 1C0.429688 1 0.364583 0.986979 0.302734 0.960938C0.244141 0.934896 0.192057 0.899089
                  0.146484 0.853516C0.100911 0.807943 0.0651042 0.755859 0.0390625 0.697266C0.0130208 0.635417 0
@@ -18,7 +18,7 @@
       </svg>
     </p-button>
     }
-    <p-button [text]="true" (onClick)="maximizeOrRestore()">
+    <p-button [text]="true" size="large" (onClick)="maximizeOrRestore()">
       @if (isWindowMaximized){
       <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.99902 2.96387C8.99902 2.69368 8.94531 2.43978 8.83789 2.20215C8.73047 1.96126 8.58398 1.75293
@@ -70,7 +70,7 @@
       </svg>
       }
     </p-button>
-    <p-button class="close-button" [text]="true" (onClick)="close()">
+    <p-button class="close-button" [text]="true" size="large" (onClick)="close()">
       <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
         <path d="M5 5.70801L0.854492 9.85352C0.756836 9.95117 0.639648 10 0.50293 10C0.359701 10 0.239258 9.9528
                  0.141602 9.8584C0.0472005 9.76074 0 9.6403 0 9.49707C0 9.36035 0.0488281 9.24316 0.146484
