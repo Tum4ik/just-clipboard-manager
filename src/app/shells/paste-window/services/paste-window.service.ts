@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { MonitoringService } from '@app/core/services/monitoring.service';
+import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
-import { DisplayEdgePosition, SettingsService, SnappingMode } from '@app/core/services/settings.service';
+import { DisplayEdgePosition, SnappingMode } from '@app/core/services/settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { PhysicalPosition, PhysicalSize } from '@tauri-apps/api/dpi';
 import { cursorPosition, monitorFromPoint, Window } from '@tauri-apps/api/window';
 import { moveWindow, Position } from '@tauri-apps/plugin-positioner';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { PasteDataService } from './paste-data.service';
 
 @Injectable()
 export class PasteWindowService {
   constructor(
-    private readonly pasteDataService: PasteDataService,
-    private readonly settingsService: SettingsService,
-    private readonly pasteWindowSnappingService: PasteWindowSnappingService,
     private readonly monitoringService: MonitoringService,
+    private readonly pasteDataService: PasteDataService,
+    private readonly pasteWindowSnappingService: PasteWindowSnappingService,
+    private readonly pasteWindowSizingService: PasteWindowSizingService,
   ) { }
 
   private pasteWindow?: Window | null;
@@ -46,8 +47,9 @@ export class PasteWindowService {
     const hwnd = await invoke<number>('get_foreground_window');
     this.pasteDataService.setPasteTargetWindowHwnd(hwnd);
 
-    const size = await this.settingsService.getPasteWindowSizeAsync();
-    await this.pasteWindow.setSize(size);
+    const width = await firstValueFrom(this.pasteWindowSizingService.width$);
+    const height = await firstValueFrom(this.pasteWindowSizingService.height$);
+    await this.pasteWindow.setSize(new PhysicalSize(width, height));
 
     await this.setWindowPositionAsync(await this.pasteWindow.outerSize());
 
@@ -86,7 +88,7 @@ export class PasteWindowService {
 
   async rememberWindowSizeAsync(): Promise<void> {
     const currSize = await this.pasteWindow!.innerSize();
-    await this.settingsService.setPasteWindowSizeAsync(currSize);
+    await this.pasteWindowSizingService.setSize(currSize.width, currSize.height);
   }
 
 

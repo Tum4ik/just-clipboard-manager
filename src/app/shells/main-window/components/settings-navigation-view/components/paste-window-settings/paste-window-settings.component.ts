@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
 import { DisplayEdgePosition, SnappingMode } from '@app/core/services/settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IftaLabel } from 'primeng/iftalabel';
+import { InputNumber, InputNumberInputEvent } from 'primeng/inputnumber';
 import { Select } from "primeng/select";
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
@@ -20,15 +24,29 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     FormsModule,
     GoogleIcon,
     TranslatePipe,
+    IftaLabel,
+    InputNumber,
   ]
 })
 export class PasteWindowSettingsComponent implements OnInit {
   constructor(
     private readonly pasteWindowSnappingService: PasteWindowSnappingService,
-  ) { }
+    private readonly pasteWindowSizingService: PasteWindowSizingService,
+  ) {
+    this.width = toSignal(this.pasteWindowSizingService.width$, { requireSync: true });
+    this.height = toSignal(this.pasteWindowSizingService.height$, { requireSync: true });
+  }
 
   selectedSnappingMode?: SnappingMode;
   selectedDisplayEdgePosition?: DisplayEdgePosition;
+
+  readonly minWidth = 200;
+  readonly maxWidth = 10000;
+  readonly minHeight = 150;
+  readonly maxHeight = 1000;
+  readonly width: Signal<number>;
+  readonly height: Signal<number>;
+
 
   get snappingModes() {
     return this.pasteWindowSnappingService.snappingModes;
@@ -40,6 +58,16 @@ export class PasteWindowSettingsComponent implements OnInit {
   get isDisplayEdgesSnappingMode(): boolean {
     return this.selectedSnappingMode === SnappingMode.DisplayEdges;
   }
+
+
+  async setWidth(e: InputNumberInputEvent) {
+    await this.pasteWindowSizingService.setSize(e.value as number, this.height());
+  }
+
+  async setHeight(e: InputNumberInputEvent) {
+    await this.pasteWindowSizingService.setSize(this.width(), e.value as number);
+  }
+
 
   async ngOnInit() {
     this.selectedSnappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();

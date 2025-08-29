@@ -9,7 +9,7 @@
                 (onChange)="onSnappingModeChanges()">
         <ng-template #item #selectedItem let-item>
           <div class="option-root">
-            <google-icon [iconName]="getSnappingModeIconName(item)" />
+            <google-icon [iconName]="getSnappingModeIconName(item)" [size]="18" />
             <span>{{ 'settings..paste-window..snapping..options..' + item | translate }}</span>
           </div>
         </ng-template>
@@ -31,7 +31,28 @@
   <jcm-settings-card icon="resize"
                      [title]="'settings..paste-window..size-title' | translate"
                      [description]="'settings..paste-window..size-description' | translate">
-
+    <div class="size-options">
+      <p-ifta-label>
+        <p-input-number inputId="width-input"
+                        size="small"
+                        [inputSize]="5"
+                        [allowEmpty]="false"
+                        [min]="minWidth" [max]="maxWidth"
+                        [ngModel]="width()"
+                        (onInput)="setWidth($event)" />
+        <label for="width-input">{{ 'width' | translate }}</label>
+      </p-ifta-label>
+      <p-ifta-label>
+        <p-input-number inputId="height-input"
+                        size="small"
+                        [inputSize]="5"
+                        [allowEmpty]="false"
+                        [min]="minHeight" [max]="maxHeight"
+                        [ngModel]="height()"
+                        (onInput)="setHeight($event)" />
+        <label for="height-input">{{ 'height' | translate }}</label>
+      </p-ifta-label>
+    </div>
   </jcm-settings-card>
 
   <jcm-settings-card icon="opacity"

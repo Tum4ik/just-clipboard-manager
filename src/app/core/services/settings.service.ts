@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PhysicalSize } from '@tauri-apps/api/dpi';
 import { LazyStore } from '@tauri-apps/plugin-store';
 
 const LANGUAGE = 'language';
@@ -56,12 +55,11 @@ export class SettingsService {
   }
 
 
-  async getPasteWindowSizeAsync(): Promise<PhysicalSize> {
-    const size = await this.store.get<Size>(PASTE_WINDOW_SIZE);
-    return new PhysicalSize(size?.width ?? 400, size?.height ?? 400);
+  async getPasteWindowSizeAsync(): Promise<Size> {
+    return await this.store.get<Size>(PASTE_WINDOW_SIZE) ?? { width: 400, height: 400 };
   }
 
-  async setPasteWindowSizeAsync(size: PhysicalSize): Promise<void> {
+  async setPasteWindowSizeAsync(size: Size): Promise<void> {
     await this.store.set(PASTE_WINDOW_SIZE, size);
     await this.store.save();
   }
