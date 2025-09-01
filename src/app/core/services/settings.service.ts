@@ -5,7 +5,7 @@ const LANGUAGE = 'language';
 const THEME_MODE = 'theme-mode';
 const THEME_PRESET = 'theme-preset';
 const PASTE_WINDOW_SIZE = 'paste-window-size';
-const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
+const PASTE_WINDOW_HEIGHT_PERCENTAGE = 'paste-window-height-percentage';
 const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
 const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
@@ -65,12 +65,12 @@ export class SettingsService {
   }
 
 
-  async getPasteWindowPanelSizesAsync(): Promise<number[]> {
-    return await this.store.get<number[]>(PASTE_WINDOW_PANEL_SIZES) ?? [40, 60];
+  async getPasteWindowPinnedClipsHeightPercentageAsync(): Promise<number> {
+    return await this.store.get<number>(PASTE_WINDOW_HEIGHT_PERCENTAGE) ?? 40;
   }
 
-  async setPasteWindowPanelSizesAsync(sizes: number[]): Promise<void> {
-    await this.store.set(PASTE_WINDOW_PANEL_SIZES, sizes);
+  async setPasteWindowPinnedClipsHeightPercentageAsync(heightPercentage: number): Promise<void> {
+    await this.store.set(PASTE_WINDOW_HEIGHT_PERCENTAGE, heightPercentage);
     await this.store.save();
   }
 

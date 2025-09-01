@@ -29,8 +29,8 @@
   </jcm-settings-card>
 
   <jcm-settings-card icon="resize"
-                     [title]="'settings..paste-window..size-title' | translate"
-                     [description]="'settings..paste-window..size-description' | translate">
+                     [title]="'settings..paste-window..size..title' | translate"
+                     [description]="'settings..paste-window..size..description' | translate">
     <div class="size-options">
       <p-ifta-label>
         <p-input-number inputId="width-input"
@@ -55,9 +55,19 @@
     </div>
   </jcm-settings-card>
 
+  <jcm-settings-card icon="table_rows"
+                     [title]="'settings..paste-window..pinned-clips-area-size..title' | translate"
+                     [description]="'settings..paste-window..pinned-clips-area-size..description' | translate">
+    <p-input-number suffix="%"
+                    [inputSize]="5"
+                    [allowEmpty]="false"
+                    [ngModel]="pinnedClipsHeightPercentage()"
+                    (onInput)="setPinnedClipsHeightPercentage($event)" />
+  </jcm-settings-card>
+
   <jcm-settings-card icon="opacity"
-                     [title]="'settings..paste-window..opacity-title' | translate"
-                     [description]="'settings..paste-window..opacity-description' | translate">
+                     [title]="'settings..paste-window..opacity..title' | translate"
+                     [description]="'settings..paste-window..opacity..description' | translate">
 
   </jcm-settings-card>
 

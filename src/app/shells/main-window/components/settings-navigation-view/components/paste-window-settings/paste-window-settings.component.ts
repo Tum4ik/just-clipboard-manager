@@ -35,6 +35,7 @@ export class PasteWindowSettingsComponent implements OnInit {
   ) {
     this.width = toSignal(this.pasteWindowSizingService.width$, { requireSync: true });
     this.height = toSignal(this.pasteWindowSizingService.height$, { requireSync: true });
+    this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
   }
 
   selectedSnappingMode?: SnappingMode;
@@ -46,6 +47,8 @@ export class PasteWindowSettingsComponent implements OnInit {
   readonly maxHeight = 1000;
   readonly width: Signal<number>;
   readonly height: Signal<number>;
+
+  readonly pinnedClipsHeightPercentage: Signal<number>;
 
 
   get snappingModes() {
@@ -66,6 +69,10 @@ export class PasteWindowSettingsComponent implements OnInit {
 
   async setHeight(e: InputNumberInputEvent) {
     await this.pasteWindowSizingService.setSize(this.width(), e.value as number);
+  }
+
+  async setPinnedClipsHeightPercentage(e: InputNumberInputEvent) {
+    await this.pasteWindowSizingService.setPinnedClipsHeightPercentage(e.value as number);
   }
 
 

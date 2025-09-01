@@ -35,7 +35,7 @@
               layout="vertical"
               [gutterSize]="isSettingsMode ? 2 : 0"
               [style.gap.px]="isSettingsMode ? 1 : 2"
-              [panelSizes]="splitterPanelSizes">
+              [panelSizes]="[pinnedClipsHeightPercentage(), 100 - pinnedClipsHeightPercentage()]">
     <ng-template #panel>
       <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode" />
       <p-panel #pinnedClipsPanel class="pinned-clips">
