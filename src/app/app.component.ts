@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +7,6 @@ import { ThemeService } from './core/services/theme.service';
   styleUrl: './app.component.scss',
   imports: [RouterOutlet]
 })
-export class AppComponent implements OnInit {
-  constructor(private readonly themeService: ThemeService) { }
+export class AppComponent {
 
-  ngOnInit(): void {
-    this.themeService.initAsync();
-  }
 }

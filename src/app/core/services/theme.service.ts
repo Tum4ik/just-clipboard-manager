@@ -1,24 +1,39 @@
 import { Injectable } from '@angular/core';
+import { emit, Event, listen } from '@tauri-apps/api/event';
+import { Theme } from '@tauri-apps/api/window';
 import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsService, ThemeMode } from './settings.service';
 
 const PREFERS_COLOR_SCHEME_DARK = '(prefers-color-scheme: dark)';
 const DARK_MODE_SELECTOR = 'dark-mode';
+const THEME_MODE_CHANGED_EVENT_NAME = 'theme-mode-changed-event';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   constructor(
     private readonly settingsService: SettingsService,
     private readonly primeNg: PrimeNG,
-  ) { }
+  ) {
+    this.settingsService.getThemeModeAsync().then(themeMode => {
+      this.setMode(themeMode);
+    });
+    window.matchMedia(PREFERS_COLOR_SCHEME_DARK).addEventListener('change', e => {
+      this.notifyThemeChanged();
+    });
+    listen<ThemeMode>(THEME_MODE_CHANGED_EVENT_NAME, this.onThemeGloballyChanged.bind(this));
+  }
 
-  private isInitialized = false;
 
-  private themeChangedSubject = new BehaviorSubject<'light' | 'dark'>('dark');
-  themeChanged$ = this.themeChangedSubject.asObservable();
+  private theme = new BehaviorSubject<Theme>('dark');
+  theme$ = this.theme.asObservable();
 
-  get isDarkMode(): boolean {
+  async setThemeModeAsync(themeMode: ThemeMode) {
+    await this.settingsService.setThemeModeAsync(themeMode);
+    await emit<ThemeMode>(THEME_MODE_CHANGED_EVENT_NAME, themeMode);
+  }
+
+  private get isDarkMode(): boolean {
     const isSystemDarkModeSelector = this.primeNg.theme().options.darkModeSelector === 'system';
     const prefersColorSchemeDark = window.matchMedia(PREFERS_COLOR_SCHEME_DARK).matches;
     const containsDarkModeSelector = document.documentElement.classList.contains(DARK_MODE_SELECTOR);
@@ -26,22 +41,8 @@ export class ThemeService {
   }
 
 
-  async initAsync(): Promise<void> {
-    if (this.isInitialized) {
-      return;
-    }
-
-    this.isInitialized = true;
-
-    window.matchMedia(PREFERS_COLOR_SCHEME_DARK).addEventListener('change', e => {
-      this.notifyThemeChanged();
-    });
-    await this.settingsService.onThemeModeChanged(mode => {
-      this.setMode(mode!);
-    });
-
-    const mode = await this.settingsService.getThemeModeAsync();
-    this.setMode(mode);
+  private onThemeGloballyChanged(e: Event<ThemeMode>) {
+    this.setMode(e.payload);
   }
 
 
@@ -69,6 +70,6 @@ export class ThemeService {
 
 
   private notifyThemeChanged() {
-    this.themeChangedSubject.next(this.isDarkMode ? 'dark' : 'light');
+    this.theme.next(this.isDarkMode ? 'dark' : 'light');
   }
 }

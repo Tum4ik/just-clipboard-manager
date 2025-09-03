@@ -4,6 +4,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PluginsService } from '@app/core/services/plugins.service';
+import { ThemeService } from '@app/core/services/theme.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { BlockUI } from 'primeng/blockui';
@@ -14,7 +15,7 @@ import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Splitter } from 'primeng/splitter';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
@@ -49,7 +50,9 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly clipboardListener: ClipboardListener,
     private readonly pluginsService: PluginsService,
     private readonly pasteWindowSizingService: PasteWindowSizingService,
+    private readonly themeService: ThemeService,
   ) {
+    this.isDarkMode = toSignal(this.themeService.theme$.pipe(map(t => t === 'dark')), { requireSync: true });
     this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
   }
 
@@ -67,6 +70,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   isWindowBlocked = false;
   isSettingsMode = false;
 
+  readonly isDarkMode: Signal<boolean>;
   readonly pinnedClipsHeightPercentage: Signal<number>;
 
   get pinnedClips(): Signal<PasteWindowClip[]> {

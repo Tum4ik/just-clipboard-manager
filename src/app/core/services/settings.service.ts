@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Theme } from '@tauri-apps/api/window';
 import { LazyStore } from '@tauri-apps/plugin-store';
 
 const LANGUAGE = 'language';
@@ -44,14 +45,6 @@ export class SettingsService {
   async setThemeModeAsync(themeMode: ThemeMode): Promise<void> {
     await this.store.set(THEME_MODE, themeMode);
     await this.store.save();
-  }
-
-  onThemeModeChanged(cb: (value: ThemeMode | undefined) => void): Promise<() => void> {
-    return this.store.onChange<ThemeMode>((k, v) => {
-      if (k === THEME_MODE) {
-        cb(v);
-      }
-    });
   }
 
 
@@ -106,7 +99,7 @@ export class SettingsService {
 }
 
 
-export type ThemeMode = 'system' | 'light' | 'dark';
+export type ThemeMode = 'system' | Theme;
 export interface Size { width: number; height: number; }
 
 export enum SnappingMode {

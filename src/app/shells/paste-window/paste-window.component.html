@@ -1,4 +1,4 @@
-<div class="root">
+<div class="root" [style.background-color]="isDarkMode() ? '#121212': 'white'">
   <p-block-ui [blocked]="isWindowBlocked" />
   @if (isSettingsMode){
   <div class="resize-handle top"></div>
