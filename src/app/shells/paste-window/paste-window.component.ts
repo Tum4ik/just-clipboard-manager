@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Render
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { PasteWindowOpacityService } from '@app/core/services/paste-window-opacity.service';
 import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PluginsService } from '@app/core/services/plugins.service';
 import { ThemeService } from '@app/core/services/theme.service';
@@ -51,9 +52,11 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly pluginsService: PluginsService,
     private readonly pasteWindowSizingService: PasteWindowSizingService,
     private readonly themeService: ThemeService,
+    private readonly pasteWindowOpacityService: PasteWindowOpacityService,
   ) {
     this.isDarkMode = toSignal(this.themeService.theme$.pipe(map(t => t === 'dark')), { requireSync: true });
     this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
+    this.opacity = toSignal(this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { requireSync: true });
   }
 
 
@@ -72,6 +75,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   readonly isDarkMode: Signal<boolean>;
   readonly pinnedClipsHeightPercentage: Signal<number>;
+  readonly opacity: Signal<number>;
 
   get pinnedClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.orderedPinnedClips;

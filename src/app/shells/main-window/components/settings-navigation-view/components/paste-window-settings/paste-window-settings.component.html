@@ -59,7 +59,7 @@
                      [title]="'settings..paste-window..pinned-clips-area-size..title' | translate"
                      [description]="'settings..paste-window..pinned-clips-area-size..description' | translate">
     <p-input-number suffix="%"
-                    [inputSize]="5"
+                    [inputSize]="1"
                     [allowEmpty]="false"
                     [ngModel]="pinnedClipsHeightPercentage()"
                     (onInput)="setPinnedClipsHeightPercentage($event)" />
@@ -68,7 +68,17 @@
   <jcm-settings-card icon="opacity"
                      [title]="'settings..paste-window..opacity..title' | translate"
                      [description]="'settings..paste-window..opacity..description' | translate">
-
+    <div class="opacity-options">
+      <p-slider [min]="0" [max]="100"
+                [(ngModel)]="opacityPercentage"
+                (onChange)="onOpacityChanged()" />
+      <p-input-number suffix="%"
+                      [min]="0" [max]="100"
+                      [inputSize]="1"
+                      [allowEmpty]="false"
+                      [(ngModel)]="opacityPercentage"
+                      (onInput)="onOpacityChanged()" />
+    </div>
   </jcm-settings-card>
 
 </jcm-scroll-view>

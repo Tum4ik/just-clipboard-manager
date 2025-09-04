@@ -9,6 +9,7 @@ const PASTE_WINDOW_SIZE = 'paste-window-size';
 const PASTE_WINDOW_HEIGHT_PERCENTAGE = 'paste-window-height-percentage';
 const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
 const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
+const PASTE_WINDOW_OPACITY_PERCENTAGE = 'paste-window-opacity-percentage';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
 
 @Injectable({ providedIn: 'root' })
@@ -84,6 +85,16 @@ export class SettingsService {
 
   async setPasteWindowDisplayEdgePositionAsync(position: DisplayEdgePosition): Promise<void> {
     await this.store.set(PASTE_WINDOW_DISPLAY_EDGE_POSITION, position);
+    await this.store.save();
+  }
+
+
+  async getPasteWindowOpacityPercentageAsync(): Promise<number> {
+    return await this.store.get<number>(PASTE_WINDOW_OPACITY_PERCENTAGE) ?? 100;
+  }
+
+  async setPasteWindowOpacityPercentageAsync(opacity: number): Promise<void> {
+    await this.store.set(PASTE_WINDOW_OPACITY_PERCENTAGE, opacity);
     await this.store.save();
   }
 

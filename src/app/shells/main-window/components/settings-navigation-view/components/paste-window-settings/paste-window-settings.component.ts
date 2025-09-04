@@ -2,6 +2,7 @@ import { Component, OnInit, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { PasteWindowOpacityService } from '@app/core/services/paste-window-opacity.service';
 import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PasteWindowSnappingService } from '@app/core/services/paste-window-snapping.service';
 import { DisplayEdgePosition, SnappingMode } from '@app/core/services/settings.service';
@@ -9,6 +10,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IftaLabel } from 'primeng/iftalabel';
 import { InputNumber, InputNumberInputEvent } from 'primeng/inputnumber';
 import { Select } from "primeng/select";
+import { Slider } from 'primeng/slider';
+import { firstValueFrom } from 'rxjs';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
 
@@ -26,12 +29,14 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     TranslatePipe,
     IftaLabel,
     InputNumber,
+    Slider,
   ]
 })
 export class PasteWindowSettingsComponent implements OnInit {
   constructor(
     private readonly pasteWindowSnappingService: PasteWindowSnappingService,
     private readonly pasteWindowSizingService: PasteWindowSizingService,
+    private readonly pasteWindowOpacityService: PasteWindowOpacityService,
   ) {
     this.width = toSignal(this.pasteWindowSizingService.width$, { requireSync: true });
     this.height = toSignal(this.pasteWindowSizingService.height$, { requireSync: true });
@@ -41,6 +46,7 @@ export class PasteWindowSettingsComponent implements OnInit {
   selectedSnappingMode?: SnappingMode;
   selectedDisplayEdgePosition?: DisplayEdgePosition;
 
+  // todo: move min/max values to service
   readonly minWidth = 200;
   readonly maxWidth = 10000;
   readonly minHeight = 150;
@@ -49,6 +55,8 @@ export class PasteWindowSettingsComponent implements OnInit {
   readonly height: Signal<number>;
 
   readonly pinnedClipsHeightPercentage: Signal<number>;
+
+  opacityPercentage: number = 100;
 
 
   get snappingModes() {
@@ -79,6 +87,7 @@ export class PasteWindowSettingsComponent implements OnInit {
   async ngOnInit() {
     this.selectedSnappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();
     this.selectedDisplayEdgePosition = await this.pasteWindowSnappingService.getDisplayEdgePositionAsync();
+    this.opacityPercentage = await firstValueFrom(this.pasteWindowOpacityService.opacityPercentage$);
   }
 
   onSnappingModeChanges() {
@@ -100,5 +109,9 @@ export class PasteWindowSettingsComponent implements OnInit {
       case SnappingMode.Caret: return 'text_select_end';
       case SnappingMode.DisplayEdges: return 'picture_in_picture_medium';
     }
+  }
+
+  onOpacityChanged() {
+    this.pasteWindowOpacityService.setOpacityPercentageAsync(this.opacityPercentage);
   }
 }

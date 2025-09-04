@@ -17,3 +17,14 @@
   display: flex;
   gap: 8px;
 }
+
+.opacity-options {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+  p-slider {
+    width: 150px;
+    cursor: pointer;
+  }
+}
