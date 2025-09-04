@@ -28,8 +28,8 @@ pub async fn get_caret_position() -> Result<CaretPosition, String> {
       &mut accessible as *mut _ as *mut _,
     );
 
-    if result.is_err() {
-      return Err("Failed to get accessible object".into());
+    if let Err(e) = result {
+      return Err(format!("Failed to get accessible object: {e}"));
     }
 
     if let Some(accessible) = accessible {
