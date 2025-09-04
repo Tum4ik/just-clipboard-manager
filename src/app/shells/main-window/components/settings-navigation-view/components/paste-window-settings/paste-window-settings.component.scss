@@ -1,0 +1,30 @@
+.option-root {
+  display: flex;
+  align-items: center;
+
+  google-icon {
+    margin-right: 12px;
+  }
+}
+
+.snapping-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.size-options {
+  display: flex;
+  gap: 8px;
+}
+
+.opacity-options {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+  p-slider {
+    width: 150px;
+    cursor: pointer;
+  }
+}

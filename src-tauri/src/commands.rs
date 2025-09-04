@@ -1,5 +1,6 @@
 pub mod environment;
 pub mod extract_and_remove_zip;
+pub mod get_caret_position;
 pub mod get_foreground_window;
 pub mod open_main_window;
 pub mod paste_clip;
@@ -15,6 +16,7 @@ macro_rules! all_commands {
       commands::update_clip::update_clip,
       commands::paste_clip::paste_clip,
       commands::get_foreground_window::get_foreground_window,
+      commands::get_caret_position::get_caret_position,
       commands::open_main_window::open_main_window,
       commands::environment::environment,
       commands::extract_and_remove_zip::extract_and_remove_zip,

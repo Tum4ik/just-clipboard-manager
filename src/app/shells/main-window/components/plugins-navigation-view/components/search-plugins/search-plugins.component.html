@@ -35,8 +35,7 @@
           <span>{{ 'installation-failed' | translate }}</span>
         </p-tag>
         }
-        <p-button label="{{ 'install' | translate }}"
-                  size="small"
+        <p-button [label]="'install' | translate"
                   variant="outlined"
                   raised="true"
                   [disabled]="plugin.isInstalling"

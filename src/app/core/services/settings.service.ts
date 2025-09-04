@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { PhysicalSize } from '@tauri-apps/api/dpi';
+import { Theme } from '@tauri-apps/api/window';
 import { LazyStore } from '@tauri-apps/plugin-store';
 
 const LANGUAGE = 'language';
 const THEME_MODE = 'theme-mode';
 const THEME_PRESET = 'theme-preset';
 const PASTE_WINDOW_SIZE = 'paste-window-size';
-const PASTE_WINDOW_PANEL_SIZES = 'paste-window-panel-sizes';
+const PASTE_WINDOW_HEIGHT_PERCENTAGE = 'paste-window-height-percentage';
+const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
+const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
+const PASTE_WINDOW_OPACITY_PERCENTAGE = 'paste-window-opacity-percentage';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
 
 @Injectable({ providedIn: 'root' })
@@ -45,32 +48,53 @@ export class SettingsService {
     await this.store.save();
   }
 
-  onThemeModeChanged(cb: (value: ThemeMode | undefined) => void): Promise<() => void> {
-    return this.store.onChange<ThemeMode>((k, v) => {
-      if (k === THEME_MODE) {
-        cb(v);
-      }
-    });
+
+  async getPasteWindowSizeAsync(): Promise<Size> {
+    return await this.store.get<Size>(PASTE_WINDOW_SIZE) ?? { width: 400, height: 400 };
   }
 
-
-  async getPasteWindowSizeAsync(): Promise<PhysicalSize> {
-    const size = await this.store.get<Size>(PASTE_WINDOW_SIZE);
-    return new PhysicalSize(size?.width ?? 400, size?.height ?? 400);
-  }
-
-  async setPasteWindowSizeAsync(size: PhysicalSize): Promise<void> {
+  async setPasteWindowSizeAsync(size: Size): Promise<void> {
     await this.store.set(PASTE_WINDOW_SIZE, size);
     await this.store.save();
   }
 
 
-  async getPasteWindowPanelSizesAsync(): Promise<number[]> {
-    return await this.store.get<number[]>(PASTE_WINDOW_PANEL_SIZES) ?? [40, 60];
+  async getPasteWindowPinnedClipsHeightPercentageAsync(): Promise<number> {
+    return await this.store.get<number>(PASTE_WINDOW_HEIGHT_PERCENTAGE) ?? 40;
   }
 
-  async setPasteWindowPanelSizesAsync(sizes: number[]): Promise<void> {
-    await this.store.set(PASTE_WINDOW_PANEL_SIZES, sizes);
+  async setPasteWindowPinnedClipsHeightPercentageAsync(heightPercentage: number): Promise<void> {
+    await this.store.set(PASTE_WINDOW_HEIGHT_PERCENTAGE, heightPercentage);
+    await this.store.save();
+  }
+
+
+  async getPasteWindowSnappingModeAsync(): Promise<SnappingMode> {
+    return await this.store.get<SnappingMode>(PASTE_WINDOW_SNAPPING_MODE) ?? SnappingMode.MouseCursor;
+  }
+
+  async setPasteWindowSnappingModeAsync(mode: SnappingMode): Promise<void> {
+    await this.store.set(PASTE_WINDOW_SNAPPING_MODE, mode);
+    await this.store.save();
+  }
+
+
+  async getPasteWindowDisplayEdgePositionAsync(): Promise<DisplayEdgePosition> {
+    return await this.store.get<DisplayEdgePosition>(PASTE_WINDOW_DISPLAY_EDGE_POSITION) ?? DisplayEdgePosition.TopLeft;
+  }
+
+  async setPasteWindowDisplayEdgePositionAsync(position: DisplayEdgePosition): Promise<void> {
+    await this.store.set(PASTE_WINDOW_DISPLAY_EDGE_POSITION, position);
+    await this.store.save();
+  }
+
+
+  async getPasteWindowOpacityPercentageAsync(): Promise<number> {
+    return await this.store.get<number>(PASTE_WINDOW_OPACITY_PERCENTAGE) ?? 100;
+  }
+
+  async setPasteWindowOpacityPercentageAsync(opacity: number): Promise<void> {
+    await this.store.set(PASTE_WINDOW_OPACITY_PERCENTAGE, opacity);
     await this.store.save();
   }
 
@@ -86,5 +110,22 @@ export class SettingsService {
 }
 
 
-export type ThemeMode = 'system' | 'light' | 'dark';
+export type ThemeMode = 'system' | Theme;
 export interface Size { width: number; height: number; }
+
+export enum SnappingMode {
+  MouseCursor = 'mouse-cursor',
+  Caret = 'caret',
+  DisplayEdges = 'display-edges'
+}
+
+export enum DisplayEdgePosition {
+  TopLeft = 'top-left',
+  TopRight = 'top-right',
+  BottomLeft = 'bottom-left',
+  BottomRight = 'bottom-right',
+  TopCenter = 'top-center',
+  BottomCenter = 'bottom-center',
+  LeftCenter = 'left-center',
+  RightCenter = 'right-center',
+}

@@ -1,24 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 html {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+
   @include mat.tooltip-overrides((container-color: var(--p-surface-700),
       container-shape: 4px,
       supporting-text-color: var(--p-surface-0),
     ));
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-html,
-body {
-  height: 100%;
 }
 
 @font-face {
@@ -126,8 +124,18 @@ p-card {
   --p-card-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.1), 0 2px 2px -1px rgba(0, 0, 0, 0.1)
 }
 
+p-select {
+  min-width: 200px;
+}
+
 jcm-clip-full-data-preview {
   .p-scrollpanel-content {
     width: 100% !important;
+  }
+}
+
+p-slider {
+  .p-slider-handle {
+    cursor: pointer;
   }
 }

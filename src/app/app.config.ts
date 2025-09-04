@@ -13,6 +13,7 @@ import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
+import { ThemeService } from "./core/services/theme.service";
 import { registerSvgIcons } from "./initializers/register-svg-icons";
 import { AppRouteReuseStrategy } from "./router/app-route-reuse-strategy";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
@@ -43,6 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       registerSvgIcons();
 
+      inject(ThemeService);
       const environmentService = inject(EnvironmentService);
       const settings = inject(SettingsService);
       const translate = inject(TranslateService);

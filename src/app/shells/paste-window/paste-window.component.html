@@ -1,4 +1,6 @@
-<div class="root">
+<div class="root"
+     [style.background-color]="isDarkMode() ? '#121212': 'white'"
+     [style.opacity]="opacity()">
   <p-block-ui [blocked]="isWindowBlocked" />
   @if (isSettingsMode){
   <div class="resize-handle top"></div>
@@ -15,9 +17,8 @@
              pInputText
              [fluid]="true"
              [disabled]="isSettingsMode"
-             pSize="small"
              type="text"
-             placeholder="{{ 'search' | translate }}"
+             [placeholder]="'search' | translate"
              (input)="onSearchChanged(searchInput.value)" />
       @if (searchInput.value) {
       <p-inputicon (click)="clearSearch()">
@@ -29,14 +30,14 @@
               variant="text" size="small"
               [matTooltip]="'settings' | translate"
               (onClick)="settingsMode()">
-      <google-icon iconName="settings" [size]="23" [isFilled]="isSettingsMode" />
+      <google-icon iconName="settings" [size]="25" [isFilled]="isSettingsMode" />
     </p-button>
   </div>
   <p-splitter #splitter
               layout="vertical"
               [gutterSize]="isSettingsMode ? 2 : 0"
               [style.gap.px]="isSettingsMode ? 1 : 2"
-              [panelSizes]="splitterPanelSizes">
+              [panelSizes]="[pinnedClipsHeightPercentage(), 100 - pinnedClipsHeightPercentage()]">
     <ng-template #panel>
       <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode" />
       <p-panel #pinnedClipsPanel class="pinned-clips">

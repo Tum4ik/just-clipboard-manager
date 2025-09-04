@@ -3,6 +3,8 @@
   "language": "Language",
   "exit": "Exit",
   "search": "Search",
+  "width": "Width",
+  "height": "Height",
   "plugin": "Plugin",
   "plugin.": {
     "by": "by",
@@ -16,6 +18,37 @@
     "general": "General",
     "interface": "Interface",
     "paste-window": "Paste window",
+    "paste-window.": {
+      "snapping.": {
+        "title": "Snapping",
+        "description": "Allows you to automatically position the paste window based on the selected option",
+        "options.": {
+          "mouse-cursor": "Mouse cursor",
+          "caret": "Caret",
+          "display-edges": "Display edges",
+          "top-left": "Top left",
+          "top-right": "Top right",
+          "bottom-left": "Bottom left",
+          "bottom-right": "Bottom right",
+          "top-center": "Top center",
+          "bottom-center": "Bottom center",
+          "left-center": "Left center",
+          "right-center": "Right center"
+        }
+      },
+      "size.": {
+        "title": "Size",
+        "description": "Allows you to specify the size of the paste window"
+      },
+      "pinned-clips-area-size.": {
+        "title": "Pinned clips area size",
+        "description": "Allows you to specify the size (height in percentage) of the pinned clips area in the paste window"
+      },
+      "opacity.": {
+        "title": "Opacity",
+        "description": "Allows you to control the degree of transparency of the paste window"
+      }
+    },
     "hot-keys": "Hot keys"
   },
   "language-setting-descriptions": "The language of the user interface",

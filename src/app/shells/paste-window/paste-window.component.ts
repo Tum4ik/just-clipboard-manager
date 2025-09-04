@@ -1,8 +1,11 @@
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, TemplateRef, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
+import { PasteWindowOpacityService } from '@app/core/services/paste-window-opacity.service';
+import { PasteWindowSizingService } from '@app/core/services/paste-window-sizing.service';
 import { PluginsService } from '@app/core/services/plugins.service';
-import { SettingsService } from '@app/core/services/settings.service';
+import { ThemeService } from '@app/core/services/theme.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { BlockUI } from 'primeng/blockui';
@@ -13,7 +16,7 @@ import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Splitter } from 'primeng/splitter';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
@@ -47,8 +50,14 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly pasteWindowClipsService: PasteWindowClipsService,
     private readonly clipboardListener: ClipboardListener,
     private readonly pluginsService: PluginsService,
-    private readonly settingsService: SettingsService,
-  ) { }
+    private readonly pasteWindowSizingService: PasteWindowSizingService,
+    private readonly themeService: ThemeService,
+    private readonly pasteWindowOpacityService: PasteWindowOpacityService,
+  ) {
+    this.isDarkMode = toSignal(this.themeService.theme$.pipe(map(t => t === 'dark')), { requireSync: true });
+    this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
+    this.opacity = toSignal(this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { requireSync: true });
+  }
 
 
   private readonly subscriptions = new Subscription();
@@ -63,7 +72,10 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isWindowBlocked = false;
   isSettingsMode = false;
-  splitterPanelSizes: number[] = [];
+
+  readonly isDarkMode: Signal<boolean>;
+  readonly pinnedClipsHeightPercentage: Signal<number>;
+  readonly opacity: Signal<number>;
 
   get pinnedClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.orderedPinnedClips;
@@ -115,8 +127,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    this.settingsService.getPasteWindowPanelSizesAsync().then(sizes => this.splitterPanelSizes = sizes);
-
     this.pasteWindowClipsService.loadPinnedClipsAsync();
   }
 
@@ -150,7 +160,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pasteWindowService.allowHide();
       await this.pasteWindowService.disableResizeAsync();
       await this.pasteWindowService.rememberWindowSizeAsync();
-      await this.settingsService.setPasteWindowPanelSizesAsync(this.splitter().panelSizes);
+      await this.pasteWindowSizingService.setPinnedClipsHeightPercentage(this.splitter().panelSizes[0]);
       if (this.splitterHandleElement) {
         this.splitterHandleElement.tabIndex = -1;
       }

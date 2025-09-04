@@ -1,7 +1,8 @@
 <jcm-scroll-view>
+
   <jcm-settings-card icon="language"
-                     title="{{ 'language' | translate }}"
-                     description="{{ 'language-setting-descriptions' | translate }}">
+                     [title]="'language' | translate"
+                     [description]="'language-setting-descriptions' | translate">
     <p-select [options]="languages"
               [(ngModel)]="selectedLanguage"
               (onChange)="onLanguageChanged($event)">
@@ -12,11 +13,11 @@
         </div>
       </ng-template>
     </p-select>
-
   </jcm-settings-card>
+
   <jcm-settings-card icon="routine"
-                     title="{{ 'theme-mode' | translate }}"
-                     description="{{ 'theme-mode..setting-description' | translate }}">
+                     [title]="'theme-mode' | translate"
+                     [description]="'theme-mode..setting-description' | translate">
     <p-select [options]="themeModes"
               [(ngModel)]="selectedThemeMode"
               (onChange)="onThemeModeChanged($event)">
@@ -28,4 +29,5 @@
       </ng-template>
     </p-select>
   </jcm-settings-card>
+
 </jcm-scroll-view>
