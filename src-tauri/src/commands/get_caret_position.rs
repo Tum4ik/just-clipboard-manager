@@ -46,7 +46,7 @@ pub async fn get_caret_position() -> Result<CaretPosition, String> {
         &mut height,
         &VARIANT::from(0),
       ) {
-        return Err(format!("Can't access caret location. {e}"));
+        return Err(format!("Can't access caret location: {e}"));
       }
 
       return Ok(CaretPosition { x: left, y: top });

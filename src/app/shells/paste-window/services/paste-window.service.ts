@@ -161,7 +161,6 @@ export class PasteWindowService {
 
       return new PhysicalPosition(x, y);
     } catch (err) {
-      console.log(err);
       this.monitoringService.error('Failed to get caret position.', err);
       // Fallback to mouse cursor position if caret position fails
       return await this.getWindowPositionByMouseCursorAsync(windowSize);
