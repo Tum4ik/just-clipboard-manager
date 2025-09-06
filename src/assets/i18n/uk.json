@@ -16,6 +16,27 @@
   "settings": "Налаштування",
   "settings.": {
     "general": "Загальні",
+    "general.": {
+      "auto-start-application.": {
+        "title": "Автозапуск програми",
+        "description": "Автоматично запускати програму при вході в систему"
+      },
+      "auto-delete-clips.": {
+        "title": "Автовидалення фрагментів",
+        "description": "Автоматично видаляти фрагменти буфера обміну, старіші за вказаний період (закріплені фрагменти зберігаються)",
+        "options.": {
+          "day_singular": "день",
+          "day_paucal": "дні",
+          "day_plural": "днів",
+          "month_singular": "місяць",
+          "month_paucal": "місяці",
+          "month_plural": "місяців",
+          "year_singular": "рік",
+          "year_paucal": "роки",
+          "year_plural": "років"
+        }
+      }
+    },
     "interface": "Інтерфейс",
     "paste-window": "Вікно вставки",
     "paste-window.": {

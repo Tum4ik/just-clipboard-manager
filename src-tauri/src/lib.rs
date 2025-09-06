@@ -12,6 +12,7 @@ use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run(config: Config) {
   tauri::Builder::default()
+    .plugin(tauri_plugin_autostart::Builder::new().build())
     .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {}))
     .plugin(tauri_plugin_positioner::init())
     .plugin(tauri_plugin_upload::init())

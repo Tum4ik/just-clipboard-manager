@@ -11,6 +11,7 @@ const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
 const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
 const PASTE_WINDOW_OPACITY_PERCENTAGE = 'paste-window-opacity-percentage';
 const PINNED_CLIPS_ORDER = 'pinned-clips-order';
+const CLIPS_AUTO_DELETE_PERIOD = 'clips-auto-delete-period';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -107,11 +108,23 @@ export class SettingsService {
     await this.store.set(PINNED_CLIPS_ORDER, order);
     await this.store.save();
   }
+
+
+  async getClipsAutoDeletePeriodAsync(): Promise<AutoDeletePeriod> {
+    return await this.store.get<AutoDeletePeriod>(CLIPS_AUTO_DELETE_PERIOD)
+      ?? { quantity: 3, periodType: DeletionPeriodType.Month };
+  }
+
+  async setClipsAutoDeletePeriodAsync(period: AutoDeletePeriod): Promise<void> {
+    await this.store.set(CLIPS_AUTO_DELETE_PERIOD, period);
+    await this.store.save();
+  }
 }
 
 
 export type ThemeMode = 'system' | Theme;
 export interface Size { width: number; height: number; }
+export interface AutoDeletePeriod { quantity: number; periodType: DeletionPeriodType; }
 
 export enum SnappingMode {
   MouseCursor = 'mouse-cursor',
@@ -128,4 +141,10 @@ export enum DisplayEdgePosition {
   BottomCenter = 'bottom-center',
   LeftCenter = 'left-center',
   RightCenter = 'right-center',
+}
+
+export enum DeletionPeriodType {
+  Day = 'day',
+  Month = 'month',
+  Year = 'year',
 }

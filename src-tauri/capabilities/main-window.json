@@ -28,6 +28,7 @@
         }
       ]
     },
-    "upload:allow-download"
+    "upload:allow-download",
+    "autostart:default"
   ]
 }
