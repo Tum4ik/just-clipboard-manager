@@ -108,4 +108,23 @@ export class ClipsRepository extends BaseDatabaseRepository {
       [pluginId]
     );
   }
+
+
+  async deleteOutdatedClipsAsync(olderThan: Date): Promise<void> {
+    await this.db.execute(
+      /* sql */`
+      DELETE FROM clips
+      WHERE
+        id IN (
+          SELECT clips.id
+          FROM clips
+          LEFT JOIN pinned_clips ON clips.id = pinned_clips.id
+          WHERE
+            pinned_clips.id IS NULL
+            AND clips.clipped_at < $1
+        )
+      `,
+      [olderThan]
+    );
+  }
 }
