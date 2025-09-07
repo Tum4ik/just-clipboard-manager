@@ -25,16 +25,17 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     Select,
   ]
 })
-export class GeneralSettingsComponent {
+export class GeneralSettingsComponent implements OnInit {
   constructor(
     private readonly clipsAutoDeleteService: ClipsAutoDeleteService,
     private readonly translateService: TranslateService,
-  ) {
-    isEnabled().then(enabled => this.isAutoStartEnabled = enabled);
-    this.clipsAutoDeleteService.getClipsAutoDeletePeriodAsync().then(({ quantity, periodType }) => {
-      this.periodQuantity = quantity;
-      this.selectedDeletionPeriodType = periodType;
-    });
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    this.isAutoStartEnabled = await isEnabled();
+    const { quantity, periodType } = await this.clipsAutoDeleteService.getClipsAutoDeletePeriodAsync();
+    this.periodQuantity = quantity;
+    this.selectedDeletionPeriodType = periodType;
   }
 
   isAutoStartEnabled = false;
