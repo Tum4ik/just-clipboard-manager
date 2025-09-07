@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClipsAutoDeleteService } from '@app/core/services/clips-auto-delete.service';
 import { DeletionPeriodType } from '@app/core/services/settings.service';
@@ -29,7 +29,7 @@ export class GeneralSettingsComponent implements OnInit {
   constructor(
     private readonly clipsAutoDeleteService: ClipsAutoDeleteService,
     private readonly translateService: TranslateService,
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.isAutoStartEnabled = await isEnabled();
