@@ -15,7 +15,7 @@
                       [min]="1" [max]="999"
                       [allowEmpty]="false"
                       [(ngModel)]="periodQuantity"
-                      (onInput)="setClipsAutoDeletePeriod(periodQuantity, selectedDeletionPeriodType)" />
+                      (onBlur)="setClipsAutoDeletePeriod(periodQuantity, selectedDeletionPeriodType)" />
       <p-select [options]="deletionPeriodTypes"
                 [(ngModel)]="selectedDeletionPeriodType"
                 (onChange)="setClipsAutoDeletePeriod(periodQuantity, selectedDeletionPeriodType)">
