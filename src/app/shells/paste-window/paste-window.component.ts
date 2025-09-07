@@ -54,7 +54,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly themeService: ThemeService,
     private readonly pasteWindowOpacityService: PasteWindowOpacityService,
   ) {
-    this.isDarkMode = toSignal(this.themeService.theme$.pipe(map(t => t === 'dark')), { requireSync: true });
+    this.isDarkMode = toSignal(this.themeService.isDarkTheme$, { requireSync: true });
     this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
     this.opacity = toSignal(this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { requireSync: true });
   }

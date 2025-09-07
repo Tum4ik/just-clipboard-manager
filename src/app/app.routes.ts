@@ -39,11 +39,21 @@ export const routes: Routes = [
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
     children: [
       {
+        path: '',
+        redirectTo: 'settings',
+        pathMatch: 'full'
+      },
+      {
         path: 'settings',
         loadComponent: () =>
           import('./shells/main-window/components/settings-navigation-view/settings-navigation-view.component')
             .then(c => c.SettingsNavigationViewComponent),
         children: [
+          {
+            path: '',
+            redirectTo: 'general',
+            pathMatch: 'full'
+          },
           {
             path: 'general',
             loadComponent: () =>
@@ -76,6 +86,11 @@ export const routes: Routes = [
           import('./shells/main-window/components/plugins-navigation-view/plugins-navigation-view.component')
             .then(c => c.PluginsNavigationViewComponent),
         children: [
+          {
+            path: '',
+            redirectTo: 'installed',
+            pathMatch: 'full'
+          },
           {
             path: 'installed',
             loadComponent: () =>

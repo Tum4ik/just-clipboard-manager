@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { emit, Event, listen } from '@tauri-apps/api/event';
-import { Theme } from '@tauri-apps/api/window';
 import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsService, ThemeMode } from './settings.service';
@@ -24,9 +23,11 @@ export class ThemeService {
     listen<ThemeMode>(THEME_MODE_CHANGED_EVENT_NAME, this.onThemeGloballyChanged.bind(this));
   }
 
+  private themeMode = new BehaviorSubject<ThemeMode>('system');
+  themeMode$ = this.themeMode.asObservable();
 
-  private theme = new BehaviorSubject<Theme>('dark');
-  theme$ = this.theme.asObservable();
+  private isDarkTheme = new BehaviorSubject<boolean>(true);
+  isDarkTheme$ = this.isDarkTheme.asObservable();
 
   async setThemeModeAsync(themeMode: ThemeMode) {
     await this.settingsService.setThemeModeAsync(themeMode);
@@ -65,11 +66,12 @@ export class ThemeService {
     }
 
     this.primeNg.onThemeChange(currentTheme);
+    this.themeMode.next(mode);
     this.notifyThemeChanged();
   }
 
 
   private notifyThemeChanged() {
-    this.theme.next(this.isDarkMode ? 'dark' : 'light');
+    this.isDarkTheme.next(this.isDarkMode);
   }
 }
