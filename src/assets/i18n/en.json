@@ -70,7 +70,10 @@
         "description": "Allows you to control the degree of transparency of the paste window"
       }
     },
-    "hot-keys": "Hot keys"
+    "hot-keys": "Hot keys",
+    "hot-keys.": {
+      "call-paste-window": "Call paste window"
+    }
   },
   "language-setting-descriptions": "The language of the user interface",
   "theme-mode": "Theme mode",
