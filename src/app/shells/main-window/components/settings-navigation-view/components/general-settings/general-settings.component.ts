@@ -48,18 +48,18 @@ export class GeneralSettingsComponent implements OnInit {
   }
 
 
-  setAutoStart(e: ToggleSwitchChangeEvent) {
+  async setAutoStart(e: ToggleSwitchChangeEvent) {
     if (e.checked) {
-      enable();
+      await enable();
     }
     else {
-      disable();
+      await disable();
     }
   }
 
 
-  setClipsAutoDeletePeriod(periodQuantity: number, periodType: DeletionPeriodType) {
-    this.clipsAutoDeleteService.setClipsAutoDeletePeriodAsync(periodQuantity, periodType);
+  async setClipsAutoDeletePeriod(periodQuantity: number, periodType: DeletionPeriodType) {
+    await this.clipsAutoDeleteService.setClipsAutoDeletePeriodAsync(periodQuantity, periodType);
   }
 
 

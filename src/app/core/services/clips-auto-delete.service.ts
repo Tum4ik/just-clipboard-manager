@@ -21,6 +21,9 @@ export class ClipsAutoDeleteService {
 
   async deleteOutdatedClips(): Promise<void> {
     const autoDeletePeriod = await this.settingsService.getClipsAutoDeletePeriodAsync();
+    if (autoDeletePeriod.quantity <= 0) {
+      return;
+    }
 
     const olderThan = new Date();
     switch (autoDeletePeriod.periodType) {
