@@ -1,3 +1,5 @@
+const pluralRulesCache = new Map<string, Intl.PluralRules>();
+
 /**
  * Returns the pluralization category for a given number and locale.
  * @param n The number to get the pluralization category for.
@@ -5,6 +7,10 @@
  * @returns The pluralization category (e.g., 'zero', 'one', 'two', 'few', 'many', 'other').
  */
 export function getPluralCategory(n: number, locale: string): Intl.LDMLPluralRule {
-  const pr = new Intl.PluralRules(locale);
+  let pr = pluralRulesCache.get(locale);
+  if (!pr) {
+    pr = new Intl.PluralRules(locale);
+    pluralRulesCache.set(locale, pr);
+  }
   return pr.select(n);
 }
