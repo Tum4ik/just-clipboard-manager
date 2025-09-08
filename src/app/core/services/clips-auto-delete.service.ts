@@ -22,12 +22,16 @@ export class ClipsAutoDeleteService {
     const autoDeletePeriod = await this.settingsService.getClipsAutoDeletePeriodAsync();
 
     const olderThan = new Date();
-    if (autoDeletePeriod.periodType === DeletionPeriodType.Day) {
-      olderThan.setDate(olderThan.getDate() - autoDeletePeriod.quantity);
-    } else if (autoDeletePeriod.periodType === DeletionPeriodType.Month) {
-      olderThan.setMonth(olderThan.getMonth() - autoDeletePeriod.quantity);
-    } else if (autoDeletePeriod.periodType === DeletionPeriodType.Year) {
-      olderThan.setFullYear(olderThan.getFullYear() - autoDeletePeriod.quantity);
+    switch (autoDeletePeriod.periodType) {
+      case DeletionPeriodType.Day:
+        olderThan.setDate(olderThan.getDate() - autoDeletePeriod.quantity);
+        break;
+      case DeletionPeriodType.Month:
+        olderThan.setMonth(olderThan.getMonth() - autoDeletePeriod.quantity);
+        break;
+      case DeletionPeriodType.Year:
+        olderThan.setFullYear(olderThan.getFullYear() - autoDeletePeriod.quantity);
+        break;
     }
 
     const clipsRepository = new ClipsRepository();
