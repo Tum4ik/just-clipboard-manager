@@ -12,10 +12,10 @@ export class ClipboardListener {
   constructor(
     private readonly monitoringService: MonitoringService,
     private readonly pluginsService: PluginsService,
+    private readonly clipsRepository: ClipsRepository,
   ) { }
 
   private isListening = false;
-  private readonly clipsRepository = new ClipsRepository();
 
   private clipboardUpdatedSubject = new Subject<void>();
   readonly clipboardUpdated$ = this.clipboardUpdatedSubject.asObservable();

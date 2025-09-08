@@ -6,6 +6,7 @@ import { DeletionPeriodType, SettingsService } from "./settings.service";
 export class ClipsAutoDeleteService {
   constructor(
     private readonly settingsService: SettingsService,
+    private readonly clipsRepository: ClipsRepository,
   ) { }
 
   readonly deletionPeriodTypes: DeletionPeriodType[] = Object.values(DeletionPeriodType);
@@ -34,7 +35,6 @@ export class ClipsAutoDeleteService {
         break;
     }
 
-    const clipsRepository = new ClipsRepository();
-    await clipsRepository.deleteOutdatedClipsAsync(olderThan);
+    await this.clipsRepository.deleteOutdatedClipsAsync(olderThan);
   }
 }

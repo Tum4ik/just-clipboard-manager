@@ -15,6 +15,8 @@ export class PasteWindowClipsService {
     private readonly pluginsService: PluginsService,
     private readonly pasteDataService: PasteDataService,
     private readonly settingsService: SettingsService,
+    private readonly pinnedClipsRepository: PinnedClipsRepository,
+    private readonly clipsRepository: ClipsRepository,
   ) {
     this.searchSubject.pipe(
       distinctUntilChanged((prev, curr) => prev.text === curr.text),
@@ -23,9 +25,6 @@ export class PasteWindowClipsService {
       this.loadClipsFromScratchAsync();
     });
   }
-
-  private readonly pinnedClipsRepository = new PinnedClipsRepository();
-  private readonly clipsRepository = new ClipsRepository();
 
   private readonly searchSubject = new BehaviorSubject<{ text: string; shouldDebounce: boolean; }>(
     { text: '', shouldDebounce: true }

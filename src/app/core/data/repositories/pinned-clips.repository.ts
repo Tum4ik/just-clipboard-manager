@@ -1,6 +1,8 @@
+import { Injectable } from "@angular/core";
 import { PinnedClip } from "../models/pinned-clip.model";
 import { BaseDatabaseRepository } from "./base-database.repository";
 
+@Injectable({ providedIn: 'root' })
 export class PinnedClipsRepository extends BaseDatabaseRepository {
   async getPinnedClipsAsync(): Promise<PinnedClip[]> {
     const result = await this.db.select<any[]>(

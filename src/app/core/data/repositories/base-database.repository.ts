@@ -18,8 +18,4 @@ export abstract class BaseDatabaseRepository {
   async rollbackAsync(): Promise<void> {
     await this.db.execute("ROLLBACK");
   }
-
-  async disposeAsync(): Promise<void> {
-    await this.db.close();
-  }
 }

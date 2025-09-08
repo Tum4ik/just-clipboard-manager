@@ -33,6 +33,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
     private readonly pluginsService: PluginsService,
     private readonly translateService: TranslateService,
     private readonly dialogService: ExtendedDialogService,
+    private readonly clipsRepository: ClipsRepository,
   ) {
     this.lang = this.translateService.getCurrentLang();
   }
@@ -68,8 +69,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
         return;
       case ConfirmPluginUninstallResult.RemovePluginAndClips:
         this.pluginsService.uninstallPluginAsync(plugin.id);
-        const repository = new ClipsRepository();
-        repository.deleteClipsForPluginAsync(plugin.id);
+        this.clipsRepository.deleteClipsForPluginAsync(plugin.id);
         return;
     }
   }

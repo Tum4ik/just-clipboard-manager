@@ -1,8 +1,10 @@
+import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { PluginId } from 'just-clipboard-manager-pdk';
 import { Clip } from '../models/clip.model';
 import { BaseDatabaseRepository } from "./base-database.repository";
 
+@Injectable({ providedIn: 'root' })
 export class ClipsRepository extends BaseDatabaseRepository {
 
   async updateAsync(clip: Clip): Promise<void> {
