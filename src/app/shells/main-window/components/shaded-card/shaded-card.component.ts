@@ -43,10 +43,12 @@ export class ShadedCardComponent implements OnInit, OnDestroy {
   surfaceShade = 100;
 
   ngOnInit(): void {
-    this.themeChangedSubscription = this.themeService.theme$.subscribe(theme => {
-      switch (theme) {
-        case 'light': this.surfaceShade = this.shades.get(this.shadeLevel())!.light; break;
-        case 'dark': this.surfaceShade = this.shades.get(this.shadeLevel())!.dark; break;
+    this.themeChangedSubscription = this.themeService.isDarkTheme$.subscribe(isDarkTheme => {
+      if (isDarkTheme) {
+        this.surfaceShade = this.shades.get(this.shadeLevel())!.dark;
+      }
+      else {
+        this.surfaceShade = this.shades.get(this.shadeLevel())!.light;
       }
     });
   }

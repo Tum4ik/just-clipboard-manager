@@ -17,7 +17,6 @@ import { Panel } from 'primeng/panel';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Splitter } from 'primeng/splitter';
 import { map, Subscription } from 'rxjs';
-import { ClipsRepository } from '../../core/data/repositories/clips.repository';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
 import { PasteWindowClip, PasteWindowClipsService } from './services/paste-window-clips.service';
@@ -54,14 +53,13 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly themeService: ThemeService,
     private readonly pasteWindowOpacityService: PasteWindowOpacityService,
   ) {
-    this.isDarkMode = toSignal(this.themeService.theme$.pipe(map(t => t === 'dark')), { requireSync: true });
+    this.isDarkMode = toSignal(this.themeService.isDarkTheme$, { requireSync: true });
     this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
     this.opacity = toSignal(this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { requireSync: true });
   }
 
 
   private readonly subscriptions = new Subscription();
-  private readonly clipsRepository = new ClipsRepository();
   private readonly searchInputElement = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
   private readonly splitter = viewChild.required<Splitter>('splitter');
   private readonly regularClipsScrollPanel = viewChild.required<ScrollPanel>('regularClipsScrollPanel');
@@ -143,7 +141,6 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.clipsRepository.disposeAsync();
   }
 
 

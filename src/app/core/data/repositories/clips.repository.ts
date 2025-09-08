@@ -1,8 +1,10 @@
+import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { PluginId } from 'just-clipboard-manager-pdk';
 import { Clip } from '../models/clip.model';
 import { BaseDatabaseRepository } from "./base-database.repository";
 
+@Injectable({ providedIn: 'root' })
 export class ClipsRepository extends BaseDatabaseRepository {
 
   async updateAsync(clip: Clip): Promise<void> {
@@ -106,6 +108,25 @@ export class ClipsRepository extends BaseDatabaseRepository {
       WHERE plugin_id = $1
       `,
       [pluginId]
+    );
+  }
+
+
+  async deleteOutdatedClipsAsync(olderThan: Date): Promise<void> {
+    await this.db.execute(
+      /* sql */`
+      DELETE FROM clips
+      WHERE
+        id IN (
+          SELECT clips.id
+          FROM clips
+          LEFT JOIN pinned_clips ON clips.id = pinned_clips.id
+          WHERE
+            pinned_clips.id IS NULL
+            AND clips.clipped_at < $1
+        )
+      `,
+      [olderThan]
     );
   }
 }

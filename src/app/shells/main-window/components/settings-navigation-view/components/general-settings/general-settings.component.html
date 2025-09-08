@@ -1,1 +1,39 @@
-<p>general-settings works!</p>
+<jcm-scroll-view>
+
+  <jcm-settings-card icon="airplay"
+                     [title]="'settings..general..auto-start-application..title' | translate"
+                     [description]="'settings..general..auto-start-application..description' | translate">
+    <p-toggle-switch [(ngModel)]="isAutoStartEnabled"
+                     (onChange)="setAutoStart($event)" />
+  </jcm-settings-card>
+
+  <jcm-settings-card icon="auto_delete"
+                     [title]="'settings..general..auto-delete-clips..title' | translate"
+                     [description]="'settings..general..auto-delete-clips..description' | translate">
+    <div class="auto-delete-options">
+      <p-input-number [inputSize]="1"
+                      [min]="1" [max]="999"
+                      [allowEmpty]="false"
+                      [(ngModel)]="periodQuantity"
+                      (ngModelChange)="setClipsAutoDeletePeriod(periodQuantity, selectedDeletionPeriodType)" />
+      <p-select [options]="deletionPeriodTypes"
+                [(ngModel)]="selectedDeletionPeriodType"
+                (onChange)="setClipsAutoDeletePeriod(periodQuantity, selectedDeletionPeriodType)">
+        <ng-template #item #selectedItem let-item>
+          @switch (getPluralCategory(periodQuantity)) {
+          @case ('one') {
+          <span>{{ 'settings..general..auto-delete-clips..options..' + item + '_singular' | translate }}</span>
+          }
+          @case ('few') {
+          <span>{{ 'settings..general..auto-delete-clips..options..' + item + '_paucal' | translate }}</span>
+          }
+          @default {
+          <span>{{ 'settings..general..auto-delete-clips..options..' + item + '_plural' | translate }}</span>
+          }
+          }
+        </ng-template>
+      </p-select>
+    </div>
+  </jcm-settings-card>
+
+</jcm-scroll-view>

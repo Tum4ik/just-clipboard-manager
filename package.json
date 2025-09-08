@@ -30,6 +30,7 @@
     "@octokit/rest": "^22.0.0",
     "@primeuix/themes": "^1.2.3",
     "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-autostart": "^2.5.0",
     "@tauri-apps/plugin-fs": "^2.4.2",
     "@tauri-apps/plugin-global-shortcut": "^2.3.0",
     "@tauri-apps/plugin-http": "^2.5.2",

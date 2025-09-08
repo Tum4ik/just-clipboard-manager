@@ -23,9 +23,9 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
     private readonly renderer: Renderer2,
     @Inject(DOCUMENT) private readonly document: Document,
     private readonly ngZone: NgZone,
+    private readonly clipsRepository: ClipsRepository,
   ) { }
 
-  private readonly clipsRepository = new ClipsRepository();
   private resizeObserver?: ResizeObserver;
 
 
@@ -53,7 +53,6 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.clipsRepository.disposeAsync();
     this.resizeObserver?.disconnect();
   }
 

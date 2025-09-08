@@ -9,6 +9,7 @@ import { providePrimeNG } from 'primeng/config';
 import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
 import { TOOLTIP_OPTIONS } from "./core/config/tooltip.config";
+import { ClipsAutoDeleteService } from "./core/services/clips-auto-delete.service";
 import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
@@ -42,21 +43,23 @@ export const appConfig: ApplicationConfig = {
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
     }),
     provideAppInitializer(async () => {
-      registerSvgIcons();
-
       inject(ThemeService);
       const environmentService = inject(EnvironmentService);
-      const settings = inject(SettingsService);
-      const translate = inject(TranslateService);
+      const settingsService = inject(SettingsService);
+      const translateService = inject(TranslateService);
       const pluginsService = inject(PluginsService);
+      const clipsAutoDeleteService = inject(ClipsAutoDeleteService);
 
+      registerSvgIcons();
       await environmentService.initAsync();
 
-      translate.addLangs(['en', 'uk']);
-      await firstValueFrom(translate.use(await settings.getLanguageAsync()));
-      await settings.onLanguageChanged(l => translate.use(l ?? 'en'));
+      translateService.addLangs(['en', 'uk']);
+      const lang = await settingsService.getLanguageAsync();
+      await firstValueFrom(translateService.use(lang));
+      await settingsService.onLanguageChanged(l => translateService.use(l ?? 'en'));
 
       await pluginsService.initAsync();
+      await clipsAutoDeleteService.deleteOutdatedClips();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
     { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy },

@@ -55,7 +55,7 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
       this.selectedLanguage = this.languages.find(l => l.code === e.lang);
     });
-    this.selectedThemeMode = await firstValueFrom(this.themeService.theme$);
+    this.selectedThemeMode = await firstValueFrom(this.themeService.themeMode$);
   }
 
   ngOnDestroy(): void {

@@ -16,6 +16,27 @@
   "settings": "Settings",
   "settings.": {
     "general": "General",
+    "general.": {
+      "auto-start-application.": {
+        "title": "Auto-start application",
+        "description": "Starts automatically when you sign in"
+      },
+      "auto-delete-clips.": {
+        "title": "Auto-delete clips",
+        "description": "Automatically deletes clips older than specified period (pinned clips are kept)",
+        "options.": {
+          "day_singular": "day",
+          "day_paucal": "days",
+          "day_plural": "days",
+          "month_singular": "month",
+          "month_paucal": "months",
+          "month_plural": "months",
+          "year_singular": "year",
+          "year_paucal": "years",
+          "year_plural": "years"
+        }
+      }
+    },
     "interface": "Interface",
     "paste-window": "Paste window",
     "paste-window.": {
