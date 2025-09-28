@@ -1,7 +1,8 @@
 <jcm-scroll-view>
 
   <jcm-settings-card [title]="'settings..hot-keys..call-paste-window' | translate">
-
+    <jcm-hot-key-setting [currentShortcut]="callPasteWindowShortcut"
+                         (shortcutChanged)="onCallPasteWindowShortcutChanged($event)" />
   </jcm-settings-card>
 
 </jcm-scroll-view>

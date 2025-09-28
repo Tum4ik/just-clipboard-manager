@@ -1,0 +1,48 @@
+@if (isEditMode()){
+<p-button size="small" [variant]="canAccept() ? 'outlined': 'text'" severity="success" [raised]="true"
+          [disabled]="!canAccept()"
+          (onClick)="accept()">
+  <google-icon iconName="check" />
+</p-button>
+<p-button size="small" [variant]="canErase() ? 'outlined': 'text'" severity="warn" [raised]="true"
+          [disabled]="!canErase()"
+          (onClick)="erase()">
+  <google-icon iconName="ink_eraser" />
+</p-button>
+}
+
+<p-tag #shortcut
+       [severity]="shortcutSeverity()">
+  @if (displayShortcut()){
+  @if(displayShortcut()?.hasCtrl){
+  <span>Ctrl + </span>
+  }
+  @if(displayShortcut()?.hasShift){
+  <span>Shift + </span>
+  }
+  @if(displayShortcut()?.hasAlt){
+  <span>Alt + </span>
+  }
+  @if(displayShortcut()?.hasMeta){
+  <span class="material-symbols-rounded"
+        [style.font-variation-settings]="'\'FILL\' 1'">
+    window
+  </span>
+  <span> + </span>
+  }
+  <span>{{ displayShortcut()?.code }}</span>
+  }
+</p-tag>
+
+@if (isEditMode()){
+<p-button size="small" variant="outlined" severity="danger" [raised]="true"
+          (onClick)="cancel()">
+  <google-icon iconName="close" />
+</p-button>
+}
+@else {
+<p-button size="small" variant="outlined" [raised]="true"
+          (onClick)="edit()">
+  <google-icon iconName="edit" />
+</p-button>
+}
