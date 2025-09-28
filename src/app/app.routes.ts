@@ -1,10 +1,11 @@
 import { Routes } from "@angular/router";
+import { GlobalShortcutsSettingService } from "./shells/main-window/services/global-shortcuts-setting.service";
 import { clipboardListenerResolver } from "./shells/paste-window/resolvers/clipboard-listener.resolver";
 import { globalShortcutsResolver } from "./shells/paste-window/resolvers/global-shortcuts.resolver";
 import { pasteWindowServiceResolver } from "./shells/paste-window/resolvers/paste-window-visibility.resolver";
 import { trayIconResolver } from "./shells/paste-window/resolvers/tray-icon.resolver";
 import { ClipboardListener } from "./shells/paste-window/services/clipboard-listener.service";
-import { GlobalShortcutsService } from "./shells/paste-window/services/global-shortcuts.service";
+import { GlobalShortcutsRegistrationService } from "./shells/paste-window/services/global-shortcuts-registration.service";
 import { PasteDataService } from "./shells/paste-window/services/paste-data.service";
 import { PasteWindowClipsService } from "./shells/paste-window/services/paste-window-clips.service";
 import { PasteWindowService } from "./shells/paste-window/services/paste-window.service";
@@ -17,7 +18,7 @@ export const routes: Routes = [
     providers: [
       AppTray,
       ClipboardListener,
-      GlobalShortcutsService,
+      GlobalShortcutsRegistrationService,
       PasteWindowService,
       PasteWindowClipsService,
       PasteDataService,
@@ -37,6 +38,9 @@ export const routes: Routes = [
   {
     path: 'main-window',
     loadComponent: () => import('./shells/main-window/main-window.component').then(c => c.MainWindowComponent),
+    providers: [
+      GlobalShortcutsSettingService,
+    ],
     children: [
       {
         path: '',

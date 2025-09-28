@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  gap: 8px;
+}
+
+p-tag {
+  border: 1px solid var(--p-surface-600);
+  font-size: 1rem;
+  font-weight: 400;
+}
