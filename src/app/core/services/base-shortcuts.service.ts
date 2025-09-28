@@ -64,7 +64,7 @@ export class BaseShortcutsService {
     const ctrl = shortcut.hasCtrl ? 'Ctrl+' : '';
     const shift = shortcut.hasShift ? 'Shift+' : '';
     const alt = shortcut.hasAlt ? 'Alt+' : '';
-    const meta = shortcut.hasMeta ? 'Cmd+' : '';
+    const meta = shortcut.hasMeta ? 'Super+' : '';
     return `${ctrl}${shift}${alt}${meta}${shortcut.code}`;
   }
 

@@ -18,10 +18,6 @@ pub fn is_shortcut_registered(
   has_meta: bool,
 ) -> Result<bool, String> {
   let Some(key) = parse_key(code) else {
-    // The key is not supported, so we can't check if it's registered.
-    // We assume it's not registered by us, but it could be a system shortcut we don't support.
-    // Returning false is safer, as it won't block the user from setting a shortcut
-    // that we just don't know how to parse.
     return Err(format!("Unsupported keyboard key: {code}"));
   };
 
@@ -59,13 +55,13 @@ pub fn is_shortcut_registered(
 fn parse_key(code: &str) -> Option<VIRTUAL_KEY> {
   let code = code.to_uppercase().replace("KEY", "").replace("DIGIT", "");
   if code.len() == 1 {
-    let character = code.chars().next().unwrap().to_ascii_uppercase();
+    let character = code.chars().next().unwrap();
     if (character >= 'A' && character <= 'Z') || (character >= '0' && character <= '9') {
       return Some(VIRTUAL_KEY(character as u16));
     }
   }
 
-  match code.to_uppercase().as_str() {
+  match code.as_str() {
     "ESCAPE" => Some(VK_ESCAPE),
     "F1" => Some(VK_F1),
     "F2" => Some(VK_F2),
