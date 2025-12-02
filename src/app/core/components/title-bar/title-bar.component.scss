@@ -4,6 +4,17 @@ p-menubar {
   --p-menubar-padding: 0;
 }
 
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-inline: 8px;
+}
+
+.title {
+  font-size: 12px;
+  user-select: none;
+}
+
 p-button {
   &.close-button {
     --p-button-text-primary-hover-background: var(--p-button-text-danger-active-background);
