@@ -1,8 +1,8 @@
 [package]
 name = "just-clipboard-manager"
 version = "4.0.0-dev"
-description = "Just a clipboard manager"
-authors = ["Yevheniy Tymchishin"]
+description = "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management."
+authors = ["Yevheniy Tymchishin <timchishinevgeniy@gmail.com>"]
 edition = "2021"
 license-file = "../LICENSE"
 

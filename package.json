@@ -1,11 +1,5 @@
 {
   "name": "just-clipboard-manager",
-  "description": "Just a clipboard manager",
-  "author": {
-    "name": "Yevheniy Tymchishin",
-    "email": "timchishinevgeniy@gmail.com"
-  },
-  "license": "MIT",
   "scripts": {
     "tauri-dev": "tauri dev",
     "ng": "ng",

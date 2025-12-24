@@ -3,6 +3,11 @@
   <br/>
   Just Clipboard Manager
 </h1>
+
+A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management.
+
+<hr>
+
 <h1 align="center">
   <img src=".attachments/paste-window-light.png" alt="Paste Window Light" width="400" />
   <img src=".attachments/paste-window-dark.png" alt="Paste Window Dark" width="400" />
@@ -17,7 +22,6 @@
 
 <p align="right">
   <a href="https://www.buymeacoffee.com/tum4ik">
-    <img src=".attachments/bmc-button.svg" alt="Buy me a coffee" width="195" />
+    <img src="src/assets/bmc-button.svg" alt="Buy me a coffee" width="195" />
   </a>
 </p>
-

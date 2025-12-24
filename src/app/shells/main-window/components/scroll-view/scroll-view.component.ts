@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ScrollPanel } from 'primeng/scrollpanel';
 
 @Component({
@@ -10,5 +10,5 @@ import { ScrollPanel } from 'primeng/scrollpanel';
   ]
 })
 export class ScrollViewComponent {
-
+  readonly itemsGap = input(12);
 }
