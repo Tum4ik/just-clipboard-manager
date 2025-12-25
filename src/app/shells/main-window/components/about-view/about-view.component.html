@@ -4,8 +4,8 @@
     <img src="/assets/favicon.ico" class="logo" />
     <div class="text-items">
       <div class="bold">Just Clipboard Manager</div>
-      <div>version {{ version }}</div>
-      <div>© 2022-2026 Yevheniy Tymchishin. All rights reserved.</div>
+      <div>{{ 'about..version' | translate }} {{ version }}</div>
+      <div>{{ 'about..copyright' | translate:{years: '2022-2026'} }}</div>
     </div>
   </div>
 
@@ -14,18 +14,15 @@
   <div class="repository-section">
     <img class="github-logo" src="/assets/github/{{isDarkTheme() ? 'dark' : 'light'}}.svg" />
     <a href="https://github.com/Tum4ik/just-clipboard-manager" target="_blank">
-      <p-button label="Source code" link />
+      <p-button [label]="'about..source-code' | translate" link />
     </a>
   </div>
 
   <p-divider />
 
   <div class="section acknowledgments-section">
-    <div class="bold">Acknowledgments</div>
-    <div>
-      This application is built using Tauri, Angular, PrimeNG and other amazing open-source libraries.
-      Special thanks to the developers and communities behind these projects.
-    </div>
+    <div class="bold">{{ 'about..acknowledgments' | translate }}</div>
+    <div>{{ 'about..acknowledgments-text' | translate }}</div>
     <div class="logos">
       <a href="https://v2.tauri.app" target="_blank">
         <img src="/assets/acknowledgments-logos/tauri-logo-{{isDarkTheme() ? 'dark' : 'light'}}.svg" />
@@ -42,46 +39,46 @@
   <p-divider />
 
   <div class="section contacts-section">
-    <div class="bold">Contacts</div>
+    <div class="bold">{{ 'about..contacts' | translate }}</div>
     <div class="contacts-items">
       <div class="cols">
         <div class="col">
           <div class="contact-item">
             <google-icon iconName="rate_review" />
-            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=feedbacks">
-              <p-button label="Leave a feedback" link />
+            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=feedbacks" target="_blank">
+              <p-button [label]="'about..leave-feedback' | translate" link />
             </a>
           </div>
           <div class="contact-item">
             <google-icon iconName="lightbulb" />
-            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=ideas">
-              <p-button label="Suggest an idea" link />
+            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=ideas" target="_blank">
+              <p-button [label]="'about..suggest-idea' | translate" link />
             </a>
           </div>
         </div>
         <div class="col">
           <div class="contact-item">
             <google-icon iconName="live_help" />
-            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=q-a">
-              <p-button label="Ask a question" link />
+            <a href="https://github.com/Tum4ik/just-clipboard-manager/discussions/new?category=q-a" target="_blank">
+              <p-button [label]="'about..ask-question' | translate" link />
             </a>
           </div>
           <div class="contact-item">
             <google-icon iconName="bug_report" />
-            <a href="https://github.com/Tum4ik/just-clipboard-manager/issues/new">
-              <p-button label="Report a problem" link />
+            <a href="https://github.com/Tum4ik/just-clipboard-manager/issues/new" target="_blank">
+              <p-button [label]="'about..report-problem' | translate" link />
             </a>
           </div>
         </div>
       </div>
       <div class="contact-item">
         <google-icon iconName="alternate_email" />
-        <span style="margin-inline: 0.8rem;">Direct email:</span>
+        <span style="margin-inline: 0.8rem;">{{ 'about..direct-email' | translate }}:</span>
         <span>{{ email }}</span>
         <p-button size="small"
                   [severity]="isEmailCopied ? 'success' : 'secondary'"
                   [text]="true"
-                  [matTooltip]="'Copy to clipboard'"
+                  [matTooltip]="'about..copy-to-clipboard' | translate"
                   (onClick)="copyEmailToClipboard()">
           <google-icon [iconName]="isEmailCopied ? 'check' : 'assignment'" />
         </p-button>
@@ -92,7 +89,7 @@
   <p-divider />
 
   <div class="section support-section">
-    <div class="bold">Support</div>
+    <div class="bold">{{ 'about..support' | translate }}</div>
     <a class="bmc-button" pButton pRipple [outlined]="true"
        href="https://www.buymeacoffee.com/tum4ik" target="_blank">
       <jcm-buy-me-a-coffee />

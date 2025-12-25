@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { ThemeService } from '@app/core/services/theme.service';
+import { TranslatePipe } from '@ngx-translate/core';
 import { invoke } from '@tauri-apps/api/core';
 import { Button, ButtonDirective } from 'primeng/button';
 import { Divider } from 'primeng/divider';
@@ -25,6 +26,7 @@ import { PrimeNgLogo } from './prime-ng-logo/prime-ng-logo';
     GoogleIcon,
     Button,
     MatTooltip,
+    TranslatePipe,
   ],
 })
 export class AboutViewComponent implements OnInit {
