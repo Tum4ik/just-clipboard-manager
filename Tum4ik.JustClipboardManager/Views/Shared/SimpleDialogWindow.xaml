@@ -24,7 +24,7 @@
                 BorderThickness="{TemplateBinding BorderThickness}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 Effect="{TemplateBinding Effect}"
-                Width="450" MinHeight="210">
+                MinWidth="450" MinHeight="210">
           <DockPanel>
             <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="20">
               <UniformGrid.Resources>

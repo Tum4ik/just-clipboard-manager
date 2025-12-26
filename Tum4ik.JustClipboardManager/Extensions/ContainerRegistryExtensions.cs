@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.Threading;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using Tum4ik.JustClipboardManager.Data;
-using Tum4ik.JustClipboardManager.Ioc.Wrappers;
 using Tum4ik.JustClipboardManager.Services.Dialogs;
 
 namespace Tum4ik.JustClipboardManager.Extensions;
@@ -56,16 +55,6 @@ internal static class ContainerRegistryExtensions
     );
   }
 
-
-  public static IContainerRegistry RegisterGeneratedWrappers(this IContainerRegistry services)
-  {
-    return services
-      .Register<IProcess, ProcessWrapper>()
-      .RegisterSingleton<IEnvironment, EnvironmentWrapper>()
-      .RegisterSingleton<IFile, FileWrapper>()
-      .RegisterSingleton<IPath, PathWrapper>()
-      .RegisterSingleton<IClipboard, ClipboardWrapper>();
-  }
 
 
   public static IContainerRegistry RegisterThreadSwitching(this IContainerRegistry services)

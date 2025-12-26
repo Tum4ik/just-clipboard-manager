@@ -448,6 +448,24 @@ namespace Tum4ik.JustClipboardManager.Resources.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Major update is available. Please, go to GitHub releases and download..
+        /// </summary>
+        internal static string MajorUpdateAvailableDescription {
+            get {
+                return ResourceManager.GetString("MajorUpdateAvailableDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Just Clipboard Manager.
+        /// </summary>
+        internal static string MajorUpdateAvailableDialogTitle {
+            get {
+                return ResourceManager.GetString("MajorUpdateAvailableDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to months.
         /// </summary>
         internal static string month_Paucal {

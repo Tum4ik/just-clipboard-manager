@@ -330,7 +330,6 @@ public partial class App : ISingleInstance, IApplicationLifetime
   protected override void RegisterTypes(IContainerRegistry containerRegistry)
   {
     containerRegistry
-      .RegisterGeneratedWrappers()
       .RegisterDatabase()
       .RegisterThreadSwitching()
       .RegisterInstance(_configuration)
@@ -386,6 +385,7 @@ public partial class App : ISingleInstance, IApplicationLifetime
     containerRegistry.RegisterSingleInstanceDialog<MainDialog, MainDialogViewModel>(DialogNames.MainDialog);
     containerRegistry.RegisterDialog<UnregisteredHotkeysDialog, UnregisteredHotkeysDialogViewModel>(DialogNames.UnregisteredHotkeysDialog);
     containerRegistry.RegisterDialog<EditHotkeyDialog, EditHotkeyDialogViewModel>(DialogNames.EditHotkeyDialog);
+    containerRegistry.RegisterDialog<MajorUpdateAvailableDialog, MajorUpdateAvailableDialogViewModel>(DialogNames.MajorUpdateAvailableDialog);
 
     containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>(ViewNames.SettingsView);
     containerRegistry.RegisterForNavigation<SettingsGeneralView, SettingsGeneralViewModel>(ViewNames.SettingsGeneralView);

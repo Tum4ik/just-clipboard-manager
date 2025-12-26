@@ -2,26 +2,24 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net.Http;
 using Octokit;
-using Tum4ik.JustClipboardManager.Ioc.Wrappers;
+using Prism.Services.Dialogs;
+using Tum4ik.JustClipboardManager.Constants;
 using FileMode = System.IO.FileMode;
 
 namespace Tum4ik.JustClipboardManager.Services;
 internal class UpdateService : IUpdateService
 {
-  private readonly IInfoService _infoService;
   private readonly IGitHubClient _gitHubClient;
-  private readonly IEnvironment _environment;
   private readonly IHub _sentryHub;
+  private readonly IDialogService _dialogService;
 
-  public UpdateService(IInfoService infoService,
-                       IGitHubClient gitHubClient,
-                       IEnvironment environment,
-                       IHub sentryHub)
+  public UpdateService(IGitHubClient gitHubClient,
+                       IHub sentryHub,
+                       IDialogService dialogService)
   {
-    _infoService = infoService;
     _gitHubClient = gitHubClient;
-    _environment = environment;
     _sentryHub = sentryHub;
+    _dialogService = dialogService;
   }
 
 
@@ -32,22 +30,12 @@ internal class UpdateService : IUpdateService
       var latestRelease = await _gitHubClient.Repository
         .Release
         .GetLatest("Tum4ik", "just-clipboard-manager")
-        .ConfigureAwait(false);
+        .ConfigureAwait(true);
       if (Version.TryParse(latestRelease.TagName, out var latestReleaseVersion))
       {
-        if (latestReleaseVersion > _infoService.Version)
+        if (latestReleaseVersion >= new Version(4, 0, 0))
         {
-          var osArchitecture = _environment.Is64BitOperatingSystem ? "x64" : "x86";
-          var downloadLink = latestRelease.Assets
-            .Single(a => a.Name.Contains(osArchitecture, StringComparison.OrdinalIgnoreCase)
-                      && a.Name.Contains(".exe", StringComparison.OrdinalIgnoreCase))
-            .BrowserDownloadUrl;
-          return new(true)
-          {
-            LatestVersion = latestReleaseVersion,
-            DownloadLink = new(downloadLink),
-            ReleaseNotes = latestRelease.Body
-          };
+          _dialogService.Show(DialogNames.MajorUpdateAvailableDialog);
         }
       }
       else
