@@ -27,10 +27,11 @@ export class AppTray {
   async initAsync() {
     this.settingsMenuItem = await MenuItem.new({
       text: 'Settings',
-      action: () => this.showMainWindowAsync()
+      action: () => this.showMainWindowAsync('settings')
     });
     this.aboutMenuItem = await MenuItem.new({
       text: 'About',
+      action: () => this.showMainWindowAsync('about')
     });
 
     const languageItems: CheckMenuItem[] = [];
@@ -94,7 +95,7 @@ export class AppTray {
   }
 
 
-  private async showMainWindowAsync() {
-    await invoke('open_main_window', { section: 'settings' });
+  private async showMainWindowAsync(view: string) {
+    await invoke('open_main_window', { section: view });
   }
 }

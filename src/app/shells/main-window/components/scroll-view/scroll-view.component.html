@@ -4,7 +4,7 @@
                   height: '100%',
                   'padding-right': 'var(--p-scrollpanel-bar-size)'
                 }">
-  <div class="content">
+  <div class="content" [style.gap.px]="itemsGap()">
     <ng-content />
   </div>
 </p-scroll-panel>

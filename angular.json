@@ -29,7 +29,12 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "input": "src-tauri/icons",
+                "glob": "icon.ico",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles.scss"

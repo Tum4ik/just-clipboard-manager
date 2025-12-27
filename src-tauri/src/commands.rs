@@ -1,7 +1,9 @@
+pub mod copy_text_to_clipboard;
 pub mod environment;
 pub mod extract_and_remove_zip;
 pub mod get_caret_position;
 pub mod get_foreground_window;
+pub mod info;
 pub mod is_shortcut_registered;
 pub mod open_main_window;
 pub mod paste_clip;
@@ -20,8 +22,11 @@ macro_rules! all_commands {
       commands::get_caret_position::get_caret_position,
       commands::open_main_window::open_main_window,
       commands::environment::environment,
+      commands::info::version,
+      commands::info::authors,
       commands::extract_and_remove_zip::extract_and_remove_zip,
       commands::is_shortcut_registered::is_shortcut_registered,
+      commands::copy_text_to_clipboard::copy_text_to_clipboard,
 
       commands::sentry::sentry_capture_info,
       commands::sentry::sentry_capture_warning,

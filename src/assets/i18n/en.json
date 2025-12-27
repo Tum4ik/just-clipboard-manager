@@ -1,10 +1,25 @@
 {
-  "about": "About",
   "language": "Language",
   "exit": "Exit",
   "search": "Search",
   "width": "Width",
   "height": "Height",
+  "about": "About",
+  "about.": {
+    "version": "version",
+    "copyright": "© {{years}} Yevheniy Tymchishin. All rights reserved.",
+    "source-code": "Source code",
+    "acknowledgments": "Acknowledgments",
+    "acknowledgments-text": "This application is built using Tauri, Angular, PrimeNG and other amazing open-source libraries. Special thanks to the developers and communities behind these projects.",
+    "contacts": "Contacts",
+    "leave-feedback": "Leave a feedback",
+    "suggest-idea": "Suggest an idea",
+    "ask-question": "Ask a question",
+    "report-problem": "Report a problem",
+    "direct-email": "Direct email",
+    "copy-to-clipboard": "Copy to clipboard",
+    "support": "Support"
+  },
   "plugin": "Plugin",
   "plugin.": {
     "by": "by",
