@@ -5,8 +5,7 @@
 </h1>
 
 A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management.
-
-<hr>
+<h1></h1>
 
 <h1 align="center">
   <img src=".attachments/paste-window-light.png" alt="Paste Window Light" width="400" />
@@ -22,6 +21,6 @@ A powerful, extensible, open-source clipboard manager designed for efficiency an
 
 <p align="right">
   <a href="https://www.buymeacoffee.com/tum4ik">
-    <img src="src/assets/bmc-button.svg" alt="Buy me a coffee" width="195" />
+    <img src=".attachments/bmc-button.svg" alt="Buy me a coffee" width="195" />
   </a>
 </p>
