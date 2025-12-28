@@ -1,12 +1,15 @@
+import pdkPackageJson from "../package.json";
 import { Author, PackageJson, PluginId, RepresentationData } from "./types";
 
 export abstract class ClipboardDataPlugin {
-  constructor(packageJson: PackageJson) {
-    this._id = packageJson.pluginMetadata.id as PluginId;
-    this._name = packageJson.pluginMetadata.name;
-    this._version = packageJson.version;
-    this._description = packageJson.pluginMetadata.description;
-    this._author = packageJson.author;
+  constructor(pluginPackageJson: PackageJson) {
+    this._id = pluginPackageJson.pluginMetadata.id as PluginId;
+    this._name = pluginPackageJson.pluginMetadata.name;
+    this._pluginVersion = pluginPackageJson.version;
+    this._description = pluginPackageJson.pluginMetadata.description;
+    this._author = pluginPackageJson.author;
+
+    this._pdkVersion = pdkPackageJson.version;
   }
 
   private _id: PluginId;
@@ -19,9 +22,9 @@ export abstract class ClipboardDataPlugin {
     return this._name;
   }
 
-  private _version: string;
-  get version(): string {
-    return this._version;
+  private _pluginVersion: string;
+  get pluginVersion(): string {
+    return this._pluginVersion;
   }
 
   private _description: { [lang: string]: string; } | undefined;
@@ -32,6 +35,11 @@ export abstract class ClipboardDataPlugin {
   private _author: Author | undefined;
   get author(): Author | undefined {
     return this._author;
+  }
+
+  private _pdkVersion: string;
+  get pdkVersion(): string {
+    return this._pdkVersion;
   }
 
   abstract get representationFormats(): readonly string[];
