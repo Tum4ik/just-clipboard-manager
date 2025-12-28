@@ -1,4 +1,3 @@
-import pdkPackageJson from "../package.json";
 import { Author, PackageJson, PluginId, RepresentationData } from "./types";
 
 export abstract class ClipboardDataPlugin {
@@ -8,8 +7,6 @@ export abstract class ClipboardDataPlugin {
     this._pluginVersion = pluginPackageJson.version;
     this._description = pluginPackageJson.pluginMetadata.description;
     this._author = pluginPackageJson.author;
-
-    this._pdkVersion = pdkPackageJson.version;
   }
 
   private _id: PluginId;
@@ -35,11 +32,6 @@ export abstract class ClipboardDataPlugin {
   private _author: Author | undefined;
   get author(): Author | undefined {
     return this._author;
-  }
-
-  private _pdkVersion: string;
-  get pdkVersion(): string {
-    return this._pdkVersion;
   }
 
   abstract get representationFormats(): readonly string[];
