@@ -222,6 +222,11 @@ export class PluginsService {
   }
 
 
+  isBuiltInPlugin(pluginId: PluginId): boolean {
+    return pluginId === TEXT_PLUGIN_ID;
+  }
+
+
   private async loadPluginAsync(pluginDirName: string): Promise<void> {
     const pluginBundlePath = `plugins/${pluginDirName}/plugin-bundle.mjs`;
     try {

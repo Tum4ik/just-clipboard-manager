@@ -16,7 +16,7 @@ export class GithubService {
       const response = await this.octokit.repos.getContent({
         owner: 'Tum4ik',
         repo: 'just-clipboard-manager-plugins',
-        path: `release/${major(pdkVersion)}/list.json`,
+        path: `release/v${major(pdkVersion)}/list.json`,
       });
       if (response.status !== 200) {
         this.monitoringService.warning(`Failed to fetch plugins list. Status code: ${response.status}`);

@@ -19,10 +19,12 @@
     {{ pluginInfo.plugin.description![lang] }}
     <ng-template #footer>
       <div class="footer">
+        @if (!isBuiltInPlugin(pluginInfo.plugin.id)){
         <p-button [label]="'uninstall' | translate"
                   variant="outlined"
                   raised="true"
                   (onClick)="uninstall(pluginInfo.plugin)" />
+        }
         <p-toggle-button [ngModel]="pluginInfo.isEnabled"
                          [onLabel]="'enabled' | translate"
                          [offLabel]="'disabled' | translate"
