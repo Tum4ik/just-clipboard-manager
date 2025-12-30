@@ -2,22 +2,33 @@ name: Release Application
 
 on:
   workflow_dispatch:
+    inputs:
+      is-release:
+        description: Release
+        type: boolean
+        default: false
+  pull_request:
+    branches:
+      - main
 
 
 jobs:
-  build:
-    name: Build
+  release:
+    name: Release
     defaults:
       run:
         shell: pwsh
+    permissions:
+      contents: write
     strategy:
+      fail-fast: false
       matrix:
         include:
           - platform: windows-latest
           # - platform: ubuntu-latest # (planned for future)
     runs-on: ${{ matrix.platform }}
     outputs:
-      version: ${{ steps.get-version.outputs.version }}
+      release-notes: ${{ steps.get-release-notes.outputs.release-notes }}
 
     steps:
     - name: Checkout
@@ -27,20 +38,28 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 24
-        cache: 'npm'
+        cache: npm
         cache-dependency-path: ./package-lock.json
 
     - name: Install Rust stable
       uses: dtolnay/rust-toolchain@stable
 
-    - name: Get version
-      id: get-version
+    - name: Rust cache
+      uses: swatinem/rust-cache@v2
+      with:
+        workspaces: './src-tauri -> target'
+        
+    - name: import windows certificate
+      if: matrix.platform == 'windows-latest'
+      env:
+        WINDOWS_CERTIFICATE: ${{ secrets.BASE64_ENCODED_PFX }}
+        WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.PFX_KEY }}
       run: |
-        Install-Module -Name PSToml -Force
-        $cargoToml = Get-Content ./src-tauri/Cargo.toml -Raw | ConvertFrom-Toml
-        $version = $cargoToml.package.version
-        Write-Host "$version"
-        echo "version=$version" >> $env:GITHUB_OUTPUT
+        New-Item -ItemType directory -Path certificate
+        Set-Content -Path certificate/tempCert.txt -Value $env:WINDOWS_CERTIFICATE
+        certutil -decode certificate/tempCert.txt certificate/certificate.pfx
+        Remove-Item -path certificate -include tempCert.txt
+        Import-PfxCertificate -FilePath certificate/certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -Force -AsPlainText)
 
     - name: Build Text plugin
       working-directory: ./plugins/text-plugin
@@ -52,45 +71,27 @@ jobs:
       run: npm ci
 
     - name: Build Tauri application
+      if: ${{ !inputs.is-release }}
       run: npm run tauri build
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        if-no-files-found: error
-        name: build-output
-        path: |
-          ./src-tauri/target/release/bundle/*
-          ./release-notes.md
-
-    # - name: Build Tauri application
-    #   uses: tauri-apps/tauri-action@v0
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     releaseDraft: true
-
-
-  github-release:
-    # if: false
-    name: Release ${{ needs.build.outputs.version }}
-    needs: build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: pwsh
-
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-
-    - name: GitHub release
-      env:
-        GH_REPO: ${{ github.repository }}
-        GITHUB_TOKEN: ${{ github.token }}
+    - name: Get release notes
+      id: get-release-notes
       run: |
-        gh release create ${{ needs.build.outputs.version }} `
-          (Get-ChildItem -Path . -Recurse -File -Include *.exe, *.msi) `
-          --draft `
-          --title ${{ needs.build.outputs.version }} `
-          --notes-file 'build-output/release-notes.md'
+        $content = Get-Content ./release-notes.md -Raw
+        echo "release-notes<<EOF" >> $env:GITHUB_OUTPUT
+        echo $content >> $env:GITHUB_OUTPUT
+        echo "EOF" >> $env:GITHUB_OUTPUT
+
+    - name: Release Tauri app
+      if: ${{ inputs.is-release }}
+      uses: tauri-apps/tauri-action@v0
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      with:
+        tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+        releaseName: __VERSION__
+        releaseBody: ${{ steps.get-release-notes.outputs.release-notes }}
+        releaseDraft: true
+        includeUpdaterJson: true
