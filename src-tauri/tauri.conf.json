@@ -71,8 +71,8 @@
     },
     "createUpdaterArtifacts": true,
     "windows": {
-      "certificateThumbprint": "9031E9F6A356D4D0B52C83750C69EFCF",
-      "digestAlgorithm": "RSA-SHA256",
+      "certificateThumbprint": "EB76069DBF56716493C01373241B42F627464A90",
+      "digestAlgorithm": "oid",
       "timestampUrl": "http://timestamp.comodoca.com"
     }
   }
