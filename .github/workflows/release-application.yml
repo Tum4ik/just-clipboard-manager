@@ -48,7 +48,7 @@ jobs:
       uses: swatinem/rust-cache@v2
       with:
         workspaces: './src-tauri -> target'
-        
+
     - name: import windows certificate
       if: matrix.platform == 'windows-latest'
       env:
@@ -72,6 +72,9 @@ jobs:
 
     - name: Build Tauri application
       if: ${{ !inputs.is-release }}
+      env:
+        RUST_BACKTRACE: full
+        TAURI_LOG_LEVEL: trace
       run: npm run tauri build
 
     - name: Get release notes
