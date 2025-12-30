@@ -75,7 +75,7 @@ jobs:
       env:
         RUST_BACKTRACE: full
         TAURI_LOG_LEVEL: trace
-      run: npm run tauri build
+      run: npm run tauri build -- --verbose
 
     - name: Get release notes
       id: get-release-notes
