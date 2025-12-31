@@ -2,6 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main-window",
   "description": "Capability for the main window",
+  "platforms": [
+    "macOS",
+    "windows",
+    "linux"
+  ],
   "windows": [
     "main-window"
   ],
@@ -33,6 +38,7 @@
       ]
     },
     "upload:allow-download",
-    "autostart:default"
+    "autostart:default",
+    "updater:default"
   ]
 }

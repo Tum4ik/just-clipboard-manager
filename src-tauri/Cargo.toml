@@ -1,6 +1,6 @@
 [package]
 name = "just-clipboard-manager"
-version = "4.0.0-dev"
+version = "4.0.0"
 description = "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management."
 authors = ["Yevheniy Tymchishin <timchishinevgeniy@gmail.com>"]
 edition = "2021"
@@ -50,3 +50,4 @@ tauri-plugin-autostart = "2"
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-positioner = "2"
 tauri-plugin-single-instance = "2"
+tauri-plugin-updater = "2"

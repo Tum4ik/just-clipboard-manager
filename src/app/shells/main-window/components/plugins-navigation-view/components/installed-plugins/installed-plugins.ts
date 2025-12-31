@@ -4,7 +4,7 @@ import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
 import { ExtendedDialogService } from '@app/core/services/extended-dialog.service';
 import { PluginsService, PluginWithAdditionalInfo } from '@app/core/services/plugins.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
+import { ClipboardDataPlugin, PluginId } from 'just-clipboard-manager-pdk';
 import { Button } from 'primeng/button';
 import { ToggleButton } from 'primeng/togglebutton';
 import { Subscription } from 'rxjs';
@@ -81,5 +81,10 @@ export class InstalledPlugins implements OnInit, OnDestroy {
     } else {
       await this.pluginsService.disablePluginAsync(plugin.id);
     }
+  }
+
+
+  isBuiltInPlugin(pluginId: PluginId) {
+    return this.pluginsService.isBuiltInPlugin(pluginId);
   }
 }

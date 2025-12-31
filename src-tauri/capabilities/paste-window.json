@@ -2,6 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "paste-window",
   "description": "Capability for the paste window",
+  "platforms": [
+    "macOS",
+    "windows",
+    "linux"
+  ],
   "windows": [
     "paste-window",
     "clip-preview-window"
@@ -29,6 +34,7 @@
     "sql:allow-select",
     "store:default",
     "log:default",
-    "positioner:default"
+    "positioner:default",
+    "updater:default"
   ]
 }

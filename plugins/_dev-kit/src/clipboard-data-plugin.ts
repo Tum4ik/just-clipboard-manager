@@ -1,12 +1,12 @@
 import { Author, PackageJson, PluginId, RepresentationData } from "./types";
 
 export abstract class ClipboardDataPlugin {
-  constructor(packageJson: PackageJson) {
-    this._id = packageJson.pluginMetadata.id as PluginId;
-    this._name = packageJson.pluginMetadata.name;
-    this._version = packageJson.version;
-    this._description = packageJson.pluginMetadata.description;
-    this._author = packageJson.author;
+  constructor(pluginPackageJson: PackageJson) {
+    this._id = pluginPackageJson.pluginMetadata.id as PluginId;
+    this._name = pluginPackageJson.pluginMetadata.name;
+    this._version = pluginPackageJson.version;
+    this._description = pluginPackageJson.pluginMetadata.description;
+    this._author = pluginPackageJson.author;
   }
 
   private _id: PluginId;

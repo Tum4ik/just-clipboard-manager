@@ -5,6 +5,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check, Update } from '@tauri-apps/plugin-updater';
 import { providePrimeNG } from 'primeng/config';
 import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
@@ -43,14 +45,33 @@ export const appConfig: ApplicationConfig = {
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
     }),
     provideAppInitializer(async () => {
+      const monitoring = inject(MonitoringService);
       inject(ThemeService);
       const environmentService = inject(EnvironmentService);
       const settingsService = inject(SettingsService);
       const translateService = inject(TranslateService);
       const pluginsService = inject(PluginsService);
       const clipsAutoDeleteService = inject(ClipsAutoDeleteService);
-
       registerSvgIcons();
+
+      // todo: establish update service
+      let update: Update | null = null;
+      try {
+        update = await check();
+      } catch (error) {
+        monitoring.error("Can't check updates.", error);
+      }
+      if (update) {
+        try {
+          await update.downloadAndInstall();
+          await relaunch();
+          return;
+        } catch (error) {
+          monitoring.error("Can't download and install.", error);
+        }
+      }
+
+
       await environmentService.initAsync();
 
       translateService.addLangs(['en', 'uk']);
@@ -59,7 +80,7 @@ export const appConfig: ApplicationConfig = {
       await settingsService.onLanguageChanged(l => translateService.use(l ?? 'en'));
 
       await pluginsService.initAsync();
-      await clipsAutoDeleteService.deleteOutdatedClips();
+      await clipsAutoDeleteService.deleteOutdatedClipsAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
     { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy },
