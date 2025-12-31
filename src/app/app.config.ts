@@ -65,6 +65,7 @@ export const appConfig: ApplicationConfig = {
         try {
           await update.downloadAndInstall();
           await relaunch();
+          return;
         } catch (error) {
           monitoring.error("Can't download and install.", error);
         }
@@ -79,7 +80,7 @@ export const appConfig: ApplicationConfig = {
       await settingsService.onLanguageChanged(l => translateService.use(l ?? 'en'));
 
       await pluginsService.initAsync();
-      await clipsAutoDeleteService.deleteOutdatedClips();
+      await clipsAutoDeleteService.deleteOutdatedClipsAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
     { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy },
