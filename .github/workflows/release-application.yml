@@ -75,6 +75,8 @@ jobs:
       env:
         RUST_BACKTRACE: full
         TAURI_LOG_LEVEL: trace
+        TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
       run: npm run tauri build -- --verbose
 
     - name: Get release notes
