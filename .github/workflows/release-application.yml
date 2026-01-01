@@ -49,7 +49,7 @@ jobs:
       with:
         workspaces: './src-tauri -> target'
 
-    - name: import windows certificate
+    - name: Import Windows certificate
       if: matrix.platform == 'windows-latest'
       env:
         WINDOWS_CERTIFICATE: ${{ secrets.BASE64_ENCODED_PFX }}

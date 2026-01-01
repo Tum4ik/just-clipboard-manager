@@ -70,10 +70,17 @@
       "config/*.toml": "config/"
     },
     "createUpdaterArtifacts": true,
+    "copyright": "© 2022-2026 Yevheniy Tymchishin. All rights reserved.",
+    "longDescription": "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management.",
+    "category": "Productivity",
+    "publisher": "Yevheniy Tymchishin",
     "windows": {
       "certificateThumbprint": "EB76069DBF56716493C01373241B42F627464A90",
       "digestAlgorithm": "sha256",
-      "timestampUrl": "http://timestamp.comodoca.com"
+      "timestampUrl": "http://timestamp.comodoca.com",
+      "nsis": {
+        "installerIcon": "icons/icon.ico"
+      }
     }
   }
 }
