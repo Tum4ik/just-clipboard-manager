@@ -40,7 +40,7 @@ export class BaseShortcutsService {
 
   async getCallPasteWindowShortcutAsync(): Promise<Shortcut> {
     return await this.store.get<Shortcut>(CALL_PASTE_WINDOW) ?? {
-      code: 'KeyQ',
+      code: 'KeyV',
       hasCtrl: true,
       hasShift: true,
       hasAlt: false,
