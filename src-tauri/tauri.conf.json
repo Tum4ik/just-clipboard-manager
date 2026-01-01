@@ -71,14 +71,22 @@
     },
     "createUpdaterArtifacts": true,
     "copyright": "© 2022-2026 Yevheniy Tymchishin. All rights reserved.",
-    "shortDescription": "Just Clipboard Manager",
     "longDescription": "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management.",
     "category": "Productivity",
     "publisher": "Yevheniy Tymchishin",
     "windows": {
       "certificateThumbprint": "EB76069DBF56716493C01373241B42F627464A90",
       "digestAlgorithm": "sha256",
-      "timestampUrl": "http://timestamp.comodoca.com"
+      "timestampUrl": "http://timestamp.comodoca.com",
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "icons/header-image_150x57.png",
+        "sidebarImage": "icons/sidebar-image_164x314.png"
+      },
+      "wix": {
+        "bannerPath": "icons/wix/banner_493x58.png",
+        "dialogImagePath": "icons/wix/dialog-image_493x312.png"
+      }
     }
   }
 }
