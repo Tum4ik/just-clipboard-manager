@@ -79,13 +79,7 @@
       "digestAlgorithm": "sha256",
       "timestampUrl": "http://timestamp.comodoca.com",
       "nsis": {
-        "installerIcon": "icons/icon.ico",
-        "headerImage": "icons/header-image_150x57.png",
-        "sidebarImage": "icons/sidebar-image_164x314.png"
-      },
-      "wix": {
-        "bannerPath": "icons/wix/banner_493x58.png",
-        "dialogImagePath": "icons/wix/dialog-image_493x312.png"
+        "installerIcon": "icons/icon.ico"
       }
     }
   }
