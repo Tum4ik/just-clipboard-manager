@@ -94,7 +94,7 @@ jobs:
         Install-Module -Name PSToml -Force
         $filePath = "./src-tauri/config/default.toml"
         $configDefault = Get-Content $filePath -Raw | ConvertFrom-Toml
-        $configDefault.sentry.dsn = $env.SENTRY_DSN
+        $configDefault.sentry.dsn = $env:SENTRY_DSN
         $configDefault | ConvertTo-Toml | Set-Content $filePath
 
     - name: Release Tauri app
