@@ -87,6 +87,16 @@ jobs:
         echo $content >> $env:GITHUB_OUTPUT
         echo "EOF" >> $env:GITHUB_OUTPUT
 
+    - name: Configure Sentry
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      run: |
+        Install-Module -Name PSToml -Force
+        $filePath = "./src-tauri/config/default.toml"
+        $configDefault = Get-Content $filePath -Raw | ConvertFrom-Toml
+        $configDefault.sentry.dsn = $env:SENTRY_DSN
+        $configDefault | ConvertTo-Toml | Set-Content $filePath
+
     - name: Release Tauri app
       if: ${{ inputs.is-release }}
       uses: tauri-apps/tauri-action@v0
