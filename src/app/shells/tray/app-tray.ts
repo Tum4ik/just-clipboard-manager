@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
+import { MonitoringService } from "@app/core/services/monitoring.service";
 import { TranslateService } from "@ngx-translate/core";
 import { defaultWindowIcon } from '@tauri-apps/api/app';
 import { invoke } from "@tauri-apps/api/core";
 import { Image } from "@tauri-apps/api/image";
 import { CheckMenuItem, Menu, MenuItem, Submenu } from "@tauri-apps/api/menu";
 import { TrayIcon } from '@tauri-apps/api/tray';
-import { exit } from '@tauri-apps/plugin-process';
+import { exit, relaunch } from '@tauri-apps/plugin-process';
+import { check, Update } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from "rxjs";
 import { LANGUAGE_INFO } from "../../core/constants/language-info";
 import { SettingsService } from "../../core/services/settings.service";
@@ -14,7 +16,8 @@ import { SettingsService } from "../../core/services/settings.service";
 export class AppTray {
   constructor(
     private readonly translateService: TranslateService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private readonly monitoring: MonitoringService,
   ) { }
 
   private settingsMenuItem?: MenuItem;
@@ -25,6 +28,24 @@ export class AppTray {
   private exitMenuItem?: MenuItem;
 
   async initAsync() {
+    // todo: establish update service
+    let update: Update | null = null;
+    try {
+      update = await check();
+    } catch (error) {
+      this.monitoring.error("Can't check updates.", error);
+    }
+    if (update) {
+      try {
+        await update.downloadAndInstall();
+        await relaunch();
+        return;
+      } catch (error) {
+        this.monitoring.error("Can't download and install.", error);
+      }
+    }
+
+
     this.settingsMenuItem = await MenuItem.new({
       text: 'Settings',
       action: () => this.showMainWindowAsync('settings')

@@ -8,8 +8,7 @@
     "linux"
   ],
   "windows": [
-    "paste-window",
-    "clip-preview-window"
+    "paste-window"
   ],
   "permissions": [
     "core:default",
