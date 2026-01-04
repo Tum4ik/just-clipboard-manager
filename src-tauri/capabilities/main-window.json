@@ -38,7 +38,6 @@
       ]
     },
     "upload:allow-download",
-    "autostart:default",
     "updater:default"
   ]
 }

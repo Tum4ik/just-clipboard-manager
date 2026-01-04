@@ -4,7 +4,7 @@ import { ClipsAutoDeleteService } from '@app/core/services/clips-auto-delete.ser
 import { DeletionPeriodType } from '@app/core/services/settings.service';
 import { getPluralCategory } from '@app/core/utils/plural.utils';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart';
+import { invoke } from '@tauri-apps/api/core';
 import { InputNumber } from 'primeng/inputnumber';
 import { Select } from "primeng/select";
 import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
@@ -32,7 +32,7 @@ export class GeneralSettingsComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.isAutoStartEnabled = await isEnabled();
+    this.isAutoStartEnabled = await invoke('autostart_is_enabled');
     const { quantity, periodType } = await this.clipsAutoDeleteService.getClipsAutoDeletePeriodAsync();
     this.periodQuantity = quantity;
     this.selectedDeletionPeriodType = periodType;
@@ -50,10 +50,10 @@ export class GeneralSettingsComponent implements OnInit {
 
   async setAutoStart(e: ToggleSwitchChangeEvent) {
     if (e.checked) {
-      await enable();
+      await invoke('autostart_enable');
     }
     else {
-      await disable();
+      await invoke('autostart_disable');
     }
   }
 
