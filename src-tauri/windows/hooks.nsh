@@ -1,7 +1,7 @@
 !macro NSIS_HOOK_POSTINSTALL
-  CreateShortCut "$SMSTARTUP\${PRODUCT_NAME}.lnk" "$INSTDIR\${BINARY_NAME}.exe"
+  CreateShortCut "$SMSTARTUP\${PRODUCTNAME}.lnk" "$INSTDIR\${MAINBINARYNAME}.exe"
 !macroend
 
 !macro NSIS_HOOK_POSTUNINSTALL
-  Delete "$SMSTARTUP\${PRODUCT_NAME}.lnk"
+  Delete "$SMSTARTUP\${PRODUCTNAME}.lnk"
 !macroend
