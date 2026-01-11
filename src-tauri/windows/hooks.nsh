@@ -1,7 +1,7 @@
 !macro NSIS_HOOK_POSTINSTALL
-  CreateShortCut "$SMSTARTUP\Just Clipboard Manager.lnk" "$INSTDIR\just-clipboard-manager.exe"
+  CreateShortCut "$SMSTARTUP\${PRODUCT_NAME}.lnk" "$INSTDIR\${BINARY_NAME}.exe"
 !macroend
 
 !macro NSIS_HOOK_POSTUNINSTALL
-  Delete "$SMSTARTUP\Just Clipboard Manager.lnk"
+  Delete "$SMSTARTUP\${PRODUCT_NAME}.lnk"
 !macroend

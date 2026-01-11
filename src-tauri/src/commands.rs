@@ -26,7 +26,7 @@ macro_rules! all_commands {
       commands::extract_and_remove_zip::extract_and_remove_zip,
       commands::is_shortcut_registered::is_shortcut_registered,
       commands::copy_text_to_clipboard::copy_text_to_clipboard,
-      
+
       commands::info::info_product_name,
       commands::info::info_version,
       commands::info::info_authors,

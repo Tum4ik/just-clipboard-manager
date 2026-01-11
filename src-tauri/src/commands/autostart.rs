@@ -1,59 +1,106 @@
 use std::path::PathBuf;
 use windows::{
-  core::{Interface, HSTRING, PWSTR},
+  core::{Interface, Result as WinResult, HSTRING, PWSTR},
   Win32::{
     System::Com::{
-      CoCreateInstance, CoInitializeEx, CoUninitialize, IPersistFile, CLSCTX_INPROC_SERVER,
-      COINIT_APARTMENTTHREADED,
+      CoCreateInstance, CoInitializeEx, CoTaskMemFree, CoUninitialize, IPersistFile,
+      CLSCTX_INPROC_SERVER, COINIT_APARTMENTTHREADED,
     },
     UI::Shell::{FOLDERID_Startup, IShellLinkW, SHGetKnownFolderPath, ShellLink, KF_FLAG_DEFAULT},
   },
 };
 
 #[tauri::command]
-pub fn autostart_is_enabled(app: tauri::AppHandle) -> bool {
-  let app_name = app.config().product_name.clone().unwrap();
-  let shortcut_path = startup_dir().join(format!("{app_name}.lnk"));
-  shortcut_path.exists()
+pub fn autostart_is_enabled(app: tauri::AppHandle) -> Result<bool, String> {
+  // let app_name = app.config().product_name.clone().unwrap();
+  // let shortcut_path = startup_dir()?.join(format!("{app_name}.lnk"));
+  let shortcut_path = shortcut_path(&app)?;
+  Ok(shortcut_path.exists())
 }
 
 #[tauri::command]
-pub fn autostart_enable(app: tauri::AppHandle) {
-  let app_name = app.config().product_name.clone().unwrap();
+pub fn autostart_enable(app: tauri::AppHandle) -> Result<(), String> {
+  let _com_guard = ComGuard::new().map_err(|err| format!("{err}"))?;
+
+  let exe_path = std::env::current_exe().map_err(|err| format!("{err}"))?;
+  let shortcut_path = shortcut_path(&app)?;
+
   unsafe {
-    let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+    let shell_link: IShellLinkW =
+      CoCreateInstance(&ShellLink, None, CLSCTX_INPROC_SERVER).map_err(|err| format!("{err}"))?;
+    shell_link
+      .SetPath(&HSTRING::from(exe_path.to_string_lossy().as_ref()))
+      .map_err(|err| format!("{err}"))?;
 
-    let exe_path = std::env::current_exe().unwrap();
-    let shortcut_path = startup_dir().join(format!("{app_name}.lnk"));
+    if let Some(parent) = exe_path.parent() {
+      shell_link
+        .SetWorkingDirectory(&HSTRING::from(parent.to_string_lossy().as_ref()))
+        .map_err(|err| format!("{err}"))?;
+    }
 
-    let shell_link: IShellLinkW = CoCreateInstance(&ShellLink, None, CLSCTX_INPROC_SERVER).unwrap();
-    let _ = shell_link.SetPath(&HSTRING::from(exe_path.to_string_lossy().as_ref()));
-    let _ = shell_link.SetWorkingDirectory(&HSTRING::from(
-      exe_path.parent().unwrap().to_string_lossy().as_ref(),
-    ));
-
-    let persist: IPersistFile = shell_link.cast().unwrap();
-    let _ = persist.Save(
-      &HSTRING::from(shortcut_path.to_string_lossy().as_ref()),
-      true,
-    );
-
-    CoUninitialize();
+    let persist: IPersistFile = shell_link.cast().map_err(|err| format!("{err}"))?;
+    persist
+      .Save(
+        &HSTRING::from(shortcut_path.to_string_lossy().as_ref()),
+        true,
+      )
+      .map_err(|err| format!("{err}"))?;
   }
+
+  Ok(())
 }
 
 #[tauri::command]
-pub fn autostart_disable(app: tauri::AppHandle) {
-  let app_name = app.config().product_name.clone().unwrap();
-  let shortcut_path = startup_dir().join(format!("{app_name}.lnk"));
+pub fn autostart_disable(app: tauri::AppHandle) -> Result<(), String> {
+  let shortcut_path = shortcut_path(&app)?;
   if shortcut_path.exists() {
-    let _ = std::fs::remove_file(shortcut_path);
+    std::fs::remove_file(shortcut_path).map_err(|err| format!("{err}"))?;
+  }
+
+  Ok(())
+}
+
+fn shortcut_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+  let name = app
+    .config()
+    .product_name
+    .clone()
+    .ok_or("productName is missing in tauri.conf.json")?;
+
+  Ok(startup_dir()?.join(format!("{name}.lnk")))
+}
+
+fn startup_dir() -> Result<PathBuf, String> {
+  unsafe {
+    let path: PWSTR = SHGetKnownFolderPath(&FOLDERID_Startup, KF_FLAG_DEFAULT, None)
+      .map_err(|err| format!("{err}"))?;
+
+    let result = path
+      .to_string()
+      .map_err(|err| format!("Invalid UTF-16 startup path. {err}"))?
+      .into();
+
+    CoTaskMemFree(Some(path.0 as _));
+
+    Ok(result)
   }
 }
 
-fn startup_dir() -> PathBuf {
-  unsafe {
-    let path: PWSTR = SHGetKnownFolderPath(&FOLDERID_Startup, KF_FLAG_DEFAULT, None).unwrap();
-    PathBuf::from(path.to_string().unwrap())
+// ---------------- RAII COM guard ----------------
+
+struct ComGuard;
+
+impl ComGuard {
+  fn new() -> WinResult<Self> {
+    unsafe {
+      let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+    }
+    Ok(Self)
+  }
+}
+
+impl Drop for ComGuard {
+  fn drop(&mut self) {
+    unsafe { CoUninitialize() }
   }
 }
