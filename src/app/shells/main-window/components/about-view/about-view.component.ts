@@ -34,14 +34,16 @@ export class AboutViewComponent implements OnInit {
 
   readonly isDarkTheme = toSignal(this.themeService.isDarkTheme$);
 
+  productName?: string | null;
   version?: string | null;
   email?: string | null;
   isEmailCopied = false;
 
   async ngOnInit() {
-    this.version = await invoke<string | null>('version');
+    this.productName = await invoke<string | null>('info_product_name');
+    this.version = await invoke<string | null>('info_version');
 
-    this.email = (await invoke<string | null>('authors'))
+    this.email = (await invoke<string | null>('info_authors'))
       ?.split(':')
       ?.map(author => author.match(/<([^>]+)>/))
       ?.find(match => match?.[1])

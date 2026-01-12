@@ -2,7 +2,7 @@
      [style.background-color]="isDarkMode() ? '#121212': 'white'"
      [style.opacity]="opacity()">
   <p-block-ui [blocked]="isWindowBlocked" />
-  @if (isSettingsMode){
+  @if (isSettingsMode()){
   <div class="resize-handle top"></div>
   <div class="resize-handle bottom"></div>
   <div class="resize-handle left"></div>
@@ -16,7 +16,7 @@
       <input #searchInput
              pInputText
              [fluid]="true"
-             [disabled]="isSettingsMode"
+             [disabled]="isSettingsMode()"
              type="text"
              [placeholder]="'search' | translate"
              (input)="onSearchChanged(searchInput.value)" />
@@ -26,20 +26,20 @@
       </p-inputicon>
       }
     </p-icon-field>
-    <p-button class="settings-btn" [class.activated]="isSettingsMode"
+    <p-button class="settings-btn" [class.activated]="isSettingsMode()"
               variant="text" size="small"
               [matTooltip]="'settings' | translate"
               (onClick)="settingsMode()">
-      <google-icon iconName="settings" [size]="25" [isFilled]="isSettingsMode" />
+      <google-icon iconName="settings" [size]="25" [isFilled]="isSettingsMode()" />
     </p-button>
   </div>
   <p-splitter #splitter
               layout="vertical"
-              [gutterSize]="isSettingsMode ? 2 : 0"
-              [style.gap.px]="isSettingsMode ? 1 : 2"
+              [gutterSize]="splitterGutterSize()"
+              [style.gap.px]="splitterPanelsGap()"
               [panelSizes]="[pinnedClipsHeightPercentage(), 100 - pinnedClipsHeightPercentage()]">
     <ng-template #panel>
-      <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode" />
+      <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode()" />
       <p-panel #pinnedClipsPanel class="pinned-clips">
         <p-scroll-panel>
           @for (pinnedClip of pinnedClips(); track pinnedClip.clipId) {
@@ -55,7 +55,7 @@
       </p-panel>
     </ng-template>
     <ng-template #panel>
-      <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode" />
+      <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode()" />
       <p-panel #regularClipsPanel class="clips">
         <p-scroll-panel #regularClipsScrollPanel>
           @for (clip of regularClips(); track clip.clipId) {

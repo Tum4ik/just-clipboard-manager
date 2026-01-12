@@ -15,7 +15,7 @@ pub struct CaretPosition {
 }
 
 #[tauri::command]
-pub async fn get_caret_position() -> Result<CaretPosition, String> {
+pub fn get_caret_position() -> Result<CaretPosition, String> {
   unsafe {
     let foreground_window = GetForegroundWindow();
 
