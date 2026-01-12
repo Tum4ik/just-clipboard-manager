@@ -12,8 +12,6 @@ use windows::{
 
 #[tauri::command]
 pub fn autostart_is_enabled(app: tauri::AppHandle) -> Result<bool, String> {
-  // let app_name = app.config().product_name.clone().unwrap();
-  // let shortcut_path = startup_dir()?.join(format!("{app_name}.lnk"));
   let shortcut_path = shortcut_path(&app)?;
   Ok(shortcut_path.exists())
 }
