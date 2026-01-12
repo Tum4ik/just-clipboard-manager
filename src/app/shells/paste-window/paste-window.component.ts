@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, Signal, TemplateRef, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, isSignal, NgZone, OnDestroy, OnInit, Renderer2, signal, Signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
@@ -65,26 +65,42 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly regularClipsScrollPanel = viewChild.required<ScrollPanel>('regularClipsScrollPanel');
 
   private isClipsListUpToDate = false;
-  private pinnedClipsPanelTemplate?: TemplateRef<HTMLElement>;
   private splitterHandleElement?: HTMLElement | null;
 
-  isWindowBlocked = false;
-  isSettingsMode = false;
+  protected isWindowBlocked = false;
+  protected readonly isSettingsMode = signal(false);
 
-  readonly isDarkMode: Signal<boolean>;
-  readonly pinnedClipsHeightPercentage: Signal<number>;
-  readonly opacity: Signal<number>;
+  protected readonly isDarkMode: Signal<boolean>;
+  protected readonly pinnedClipsHeightPercentage: Signal<number>;
+  protected readonly opacity: Signal<number>;
 
-  get pinnedClips(): Signal<PasteWindowClip[]> {
+  protected readonly splitterGutterSize = computed(() => {
+    const pinnedClips = this.pasteWindowClipsService.orderedPinnedClips();
+    const isSettingsMode = this.isSettingsMode();
+    if (pinnedClips.length > 0) {
+      return isSettingsMode ? 2 : 0;
+    }
+    return 0;
+  });
+  protected readonly splitterPanelsGap = computed(() => {
+    const pinnedClips = this.pasteWindowClipsService.orderedPinnedClips();
+    const isSettingsMode = this.isSettingsMode();
+    if (pinnedClips.length > 0) {
+      return isSettingsMode ? 1 : 2;
+    }
+    return 0;
+  });
+
+  protected get pinnedClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.orderedPinnedClips;
   }
 
-  get regularClips(): Signal<PasteWindowClip[]> {
+  protected get regularClips(): Signal<PasteWindowClip[]> {
     return this.pasteWindowClipsService.regularClips;
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     // todo: maybe move all these subscriptions to PasteWindowClipsService
     this.subscriptions.add(
       this.clipboardListener.clipboardUpdated$.subscribe(() => {
@@ -125,14 +141,14 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    this.pasteWindowClipsService.loadPinnedClipsAsync();
+    await this.pasteWindowClipsService.loadPinnedClipsAsync();
+    this.trackPinnedClipsPanelVisibility();
   }
 
   ngAfterViewInit(): void {
     const scrollPanelElement = this.regularClipsScrollPanel().contentViewChild?.nativeElement as HTMLElement;
     this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
 
-    this.pinnedClipsPanelTemplate = this.splitter().panels[0];
     this.splitterHandleElement = this.splitter().el.nativeElement.querySelector('.p-splitter-gutter-handle');
     if (this.splitterHandleElement) {
       this.splitterHandleElement.tabIndex = -1;
@@ -144,9 +160,9 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  async settingsMode() {
-    this.isSettingsMode = !this.isSettingsMode;
-    if (this.isSettingsMode) {
+  protected async settingsMode() {
+    this.isSettingsMode.update(v => !v);
+    if (this.isSettingsMode()) {
       this.pasteWindowService.disallowHide();
       await this.pasteWindowService.enableResizeAsync();
       if (this.splitterHandleElement) {
@@ -165,17 +181,17 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  onSearchChanged(search: string) {
+  protected onSearchChanged(search: string) {
     this.pasteWindowClipsService.filter(search);
   }
 
-  clearSearch() {
+  protected clearSearch() {
     this.searchInputElement().nativeElement.value = '';
     this.pasteWindowClipsService.filter('');
   }
 
 
-  onScroll(e: Event) {
+  protected onScroll(e: Event) {
     const target = e.target as HTMLElement;
     if (target && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
       this.pasteWindowClipsService.loadMoreClipsAsync(10);
@@ -183,12 +199,12 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  async onPasteDataRequested(clipId: number) {
+  protected async onPasteDataRequested(clipId: number) {
     await this.pasteWindowClipsService.pasteClipAsync(clipId);
   }
 
 
-  async onPreviewDataRequested(clipId: number) {
+  protected async onPreviewDataRequested(clipId: number) {
     this.isWindowBlocked = true;
     this.pasteWindowService.disallowHide();
     const appWindow = new WebviewWindow('clip-preview-window', {
@@ -207,29 +223,32 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  async onPinItemRequested(clipId: number) {
+  protected async onPinItemRequested(clipId: number) {
     await this.pasteWindowClipsService.pinClipAsync(clipId);
     this.trackPinnedClipsPanelVisibility();
   }
 
 
-  async onUnpinItemRequested(clipId: number) {
+  protected async onUnpinItemRequested(clipId: number) {
     await this.pasteWindowClipsService.unpinClipAsync(clipId);
     this.trackPinnedClipsPanelVisibility();
   }
 
 
-  async onDeleteItemRequested(clipId: number) {
+  protected async onDeleteItemRequested(clipId: number) {
     await this.pasteWindowClipsService.deleteClipAsync(clipId);
   }
 
 
   private trackPinnedClipsPanelVisibility() {
-    if (this.splitter().panels.length === 1 && this.pinnedClips().length > 0 && this.pinnedClipsPanelTemplate) {
-      this.splitter().panels.unshift(this.pinnedClipsPanelTemplate);
+    // todo: try to refactor to computed signal which tracks pinnedClips() array change
+    const pinnedClipsPanelElement = this.splitter().el.nativeElement.querySelector('.p-splitterpanel');
+
+    if (this.pinnedClips().length > 0) {
+      this.renderer.removeAttribute(pinnedClipsPanelElement, 'hidden');
     }
-    else if (this.pinnedClips().length <= 0 && this.splitter().panels.length === 2) {
-      this.splitter().panels.splice(0, 1);
+    else if (this.pinnedClips().length <= 0) {
+      this.renderer.setAttribute(pinnedClipsPanelElement, 'hidden', 'true');
     }
   }
 }

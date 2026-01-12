@@ -93,10 +93,7 @@ export class PasteWindowClipsService {
 
   async loadMoreClipsAsync(amount: number) {
     const clipsToAdd = await this.loadClipsAsync({ skip: this.regularClips().length, take: amount });
-    this._regularClips.update(clips => {
-      clips.push(...clipsToAdd);
-      return clips;
-    });
+    this._regularClips.update(clips => [...clips, ...clipsToAdd]);
   }
 
 
@@ -130,12 +127,9 @@ export class PasteWindowClipsService {
       const index = rc.indexOf(clipToPin);
       rc.splice(index, 1);
 
-      this._orderedPinnedClips.update(opc => {
-        opc.push(clipToPin);
-        return opc;
-      });
+      this._orderedPinnedClips.update(opc => [...opc, clipToPin]);
 
-      return rc;
+      return [...rc];
     });
   }
 
@@ -153,12 +147,9 @@ export class PasteWindowClipsService {
       const index = opc.indexOf(clipToUnpin);
       opc.splice(index, 1);
 
-      this._regularClips.update(rc => {
-        rc.unshift(clipToUnpin);
-        return rc;
-      });
+      this._regularClips.update(rc => [clipToUnpin, ...rc]);
 
-      return opc;
+      return [...opc];
     });
   }
 

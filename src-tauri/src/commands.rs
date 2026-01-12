@@ -1,3 +1,4 @@
+pub mod autostart;
 pub mod copy_text_to_clipboard;
 pub mod environment;
 pub mod extract_and_remove_zip;
@@ -22,11 +23,17 @@ macro_rules! all_commands {
       commands::get_caret_position::get_caret_position,
       commands::open_main_window::open_main_window,
       commands::environment::environment,
-      commands::info::version,
-      commands::info::authors,
       commands::extract_and_remove_zip::extract_and_remove_zip,
       commands::is_shortcut_registered::is_shortcut_registered,
       commands::copy_text_to_clipboard::copy_text_to_clipboard,
+
+      commands::info::info_product_name,
+      commands::info::info_version,
+      commands::info::info_authors,
+
+      commands::autostart::autostart_is_enabled,
+      commands::autostart::autostart_enable,
+      commands::autostart::autostart_disable,
 
       commands::sentry::sentry_capture_info,
       commands::sentry::sentry_capture_warning,

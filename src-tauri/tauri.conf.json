@@ -79,7 +79,8 @@
       "digestAlgorithm": "sha256",
       "timestampUrl": "http://timestamp.comodoca.com",
       "nsis": {
-        "installerIcon": "icons/icon.ico"
+        "installerIcon": "icons/icon.ico",
+        "installerHooks": "./windows/hooks.nsh"
       }
     }
   }
