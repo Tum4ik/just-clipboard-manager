@@ -1,7 +1,7 @@
 {
   "name": "just-clipboard-manager",
   "scripts": {
-    "tauri-dev": "tauri dev",
+    "tauri-dev": "tauri dev --config src-tauri/tauri.dev.conf.json",
     "ng": "ng",
     "prestart": "npm run build --prefix ./plugins/text-plugin",
     "start": "ng serve",

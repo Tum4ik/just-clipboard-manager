@@ -1,11 +1,9 @@
 mod clipboard_listener;
 mod commands;
-mod constants;
 mod migrations;
 
 use clipboard_listener::clipboard_listener;
 use config::Config;
-use constants::*;
 use log::LevelFilter;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 
@@ -25,7 +23,13 @@ pub fn run(config: Config) {
     )
     .plugin(
       tauri_plugin_sql::Builder::new()
-        .add_migrations(DB_PATH, migrations::migrations())
+        .add_migrations(
+          config
+            .get_string("database.connection-string")
+            .unwrap()
+            .as_str(),
+          migrations::migrations(),
+        )
         .build(),
     )
     .plugin(tauri_plugin_opener::init())

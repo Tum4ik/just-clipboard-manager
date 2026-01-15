@@ -22,10 +22,12 @@ macro_rules! all_commands {
       commands::get_foreground_window::get_foreground_window,
       commands::get_caret_position::get_caret_position,
       commands::open_main_window::open_main_window,
-      commands::environment::environment,
       commands::extract_and_remove_zip::extract_and_remove_zip,
       commands::is_shortcut_registered::is_shortcut_registered,
       commands::copy_text_to_clipboard::copy_text_to_clipboard,
+
+      commands::environment::environment,
+      commands::environment::db_connection_string,
 
       commands::info::info_product_name,
       commands::info::info_version,

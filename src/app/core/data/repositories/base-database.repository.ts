@@ -1,11 +1,17 @@
+import { inject } from '@angular/core';
+import { EnvironmentService } from '@app/core/services/environment.service';
 import Database from '@tauri-apps/plugin-sql';
 
 export abstract class BaseDatabaseRepository {
-  constructor() {
-    this.db = Database.get('sqlite:jcm-database.db');
-  }
+  private readonly environmentService = inject(EnvironmentService);
 
-  protected readonly db: Database;
+  private _db?: Database;
+  protected get db(): Database {
+    if (!this._db) {
+      this._db = Database.get(this.environmentService.dbConnectionString);
+    }
+    return this._db;
+  }
 
   async beginTransactionAsync(): Promise<void> {
     await this.db.execute("BEGIN TRANSACTION");

@@ -1,5 +1,6 @@
 use clipboard_win::raw::{close, open, set, set_without_clear};
 use clipboard_win::SysResult;
+use config::Config;
 use sqlx::Row;
 use std::ffi::c_void;
 use tauri::State;
@@ -12,16 +13,22 @@ use windows::Win32::UI::Input::KeyboardAndMouse::{
 };
 use windows::Win32::UI::WindowsAndMessaging::{GetWindowThreadProcessId, SetForegroundWindow};
 
-use crate::constants::DB_PATH;
-
 #[tauri::command]
 pub async fn paste_clip(
+  config: State<'_, Config>,
   db_instances: State<'_, DbInstances>,
   clip_id: i64,
   target_window_ptr: usize,
 ) -> Result<(), String> {
   let db_instances = db_instances.0.read().await;
-  let Sqlite(db) = db_instances.get(DB_PATH).unwrap();
+  let Sqlite(db) = db_instances
+    .get(
+      config
+        .get_string("database.connection-string")
+        .unwrap()
+        .as_str(),
+    )
+    .unwrap();
   let query_result = sqlx::query(
     "
     SELECT format_id, data

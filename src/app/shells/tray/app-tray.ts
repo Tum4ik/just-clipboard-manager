@@ -88,14 +88,16 @@ export class AppTray {
       ],
     });
 
-    const appName = "Just Clipboard Manager";
+    const productName = await invoke<string | null>('info_product_name');
     const tray = await TrayIcon.new({
       icon: await defaultWindowIcon() as Image,
-      title: appName,
-      tooltip: appName,
       menu: menu,
       showMenuOnLeftClick: false,
     });
+    if (productName) {
+      tray.setTitle(productName);
+      tray.setTooltip(productName);
+    }
   }
 
 

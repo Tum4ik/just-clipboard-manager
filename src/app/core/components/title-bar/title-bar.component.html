@@ -1,7 +1,7 @@
 <p-menubar data-tauri-drag-region [style]="{ 'border-width': '0' }">
   <ng-template #start>
     <img data-tauri-drag-region class="icon" src="/assets/icon.ico" />
-    <span data-tauri-drag-region class="title">Just Clipboard Manager</span>
+    <span data-tauri-drag-region class="title">{{ productName }}</span>
   </ng-template>
   <ng-template #end>
     @if (isMinimizeAvailable()) {
