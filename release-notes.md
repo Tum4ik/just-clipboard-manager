@@ -1,4 +1,3 @@
 # Fixes
 
-* Fixed autostart setting.
-* Fixed pinned clips panel behavior.
+* Fixed fraction digits appearance for "pinned clips" area size setting.

@@ -59,6 +59,7 @@
                      [title]="'settings..paste-window..pinned-clips-area-size..title' | translate"
                      [description]="'settings..paste-window..pinned-clips-area-size..description' | translate">
     <p-input-number suffix="%"
+                    [maxFractionDigits]="0"
                     [inputSize]="1"
                     [allowEmpty]="false"
                     [ngModel]="pinnedClipsHeightPercentage()"
