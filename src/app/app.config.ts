@@ -1,7 +1,6 @@
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -27,7 +26,6 @@ export const appConfig: ApplicationConfig = {
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
       withComponentInputBinding()
     ),
-    provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: AuraBluePreset,
