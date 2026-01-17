@@ -28,7 +28,7 @@
         <p-toggle-button [ngModel]="pluginInfo.isEnabled"
                          [onLabel]="'enabled' | translate"
                          [offLabel]="'disabled' | translate"
-                         (onChange)="togglePlugin(pluginInfo.plugin, $event.checked ?? false)" />
+                         (onChange)="togglePlugin(pluginInfo.plugin, $event.checked)" />
       </div>
     </ng-template>
   </jcm-shaded-card>

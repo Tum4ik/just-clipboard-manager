@@ -91,8 +91,12 @@ jcm-paste-window {
       width: 100%;
       height: 100%;
 
-      .p-panel-content {
-        height: 100%;
+      .p-panel-content-wrapper {
+        overflow: hidden;
+
+        .p-panel-content {
+          height: 100%;
+        }
       }
     }
   }

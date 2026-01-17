@@ -25,28 +25,31 @@ tauri-plugin-opener = "2.5"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-fs = "2"
-windows = { version = "0.61", features = [
+windows = { version = "0.62", features = [
   "Win32_System_Com",
   "Win32_System_DataExchange",
+  "Win32_System_Ole",
   "Win32_System_Threading",
+  "Win32_System_Variant",
   "Win32_UI_Accessibility",
   "Win32_UI_Input_KeyboardAndMouse",
   "Win32_UI_Shell",
   "Win32_UI_WindowsAndMessaging",
 ] }
-clipboard-win = { version = "5.4.0", features = [] }
+clipboard-win = { version = "5", features = [] }
 tauri-plugin-process = "2"
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
 tauri-plugin-store = "2"
 config = "0.15"
-sentry = "0.38"
-machine-uid = "0.5.3"
+sentry = "0.46"
+machine-uid = "0.5"
 log = "0.4"
 tauri-plugin-log = { version = "2", features = ["colored"] }
 sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
 tauri-plugin-http = "2"
 tauri-plugin-upload = "2"
-zip = "4"
+zip = "7"
+lzma-rust2 = "0.15.7"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2"

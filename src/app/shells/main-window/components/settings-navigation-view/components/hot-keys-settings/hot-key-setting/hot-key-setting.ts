@@ -78,7 +78,7 @@ export class HotKeySetting implements OnDestroy {
   async edit() {
     this.document.addEventListener('keydown', this._keydownListener);
     this.isEditMode.set(true);
-    this.renderer.setStyle(this.shortcutTag().rootEl, 'min-width', `${this.shortcutTag().rootEl.offsetWidth}px`);
+    this.renderer.setStyle(this.shortcutTag().el.nativeElement, 'min-width', `${this.shortcutTag().el.nativeElement.offsetWidth}px`);
     this.displayShortcut.set(undefined);
   }
 
