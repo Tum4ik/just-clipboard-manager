@@ -9,7 +9,6 @@ import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
 import { TOOLTIP_OPTIONS } from "./core/config/tooltip.config";
 import { ClipsAutoDeleteService } from "./core/services/clips-auto-delete.service";
-import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
@@ -43,14 +42,11 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
 
       inject(ThemeService);
-      const environmentService = inject(EnvironmentService);
       const settingsService = inject(SettingsService);
       const translateService = inject(TranslateService);
       const pluginsService = inject(PluginsService);
       const clipsAutoDeleteService = inject(ClipsAutoDeleteService);
       registerSvgIcons();
-
-      await environmentService.initAsync();
 
       translateService.addLangs(['en', 'uk']);
       const lang = await settingsService.getLanguageAsync();

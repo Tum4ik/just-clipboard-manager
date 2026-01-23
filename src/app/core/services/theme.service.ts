@@ -1,27 +1,33 @@
 import { Injectable } from '@angular/core';
-import { emit, Event, listen } from '@tauri-apps/api/event';
+import { Event } from '@tauri-apps/api/event';
 import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
+import { GlobalStateService } from './base/global-state-service';
 import { SettingsService, ThemeMode } from './settings.service';
 
 const PREFERS_COLOR_SCHEME_DARK = '(prefers-color-scheme: dark)';
 const DARK_MODE_SELECTOR = 'dark-mode';
-const THEME_MODE_CHANGED_EVENT_NAME = 'theme-mode-changed-event';
 
 @Injectable({ providedIn: 'root' })
-export class ThemeService {
+export class ThemeService extends GlobalStateService {
   constructor(
     private readonly settingsService: SettingsService,
     private readonly primeNg: PrimeNG,
   ) {
+    super();
+
     this.settingsService.getThemeModeAsync().then(themeMode => {
       this.setMode(themeMode);
     });
     window.matchMedia(PREFERS_COLOR_SCHEME_DARK).addEventListener('change', e => {
       this.notifyThemeChanged();
     });
-    listen<ThemeMode>(THEME_MODE_CHANGED_EVENT_NAME, this.onThemeGloballyChanged.bind(this));
   }
+
+  private readonly themeModeGlobalSetter = this.registerGlobalObservable(
+    'theme-mode-changed-event',
+    this.onThemeGloballyChanged.bind(this)
+  );
 
   private themeMode = new BehaviorSubject<ThemeMode>('system');
   themeMode$ = this.themeMode.asObservable();
@@ -31,7 +37,7 @@ export class ThemeService {
 
   async setThemeModeAsync(themeMode: ThemeMode) {
     await this.settingsService.setThemeModeAsync(themeMode);
-    await emit<ThemeMode>(THEME_MODE_CHANGED_EVENT_NAME, themeMode);
+    await this.themeModeGlobalSetter.setAsync(themeMode);
   }
 
   private get isDarkMode(): boolean {

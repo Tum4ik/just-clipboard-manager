@@ -166,7 +166,7 @@ export class PluginsService {
 
   async installPluginAsync(id: PluginId, url: URL): Promise<boolean> {
     let pluginsFolder = './plugins';
-    if (this.environmentService.isDevelopment) {
+    if (await this.environmentService.isDevelopmentAsync()) {
       pluginsFolder = './target/debug/plugins';
     }
 

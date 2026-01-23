@@ -40,6 +40,15 @@ pub fn run(config: Config) {
     .manage(config)
     .setup(clipboard_listener)
     .invoke_handler(all_commands!())
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    .build(tauri::generate_context!())
+    .expect("error while building tauri application")
+    .run(|_, event| match event {
+      tauri::RunEvent::Ready => {
+        sentry::start_session();
+      }
+      tauri::RunEvent::Exit => {
+        sentry::end_session();
+      }
+      _ => {}
+    });
 }

@@ -5,23 +5,27 @@ import Database from '@tauri-apps/plugin-sql';
 export abstract class BaseDatabaseRepository {
   private readonly environmentService = inject(EnvironmentService);
 
-  private _db?: Database;
-  protected get db(): Database {
-    if (!this._db) {
-      this._db = Database.get(this.environmentService.dbConnectionString);
-    }
+  private _db = new Promise<Database>(async resolve => {
+    const connectionString = await this.environmentService.getDbConnectionStringAsync();
+    const db = Database.get(connectionString);
+    resolve(db);
+  });
+  protected getDbAsync(): Promise<Database> {
     return this._db;
   }
 
   async beginTransactionAsync(): Promise<void> {
-    await this.db.execute("BEGIN TRANSACTION");
+    const db = await this._db;
+    await db.execute("BEGIN TRANSACTION");
   }
 
   async commitAsync(): Promise<void> {
-    await this.db.execute("COMMIT");
+    const db = await this._db;
+    await db.execute("COMMIT");
   }
 
   async rollbackAsync(): Promise<void> {
-    await this.db.execute("ROLLBACK");
+    const db = await this._db;
+    await db.execute("ROLLBACK");
   }
 }

@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
-import { emit, Event, listen } from "@tauri-apps/api/event";
+import { Event } from "@tauri-apps/api/event";
 import { BehaviorSubject } from "rxjs";
+import { GlobalStateService } from "./base/global-state-service";
 import { SettingsService, Size } from "./settings.service";
 
-const SIZE_CHANGED_EVENT_NAME = 'size-changed-event';
-const PINNED_CLIPS_HEIGHT_CHANGED_EVENT_NAME = 'pinned-clips-height-changed-event';
-
 @Injectable({ providedIn: 'root' })
-export class PasteWindowSizingService {
+export class PasteWindowSizingService extends GlobalStateService {
   constructor(
     private readonly settingsService: SettingsService,
   ) {
+    super();
+
     this.settingsService.getPasteWindowSizeAsync().then(size => {
       this.width.next(size.width);
       this.height.next(size.height);
@@ -18,9 +18,16 @@ export class PasteWindowSizingService {
     this.settingsService.getPasteWindowPinnedClipsHeightPercentageAsync().then(percentage => {
       this.pinnedClipsHeightPercentage.next(percentage);
     });
-    listen<Size>(SIZE_CHANGED_EVENT_NAME, this.onSizeGloballyChanged.bind(this));
-    listen<number>(PINNED_CLIPS_HEIGHT_CHANGED_EVENT_NAME, this.onPinnedClipsHeightGloballyChanged.bind(this));
   }
+
+  private readonly sizeGlobalSetter = this.registerGlobalObservable(
+    'size-changed-event',
+    this.onSizeGloballyChanged.bind(this)
+  );
+  private readonly pinnedClipsAreaHeightGlobalSetter = this.registerGlobalObservable(
+    'pinned-clips-height-changed-event',
+    this.onPinnedClipsHeightGloballyChanged.bind(this)
+  );
 
   private readonly width = new BehaviorSubject<number>(0);
   readonly width$ = this.width.asObservable();
@@ -34,12 +41,12 @@ export class PasteWindowSizingService {
 
   async setSize(width: number, height: number) {
     await this.settingsService.setPasteWindowSizeAsync({ width, height });
-    await emit<Size>(SIZE_CHANGED_EVENT_NAME, { width, height });
+    await this.sizeGlobalSetter.setAsync({ width, height });
   }
 
   async setPinnedClipsHeightPercentage(heightPercentage: number) {
     await this.settingsService.setPasteWindowPinnedClipsHeightPercentageAsync(heightPercentage);
-    await emit<number>(PINNED_CLIPS_HEIGHT_CHANGED_EVENT_NAME, heightPercentage);
+    await this.pinnedClipsAreaHeightGlobalSetter.setAsync(heightPercentage);
   }
 
 
