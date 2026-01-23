@@ -20,7 +20,6 @@ fn main() {
     environment: Some(environment.into()),
     release: sentry::release_name!(),
     auto_session_tracking: true,
-    attach_stacktrace: true,
     ..sentry::ClientOptions::default()
   });
   sentry::configure_scope(|scope| {
