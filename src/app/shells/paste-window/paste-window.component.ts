@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, isSignal, NgZone, OnDestroy, OnInit, Renderer2, signal, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, signal, Signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
@@ -125,6 +125,9 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pasteWindowClipsService.loadPinnedClipsAsync();
       })
     );
+  }
+
+  async ngAfterViewInit() {
     this.subscriptions.add(
       this.pasteWindowService.visibility$.subscribe(isVisible => {
         if (isVisible) {
@@ -143,9 +146,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     await this.pasteWindowClipsService.loadPinnedClipsAsync();
     this.trackPinnedClipsPanelVisibility();
-  }
 
-  ngAfterViewInit(): void {
     const scrollPanelElement = this.regularClipsScrollPanel().contentViewChild?.nativeElement as HTMLElement;
     this.subscriptions.add(this.renderer.listen(scrollPanelElement, 'scroll', this.onScroll.bind(this)));
 
