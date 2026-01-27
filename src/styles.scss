@@ -58,24 +58,6 @@ jcm-clip-item {
   }
 }
 
-jcm-navigation-bar {
-  p-menu {
-    .p-menu {
-      height: 100%;
-      min-width: unset;
-    }
-
-    ul.p-menu-list {
-      height: 100%;
-      padding-top: 0;
-
-      li:last-child {
-        margin-top: auto;
-      }
-    }
-  }
-}
-
 jcm-navigation-view {
   p-menu {
     .p-menu {
@@ -143,4 +125,8 @@ p-slider {
   .p-slider-handle {
     cursor: pointer;
   }
+}
+
+.p-button:focus-visible {
+  outline-offset: -1px !important;
 }

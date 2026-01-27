@@ -1,7 +1,41 @@
 <div class="root">
   <jcm-title-bar />
-  <jcm-navigation-bar />
-  <p-panel>
-    <jcm-notifying-router-outlet />
-  </p-panel>
+  <div ngTabs>
+    <div ngTabList
+         orientation="vertical"
+         selectionMode="explicit"
+         selectedTab="settings">
+      @let tabs = [
+      {label: 'settings', icon: 'settings'},
+      {label: 'plugins', icon: 'extension'},
+      {label: 'about', icon: 'info'},
+      ];
+      @for (tab of tabs; track tab.label) {
+      <div ngTab [value]="tab.label"
+           #tabDirective="ngTab"
+           pButton [text]="true"
+           pRipple>
+        <google-icon [iconName]="tab.icon" [isFilled]="tabDirective.selected()" />
+        <div class="label">{{ tab.label | translate }}</div>
+      </div>
+      }
+    </div>
+    <p-panel>
+      <div ngTabPanel value="settings">
+        <ng-template ngTabContent>
+          <jcm-settings-navigation-view />
+        </ng-template>
+      </div>
+      <div ngTabPanel value="plugins">
+        <ng-template ngTabContent>
+          <jcm-plugins-navigation-view />
+        </ng-template>
+      </div>
+      <div ngTabPanel value="about">
+        <ng-template ngTabContent>
+          <jcm-about-view />
+        </ng-template>
+      </div>
+    </p-panel>
+  </div>
 </div>

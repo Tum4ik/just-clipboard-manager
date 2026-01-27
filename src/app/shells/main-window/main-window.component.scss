@@ -1,28 +1,62 @@
 .root {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 
-  jcm-title-bar {
-    grid-row: 1;
-    grid-column: span 2;
-  }
-
-  jcm-navigation-bar {
-    grid-row: 2;
-    grid-column: 1;
-  }
-
-  p-panel {
-    --p-panel-header-padding: 0;
-    --p-panel-content-padding: 0;
-
-    grid-row: 2;
-    grid-column: 2;
-    margin-right: 4px;
-    margin-bottom: 4px;
-    overflow: hidden;
+  [ngTabs] {
     display: flex;
+    flex: 1;
+    overflow: hidden;
+
+    [ngTabList] {
+      display: flex;
+      flex-direction: column;
+      padding-inline: var(--p-menu-list-padding);
+      padding-bottom: 4px;
+      gap: var(--p-menu-list-gap);
+
+      [ngTab] {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        min-width: 64px;
+        height: 64px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        gap: 4px;
+        color: var(--p-menu-item-color);
+
+        .label {
+          font-size: 10px;
+        }
+
+        &[aria-selected='true'] {
+          background: var(--p-highlight-background);
+
+          google-icon {
+            color: var(--p-primary-color);
+          }
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        &:last-child {
+          margin-top: auto;
+        }
+      }
+    }
+
+    p-panel {
+      --p-panel-header-padding: 0;
+      --p-panel-content-padding: 0;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      overflow: hidden;
+      display: flex;
+      flex: 1;
+    }
   }
 }
