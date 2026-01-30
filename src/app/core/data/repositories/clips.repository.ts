@@ -10,7 +10,6 @@ export class ClipsRepository extends BaseDatabaseRepository {
   async updateAsync(clip: Clip): Promise<void> {
     const db = await this.getDbAsync();
     await invoke('update_clip', {
-      dbPath: db.path,
       clipId: clip.id,
       pluginId: clip.pluginId,
       representationData: clip.representationData,

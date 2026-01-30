@@ -1,3 +1,4 @@
+use crate::helpers::database::get_sqlite_db;
 use clipboard_win::raw::{close, open, set, set_without_clear};
 use clipboard_win::SysResult;
 use config::Config;
@@ -5,7 +6,6 @@ use sqlx::Row;
 use std::ffi::c_void;
 use tauri::State;
 use tauri_plugin_sql::DbInstances;
-use tauri_plugin_sql::DbPool::Sqlite;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
 use windows::Win32::UI::Input::KeyboardAndMouse::{
@@ -20,15 +20,9 @@ pub async fn paste_clip(
   clip_id: i64,
   target_window_ptr: usize,
 ) -> Result<(), String> {
-  let db_instances = db_instances.0.read().await;
-  let Sqlite(db) = db_instances
-    .get(
-      config
-        .get_string("database.connection-string")
-        .unwrap()
-        .as_str(),
-    )
-    .unwrap();
+  let db = get_sqlite_db(config, db_instances)
+    .await
+    .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   let query_result = sqlx::query(
     "
     SELECT format_id, data
@@ -37,7 +31,7 @@ pub async fn paste_clip(
     ",
   )
   .bind(clip_id)
-  .fetch_all(db)
+  .fetch_all(&db)
   .await
   .unwrap();
 
