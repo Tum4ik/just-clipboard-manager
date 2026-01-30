@@ -1,5 +1,6 @@
 import { Component, input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { MonitoringService } from '@app/core/services/monitoring.service';
+import { invoke } from '@tauri-apps/api/core';
 import { UnlistenFn } from '@tauri-apps/api/event';
 import { getCurrentWindow, Window } from '@tauri-apps/api/window';
 import { Button } from 'primeng/button';
@@ -25,7 +26,8 @@ export class TitleBarComponent implements OnInit, OnDestroy {
 
   readonly isMinimizeAvailable = input(true);
 
-  isWindowMaximized = false;
+  protected productName?: string|null;
+  protected isWindowMaximized = false;
 
   async ngOnInit() {
     const window = getCurrentWindow();
@@ -38,6 +40,8 @@ export class TitleBarComponent implements OnInit, OnDestroy {
     this.windowResizeListener = await window.onResized(async () => {
       await this.ngZone.run(async () => this.isWindowMaximized = await window.isMaximized());
     });
+    
+    this.productName = await invoke<string | null>('info_product_name');
   }
 
   ngOnDestroy(): void {

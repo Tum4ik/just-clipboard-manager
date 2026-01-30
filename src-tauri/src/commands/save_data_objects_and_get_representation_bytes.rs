@@ -1,13 +1,13 @@
+use crate::helpers::database::get_sqlite_db;
 use clipboard_win::raw::{close, get, open, size};
+use config::Config;
 use std::collections::HashMap;
 use tauri::State;
 use tauri_plugin_sql::DbInstances;
-use tauri_plugin_sql::DbPool::Sqlite;
-
-use crate::constants::DB_PATH;
 
 #[tauri::command]
 pub async fn save_data_objects_and_get_representation_bytes(
+  config: State<'_, Config>,
   db_instances: State<'_, DbInstances>,
   representation_format_id: u32,
   formats_to_save: Vec<u32>,
@@ -65,8 +65,9 @@ pub async fn save_data_objects_and_get_representation_bytes(
     ));
   }
 
-  let db_instances = db_instances.0.read().await;
-  let Sqlite(db) = db_instances.get(DB_PATH).unwrap();
+  let db = get_sqlite_db(config, db_instances)
+    .await
+    .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   let mut transaction = db.begin().await.unwrap();
 
   let query_result = sqlx::query(

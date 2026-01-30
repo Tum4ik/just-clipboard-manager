@@ -1,7 +1,6 @@
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -10,7 +9,6 @@ import { firstValueFrom } from "rxjs";
 import { routes } from "./app.routes";
 import { TOOLTIP_OPTIONS } from "./core/config/tooltip.config";
 import { ClipsAutoDeleteService } from "./core/services/clips-auto-delete.service";
-import { EnvironmentService } from "./core/services/environment.service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
@@ -27,7 +25,6 @@ export const appConfig: ApplicationConfig = {
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
       withComponentInputBinding()
     ),
-    provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: AuraBluePreset,
@@ -45,14 +42,11 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
 
       inject(ThemeService);
-      const environmentService = inject(EnvironmentService);
       const settingsService = inject(SettingsService);
       const translateService = inject(TranslateService);
       const pluginsService = inject(PluginsService);
       const clipsAutoDeleteService = inject(ClipsAutoDeleteService);
       registerSvgIcons();
-
-      await environmentService.initAsync();
 
       translateService.addLangs(['en', 'uk']);
       const lang = await settingsService.getLanguageAsync();

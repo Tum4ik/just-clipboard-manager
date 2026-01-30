@@ -22,15 +22,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "just-clipboard-manager-pdk": "^4.0.28"
+    "just-clipboard-manager-pdk": "4.0.31"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.6",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.4",
-    "@rollup/plugin-json": "^6.1.0",
-    "rollup": "^4.46.2",
-    "typescript": "^5.8.3",
-    "tslib": "^2.8.1"
+    "@rollup/plugin-commonjs": "29.0.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@rollup/plugin-json": "6.1.0",
+    "rollup": "4.55.1",
+    "typescript": "5.9.3",
+    "tslib": "2.8.1"
   }
 }

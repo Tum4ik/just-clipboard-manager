@@ -1,11 +1,10 @@
 mod clipboard_listener;
 mod commands;
-mod constants;
+mod helpers;
 mod migrations;
 
 use clipboard_listener::clipboard_listener;
 use config::Config;
-use constants::*;
 use log::LevelFilter;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 
@@ -25,7 +24,13 @@ pub fn run(config: Config) {
     )
     .plugin(
       tauri_plugin_sql::Builder::new()
-        .add_migrations(DB_PATH, migrations::migrations())
+        .add_migrations(
+          config
+            .get_string("database.connection-string")
+            .expect("'database.connection-string' not found in config")
+            .as_str(),
+          migrations::migrations(),
+        )
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
@@ -36,6 +41,15 @@ pub fn run(config: Config) {
     .manage(config)
     .setup(clipboard_listener)
     .invoke_handler(all_commands!())
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    .build(tauri::generate_context!())
+    .expect("error while building tauri application")
+    .run(|_, event| match event {
+      tauri::RunEvent::Ready => {
+        sentry::start_session();
+      }
+      tauri::RunEvent::Exit => {
+        sentry::end_session();
+      }
+      _ => {}
+    });
 }

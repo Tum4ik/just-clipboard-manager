@@ -12,15 +12,14 @@ fn main() {
     .build()
     .expect("Failed to load config");
 
-  let sentry_dsn = config.get::<String>("sentry.dsn").unwrap();
-  let environment = config.get::<String>("environment").unwrap();
+  let sentry_dsn = config.get_string("sentry.dsn").unwrap();
+  let environment = config.get_string("environment").unwrap();
 
   let _guard = sentry::init(sentry::ClientOptions {
     dsn: Dsn::from_str(&sentry_dsn).ok(),
     environment: Some(environment.into()),
     release: sentry::release_name!(),
     auto_session_tracking: true,
-    attach_stacktrace: true,
     ..sentry::ClientOptions::default()
   });
   sentry::configure_scope(|scope| {

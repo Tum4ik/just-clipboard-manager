@@ -85,14 +85,19 @@ jcm-navigation-view {
 }
 
 jcm-main-window,
-jcm-paste-window {
+jcm-paste-window,
+jcm-clip-full-data-preview {
   p-panel {
     .p-panel-content-container {
       width: 100%;
       height: 100%;
 
-      .p-panel-content {
-        height: 100%;
+      .p-panel-content-wrapper {
+        overflow: hidden;
+
+        .p-panel-content {
+          height: 100%;
+        }
       }
     }
   }

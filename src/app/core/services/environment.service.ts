@@ -1,35 +1,27 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
+import Database from '@tauri-apps/plugin-sql';
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentService {
-  private isInitialized = false;
-
-  async initAsync() {
-    if (this.isInitialized) {
-      return;
-    }
-
+  private _isDevelopment = new Promise<boolean>(async resolve => {
     const envStr = await invoke<string>('environment');
-    this._isDevelopment = envStr === 'development';
-    this._isProduction = envStr === 'production';
-
-    this.isInitialized = true;
-  }
-
-  private _isDevelopment = false;
-  get isDevelopment(): boolean {
-    if (!this.isInitialized) {
-      throw new Error('EnvironmentService is not initialized');
-    }
+    resolve(envStr === 'development');
+  });
+  isDevelopmentAsync(): Promise<boolean> {
     return this._isDevelopment;
   }
 
-  private _isProduction = true;
-  get isProduction(): boolean {
-    if (!this.isInitialized) {
-      throw new Error('EnvironmentService is not initialized');
-    }
-    return this._isProduction;
+  async isProductionAsync(): Promise<boolean> {
+    return !(await this._isDevelopment);
+  }
+
+  private _dbConnectionString = new Promise<string>(async resolve => {
+    const dbConnectionString = await invoke<string>('db_connection_string');
+    await Database.load(dbConnectionString);
+    resolve(dbConnectionString);
+  });
+  getDbConnectionStringAsync(): Promise<string> {
+    return this._dbConnectionString;
   }
 }

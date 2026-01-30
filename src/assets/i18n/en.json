@@ -23,6 +23,7 @@
   "plugin": "Plugin",
   "plugin.": {
     "by": "by",
+    "built-in": "built-in",
     "uninstall-confirm": "Do you also want to remove the plugin related clips?",
     "remove-plugin-and-clips": "Remove plugin and clips",
     "remove-only-plugin": "Remove only plugin"

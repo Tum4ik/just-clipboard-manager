@@ -8,8 +8,8 @@ import { BaseDatabaseRepository } from "./base-database.repository";
 export class ClipsRepository extends BaseDatabaseRepository {
 
   async updateAsync(clip: Clip): Promise<void> {
+    const db = await this.getDbAsync();
     await invoke('update_clip', {
-      dbPath: this.db.path,
       clipId: clip.id,
       pluginId: clip.pluginId,
       representationData: clip.representationData,
@@ -22,7 +22,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async getClipsAsync(enabledPluginIds: PluginId[], skip: number, take: number, search?: string): Promise<readonly Clip[]> {
-    const result = await this.db.select<any[]>(
+    const db = await this.getDbAsync();
+    const result = await db.select<any[]>(
       /* sql */`
       SELECT
         clips.id,
@@ -58,7 +59,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async updateClippedAtAsync(id: number, clippedAt: Date): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       UPDATE clips
       SET clipped_at = datetime($1, 'localtime')
@@ -70,7 +72,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async getClipFullDataPreviewAsync(clipId: number): Promise<{ pluginId: PluginId; data: Uint8Array; format: string; } | null> {
-    const result = await this.db.select<any[]>(
+    const db = await this.getDbAsync();
+    const result = await db.select<any[]>(
       /* sql */`
       SELECT clips.plugin_id, clips.representation_format_name, data_objects.data
       FROM clips
@@ -91,7 +94,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async deleteClipAsync(id: number): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       DELETE FROM clips
       WHERE id = $1
@@ -102,7 +106,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async deleteClipsForPluginAsync(pluginId: PluginId): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       DELETE FROM clips
       WHERE plugin_id = $1
@@ -113,7 +118,8 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
 
   async deleteOutdatedClipsAsync(olderThan: Date): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       DELETE FROM clips
       WHERE

@@ -6,7 +6,7 @@ export class TextPlugin extends ClipboardDataPlugin {
     return this._representationFormats;
   }
 
-  private readonly _formatsToSave = ['CF_UNICODETEXT', 'CF_TEXT'];
+  private readonly _formatsToSave = ['CF_UNICODETEXT', 'CF_TEXT', 'HTML Format'];
   override get formatsToSave(): readonly string[] {
     return this._formatsToSave;
   }

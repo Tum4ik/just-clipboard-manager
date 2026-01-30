@@ -1,7 +1,7 @@
 <div class="root"
      [style.background-color]="isDarkMode() ? '#121212': 'white'"
      [style.opacity]="opacity()">
-  <p-block-ui [blocked]="isWindowBlocked" />
+  <p-block-ui [blocked]="isWindowBlocked" hidden />
   @if (isSettingsMode()){
   <div class="resize-handle top"></div>
   <div class="resize-handle bottom"></div>
@@ -39,7 +39,7 @@
               [style.gap.px]="splitterPanelsGap()"
               [panelSizes]="[pinnedClipsHeightPercentage(), 100 - pinnedClipsHeightPercentage()]">
     <ng-template #panel>
-      <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode()" />
+      <p-block-ui [target]="pinnedClipsPanel" [blocked]="isSettingsMode()" hidden />
       <p-panel #pinnedClipsPanel class="pinned-clips">
         <p-scroll-panel>
           @for (pinnedClip of pinnedClips(); track pinnedClip.clipId) {
@@ -55,7 +55,7 @@
       </p-panel>
     </ng-template>
     <ng-template #panel>
-      <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode()" />
+      <p-block-ui [target]="regularClipsPanel" [blocked]="isSettingsMode()" hidden />
       <p-panel #regularClipsPanel class="clips">
         <p-scroll-panel #regularClipsScrollPanel>
           @for (clip of regularClips(); track clip.clipId) {

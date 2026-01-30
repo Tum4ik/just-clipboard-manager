@@ -5,7 +5,8 @@ import { BaseDatabaseRepository } from "./base-database.repository";
 @Injectable({ providedIn: 'root' })
 export class PinnedClipsRepository extends BaseDatabaseRepository {
   async getPinnedClipsAsync(): Promise<PinnedClip[]> {
-    const result = await this.db.select<any[]>(
+    const db = await this.getDbAsync();
+    const result = await db.select<any[]>(
       /* sql */`
       SELECT
         pinned_clips.id,
@@ -37,7 +38,8 @@ export class PinnedClipsRepository extends BaseDatabaseRepository {
 
 
   async addPinnedClipAsync(id: number): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       INSERT INTO pinned_clips (id)
       VALUES ($1)
@@ -48,7 +50,8 @@ export class PinnedClipsRepository extends BaseDatabaseRepository {
 
 
   async deletePinnedClipAsync(id: number): Promise<void> {
-    await this.db.execute(
+    const db = await this.getDbAsync();
+    await db.execute(
       /* sql */`
       DELETE FROM pinned_clips
       WHERE id = $1
