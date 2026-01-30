@@ -39,6 +39,6 @@ pub async fn update_clip(
   .bind(clip_id)
   .execute(&db)
   .await
-  .unwrap();
+  .map_err(|e| e.to_string())?;
   Ok(())
 }

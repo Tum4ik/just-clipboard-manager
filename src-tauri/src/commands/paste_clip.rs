@@ -33,7 +33,7 @@ pub async fn paste_clip(
   .bind(clip_id)
   .fetch_all(&db)
   .await
-  .unwrap();
+  .map_err(|e| e.to_string())?;
 
   if let Err(e) = open() {
     return Err(format!("Can't open clipboard. {e}"));
