@@ -1,11 +1,12 @@
+use crate::helpers::database::get_sqlite_db;
+use config::Config;
 use tauri::State;
 use tauri_plugin_sql::DbInstances;
-use tauri_plugin_sql::DbPool::Sqlite;
 
 #[tauri::command]
 pub async fn update_clip(
+  config: State<'_, Config>,
   db_instances: State<'_, DbInstances>,
-  db_path: &str,
   clip_id: i64,
   plugin_id: String,
   representation_data: Vec<u8>,
@@ -14,8 +15,9 @@ pub async fn update_clip(
   representation_format_name: String,
   search_label: Option<String>,
 ) -> Result<(), String> {
-  let db_instances = db_instances.0.read().await;
-  let Sqlite(db) = db_instances.get(db_path).unwrap();
+  let db = get_sqlite_db(config, db_instances)
+    .await
+    .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   sqlx::query(
     "
     UPDATE clips
@@ -35,8 +37,8 @@ pub async fn update_clip(
   .bind(representation_format_name)
   .bind(search_label)
   .bind(clip_id)
-  .execute(db)
+  .execute(&db)
   .await
-  .unwrap();
+  .map_err(|e| e.to_string())?;
   Ok(())
 }

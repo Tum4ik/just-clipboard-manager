@@ -2746,7 +2746,7 @@ dependencies = [
 
 [[package]]
 name = "just-clipboard-manager"
-version = "4.0.1"
+version = "4.0.2"
 dependencies = [
  "clipboard-win",
  "config",

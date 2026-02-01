@@ -1,5 +1,6 @@
 mod clipboard_listener;
 mod commands;
+mod helpers;
 mod migrations;
 
 use clipboard_listener::clipboard_listener;
@@ -26,7 +27,7 @@ pub fn run(config: Config) {
         .add_migrations(
           config
             .get_string("database.connection-string")
-            .unwrap()
+            .expect("'database.connection-string' not found in config")
             .as_str(),
           migrations::migrations(),
         )
