@@ -1,34 +1,46 @@
-.root {
+[ngTabs] {
   display: flex;
   height: 100%;
+
+  [ngTabList] {
+    display: flex;
+    flex-direction: column;
+    min-width: 12.5rem;
+    padding: var(--p-navigation-list-padding);
+    gap: var(--p-navigation-list-gap);
+
+    [ngTab] {
+      display: flex;
+      gap: 16px;
+      justify-content: flex-start;
+      color: var(--p-navigation-item-color);
+
+      &[aria-selected='true'] {
+        background: var(--p-highlight-background);
+
+        google-icon {
+          color: var(--p-primary-color);
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
 
   .content {
     width: 100%;
     padding: 4px;
-  }
-}
+    border-left: 1px solid var(--p-content-border-color);
 
-a.navigation-item {
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  min-height: 36px;
-  align-items: center;
-  padding: 8px 16px 8px 8px;
-  gap: 16px;
-  position: relative;
-  border-radius: inherit;
-  cursor: pointer;
+    [ngTabPanel] {
+      height: 100%;
+      overflow: hidden;
 
-  &.selected {
-    background: var(--p-highlight-background);
-
-    google-icon {
-      color: var(--p-primary-color);
+      &[inert] {
+        display: none;
+      }
     }
-  }
-
-  &:active {
-    background-color: var(--p-button-text-primary-active-background);
   }
 }

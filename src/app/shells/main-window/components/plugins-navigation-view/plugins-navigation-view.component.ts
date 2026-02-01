@@ -1,27 +1,32 @@
 import { Component } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { NavigationView } from '../navigation-view/navigation-view';
+import { NavigationMenuItem, NavigationView } from '../navigation-view/navigation-view';
+import { InstalledPlugins } from './components/installed-plugins/installed-plugins';
+import { PluginsPipelineComponent } from './components/plugins-pipeline/plugins-pipeline.component';
+import { SearchPluginsComponent } from './components/search-plugins/search-plugins.component';
 
 @Component({
   selector: 'jcm-plugins-navigation-view',
   template: '',
 })
 export class PluginsNavigationViewComponent extends NavigationView {
-  items: MenuItem[] = [
+  protected override readonly items: NavigationMenuItem[] = [
     {
+      id: 'installed',
       label: 'installed',
       icon: 'list_alt_check',
-      routerLink: 'installed'
+      component: InstalledPlugins
     },
     {
+      id: 'search',
       label: 'search',
       icon: 'manage_search',
-      routerLink: 'search'
+      component: SearchPluginsComponent
     },
     {
+      id: 'data-processing-pipeline',
       label: 'data-processing-pipeline',
       icon: 'move_down',
-      routerLink: 'pipeline'
+      component: PluginsPipelineComponent
     },
   ];
 }

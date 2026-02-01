@@ -4,14 +4,9 @@
     <div ngTabList
          orientation="vertical"
          selectionMode="explicit"
-         selectedTab="settings">
-      @let tabs = [
-      {label: 'settings', icon: 'settings'},
-      {label: 'plugins', icon: 'extension'},
-      {label: 'about', icon: 'info'},
-      ];
-      @for (tab of tabs; track tab.label) {
-      <div ngTab [value]="tab.label"
+         [selectedTab]="selectedTabId()">
+      @for (tab of tabs; track tab.id) {
+      <div ngTab [value]="tab.id"
            #tabDirective="ngTab"
            pButton [text]="true"
            pRipple>
@@ -21,21 +16,18 @@
       }
     </div>
     <p-panel>
-      <div ngTabPanel value="settings">
+      @for (tab of tabs; track tab.id) {
+      <div ngTabPanel [value]="tab.id" [preserveContent]="true">
         <ng-template ngTabContent>
-          <jcm-settings-navigation-view />
+          @if (tab.id === selectedTabId()){
+          <ng-container *ngComponentOutlet="tab.component; inputs: {'nestedLevelTabId': nestedLevelTabId()}" />
+          }
+          @else {
+          <ng-container *ngComponentOutlet="tab.component" />
+          }
         </ng-template>
       </div>
-      <div ngTabPanel value="plugins">
-        <ng-template ngTabContent>
-          <jcm-plugins-navigation-view />
-        </ng-template>
-      </div>
-      <div ngTabPanel value="about">
-        <ng-template ngTabContent>
-          <jcm-about-view />
-        </ng-template>
-      </div>
+      }
     </p-panel>
   </div>
 </div>

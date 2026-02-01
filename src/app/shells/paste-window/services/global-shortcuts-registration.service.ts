@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MonitoringService } from "@app/core/services/monitoring.service";
+import { MainWindowTabId } from "@app/shells/main-window/main-window.component";
 import { invoke } from "@tauri-apps/api/core";
 import { Event } from "@tauri-apps/api/event";
 import { isRegistered, register, unregister } from "@tauri-apps/plugin-global-shortcut";
@@ -19,8 +20,7 @@ export class GlobalShortcutsRegistrationService extends BaseShortcutsService {
   async initAsync(): Promise<void> {
     const shortcut = await this.getCallPasteWindowShortcutAsync();
     if (await this.isShortcutRegistered(shortcut)) {
-      // todo: there is problem with navigation remembering
-      await invoke('open_main_window', { section: 'settings/hot-keys' });
+      await invoke('open_main_window', { topLevelTabId: MainWindowTabId.settings, nestedLevelTabId: 'hot-keys' });
     }
     else {
       await this.registerCallPasteWindowShortcutAsync(shortcut);

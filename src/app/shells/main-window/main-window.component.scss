@@ -11,12 +11,11 @@
     [ngTabList] {
       display: flex;
       flex-direction: column;
-      padding-inline: var(--p-menu-list-padding);
+      padding-inline: var(--p-navigation-list-padding);
       padding-bottom: 4px;
-      gap: var(--p-menu-list-gap);
+      gap: var(--p-navigation-list-gap);
 
       [ngTab] {
-        cursor: pointer;
         display: flex;
         flex-direction: column;
         min-width: 64px;
@@ -25,7 +24,7 @@
         justify-content: center;
         padding: 8px;
         gap: 4px;
-        color: var(--p-menu-item-color);
+        color: var(--p-navigation-item-color);
 
         .label {
           font-size: 10px;
@@ -57,6 +56,14 @@
       overflow: hidden;
       display: flex;
       flex: 1;
+
+      [ngTabPanel] {
+        height: 100%;
+
+        &[inert] {
+          display: none;
+        }
+      }
     }
   }
 }
