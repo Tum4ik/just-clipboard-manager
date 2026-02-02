@@ -17,9 +17,9 @@ pub fn open_main_window(
     .cloned()
   {
     Some(mut config) => {
-      let mut new_url = config.url.to_string() + "?";
+      let mut new_url = config.url.to_string();
       if let Some(top_level_tab_id) = top_level_tab_id {
-        new_url.push_str("topLevelTabId=");
+        new_url.push_str("?topLevelTabId=");
         new_url.push_str(top_level_tab_id);
 
         if let Some(nested_level_tab_id) = nested_level_tab_id {

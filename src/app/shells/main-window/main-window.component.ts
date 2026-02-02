@@ -1,5 +1,5 @@
 import { Tab, TabContent, TabList, TabPanel, Tabs } from '@angular/aria/tabs';
-import { NgComponentOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet } from '@angular/common';
 import { Component, computed, input, Type } from '@angular/core';
 import { GoogleIcon } from '@app/core/components/google-icon/google-icon';
 import { TitleBarComponent } from '@app/core/components/title-bar/title-bar.component';
@@ -7,9 +7,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonDirective } from 'primeng/button';
 import { Panel } from 'primeng/panel';
 import { Ripple } from 'primeng/ripple';
-import { AboutViewComponent } from './components/about-view/about-view.component';
-import { PluginsNavigationViewComponent } from './components/plugins-navigation-view/plugins-navigation-view.component';
-import { SettingsNavigationViewComponent } from './components/settings-navigation-view/settings-navigation-view.component';
 
 @Component({
   selector: 'jcm-main-window',
@@ -24,6 +21,7 @@ import { SettingsNavigationViewComponent } from './components/settings-navigatio
     TranslatePipe,
     GoogleIcon,
     TabList, Tab, Tabs, TabPanel, TabContent,
+    AsyncPipe,
   ]
 })
 export class MainWindowComponent {
@@ -32,19 +30,22 @@ export class MainWindowComponent {
       id: MainWindowTabId.settings,
       label: 'settings',
       icon: 'settings',
-      component: SettingsNavigationViewComponent
+      component: import('./components/settings-navigation-view/settings-navigation-view.component')
+        .then(c => c.SettingsNavigationViewComponent)
     },
     {
       id: MainWindowTabId.plugins,
       label: 'plugins',
       icon: 'extension',
-      component: PluginsNavigationViewComponent
+      component: import('./components/plugins-navigation-view/plugins-navigation-view.component')
+        .then(c => c.PluginsNavigationViewComponent)
     },
     {
       id: MainWindowTabId.about,
       label: 'about',
       icon: 'info',
-      component: AboutViewComponent
+      component: import('./components/about-view/about-view.component')
+        .then(c => c.AboutViewComponent)
     },
   ];
 
@@ -58,13 +59,17 @@ export class MainWindowComponent {
     }
     return MainWindowTabId.settings;
   });
+
+  protected isNavigationView(type: Type<unknown> | null): boolean {
+    return type?.prototype && Object.getPrototypeOf(type?.prototype).constructor.name === '_NavigationView';
+  }
 }
 
 export interface MainWindowTab {
   id: MainWindowTabId;
   label: string;
   icon: string;
-  component: Type<any> | null;
+  component: Promise<Type<unknown> | null>;
 }
 
 export enum MainWindowTabId {

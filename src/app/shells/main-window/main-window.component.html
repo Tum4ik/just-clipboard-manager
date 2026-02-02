@@ -19,11 +19,12 @@
       @for (tab of tabs; track tab.id) {
       <div ngTabPanel [value]="tab.id" [preserveContent]="true">
         <ng-template ngTabContent>
-          @if (tab.id === selectedTabId()){
-          <ng-container *ngComponentOutlet="tab.component; inputs: {'nestedLevelTabId': nestedLevelTabId()}" />
+          @let component = tab.component | async;
+          @if (tab.id === selectedTabId() && isNavigationView(component)){
+          <ng-container *ngComponentOutlet="component; inputs: {'nestedLevelTabId': nestedLevelTabId()};" />
           }
           @else {
-          <ng-container *ngComponentOutlet="tab.component" />
+          <ng-container *ngComponentOutlet="component" />
           }
         </ng-template>
       </div>
