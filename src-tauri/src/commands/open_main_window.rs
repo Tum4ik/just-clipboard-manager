@@ -16,6 +16,11 @@ pub fn open_main_window(
     .find(|c| c.label == "main-window")
     .cloned()
   {
+    None => {
+      let error = "Config for main window is not found";
+      sentry::capture_message(error, sentry::Level::Fatal);
+      return Err(error.to_string());
+    }
     Some(mut config) => {
       let mut new_url = config.url.to_string();
       if let Some(top_level_tab_id) = top_level_tab_id {
@@ -40,9 +45,6 @@ pub fn open_main_window(
           .build()
           .unwrap();
       });
-    }
-    None => {
-      sentry::capture_message("Config for main window is not found", sentry::Level::Fatal);
     }
   }
   Ok(())

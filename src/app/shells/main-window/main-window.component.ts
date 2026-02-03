@@ -61,7 +61,7 @@ export class MainWindowComponent {
   });
 
   protected isNavigationView(type: Type<unknown> | null): boolean {
-    return type?.prototype && Object.getPrototypeOf(type?.prototype).constructor.name === '_NavigationView';
+    return !!(type as any)?.isNavigationView;
   }
 }
 

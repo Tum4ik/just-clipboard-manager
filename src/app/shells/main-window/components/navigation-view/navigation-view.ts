@@ -3,6 +3,8 @@ import { NavigationViewComponent } from "./navigation-view.component";
 
 @Directive()
 export abstract class NavigationView implements AfterViewInit {
+  static readonly isNavigationView = true;
+
   constructor(
     private readonly viewContainer: ViewContainerRef,
   ) { }
@@ -12,7 +14,7 @@ export abstract class NavigationView implements AfterViewInit {
   protected abstract readonly items: NavigationMenuItem[];
 
   ngAfterViewInit(): void {
-    const component = this.viewContainer.createComponent(NavigationViewComponent, {
+    this.viewContainer.createComponent(NavigationViewComponent, {
       bindings: [
         inputBinding('items', () => this.items),
         inputBinding('nestedLevelTabId', this.nestedLevelTabId)
