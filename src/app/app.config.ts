@@ -1,7 +1,7 @@
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
-import { provideRouter, RouteReuseStrategy, withComponentInputBinding, withRouterConfig } from "@angular/router";
+import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateService } from "@ngx-translate/core";
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
@@ -14,7 +14,6 @@ import { PluginsService } from "./core/services/plugins.service";
 import { SettingsService } from "./core/services/settings.service";
 import { ThemeService } from "./core/services/theme.service";
 import { registerSvgIcons } from "./initializers/register-svg-icons";
-import { AppRouteReuseStrategy } from "./router/app-route-reuse-strategy";
 import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 
 export const appConfig: ApplicationConfig = {
@@ -57,7 +56,6 @@ export const appConfig: ApplicationConfig = {
       await clipsAutoDeleteService.deleteOutdatedClipsAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
-    { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: TOOLTIP_OPTIONS },
   ]
 };

@@ -1,25 +1,24 @@
-<div class="root">
-  <p-menu [model]="items()"
-          [style]="{
-            'border-top-right-radius': '0',
-            'border-bottom-right-radius': '0',
-            'border-top-width': '0',
-            'border-bottom-width': '0',
-            'border-left-width': '0',
-          }">
-    <ng-template #item let-item>
-      <a #anchor
-         class="navigation-item"
-         pRipple
-         [routerLink]="item.routerLink"
-         routerLinkActive="selected"
-         (click)="navigationItemClicked(anchor.href)">
-        <google-icon [iconName]="item.icon" [size]="20" />
-        <span class="label">{{ item.label | translate }}</span>
-      </a>
-    </ng-template>
-  </p-menu>
+<div ngTabs>
+  <div ngTabList
+       orientation="vertical"
+       selectionMode="explicit"
+       [selectedTab]="selectedItem()">
+    @for (item of items(); track item.id) {
+    <div ngTab [value]="item.id"
+         pButton [text]="true"
+         pRipple>
+      <google-icon [iconName]="item.icon" [size]="20" />
+      <span class="label">{{ item.label | translate }}</span>
+    </div>
+    }
+  </div>
   <div class="content">
-    <router-outlet />
+    @for (item of items(); track item.id) {
+    <div ngTabPanel [value]="item.id" [preserveContent]="true">
+      <ng-template ngTabContent>
+        <ng-container *ngComponentOutlet="item.component" />
+      </ng-template>
+    </div>
+    }
   </div>
 </div>

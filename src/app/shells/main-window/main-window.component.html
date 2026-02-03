@@ -1,7 +1,34 @@
 <div class="root">
   <jcm-title-bar />
-  <jcm-navigation-bar />
-  <p-panel>
-    <jcm-notifying-router-outlet />
-  </p-panel>
+  <div ngTabs>
+    <div ngTabList
+         orientation="vertical"
+         selectionMode="explicit"
+         [selectedTab]="selectedTabId()">
+      @for (tab of tabs; track tab.id) {
+      <div ngTab [value]="tab.id"
+           #tabDirective="ngTab"
+           pButton [text]="true"
+           pRipple>
+        <google-icon [iconName]="tab.icon" [isFilled]="tabDirective.selected()" />
+        <div class="label">{{ tab.label | translate }}</div>
+      </div>
+      }
+    </div>
+    <p-panel>
+      @for (tab of tabs; track tab.id) {
+      <div ngTabPanel [value]="tab.id" [preserveContent]="true">
+        <ng-template ngTabContent>
+          @let component = tab.component | async;
+          @if (tab.id === selectedTabId() && isNavigationView(component)){
+          <ng-container *ngComponentOutlet="component; inputs: {'nestedLevelTabId': nestedLevelTabId()};" />
+          }
+          @else {
+          <ng-container *ngComponentOutlet="component" />
+          }
+        </ng-template>
+      </div>
+      }
+    </p-panel>
+  </div>
 </div>
