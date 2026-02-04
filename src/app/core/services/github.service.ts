@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Octokit } from "@octokit/rest";
 import { major } from 'semver';
-import packageJson from '../../../../../package.json';
-import { MonitoringService } from '../../../core/services/monitoring.service';
+import packageJson from '../../../../package.json';
+import { MonitoringService } from './monitoring.service';
 
 @Injectable({ providedIn: 'root' })
 export class GithubService {
