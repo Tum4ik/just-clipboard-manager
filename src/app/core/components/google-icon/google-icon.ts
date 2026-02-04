@@ -1,4 +1,4 @@
-import { Component, input, linkedSignal } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'google-icon',
@@ -10,5 +10,5 @@ export class GoogleIcon {
   readonly size = input<number>(24);
   readonly isFilled = input<boolean>(false);
 
-  readonly fontVariationSettings = linkedSignal(() => `'FILL' ${this.isFilled() ? 1 : 0}`);
+  protected readonly fontVariationSettings = computed(() => `'FILL' ${this.isFilled() ? 1 : 0}`);
 }

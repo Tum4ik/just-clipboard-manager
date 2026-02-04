@@ -1,4 +1,4 @@
-import { Component, input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { MonitoringService } from '@app/core/services/monitoring.service';
 import { invoke } from '@tauri-apps/api/core';
 import { UnlistenFn } from '@tauri-apps/api/event';
@@ -17,7 +17,6 @@ import { Menubar } from 'primeng/menubar';
 })
 export class TitleBarComponent implements OnInit, OnDestroy {
   constructor(
-    private readonly ngZone: NgZone,
     private readonly monitoringService: MonitoringService,
   ) { }
 
@@ -26,8 +25,8 @@ export class TitleBarComponent implements OnInit, OnDestroy {
 
   readonly isMinimizeAvailable = input(true);
 
-  protected productName?: string|null;
-  protected isWindowMaximized = false;
+  protected readonly productName = signal<string | null>(null);
+  protected readonly isWindowMaximized = signal(false);
 
   async ngOnInit() {
     const window = getCurrentWindow();
@@ -37,11 +36,11 @@ export class TitleBarComponent implements OnInit, OnDestroy {
     }
 
     this.window = window;
-    this.windowResizeListener = await window.onResized(async () => {
-      await this.ngZone.run(async () => this.isWindowMaximized = await window.isMaximized());
+    this.windowResizeListener = await window.onResized(() => {
+      window.isMaximized().then(isMaximized => this.isWindowMaximized.set(isMaximized));
     });
-    
-    this.productName = await invoke<string | null>('info_product_name');
+
+    invoke<string | null>('info_product_name').then(name => this.productName.set(name));
   }
 
   ngOnDestroy(): void {
@@ -49,11 +48,11 @@ export class TitleBarComponent implements OnInit, OnDestroy {
   }
 
 
-  async minimize() {
+  protected async minimize() {
     await this.window?.minimize();
   }
 
-  async maximizeOrRestore() {
+  protected async maximizeOrRestore() {
     if (await this.window?.isMaximized()) {
       await this.window?.unmaximize();
     }
@@ -62,7 +61,7 @@ export class TitleBarComponent implements OnInit, OnDestroy {
     }
   }
 
-  async close() {
+  protected async close() {
     await this.window?.close();
   }
 }
