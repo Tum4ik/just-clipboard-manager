@@ -1,3 +1,3 @@
 # Fixes
 
-* Fixed problem when plugin format is not found in the available format for the processing clipboard item.
+* Fixed an error that occurred when a plugin requested a clipboard format that was not available.
