@@ -1,4 +1,3 @@
 # Fixes
 
-* Fixed fraction digits appearance for "pinned clips" area size setting.
-* "HTML Format" support for Text plugin.
+* Fixed problem when plugin format is not found in the available format for the processing clipboard item.
