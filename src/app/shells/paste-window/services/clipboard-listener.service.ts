@@ -53,7 +53,9 @@ export class ClipboardListener {
         'save_data_objects_and_get_representation_bytes',
         {
           representationFormatId: pickResult.formatId,
-          formatsToSave: pickResult.plugin.formatsToSave.map(f => availableFormats.get(f))
+          formatsToSave: pickResult.plugin.formatsToSave
+            .map(f => availableFormats.get(f))
+            .filter(f => f !== undefined)
         }
       );
 
