@@ -1,12 +1,11 @@
 <jcm-scroll-view>
-
+  <!-- todo: refactor: extract each setting card into its own separate component -->
   <jcm-settings-card icon="float_landscape_2"
                      [title]="'settings..paste-window..snapping..title' | translate"
                      [description]="'settings..paste-window..snapping..description' | translate">
     <div class="snapping-options">
       <p-select [options]="snappingModes"
-                [(ngModel)]="selectedSnappingMode"
-                (onChange)="onSnappingModeChanges()">
+                [(ngModel)]="selectedSnappingMode">
         <ng-template #item #selectedItem let-item>
           <div class="option-root">
             <google-icon [iconName]="getSnappingModeIconName(item)" [size]="18" />
@@ -14,10 +13,9 @@
           </div>
         </ng-template>
       </p-select>
-      @if (isDisplayEdgesSnappingMode) {
+      @if (isDisplayEdgesSnappingMode()) {
       <p-select [options]="displayEdgePositions"
-                [(ngModel)]="selectedDisplayEdgePosition"
-                (onChange)="onDisplayEdgePositionChanges()">
+                [(ngModel)]="selectedDisplayEdgePosition">
         <ng-template #item #selectedItem let-item>
           <div class="option-root">
             <span>{{ 'settings..paste-window..snapping..options..' + item | translate }}</span>
@@ -71,14 +69,12 @@
                      [description]="'settings..paste-window..opacity..description' | translate">
     <div class="opacity-options">
       <p-slider [min]="0" [max]="100"
-                [(ngModel)]="opacityPercentage"
-                (onChange)="onOpacityChanged()" />
+                [(ngModel)]="opacityPercentage" />
       <p-input-number suffix="%"
                       [min]="0" [max]="100"
                       [inputSize]="1"
                       [allowEmpty]="false"
-                      [(ngModel)]="opacityPercentage"
-                      (onInput)="onOpacityChanged()" />
+                      [(ngModel)]="opacityPercentage" />
     </div>
   </jcm-settings-card>
 

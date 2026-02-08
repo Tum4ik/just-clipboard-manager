@@ -16,15 +16,15 @@ export class ConfirmPluginUninstall extends BaseDialog<ConfirmPluginUninstallRes
   onDialogLoaded(data: void): void {
   }
 
-  cancel() {
+  protected cancel() {
     this.closeDialog(ConfirmPluginUninstallResult.Cancel);
   }
 
-  removePluginAndClips() {
+  protected removePluginAndClips() {
     this.closeDialog(ConfirmPluginUninstallResult.RemovePluginAndClips);
   }
 
-  removeOnlyPlugin() {
+  protected removeOnlyPlugin() {
     this.closeDialog(ConfirmPluginUninstallResult.RemoveOnlyPlugin);
   }
 }

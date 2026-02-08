@@ -20,7 +20,7 @@ export class BaseShortcutsService {
   private readonly store: LazyStore;
 
 
-  async isShortcutRegistered(shortcut: Shortcut): Promise<boolean> {
+  async isShortcutRegisteredAsync(shortcut: Shortcut): Promise<boolean> {
     try {
       const isReg = await invoke<boolean>('is_shortcut_registered', {
         code: shortcut.code,
@@ -38,18 +38,23 @@ export class BaseShortcutsService {
   }
 
 
+  private callPasteWindowShortcut?: Shortcut;
+
   async getCallPasteWindowShortcutAsync(): Promise<Shortcut> {
-    return await this.store.get<Shortcut>(CALL_PASTE_WINDOW) ?? {
-      code: 'KeyV',
-      hasCtrl: true,
-      hasShift: true,
-      hasAlt: false,
-      hasMeta: false,
-    };
+    if (!this.callPasteWindowShortcut) {
+      this.callPasteWindowShortcut = await this.store.get<Shortcut>(CALL_PASTE_WINDOW) ?? {
+        code: 'KeyV',
+        hasCtrl: true,
+        hasShift: true,
+        hasAlt: false,
+        hasMeta: false,
+      };
+    }
+    return this.callPasteWindowShortcut;
   }
 
   async setCallPasteWindowShortcutAsync(shortcut: Shortcut): Promise<void> {
-    if (!await this.isShortcutRegistered(shortcut)) {
+    if (!await this.isShortcutRegisteredAsync(shortcut)) {
       const oldShortcut = await this.getCallPasteWindowShortcutAsync();
       await this.store.set(CALL_PASTE_WINDOW, shortcut);
       await this.store.save();
@@ -70,7 +75,7 @@ export class BaseShortcutsService {
 
 
   protected onCallPasteWindowShortcutChanged(e: Event<ShortcutChangedEvent>) {
-
+    this.callPasteWindowShortcut = e.payload.newShortcut;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
@@ -33,30 +33,43 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
   ]
 })
 export class PasteWindowSettingsComponent implements OnInit {
-  constructor(
-    private readonly pasteWindowSnappingService: PasteWindowSnappingService,
-    private readonly pasteWindowSizingService: PasteWindowSizingService,
-    private readonly pasteWindowOpacityService: PasteWindowOpacityService,
-  ) {
-    this.width = toSignal(this.pasteWindowSizingService.width$, { requireSync: true });
-    this.height = toSignal(this.pasteWindowSizingService.height$, { requireSync: true });
-    this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
-  }
+  private readonly pasteWindowSnappingService = inject(PasteWindowSnappingService);
+  private readonly pasteWindowSizingService = inject(PasteWindowSizingService);
+  private readonly pasteWindowOpacityService = inject(PasteWindowOpacityService);
 
-  selectedSnappingMode?: SnappingMode;
-  selectedDisplayEdgePosition?: DisplayEdgePosition;
+
+  protected readonly selectedSnappingMode = signal<SnappingMode | null>(null);
+  private readonly selectedSnappingModeEffect = effect(async () => {
+    const selectedSnappingMode = this.selectedSnappingMode();
+    if (selectedSnappingMode) {
+      await this.pasteWindowSnappingService.setSnappingModeAsync(selectedSnappingMode);
+    }
+  });
+
+  protected readonly selectedDisplayEdgePosition = signal<DisplayEdgePosition | null>(null);
+  private readonly selectedDisplayEdgePositionEffect = effect(async () => {
+    const selectedDisplayEdgePosition = this.selectedDisplayEdgePosition();
+    if (selectedDisplayEdgePosition) {
+      await this.pasteWindowSnappingService.setDisplayEdgePositionAsync(selectedDisplayEdgePosition);
+    }
+  });
 
   // todo: move min/max values to service
-  readonly minWidth = 200;
-  readonly maxWidth = 10000;
-  readonly minHeight = 150;
-  readonly maxHeight = 1000;
-  readonly width: Signal<number>;
-  readonly height: Signal<number>;
+  protected readonly minWidth = 200;
+  protected readonly maxWidth = 10000;
+  protected readonly minHeight = 150;
+  protected readonly maxHeight = 1000;
 
-  readonly pinnedClipsHeightPercentage: Signal<number>;
+  protected readonly width = toSignal(this.pasteWindowSizingService.width$, { requireSync: true });
+  protected readonly height = toSignal(this.pasteWindowSizingService.height$, { requireSync: true });
 
-  opacityPercentage: number = 100;
+  protected readonly pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
+
+  protected readonly opacityPercentage = signal(90);
+  private readonly opacityPercentageEffect = effect(async () => {
+    const opacityPercentage = this.opacityPercentage();
+    await this.pasteWindowOpacityService.setOpacityPercentageAsync(opacityPercentage);
+  });
 
 
   get snappingModes() {
@@ -66,52 +79,37 @@ export class PasteWindowSettingsComponent implements OnInit {
     return this.pasteWindowSnappingService.displayEdgePositions;
   }
 
-  get isDisplayEdgesSnappingMode(): boolean {
-    return this.selectedSnappingMode === SnappingMode.DisplayEdges;
+  protected readonly isDisplayEdgesSnappingMode = computed(
+    () => this.selectedSnappingMode() === SnappingMode.DisplayEdges
+  );
+
+
+  ngOnInit() {
+    this.pasteWindowSnappingService.getSnappingModeAsync().then(mode => this.selectedSnappingMode.set(mode));
+    this.pasteWindowSnappingService.getDisplayEdgePositionAsync().then(position => this.selectedDisplayEdgePosition.set(position));
+    firstValueFrom(this.pasteWindowOpacityService.opacityPercentage$).then(opacity => this.opacityPercentage.set(opacity));
   }
 
 
-  async setWidth(e: InputNumberInputEvent) {
+  protected async setWidth(e: InputNumberInputEvent) {
     await this.pasteWindowSizingService.setSize(e.value as number, this.height());
   }
 
-  async setHeight(e: InputNumberInputEvent) {
+  protected async setHeight(e: InputNumberInputEvent) {
     await this.pasteWindowSizingService.setSize(this.width(), e.value as number);
   }
 
-  async setPinnedClipsHeightPercentage(e: InputNumberInputEvent) {
+  protected async setPinnedClipsHeightPercentage(e: InputNumberInputEvent) {
     await this.pasteWindowSizingService.setPinnedClipsHeightPercentage(e.value as number);
   }
 
 
-  async ngOnInit() {
-    this.selectedSnappingMode = await this.pasteWindowSnappingService.getSnappingModeAsync();
-    this.selectedDisplayEdgePosition = await this.pasteWindowSnappingService.getDisplayEdgePositionAsync();
-    this.opacityPercentage = await firstValueFrom(this.pasteWindowOpacityService.opacityPercentage$);
-  }
-
-  onSnappingModeChanges() {
-    if (this.selectedSnappingMode) {
-      this.pasteWindowSnappingService.setSnappingModeAsync(this.selectedSnappingMode);
-    }
-  }
-
-  onDisplayEdgePositionChanges() {
-    if (this.selectedDisplayEdgePosition) {
-      this.pasteWindowSnappingService.setDisplayEdgePositionAsync(this.selectedDisplayEdgePosition);
-    }
-  }
-
-  getSnappingModeIconName(mode: SnappingMode): string {
+  protected getSnappingModeIconName(mode: SnappingMode): string {
     switch (mode) {
       default:
       case SnappingMode.MouseCursor: return 'arrow_selector_tool';
       case SnappingMode.Caret: return 'text_select_end';
       case SnappingMode.DisplayEdges: return 'picture_in_picture_medium';
     }
-  }
-
-  onOpacityChanged() {
-    this.pasteWindowOpacityService.setOpacityPercentageAsync(this.opacityPercentage);
   }
 }

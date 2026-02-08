@@ -15,6 +15,7 @@ export class SettingsNavigationViewComponent extends NavigationView {
       id: 'general',
       label: 'settings..general',
       icon: 'tune',
+      // todo: implement lazy loading for components like in main-window
       component: GeneralSettingsComponent
     },
     {

@@ -1,11 +1,10 @@
 <jcm-scroll-view>
-
+  <!-- todo: refactor: extract each setting card into its own separate component -->
   <jcm-settings-card icon="language"
                      [title]="'language' | translate"
                      [description]="'language-setting-descriptions' | translate">
     <p-select [options]="languages"
-              [(ngModel)]="selectedLanguage"
-              (onChange)="onLanguageChanged($event)">
+              [(ngModel)]="selectedLanguage">
       <ng-template #item #selectedItem let-item>
         <div class="option-root">
           <mat-icon class="option-icon" svgIcon="flags:{{ item.code }}" />
@@ -19,8 +18,7 @@
                      [title]="'theme-mode' | translate"
                      [description]="'theme-mode..setting-description' | translate">
     <p-select [options]="themeModes"
-              [(ngModel)]="selectedThemeMode"
-              (onChange)="onThemeModeChanged($event)">
+              [(ngModel)]="selectedThemeMode">
       <ng-template #item #selectedItem let-item>
         <div class="option-root">
           <google-icon [iconName]="getThemeModeIconName(item)" />

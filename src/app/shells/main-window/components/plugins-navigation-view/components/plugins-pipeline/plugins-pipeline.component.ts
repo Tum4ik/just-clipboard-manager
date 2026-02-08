@@ -24,11 +24,11 @@ export class PluginsPipelineComponent {
     private readonly pluginsService: PluginsService,
   ) { }
 
-  get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
+  protected get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
     return this.pluginsService.installedPlugins;
   }
 
-  async pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
+  protected async pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
     await this.pluginsService.changePluginsOrderAsync(e.previousIndex, e.currentIndex);
   }
 }

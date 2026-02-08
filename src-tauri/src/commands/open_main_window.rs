@@ -40,10 +40,11 @@ pub fn open_main_window(
         return Ok(());
       }
       std::thread::spawn(move || {
-        tauri::WebviewWindowBuilder::from_config(&handle, &config)
+        let _ = tauri::WebviewWindowBuilder::from_config(&handle, &config)
           .unwrap()
           .build()
-          .unwrap();
+          .unwrap()
+          .set_focus();
       });
     }
   }
