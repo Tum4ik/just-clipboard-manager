@@ -1,5 +1,5 @@
 import { Tab, TabContent, TabList, TabPanel, Tabs } from '@angular/aria/tabs';
-import { NgComponentOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import { NavigationMenuItem } from './navigation-view';
     TranslatePipe,
     GoogleIcon,
     TabList, Tab, Tabs, TabPanel, TabContent,
+    AsyncPipe,
   ]
 })
 export class NavigationViewComponent {
