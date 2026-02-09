@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, signal, Signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, inject, NgZone, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
@@ -19,7 +19,7 @@ import { Splitter } from 'primeng/splitter';
 import { map, Subscription } from 'rxjs';
 import { ClipItemComponent } from './components/clip-item/clip-item.component';
 import { ClipboardListener } from './services/clipboard-listener.service';
-import { PasteWindowClip, PasteWindowClipsService } from './services/paste-window-clips.service';
+import { PasteWindowClipsService } from './services/paste-window-clips.service';
 import { PasteWindowService } from './services/paste-window.service';
 
 @Component({
@@ -42,21 +42,15 @@ import { PasteWindowService } from './services/paste-window.service';
   ]
 })
 export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor(
-    private readonly renderer: Renderer2,
-    private readonly ngZone: NgZone,
-    private readonly pasteWindowService: PasteWindowService,
-    private readonly pasteWindowClipsService: PasteWindowClipsService,
-    private readonly clipboardListener: ClipboardListener,
-    private readonly pluginsService: PluginsService,
-    private readonly pasteWindowSizingService: PasteWindowSizingService,
-    private readonly themeService: ThemeService,
-    private readonly pasteWindowOpacityService: PasteWindowOpacityService,
-  ) {
-    this.isDarkMode = toSignal(this.themeService.isDarkTheme$, { requireSync: true });
-    this.pinnedClipsHeightPercentage = toSignal(this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true });
-    this.opacity = toSignal(this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { initialValue: 1 });
-  }
+  private readonly renderer = inject(Renderer2);
+  private readonly ngZone = inject(NgZone);
+  private readonly pasteWindowService = inject(PasteWindowService);
+  private readonly pasteWindowClipsService = inject(PasteWindowClipsService);
+  private readonly clipboardListener = inject(ClipboardListener);
+  private readonly pluginsService = inject(PluginsService);
+  private readonly pasteWindowSizingService = inject(PasteWindowSizingService);
+  private readonly themeService = inject(ThemeService);
+  private readonly pasteWindowOpacityService = inject(PasteWindowOpacityService);
 
 
   private readonly subscriptions = new Subscription();
@@ -67,12 +61,18 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   private isClipsListUpToDate = false;
   private splitterHandleElement?: HTMLElement | null;
 
-  protected isWindowBlocked = false;
+  protected readonly isWindowBlocked = signal(false);
   protected readonly isSettingsMode = signal(false);
 
-  protected readonly isDarkMode: Signal<boolean>;
-  protected readonly pinnedClipsHeightPercentage: Signal<number>;
-  protected readonly opacity: Signal<number>;
+  protected readonly isDarkMode = toSignal(
+    this.themeService.isDarkTheme$, { requireSync: true }
+  );
+  protected readonly pinnedClipsHeightPercentage = toSignal(
+    this.pasteWindowSizingService.pinnedClipsHeightPercentage$, { requireSync: true }
+  );
+  protected readonly opacity = toSignal(
+    this.pasteWindowOpacityService.opacityPercentage$.pipe(map(o => o / 100)), { initialValue: 1 }
+  );
 
   protected readonly splitterGutterSize = computed(() => {
     const pinnedClips = this.pasteWindowClipsService.orderedPinnedClips();
@@ -91,13 +91,8 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     return 0;
   });
 
-  protected get pinnedClips(): Signal<PasteWindowClip[]> {
-    return this.pasteWindowClipsService.orderedPinnedClips;
-  }
-
-  protected get regularClips(): Signal<PasteWindowClip[]> {
-    return this.pasteWindowClipsService.regularClips;
-  }
+  protected readonly pinnedClips = this.pasteWindowClipsService.orderedPinnedClips;
+  protected readonly regularClips = this.pasteWindowClipsService.regularClips;
 
 
   async ngOnInit() {
@@ -206,7 +201,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   protected async onPreviewDataRequested(clipId: number) {
-    this.isWindowBlocked = true;
+    this.isWindowBlocked.set(true);
     this.pasteWindowService.disallowHide();
     const appWindow = new WebviewWindow('clip-preview-window', {
       decorations: false,
@@ -216,7 +211,7 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     await appWindow.onCloseRequested(e => {
       this.ngZone.run(() => {
-        this.isWindowBlocked = false;
+        this.isWindowBlocked.set(false);
         this.pasteWindowService.allowHide();
         this.pasteWindowService.focus();
       });
