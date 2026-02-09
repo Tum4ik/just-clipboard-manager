@@ -1,6 +1,6 @@
 [package]
 name = "just-clipboard-manager"
-version = "4.0.2"
+version = "4.0.3"
 description = "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management."
 authors = ["Yevheniy Tymchishin <timchishinevgeniy@gmail.com>"]
 edition = "2021"

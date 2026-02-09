@@ -55,7 +55,7 @@ export class ClipboardListener {
           representationFormatId: pickResult.formatId,
           formatsToSave: pickResult.plugin.formatsToSave
             .map(f => availableFormats.get(f))
-            .filter(f => f)
+            .filter(f => f !== undefined)
         }
       );
 
