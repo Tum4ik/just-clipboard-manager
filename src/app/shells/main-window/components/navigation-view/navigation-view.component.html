@@ -16,7 +16,7 @@
     @for (item of items(); track item.id) {
     <div ngTabPanel [value]="item.id" [preserveContent]="true">
       <ng-template ngTabContent>
-        <ng-container *ngComponentOutlet="item.component | async" />
+        <ng-container *ngComponentOutlet="item.component" />
       </ng-template>
     </div>
     }

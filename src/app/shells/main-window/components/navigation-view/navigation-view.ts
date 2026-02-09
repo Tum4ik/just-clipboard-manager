@@ -27,5 +27,5 @@ export interface NavigationMenuItem {
   id: string;
   label: string;
   icon: string;
-  component: Promise<Type<unknown> | null>;
+  component: Type<any> | null;
 }
