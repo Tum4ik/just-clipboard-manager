@@ -14,7 +14,6 @@ export class PluginsNavigationViewComponent extends NavigationView {
       id: 'installed',
       label: 'installed',
       icon: 'list_alt_check',
-      // todo: implement lazy loading for components like in main-window
       component: InstalledPlugins
     },
     {
