@@ -8,9 +8,9 @@ import { LazyStore } from '@tauri-apps/plugin-store';
 import { download } from '@tauri-apps/plugin-upload';
 import { ClipboardDataPlugin, PluginId } from 'just-clipboard-manager-pdk';
 import { Subject } from 'rxjs';
-import { GithubService } from '../../shells/main-window/services/github.service';
 import { SearchPluginInfo } from '../dto/search-plugin-info.dto';
 import { EnvironmentService } from './environment.service';
+import { GithubService } from './github.service';
 import { MonitoringService } from './monitoring.service';
 
 const PLUGIN_INSTALLED_EVENT_NAME = 'plugin-installed-event';

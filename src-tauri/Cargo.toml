@@ -1,6 +1,6 @@
 [package]
 name = "just-clipboard-manager"
-version = "4.0.3"
+version = "4.0.4"
 description = "A powerful, extensible, open-source clipboard manager designed for efficiency and seamless clipboard history management."
 authors = ["Yevheniy Tymchishin <timchishinevgeniy@gmail.com>"]
 edition = "2021"
@@ -8,16 +8,6 @@ license-file = "../LICENSE"
 homepage = "https://github.com/Tum4ik/just-clipboard-manager"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[profile.dev]
-debug = true
-split-debuginfo = "packed"
-strip = true
-
-[profile.release]
-debug = true
-split-debuginfo = "packed"
-strip = true
 
 [lib]
 # The `_lib` suffix may seem redundant but it is necessary

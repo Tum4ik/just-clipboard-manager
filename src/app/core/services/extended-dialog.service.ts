@@ -1,4 +1,4 @@
-import { Directive, inject, Injectable, Type } from '@angular/core';
+import { inject, Injectable, Type } from '@angular/core';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { firstValueFrom } from 'rxjs';
 import { MonitoringService } from './monitoring.service';
@@ -37,9 +37,10 @@ export class ExtendedDialogService extends DialogService {
 }
 
 
-@Directive()
+// @Directive()
 export abstract class BaseDialog<TResult, TData = void> {
-  constructor(protected readonly dialogRef: DynamicDialogRef) { }
+  // constructor(protected readonly dialogRef: DynamicDialogRef) { }
+  protected readonly dialogRef = inject(DynamicDialogRef);
 
   abstract onDialogLoaded(data: TData): void;
 

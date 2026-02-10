@@ -1,5 +1,5 @@
 import { provideHttpClient, withFetch } from "@angular/common/http";
-import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideTranslateService, TranslateService } from "@ngx-translate/core";
@@ -19,7 +19,6 @@ import { AuraBluePreset } from "./theming/presets/aura-blue.preset";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes,
       withRouterConfig({ paramsInheritanceStrategy: 'always' }),
       withComponentInputBinding()

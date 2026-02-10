@@ -21,7 +21,7 @@
       {{ 'plugin..by' | translate }} {{ pluginInfo.plugin.author.name }}
     </ng-template>
     }
-    {{ pluginInfo.plugin.description![lang] }}
+    {{ pluginInfo.plugin.description![lang()] }}
     <ng-template #footer>
       <div class="footer">
         @if (!isBuiltInPlugin(pluginInfo.plugin.id)){

@@ -19,7 +19,7 @@ export class GlobalShortcutsRegistrationService extends BaseShortcutsService {
 
   async initAsync(): Promise<void> {
     const shortcut = await this.getCallPasteWindowShortcutAsync();
-    if (await this.isShortcutRegistered(shortcut)) {
+    if (await this.isShortcutRegisteredAsync(shortcut)) {
       await invoke('open_main_window', { topLevelTabId: MainWindowTabId.settings, nestedLevelTabId: 'hot-keys' });
     }
     else {
@@ -29,6 +29,8 @@ export class GlobalShortcutsRegistrationService extends BaseShortcutsService {
 
 
   protected override async onCallPasteWindowShortcutChanged(e: Event<ShortcutChangedEvent>) {
+    super.onCallPasteWindowShortcutChanged(e);
+
     const oldShortcutString = this.buildShortcutString(e.payload.oldShortcut);
     try {
       if (await isRegistered(oldShortcutString)) {

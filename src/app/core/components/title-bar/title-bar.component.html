@@ -1,7 +1,7 @@
-<p-menubar data-tauri-drag-region [style]="{ 'border-width': '0' }">
+<p-menubar data-tauri-drag-region>
   <ng-template #start>
     <img data-tauri-drag-region class="icon" src="/assets/icon.ico" />
-    <span data-tauri-drag-region class="title">{{ productName }}</span>
+    <span data-tauri-drag-region class="title">{{ productName() }}</span>
   </ng-template>
   <ng-template #end>
     @if (isMinimizeAvailable()) {
@@ -20,7 +20,7 @@
     </p-button>
     }
     <p-button [text]="true" size="large" (onClick)="maximizeOrRestore()">
-      @if (isWindowMaximized){
+      @if (isWindowMaximized()){
       <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.99902 2.96387C8.99902 2.69368 8.94531 2.43978 8.83789 2.20215C8.73047 1.96126 8.58398 1.75293
                  8.39844 1.57715C8.21615 1.39811 8.00293 1.25814 7.75879 1.15723C7.5179 1.05306 7.264 1.00098 6.99707

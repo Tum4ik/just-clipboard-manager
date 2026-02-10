@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { Shortcut } from '@app/core/services/base-shortcuts.service';
 import { GlobalShortcutsSettingService } from '@app/shells/main-window/services/global-shortcuts-setting.service';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -22,14 +22,15 @@ export class HotKeysSettingsComponent implements OnInit {
     private readonly globalShortcutsSettingService: GlobalShortcutsSettingService,
   ) { }
 
-  callPasteWindowShortcut?: Shortcut;
+  protected readonly callPasteWindowShortcut = signal<Shortcut | undefined>(undefined);
+  private readonly callPasteWindowShortcutEffect = effect(async () => {
+    const newShortcut = this.callPasteWindowShortcut();
+    if (newShortcut) {
+      await this.globalShortcutsSettingService.setCallPasteWindowShortcutAsync(newShortcut);
+    }
+  });
 
-  async ngOnInit() {
-    this.callPasteWindowShortcut = await this.globalShortcutsSettingService.getCallPasteWindowShortcutAsync();
-  }
-
-  async onCallPasteWindowShortcutChanged(newShortcut: Shortcut) {
-    this.callPasteWindowShortcut = newShortcut;
-    await this.globalShortcutsSettingService.setCallPasteWindowShortcutAsync(newShortcut);
+  ngOnInit() {
+    this.globalShortcutsSettingService.getCallPasteWindowShortcutAsync().then(s => this.callPasteWindowShortcut.set(s));
   }
 }

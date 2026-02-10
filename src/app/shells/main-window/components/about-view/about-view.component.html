@@ -3,8 +3,8 @@
   <div class="logo-section">
     <img src="/assets/icon.ico" class="logo" />
     <div class="text-items">
-      <div class="bold">{{ productName }}</div>
-      <div>{{ 'about..version' | translate }} {{ version }}</div>
+      <div class="bold">{{ productName() }}</div>
+      <div>{{ 'about..version' | translate }} {{ version() }}</div>
       <div>{{ 'about..copyright' | translate:{years: '2022-2026'} }}</div>
     </div>
   </div>
@@ -74,13 +74,13 @@
       <div class="contact-item">
         <google-icon iconName="alternate_email" />
         <span class="direct-email-label">{{ 'about..direct-email' | translate }}:</span>
-        <span>{{ email }}</span>
+        <span>{{ email() }}</span>
         <p-button size="small"
-                  [severity]="isEmailCopied ? 'success' : 'secondary'"
+                  [severity]="isEmailCopied() ? 'success' : 'secondary'"
                   [text]="true"
                   [matTooltip]="'about..copy-to-clipboard' | translate"
                   (onClick)="copyEmailToClipboard()">
-          <google-icon [iconName]="isEmailCopied ? 'check' : 'assignment'" />
+          <google-icon [iconName]="isEmailCopied() ? 'check' : 'assignment'" />
         </p-button>
       </div>
     </div>

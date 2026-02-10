@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { SettingsService, ThemeMode } from '@app/core/services/settings.service';
 import { ThemeService } from '@app/core/services/theme.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Select, SelectChangeEvent } from 'primeng/select';
+import { Select } from 'primeng/select';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { LANGUAGE_INFO } from '../../../../../../core/constants/language-info';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
@@ -37,12 +37,24 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
 
   private langChangedSubscription?: Subscription;
 
-  readonly languages: LanguageItem[];
-  selectedLanguage: LanguageItem | undefined;
+  protected readonly languages: LanguageItem[];
+  protected readonly selectedLanguage = signal<LanguageItem | undefined>(undefined);
+  private readonly selectedLanguageEffect = effect(() => {
+    const selectedLanguage = this.selectedLanguage();
+    if (selectedLanguage?.code) {
+      this.settingsService.setLanguageAsync(selectedLanguage.code);
+    }
+  });
 
-  readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
-  selectedThemeMode?: ThemeMode;
-  getThemeModeIconName(themeMode: ThemeMode): string {
+  protected readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
+  protected readonly selectedThemeMode = signal<ThemeMode | undefined>(undefined);
+  private readonly selectedThemeModeEffect = effect(() => {
+    const selectedThemeMode = this.selectedThemeMode();
+    if (selectedThemeMode) {
+      this.themeService.setThemeModeAsync(selectedThemeMode);
+    }
+  });
+  protected getThemeModeIconName(themeMode: ThemeMode): string {
     switch (themeMode) {
       case 'light': return 'light_mode';
       case 'dark': return 'dark_mode';
@@ -51,27 +63,23 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.selectedLanguage = this.languages.find(l => l.code === this.translateService.getCurrentLang());
+    this.setSelectedLanguage(this.translateService.getCurrentLang());
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
-      this.selectedLanguage = this.languages.find(l => l.code === e.lang);
+      this.setSelectedLanguage(e.lang);
     });
-    this.selectedThemeMode = await firstValueFrom(this.themeService.themeMode$);
+
+    const selectedThemeMode = await firstValueFrom(this.themeService.themeMode$);
+    this.selectedThemeMode.set(selectedThemeMode);
   }
 
   ngOnDestroy(): void {
     this.langChangedSubscription?.unsubscribe();
   }
 
-  onLanguageChanged(e: SelectChangeEvent) {
-    if (this.selectedLanguage?.code) {
-      this.settingsService.setLanguageAsync(this.selectedLanguage.code);
-    }
-  }
 
-  onThemeModeChanged(e: SelectChangeEvent) {
-    if (this.selectedThemeMode) {
-      this.themeService.setThemeModeAsync(this.selectedThemeMode);
-    }
+  private setSelectedLanguage(lang: string) {
+    const selectedLanguage = this.languages.find(l => l.code === lang);
+    this.selectedLanguage.set(selectedLanguage);
   }
 }
 
