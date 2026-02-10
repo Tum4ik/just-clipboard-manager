@@ -1,3 +1,3 @@
 # Fixes
 
-*
+* Improved icons preloading.
