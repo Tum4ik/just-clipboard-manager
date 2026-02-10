@@ -41,10 +41,9 @@ pub fn open_main_window(
       }
       std::thread::spawn(move || {
         let _ = tauri::WebviewWindowBuilder::from_config(&handle, &config)
-          .unwrap()
-          .build()
-          .unwrap()
-          .set_focus();
+          .and_then(|builder| builder.build())
+          .and_then(|window| window.set_focus())
+          .map_err(|e| sentry::capture_error(&e));
       });
     }
   }
