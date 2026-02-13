@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { EnvironmentService } from "@app/core/services/environment.service";
+import { LanguageSwitchingService } from "@app/core/services/language-switching-service";
 import { MonitoringService } from "@app/core/services/monitoring.service";
 import { TranslateService } from "@ngx-translate/core";
 import { defaultWindowIcon } from '@tauri-apps/api/app';
@@ -11,14 +12,13 @@ import { exit, relaunch } from '@tauri-apps/plugin-process';
 import { check, Update } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from "rxjs";
 import { LANGUAGE_INFO } from "../../core/constants/language-info";
-import { SettingsService } from "../../core/services/settings.service";
 import { MainWindowTabId } from "../main-window/main-window.component";
 
 @Injectable()
 export class AppTray {
   constructor(
     private readonly translateService: TranslateService,
-    private readonly settingsService: SettingsService,
+    private readonly languageSwitchingService: LanguageSwitchingService,
     private readonly monitoring: MonitoringService,
     private readonly environment: EnvironmentService,
   ) { }
@@ -59,11 +59,11 @@ export class AppTray {
     });
 
     const languageItems: CheckMenuItem[] = [];
-    for (const lang of this.translateService.getLangs()) {
+    for (const lang of this.languageSwitchingService.supportedLanguages) {
       const langItem = await CheckMenuItem.new({
         id: lang,
         text: LANGUAGE_INFO[lang].nativeName,
-        action: () => this.settingsService.setLanguageAsync(lang)
+        action: () => this.languageSwitchingService.setLanguageAsync(lang)
       });
       languageItems.push(langItem);
     }
