@@ -10,7 +10,7 @@ export class PasteWindowOpacityService {
   constructor(
     private readonly settingsService: SettingsService,
   ) {
-    this.settingsService.getPasteWindowOpacityPercentageAsync().then(opacity => {
+    this.settingsService.pasteWindowOpacityPercentage.getAsync().then(opacity => {
       this.opacityPercentage.next(opacity);
     });
     listen<number>(OPACITY_PERCENTAGE_CHANGED_EVENT_NAME, this.onOpacityPercentageGloballyChanged.bind(this));
@@ -21,7 +21,7 @@ export class PasteWindowOpacityService {
 
 
   async setOpacityPercentageAsync(opacity: number): Promise<void> {
-    await this.settingsService.setPasteWindowOpacityPercentageAsync(opacity);
+    await this.settingsService.pasteWindowOpacityPercentage.setAsync(opacity);
     await emit<number>(OPACITY_PERCENTAGE_CHANGED_EVENT_NAME, opacity);
   }
 
