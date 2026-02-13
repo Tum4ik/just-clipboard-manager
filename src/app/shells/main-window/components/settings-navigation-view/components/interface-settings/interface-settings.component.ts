@@ -49,7 +49,7 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   private readonly selectedLanguageEffect = effect(async () => {
     const selectedLanguage = this.selectedLanguage();
     if (selectedLanguage?.code) {
-      await this.languageSwitchingService.setLanguageAsync(Language[selectedLanguage.code as keyof typeof Language]);
+      await this.languageSwitchingService.setLanguageAsync(selectedLanguage.code as Language);
     }
   });
 
