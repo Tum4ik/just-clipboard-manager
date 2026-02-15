@@ -12,15 +12,15 @@ export class ClipsAutoDeleteService {
   readonly deletionPeriodTypes: DeletionPeriodType[] = Object.values(DeletionPeriodType);
 
   async getClipsAutoDeletePeriodAsync(): Promise<{ quantity: number, periodType: DeletionPeriodType; }> {
-    return await this.settingsService.getClipsAutoDeletePeriodAsync();
+    return await this.settingsService.clipsAutoDeletePeriod.getAsync();
   }
 
   async setClipsAutoDeletePeriodAsync(periodQuantity: number, periodType: DeletionPeriodType) {
-    await this.settingsService.setClipsAutoDeletePeriodAsync({ quantity: periodQuantity, periodType: periodType });
+    await this.settingsService.clipsAutoDeletePeriod.setAsync({ quantity: periodQuantity, periodType: periodType });
   }
 
   async deleteOutdatedClipsAsync(): Promise<void> {
-    const autoDeletePeriod = await this.settingsService.getClipsAutoDeletePeriodAsync();
+    const autoDeletePeriod = await this.settingsService.clipsAutoDeletePeriod.getAsync();
     if (autoDeletePeriod.quantity <= 0) {
       return;
     }

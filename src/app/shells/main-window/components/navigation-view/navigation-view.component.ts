@@ -1,38 +1,35 @@
-import { Component, input, output } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Tab, TabContent, TabList, TabPanel, Tabs } from '@angular/aria/tabs';
+import { NgComponentOutlet } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { Menu } from 'primeng/menu';
+import { ButtonDirective } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
+import { NavigationMenuItem } from './navigation-view';
 
 @Component({
   selector: 'jcm-navigation-view',
   templateUrl: './navigation-view.component.html',
   styleUrl: './navigation-view.component.scss',
   imports: [
-    Menu,
     Ripple,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
+    ButtonDirective,
+    NgComponentOutlet,
     TranslatePipe,
-    GoogleIcon
+    GoogleIcon,
+    TabList, Tab, Tabs, TabPanel, TabContent,
   ]
 })
 export class NavigationViewComponent {
-  private urlToPathname: Map<string, string> = new Map();
+  readonly items = input.required<NavigationMenuItem[]>();
+  readonly nestedLevelTabId = input<string>();
 
-  readonly items = input.required<MenuItem[]>();
-  readonly hrefActivated = output<string>();
-
-  navigationItemClicked(url: string) {
-    let href = this.urlToPathname.get(url);
-    if (!href) {
-      href = new URL(url).pathname;
-      this.urlToPathname.set(url, href);
+  protected readonly selectedItem = computed(() => {
+    const tabId = this.nestedLevelTabId();
+    const itemsIds = this.items().map(i => i.id);
+    if (tabId && itemsIds.includes(tabId)) {
+      return tabId;
     }
-
-    this.hrefActivated.emit(href);
-  }
+    return itemsIds[0];
+  });
 }

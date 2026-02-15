@@ -16,7 +16,7 @@ export class ThemeService extends GlobalStateService {
   ) {
     super();
 
-    this.settingsService.getThemeModeAsync().then(themeMode => {
+    this.settingsService.themeMode.getAsync().then(themeMode => {
       this.setMode(themeMode);
     });
     window.matchMedia(PREFERS_COLOR_SCHEME_DARK).addEventListener('change', e => {
@@ -36,7 +36,7 @@ export class ThemeService extends GlobalStateService {
   isDarkTheme$ = this.isDarkTheme.asObservable();
 
   async setThemeModeAsync(themeMode: ThemeMode) {
-    await this.settingsService.setThemeModeAsync(themeMode);
+    await this.settingsService.themeMode.setAsync(themeMode);
     await this.themeModeGlobalSetter.setAsync(themeMode);
   }
 

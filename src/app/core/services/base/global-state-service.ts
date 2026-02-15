@@ -1,8 +1,14 @@
 import { emit, EventCallback, EventName, listen, UnlistenFn } from '@tauri-apps/api/event';
 
 export abstract class GlobalStateService {
-  protected registerGlobalObservable<T>(event: EventName, handler: EventCallback<T>): GlobalStateSetter<T> {
-    return new GlobalStateSetter<T>(event, listen<T>(event, handler));
+  private static registeredEvents = new Set<EventName>();
+
+  protected registerGlobalObservable<T>(event: EventName, onGloballyChangedCallback: EventCallback<T>): GlobalStateSetter<T> {
+    if (GlobalStateService.registeredEvents.has(event)) {
+      throw new Error('The global event is already registered.');
+    }
+    GlobalStateService.registeredEvents.add(event);
+    return new GlobalStateSetter<T>(event, listen<T>(event, onGloballyChangedCallback));
   }
 }
 

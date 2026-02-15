@@ -26,22 +26,22 @@ export class PasteWindowSnappingService {
 
   private snappingMode?: SnappingMode;
   async getSnappingModeAsync(): Promise<SnappingMode> {
-    return this.snappingMode ??= await this.settingsService.getPasteWindowSnappingModeAsync();
+    return this.snappingMode ??= await this.settingsService.pasteWindowSnappingMode.getAsync();
   }
 
   async setSnappingModeAsync(mode: SnappingMode): Promise<void> {
-    await this.settingsService.setPasteWindowSnappingModeAsync(mode);
+    await this.settingsService.pasteWindowSnappingMode.setAsync(mode);
     await emit<SnappingMode>(SNAPPING_MODE_CHANGED_EVENT_NAME, mode);
   }
 
 
   private displayEdgePosition?: DisplayEdgePosition;
   async getDisplayEdgePositionAsync(): Promise<DisplayEdgePosition> {
-    return this.displayEdgePosition ??= await this.settingsService.getPasteWindowDisplayEdgePositionAsync();
+    return this.displayEdgePosition ??= await this.settingsService.pasteWindowDisplayEdgePosition.getAsync();
   }
 
   async setDisplayEdgePositionAsync(position: DisplayEdgePosition): Promise<void> {
-    await this.settingsService.setPasteWindowDisplayEdgePositionAsync(position);
+    await this.settingsService.pasteWindowDisplayEdgePosition.setAsync(position);
     await emit<DisplayEdgePosition>(DISPLAY_EDGE_POSITION_CHANGED_EVENT_NAME, position);
   }
 

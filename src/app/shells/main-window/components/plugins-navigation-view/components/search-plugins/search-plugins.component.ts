@@ -36,12 +36,12 @@ export class SearchPluginsComponent {
   ) {
     this.lang = toSignal(
       this.translateService.onLangChange.pipe(map(e => e.lang)),
-      { initialValue: translateService.currentLang }
+      { initialValue: translateService.getCurrentLang() }
     );
   }
 
   private searchPlugins?: Promise<SearchPluginInfo[]>;
-  readonly plugins = computed<Promise<readonly SearchPluginViewModel[]>>(() => {
+  protected readonly plugins = computed<Promise<readonly SearchPluginViewModel[]>>(() => {
     const installedPlugins = this.pluginsService.installedPlugins();
     this.searchPlugins ??= this.pluginsService.searchPluginsAsync();
     return this.searchPlugins.then(plugins => {
@@ -54,10 +54,10 @@ export class SearchPluginsComponent {
       });
     });
   });
-  readonly lang: Signal<string>;
+  protected readonly lang: Signal<string>;
 
 
-  async install(plugin: SearchPluginViewModel) {
+  protected async install(plugin: SearchPluginViewModel) {
     if (plugin.isInstalling) {
       return;
     }

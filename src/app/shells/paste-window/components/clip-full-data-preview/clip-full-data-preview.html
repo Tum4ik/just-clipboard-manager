@@ -1,11 +1,11 @@
 <jcm-title-bar [isMinimizeAvailable]="false" />
 <div #panelWrapper class="panel">
   <p-panel>
-    <p-scroll-panel [style.height.px]="scrollHeight">
-      @if (isLoading) {
+    <p-scroll-panel [style.height.px]="scrollHeight()">
+      @if (isLoading()) {
       <p-progress-spinner />
       }
-      <div #previewContent [hidden]="isLoading"></div>
+      <div #previewContent [hidden]="isLoading()"></div>
     </p-scroll-panel>
   </p-panel>
 </div>

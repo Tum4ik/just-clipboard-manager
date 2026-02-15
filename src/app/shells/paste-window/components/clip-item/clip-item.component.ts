@@ -42,33 +42,33 @@ export class ClipItemComponent {
   readonly unpinItemRequested = output<number>();
   readonly deleteItemRequested = output<number>();
 
-  readonly isMouseOver = signal(false);
+  protected readonly isMouseOver = signal(false);
 
-  onMouseenter() {
+  protected onMouseenter() {
     this.isMouseOver.set(true);
   }
 
-  onMouseleave() {
+  protected onMouseleave() {
     this.isMouseOver.set(false);
   }
 
-  paste() {
+  protected paste() {
     this.pasteDataRequested.emit(this.clipId());
   }
 
-  preview() {
+  protected preview() {
     this.previewDataRequested.emit(this.clipId());
   }
 
-  pin() {
+  protected pin() {
     this.pinItemRequested.emit(this.clipId());
   }
 
-  unpin() {
+  protected unpin() {
     this.unpinItemRequested.emit(this.clipId());
   }
 
-  delete() {
+  protected delete() {
     this.deleteItemRequested.emit(this.clipId());
   }
 }

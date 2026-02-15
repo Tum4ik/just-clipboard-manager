@@ -1,32 +1,39 @@
 import { Component } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { NavigationView } from '../navigation-view/navigation-view';
+import { NavigationMenuItem, NavigationView } from '../navigation-view/navigation-view';
+import { GeneralSettingsComponent } from './components/general-settings/general-settings.component';
+import { HotKeysSettingsComponent } from './components/hot-keys-settings/hot-keys-settings.component';
+import { InterfaceSettingsComponent } from './components/interface-settings/interface-settings.component';
+import { PasteWindowSettingsComponent } from './components/paste-window-settings/paste-window-settings.component';
 
 @Component({
   selector: 'jcm-settings-navigation-view',
   template: '',
 })
 export class SettingsNavigationViewComponent extends NavigationView {
-  items: MenuItem[] = [
+  protected override readonly items: NavigationMenuItem[] = [
     {
+      id: 'general',
       label: 'settings..general',
       icon: 'tune',
-      routerLink: 'general'
+      component: GeneralSettingsComponent
     },
     {
+      id: 'interface',
       label: 'settings..interface',
       icon: 'display_settings',
-      routerLink: 'interface'
+      component: InterfaceSettingsComponent
     },
     {
+      id: 'paste-window',
       label: 'settings..paste-window',
       icon: 'wysiwyg',
-      routerLink: 'paste-window'
+      component: PasteWindowSettingsComponent
     },
     {
+      id: 'hot-keys',
       label: 'settings..hot-keys',
       icon: 'keyboard',
-      routerLink: 'hot-keys'
+      component: HotKeysSettingsComponent
     }
   ];
 }

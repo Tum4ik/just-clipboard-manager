@@ -46,7 +46,7 @@ export class PasteWindowClipsService {
     const orderedClips: PasteWindowClip[] = [];
 
     // Get pinned clips order from settings
-    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    const order = await this.settingsService.pinnedClipsOrder.getAsync();
     let shouldSaveNewOrder = false;
 
     for (const pinnedClipId of order) {
@@ -77,7 +77,7 @@ export class PasteWindowClipsService {
     }
 
     if (shouldSaveNewOrder) {
-      await this.settingsService.setPinnedClipsOrderAsync(order);
+      await this.settingsService.pinnedClipsOrder.setAsync(order);
     }
 
     this._orderedPinnedClips.set(orderedClips);
@@ -118,9 +118,9 @@ export class PasteWindowClipsService {
 
   async pinClipAsync(clipId: number) {
     await this.pinnedClipsRepository.addPinnedClipAsync(clipId);
-    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    const order = await this.settingsService.pinnedClipsOrder.getAsync();
     order.push(clipId);
-    await this.settingsService.setPinnedClipsOrderAsync(order);
+    await this.settingsService.pinnedClipsOrder.setAsync(order);
 
     this._regularClips.update(rc => {
       const clipToPin = rc.find(c => c.clipId === clipId)!;
@@ -135,9 +135,9 @@ export class PasteWindowClipsService {
 
 
   async unpinClipAsync(clipId: number) {
-    const order = await this.settingsService.getPinnedClipsOrderAsync();
+    const order = await this.settingsService.pinnedClipsOrder.getAsync();
     order.splice(order.indexOf(clipId), 1);
-    await this.settingsService.setPinnedClipsOrderAsync(order);
+    await this.settingsService.pinnedClipsOrder.setAsync(order);
 
     await this.pinnedClipsRepository.deletePinnedClipAsync(clipId);
     await this.clipsRepository.updateClippedAtAsync(clipId, new Date());

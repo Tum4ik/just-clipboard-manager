@@ -11,11 +11,11 @@ export class PasteWindowSizingService extends GlobalStateService {
   ) {
     super();
 
-    this.settingsService.getPasteWindowSizeAsync().then(size => {
+    this.settingsService.pasteWindowSize.getAsync().then(size => {
       this.width.next(size.width);
       this.height.next(size.height);
     });
-    this.settingsService.getPasteWindowPinnedClipsHeightPercentageAsync().then(percentage => {
+    this.settingsService.pasteWindowPinnedClipsHeightPercentage.getAsync().then(percentage => {
       this.pinnedClipsHeightPercentage.next(percentage);
     });
   }
@@ -40,12 +40,12 @@ export class PasteWindowSizingService extends GlobalStateService {
 
 
   async setSize(width: number, height: number) {
-    await this.settingsService.setPasteWindowSizeAsync({ width, height });
+    await this.settingsService.pasteWindowSize.setAsync({ width, height });
     await this.sizeGlobalSetter.setAsync({ width, height });
   }
 
   async setPinnedClipsHeightPercentage(heightPercentage: number) {
-    await this.settingsService.setPasteWindowPinnedClipsHeightPercentageAsync(heightPercentage);
+    await this.settingsService.pasteWindowPinnedClipsHeightPercentage.setAsync(heightPercentage);
     await this.pinnedClipsAreaHeightGlobalSetter.setAsync(heightPercentage);
   }
 

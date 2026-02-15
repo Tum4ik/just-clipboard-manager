@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
 import { ExtendedDialogService } from '@app/core/services/extended-dialog.service';
@@ -29,26 +29,23 @@ import { ConfirmPluginUninstall, ConfirmPluginUninstallResult } from './dialogs/
   ]
 })
 export class InstalledPlugins implements OnInit, OnDestroy {
-  constructor(
-    private readonly pluginsService: PluginsService,
-    private readonly translateService: TranslateService,
-    private readonly dialogService: ExtendedDialogService,
-    private readonly clipsRepository: ClipsRepository,
-  ) {
-    this.lang = this.translateService.getCurrentLang();
-  }
+  private readonly pluginsService = inject(PluginsService);
+  private readonly translateService = inject(TranslateService);
+  private readonly dialogService = inject(ExtendedDialogService);
+  private readonly clipsRepository = inject(ClipsRepository);
+
 
   private langChangedSubscription?: Subscription;
 
-  lang: string;
+  protected readonly lang = signal(this.translateService.getCurrentLang());
 
-  get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
+  protected get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
     return this.pluginsService.installedPlugins;
   }
 
   ngOnInit(): void {
     this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
-      this.lang = e.lang;
+      this.lang.set(e.lang);
     });
   }
 
@@ -57,7 +54,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
   }
 
 
-  async uninstall(plugin: ClipboardDataPlugin) {
+  protected async uninstall(plugin: ClipboardDataPlugin) {
     const result = await this.dialogService.openAsync(ConfirmPluginUninstall, {
       header: `${this.translateService.instant('uninstall')} ${plugin.name}`
     });
@@ -75,7 +72,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
   }
 
 
-  async togglePlugin(plugin: ClipboardDataPlugin, enabled: boolean) {
+  protected async togglePlugin(plugin: ClipboardDataPlugin, enabled: boolean) {
     if (enabled) {
       await this.pluginsService.enablePluginAsync(plugin.id);
     } else {
@@ -84,7 +81,7 @@ export class InstalledPlugins implements OnInit, OnDestroy {
   }
 
 
-  isBuiltInPlugin(pluginId: PluginId) {
+  protected isBuiltInPlugin(pluginId: PluginId) {
     return this.pluginsService.isBuiltInPlugin(pluginId);
   }
 }

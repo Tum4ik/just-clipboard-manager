@@ -1,7 +1,7 @@
 <div class="root"
      [style.background-color]="isDarkMode() ? '#121212': 'white'"
      [style.opacity]="opacity()">
-  <p-block-ui [blocked]="isWindowBlocked" hidden />
+  <p-block-ui [blocked]="isWindowBlocked()" hidden />
   @if (isSettingsMode()){
   <div class="resize-handle top"></div>
   <div class="resize-handle bottom"></div>

@@ -26,7 +26,7 @@ pub fn clipboard_listener(app: &mut App) -> Result<(), Box<dyn std::error::Error
   unsafe {
     AddClipboardFormatListener(hwnd).expect("failed to add clipboard format listener");
 
-    let prev_proc = SetWindowLongPtrW(hwnd, GWLP_WNDPROC, wnd_proc as _);
+    let prev_proc = SetWindowLongPtrW(hwnd, GWLP_WNDPROC, wnd_proc as *const () as _);
     if prev_proc == 0 {
       panic!("Failed to set window procedure.");
     }

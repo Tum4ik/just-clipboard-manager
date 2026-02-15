@@ -1,126 +1,33 @@
 import { Injectable } from '@angular/core';
 import { Theme } from '@tauri-apps/api/window';
-import { LazyStore } from '@tauri-apps/plugin-store';
-
-const LANGUAGE = 'language';
-const THEME_MODE = 'theme-mode';
-const THEME_PRESET = 'theme-preset';
-const PASTE_WINDOW_SIZE = 'paste-window-size';
-const PASTE_WINDOW_HEIGHT_PERCENTAGE = 'paste-window-height-percentage';
-const PASTE_WINDOW_SNAPPING_MODE = 'paste-window-snapping-mode';
-const PASTE_WINDOW_DISPLAY_EDGE_POSITION = 'paste-window-display-edge-position';
-const PASTE_WINDOW_OPACITY_PERCENTAGE = 'paste-window-opacity-percentage';
-const PINNED_CLIPS_ORDER = 'pinned-clips-order';
-const CLIPS_AUTO_DELETE_PERIOD = 'clips-auto-delete-period';
+import { BaseSettingsService } from './base/base-settings-service';
 
 @Injectable({ providedIn: 'root' })
-export class SettingsService {
+export class SettingsService extends BaseSettingsService {
   constructor() {
-    this.store = new LazyStore('settings.json', { defaults: {}, autoSave: false });
+    super('settings');
   }
 
-  private readonly store: LazyStore;
-
-
-  async getLanguageAsync(): Promise<string> {
-    return await this.store.get<string>(LANGUAGE) ?? 'en';
-  }
-
-  async setLanguageAsync(language: string): Promise<void> {
-    await this.store.set(LANGUAGE, language);
-    await this.store.save();
-  }
-
-  onLanguageChanged(cb: (value: string | undefined) => void): Promise<() => void> {
-    return this.store.onChange<string>((k, v) => {
-      if (k === LANGUAGE) {
-        cb(v);
-      }
-    });
-  }
-
-
-  async getThemeModeAsync(): Promise<ThemeMode> {
-    return await this.store.get<ThemeMode>(THEME_MODE) ?? 'system';
-  }
-
-  async setThemeModeAsync(themeMode: ThemeMode): Promise<void> {
-    await this.store.set(THEME_MODE, themeMode);
-    await this.store.save();
-  }
-
-
-  async getPasteWindowSizeAsync(): Promise<Size> {
-    return await this.store.get<Size>(PASTE_WINDOW_SIZE) ?? { width: 400, height: 400 };
-  }
-
-  async setPasteWindowSizeAsync(size: Size): Promise<void> {
-    await this.store.set(PASTE_WINDOW_SIZE, size);
-    await this.store.save();
-  }
-
-
-  async getPasteWindowPinnedClipsHeightPercentageAsync(): Promise<number> {
-    return await this.store.get<number>(PASTE_WINDOW_HEIGHT_PERCENTAGE) ?? 40;
-  }
-
-  async setPasteWindowPinnedClipsHeightPercentageAsync(heightPercentage: number): Promise<void> {
-    await this.store.set(PASTE_WINDOW_HEIGHT_PERCENTAGE, heightPercentage);
-    await this.store.save();
-  }
-
-
-  async getPasteWindowSnappingModeAsync(): Promise<SnappingMode> {
-    return await this.store.get<SnappingMode>(PASTE_WINDOW_SNAPPING_MODE) ?? SnappingMode.MouseCursor;
-  }
-
-  async setPasteWindowSnappingModeAsync(mode: SnappingMode): Promise<void> {
-    await this.store.set(PASTE_WINDOW_SNAPPING_MODE, mode);
-    await this.store.save();
-  }
-
-
-  async getPasteWindowDisplayEdgePositionAsync(): Promise<DisplayEdgePosition> {
-    return await this.store.get<DisplayEdgePosition>(PASTE_WINDOW_DISPLAY_EDGE_POSITION) ?? DisplayEdgePosition.TopLeft;
-  }
-
-  async setPasteWindowDisplayEdgePositionAsync(position: DisplayEdgePosition): Promise<void> {
-    await this.store.set(PASTE_WINDOW_DISPLAY_EDGE_POSITION, position);
-    await this.store.save();
-  }
-
-
-  async getPasteWindowOpacityPercentageAsync(): Promise<number> {
-    return await this.store.get<number>(PASTE_WINDOW_OPACITY_PERCENTAGE) ?? 100;
-  }
-
-  async setPasteWindowOpacityPercentageAsync(opacity: number): Promise<void> {
-    await this.store.set(PASTE_WINDOW_OPACITY_PERCENTAGE, opacity);
-    await this.store.save();
-  }
-
-
-  async getPinnedClipsOrderAsync(): Promise<number[]> {
-    return await this.store.get<number[]>(PINNED_CLIPS_ORDER) ?? [];
-  }
-
-  async setPinnedClipsOrderAsync(order: number[]): Promise<void> {
-    await this.store.set(PINNED_CLIPS_ORDER, order);
-    await this.store.save();
-  }
-
-
-  async getClipsAutoDeletePeriodAsync(): Promise<AutoDeletePeriod> {
-    return await this.store.get<AutoDeletePeriod>(CLIPS_AUTO_DELETE_PERIOD)
-      ?? { quantity: 3, periodType: DeletionPeriodType.Month };
-  }
-
-  async setClipsAutoDeletePeriodAsync(period: AutoDeletePeriod): Promise<void> {
-    await this.store.set(CLIPS_AUTO_DELETE_PERIOD, period);
-    await this.store.save();
-  }
+  readonly language = this.setting<Language>('language', Language.en);
+  readonly themeMode = this.setting<ThemeMode>('theme-mode', 'system');
+  readonly pasteWindowSize = this.setting<Size>('paste-window-size', { width: 400, height: 400 });
+  readonly pasteWindowPinnedClipsHeightPercentage = this.setting<number>('paste-window-height-percentage', 40);
+  readonly pasteWindowSnappingMode = this.setting<SnappingMode>('paste-window-snapping-mode', SnappingMode.MouseCursor);
+  readonly pasteWindowDisplayEdgePosition = this.setting<DisplayEdgePosition>(
+    'paste-window-display-edge-position', DisplayEdgePosition.TopLeft
+  );
+  readonly pasteWindowOpacityPercentage = this.setting<number>('paste-window-opacity-percentage', 100);
+  readonly pinnedClipsOrder = this.setting<number[]>('pinned-clips-order', []);
+  readonly clipsAutoDeletePeriod = this.setting<AutoDeletePeriod>(
+    'clips-auto-delete-period', { quantity: 3, periodType: DeletionPeriodType.Month }
+  );
 }
 
+
+export enum Language {
+  en = 'en',
+  uk = 'uk',
+}
 
 export type ThemeMode = 'system' | Theme;
 export interface Size { width: number; height: number; }

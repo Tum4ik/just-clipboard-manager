@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ClipsAutoDeleteService } from '@app/core/services/clips-auto-delete.service';
 import { DeletionPeriodType } from '@app/core/services/settings.service';
@@ -7,7 +7,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { invoke } from '@tauri-apps/api/core';
 import { InputNumber } from 'primeng/inputnumber';
 import { Select } from "primeng/select";
-import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
 
@@ -32,38 +32,39 @@ export class GeneralSettingsComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.isAutoStartEnabled = await invoke('autostart_is_enabled');
-    const { quantity, periodType } = await this.clipsAutoDeleteService.getClipsAutoDeletePeriodAsync();
-    this.periodQuantity = quantity;
-    this.selectedDeletionPeriodType = periodType;
+    invoke<boolean>('autostart_is_enabled').then(enabled => this.isAutoStartEnabled.set(enabled));
+    this.clipsAutoDeleteService.getClipsAutoDeletePeriodAsync().then(({ quantity, periodType }) => {
+      this.periodQuantity.set(quantity);
+      this.selectedDeletionPeriodType.set(periodType);
+    });
   }
 
-  isAutoStartEnabled = false;
-
-  periodQuantity = 1;
-  selectedDeletionPeriodType = DeletionPeriodType.Day;
-
-  get deletionPeriodTypes() {
-    return this.clipsAutoDeleteService.deletionPeriodTypes;
-  }
-
-
-  async setAutoStart(e: ToggleSwitchChangeEvent) {
-    if (e.checked) {
+  protected readonly isAutoStartEnabled = signal(false);
+  private readonly isAutoStartEnabledEffect = effect(async () => {
+    const checked = this.isAutoStartEnabled();
+    if (checked) {
       await invoke('autostart_enable');
     }
     else {
       await invoke('autostart_disable');
     }
+  });
+
+  protected readonly periodQuantity = signal(3);
+  protected readonly selectedDeletionPeriodType = signal(DeletionPeriodType.Day);
+  private readonly autoDeletePeriodEffect = effect(async () => {
+    const periodQuantity = this.periodQuantity();
+    const selectedDeletionPeriodType = this.selectedDeletionPeriodType();
+    await this.clipsAutoDeleteService.setClipsAutoDeletePeriodAsync(periodQuantity, selectedDeletionPeriodType);
+  });
+
+
+  protected get deletionPeriodTypes() {
+    return this.clipsAutoDeleteService.deletionPeriodTypes;
   }
 
 
-  async setClipsAutoDeletePeriod(periodQuantity: number, periodType: DeletionPeriodType) {
-    await this.clipsAutoDeleteService.setClipsAutoDeletePeriodAsync(periodQuantity, periodType);
-  }
-
-
-  getPluralCategory(quantity: number): Intl.LDMLPluralRule {
+  protected getPluralCategory(quantity: number): Intl.LDMLPluralRule {
     return getPluralCategory(quantity, this.translateService.getCurrentLang());
   }
 }

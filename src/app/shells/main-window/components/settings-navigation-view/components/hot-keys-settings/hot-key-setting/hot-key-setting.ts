@@ -1,12 +1,10 @@
-import { Component, computed, DOCUMENT, Inject, input, linkedSignal, OnDestroy, output, Renderer2, signal, viewChild } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, DOCUMENT, effect, Inject, linkedSignal, model, OnDestroy, Renderer2, signal, viewChild } from '@angular/core';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { Shortcut } from '@app/core/services/base-shortcuts.service';
 import { GlobalShortcutsSettingService } from '@app/shells/main-window/services/global-shortcuts-setting.service';
 import { isRegistered } from '@tauri-apps/plugin-global-shortcut';
 import { Button } from "primeng/button";
 import { Tag } from 'primeng/tag';
-import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'jcm-hot-key-setting',
@@ -25,83 +23,92 @@ export class HotKeySetting implements OnDestroy {
     private readonly renderer: Renderer2
   ) { }
 
-  readonly currentShortcut = input<Shortcut>();
-  readonly shortcutChanged = output<Shortcut>();
+  // readonly currentShortcut = input<Shortcut>();
+  // readonly shortcutChanged = output<Shortcut>();
+  readonly shortcut = model<Shortcut>();
 
-  readonly shortcutTag = viewChild.required<Tag>('shortcut');
+  private readonly shortcutTag = viewChild.required<Tag>('shortcut');
 
-  readonly displayShortcut = linkedSignal(() => this.currentShortcut());
+  // protected readonly displayShortcut = linkedSignal(() => this.currentShortcut());
+  protected readonly displayShortcut = linkedSignal(() => this.shortcut());
+  private readonly effect = effect(async () => {
+    const displayShortcut = this.displayShortcut();
+    const isShortcutRegisteredGlobally = displayShortcut
+      ? await this.globalShortcutsSettingService.isShortcutRegisteredAsync(displayShortcut)
+      : false;
+    this.isShortcutRegisteredGlobally.set(isShortcutRegisteredGlobally);
 
-  private readonly isShortcutRegisteredGlobally = toSignal(
-    toObservable(this.displayShortcut).pipe(
-      switchMap(shortcut => shortcut ? this.globalShortcutsSettingService.isShortcutRegistered(shortcut) : of(false))
-    )
-  );
+    let isShortcutRegisteredByThisApp = false;
+    if (displayShortcut) {
+      const shortcutString = this.globalShortcutsSettingService.buildShortcutString(displayShortcut);
+      isShortcutRegisteredByThisApp = await isRegistered(shortcutString);
+    }
+    this.isShortcutRegisteredByThisApp.set(isShortcutRegisteredByThisApp);
+  });
 
-  private readonly isShortcutRegisteredByThisApp = toSignal(
-    toObservable(this.displayShortcut).pipe(
-      switchMap(shortcut => {
-        if (!shortcut) {
-          return of(false);
-        }
-        const shortcutString = this.globalShortcutsSettingService.buildShortcutString(shortcut);
-        return isRegistered(shortcutString);
-      })
-    )
-  );
+  private readonly isShortcutRegisteredGlobally = signal(false);
+  private readonly isShortcutRegisteredByThisApp = signal(false);
 
-  readonly shortcutSeverity = computed(() => {
-    if (!this.displayShortcut()) {
+  protected readonly shortcutSeverity = computed(() => {
+    const displayShortcut = this.displayShortcut();
+    const isShortcutRegisteredGlobally = this.isShortcutRegisteredGlobally();
+    const isShortcutRegisteredByThisApp = this.isShortcutRegisteredByThisApp();
+    const isEditMode = this.isEditMode();
+    if (!displayShortcut) {
       return 'secondary';
     }
-    if (this.isShortcutRegisteredGlobally() && !this.isShortcutRegisteredByThisApp()) {
+    if (isShortcutRegisteredGlobally && !isShortcutRegisteredByThisApp) {
       return 'danger';
     }
-    if (this.isEditMode()) {
+    if (isEditMode) {
       return 'success';
     }
     return 'secondary';
   });
 
-  readonly isEditMode = signal(false);
+  protected readonly isEditMode = signal(false);
 
-  readonly canAccept = computed(() => {
-    return this.displayShortcut() && !this.isShortcutRegisteredGlobally();
+  protected readonly canAccept = computed(() => {
+    const displayShortcut = this.displayShortcut();
+    const isShortcutRegisteredGlobally = this.isShortcutRegisteredGlobally();
+    return displayShortcut && !isShortcutRegisteredGlobally;
   });
 
-  readonly canErase = computed(() => !!this.displayShortcut());
+  protected readonly canErase = computed(() => !!this.displayShortcut());
 
   ngOnDestroy(): void {
     this.document.removeEventListener('keydown', this._keydownListener);
   }
 
-  async edit() {
+  protected async edit() {
     this.document.addEventListener('keydown', this._keydownListener);
     this.isEditMode.set(true);
     this.renderer.setStyle(this.shortcutTag().el.nativeElement, 'min-width', `${this.shortcutTag().el.nativeElement.offsetWidth}px`);
     this.displayShortcut.set(undefined);
   }
 
-  accept() {
+  protected accept() {
     if (!this.canAccept()) {
       return;
     }
     this.document.removeEventListener('keydown', this._keydownListener);
     this.isEditMode.set(false);
-    this.shortcutChanged.emit(this.displayShortcut()!);
+    // this.shortcutChanged.emit(this.displayShortcut()!);
+    this.shortcut.set(this.displayShortcut());
   }
 
-  erase() {
+  protected erase() {
     if (!this.canErase()) {
       return;
     }
     this.displayShortcut.set(undefined);
   }
 
-  cancel() {
+  protected cancel() {
     this.document.removeEventListener('keydown', this._keydownListener);
     this.isEditMode.set(false);
-    this.displayShortcut.set(this.currentShortcut());
+    // this.displayShortcut.set(this.currentShortcut());
+    this.displayShortcut.set(this.shortcut());
   }
 
 

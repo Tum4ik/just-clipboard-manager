@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, contentChild, input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, contentChild, input, OnDestroy, OnInit, signal, TemplateRef } from '@angular/core';
 import { Card } from 'primeng/card';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../../../core/services/theme.service';
@@ -33,22 +33,22 @@ export class ShadedCardComponent implements OnInit, OnDestroy {
     [9, { light: 900, dark: 50 }],
   ]);
 
-  readonly titleTemplate = contentChild('title', { read: TemplateRef });
-  readonly subtitleTemplate = contentChild('subtitle', { read: TemplateRef });
-  readonly footerTemplate = contentChild('footer', { read: TemplateRef });
+  protected readonly titleTemplate = contentChild('title', { read: TemplateRef });
+  protected readonly subtitleTemplate = contentChild('subtitle', { read: TemplateRef });
+  protected readonly footerTemplate = contentChild('footer', { read: TemplateRef });
 
   readonly shadeLevel = input<Level>(1);
   readonly cardBodyPadding = input<string>('12px');
 
-  surfaceShade = 100;
+  protected readonly surfaceShade = signal(100);
 
   ngOnInit(): void {
     this.themeChangedSubscription = this.themeService.isDarkTheme$.subscribe(isDarkTheme => {
       if (isDarkTheme) {
-        this.surfaceShade = this.shades.get(this.shadeLevel())!.dark;
+        this.surfaceShade.set(this.shades.get(this.shadeLevel())!.dark);
       }
       else {
-        this.surfaceShade = this.shades.get(this.shadeLevel())!.light;
+        this.surfaceShade.set(this.shades.get(this.shadeLevel())!.light);
       }
     });
   }

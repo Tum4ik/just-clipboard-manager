@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject, linkedSignal, OnDestroy, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
-import { SettingsService, ThemeMode } from '@app/core/services/settings.service';
+import { LanguageSwitchingService } from '@app/core/services/language-switching-service';
+import { Language, ThemeMode } from '@app/core/services/settings.service';
 import { ThemeService } from '@app/core/services/theme.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Select, SelectChangeEvent } from 'primeng/select';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Select } from 'primeng/select';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { LANGUAGE_INFO } from '../../../../../../core/constants/language-info';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
@@ -27,22 +29,39 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
 })
 export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   constructor(
-    private readonly translateService: TranslateService,
-    private readonly settingsService: SettingsService,
+
     private readonly themeService: ThemeService
   ) {
-    this.languages = this.translateService.getLangs()
+    this.languages = this.languageSwitchingService.supportedLanguages
       .map(l => ({ code: l, nativeName: LANGUAGE_INFO[l].nativeName }) as LanguageItem);
   }
+  private readonly languageSwitchingService = inject(LanguageSwitchingService);
 
   private langChangedSubscription?: Subscription;
 
-  readonly languages: LanguageItem[];
-  selectedLanguage: LanguageItem | undefined;
+  protected readonly languages: LanguageItem[];
 
-  readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
-  selectedThemeMode?: ThemeMode;
-  getThemeModeIconName(themeMode: ThemeMode): string {
+  private readonly currentLanguage = toSignal(this.languageSwitchingService.currentLanguage$);
+  protected readonly selectedLanguage = linkedSignal(() => {
+    const currentLanguage = this.currentLanguage();
+    return this.languages.find(l => l.code === currentLanguage);
+  });
+  private readonly selectedLanguageEffect = effect(async () => {
+    const selectedLanguage = this.selectedLanguage();
+    if (selectedLanguage?.code) {
+      await this.languageSwitchingService.setLanguageAsync(selectedLanguage.code as Language);
+    }
+  });
+
+  protected readonly themeModes: ThemeMode[] = ['system', 'light', 'dark'];
+  protected readonly selectedThemeMode = signal<ThemeMode | undefined>(undefined);
+  private readonly selectedThemeModeEffect = effect(() => {
+    const selectedThemeMode = this.selectedThemeMode();
+    if (selectedThemeMode) {
+      this.themeService.setThemeModeAsync(selectedThemeMode);
+    }
+  });
+  protected getThemeModeIconName(themeMode: ThemeMode): string {
     switch (themeMode) {
       case 'light': return 'light_mode';
       case 'dark': return 'dark_mode';
@@ -51,27 +70,12 @@ export class InterfaceSettingsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.selectedLanguage = this.languages.find(l => l.code === this.translateService.getCurrentLang());
-    this.langChangedSubscription = this.translateService.onLangChange.subscribe(e => {
-      this.selectedLanguage = this.languages.find(l => l.code === e.lang);
-    });
-    this.selectedThemeMode = await firstValueFrom(this.themeService.themeMode$);
+    const selectedThemeMode = await firstValueFrom(this.themeService.themeMode$);
+    this.selectedThemeMode.set(selectedThemeMode);
   }
 
   ngOnDestroy(): void {
     this.langChangedSubscription?.unsubscribe();
-  }
-
-  onLanguageChanged(e: SelectChangeEvent) {
-    if (this.selectedLanguage?.code) {
-      this.settingsService.setLanguageAsync(this.selectedLanguage.code);
-    }
-  }
-
-  onThemeModeChanged(e: SelectChangeEvent) {
-    if (this.selectedThemeMode) {
-      this.themeService.setThemeModeAsync(this.selectedThemeMode);
-    }
   }
 }
 

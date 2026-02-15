@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
@@ -32,30 +32,32 @@ import { PrimeNgLogo } from './prime-ng-logo/prime-ng-logo';
 export class AboutViewComponent implements OnInit {
   private readonly themeService = inject(ThemeService);
 
-  readonly isDarkTheme = toSignal(this.themeService.isDarkTheme$);
+  protected readonly isDarkTheme = toSignal(this.themeService.isDarkTheme$);
 
-  productName?: string | null;
-  version?: string | null;
-  email?: string | null;
-  isEmailCopied = false;
+  protected readonly productName = signal<string | null>(null);
+  protected readonly version = signal<string | null>(null);
+  protected readonly email = signal<string | null>(null);
+  protected readonly isEmailCopied = signal(false);
 
   async ngOnInit() {
-    this.productName = await invoke<string | null>('info_product_name');
-    this.version = await invoke<string | null>('info_version');
-
-    this.email = (await invoke<string | null>('info_authors'))
-      ?.split(':')
-      ?.map(author => author.match(/<([^>]+)>/))
-      ?.find(match => match?.[1])
-      ?.[1] ?? null;
+    invoke<string | null>('info_product_name').then(name => this.productName.set(name));
+    invoke<string | null>('info_version').then(v => this.version.set(v));
+    invoke<string | null>('info_authors').then(info => {
+      const email = info
+        ?.split(':')
+        ?.map(author => author.match(/<([^>]+)>/))
+        ?.find(match => match?.[1])
+        ?.[1] ?? null;
+      this.email.set(email);
+    });
   }
 
 
-  async copyEmailToClipboard() {
-    if (this.email) {
-      await invoke('copy_text_to_clipboard', { text: this.email });
-      this.isEmailCopied = true;
-      setTimeout(() => this.isEmailCopied = false, 2000);
+  protected async copyEmailToClipboard() {
+    if (this.email()) {
+      await invoke('copy_text_to_clipboard', { text: this.email() });
+      this.isEmailCopied.set(true);
+      setTimeout(() => this.isEmailCopied.set(false), 2000);
     }
   }
 }

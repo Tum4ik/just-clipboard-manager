@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, ElementRef, Inject, input, NgZone, OnDestroy, OnInit, Renderer2, viewChild } from '@angular/core';
+import { Component, DOCUMENT, ElementRef, Inject, input, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
 import { TitleBarComponent } from '@app/core/components/title-bar/title-bar.component';
 import { Panel } from 'primeng/panel';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -22,29 +22,26 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
     private readonly pluginsService: PluginsService,
     private readonly renderer: Renderer2,
     @Inject(DOCUMENT) private readonly document: Document,
-    private readonly ngZone: NgZone,
     private readonly clipsRepository: ClipsRepository,
   ) { }
 
   private resizeObserver?: ResizeObserver;
 
 
-  readonly panelWrapper = viewChild.required<ElementRef<HTMLElement>>('panelWrapper');
-  readonly contentContainer = viewChild.required<ElementRef<HTMLElement>>('previewContent');
+  private readonly panelWrapper = viewChild.required<ElementRef<HTMLElement>>('panelWrapper');
+  private readonly contentContainer = viewChild.required<ElementRef<HTMLElement>>('previewContent');
 
   readonly clipId = input.required<number>();
 
-  isLoading = true;
-  scrollHeight = 0;
+  protected readonly isLoading = signal(true);
+  protected readonly scrollHeight = signal(0);
 
   ngOnInit(): void {
     const panelWrapperElement = this.panelWrapper().nativeElement;
     this.resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         if (entry.target === panelWrapperElement) {
-          this.ngZone.run(() => {
-            this.scrollHeight = panelWrapperElement.clientHeight - 6 - 2 * 4;
-          });
+          this.scrollHeight.set(panelWrapperElement.clientHeight - 6 - 2 * 4);
         }
       }
     });
@@ -71,6 +68,6 @@ export class ClipFullDataPreview implements OnInit, OnDestroy {
     const dataPreviewElement = plugin.plugin.getFullDataPreviewElement(data, format, this.document);
     this.renderer.appendChild(this.contentContainer().nativeElement, dataPreviewElement);
 
-    this.isLoading = false;
+    this.isLoading.set(false);
   }
 }
