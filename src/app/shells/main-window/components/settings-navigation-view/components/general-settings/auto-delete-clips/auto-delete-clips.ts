@@ -16,7 +16,6 @@ import { Select } from 'primeng/select';
     SettingsCardComponent,
     FormsModule,
     TranslatePipe,
-    FormsModule,
     InputNumber,
     Select,
   ],
