@@ -85,6 +85,7 @@
     flex: 1;
     overflow: hidden;
     border: none;
+    background: none;
   }
 
   p-panel {
@@ -94,6 +95,7 @@
     &.pinned-clips {
       overflow: hidden;
       height: 100%;
+      background: none;
     }
 
     &.clips {
