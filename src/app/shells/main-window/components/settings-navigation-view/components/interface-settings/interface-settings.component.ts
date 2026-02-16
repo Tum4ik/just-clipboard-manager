@@ -12,6 +12,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { LANGUAGE_INFO } from '../../../../../../core/constants/language-info';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
+import { ThemePrimaryColor } from './theme-primary-color/theme-primary-color';
 
 @Component({
   selector: 'jcm-interface-settings',
@@ -24,7 +25,8 @@ import { SettingsCardComponent } from "../../../settings-card/settings-card.comp
     MatIcon,
     FormsModule,
     ScrollViewComponent,
-    GoogleIcon
+    GoogleIcon,
+    ThemePrimaryColor,
   ]
 })
 export class InterfaceSettingsComponent implements OnInit, OnDestroy {

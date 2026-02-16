@@ -99,6 +99,10 @@
     "dark": "Dark",
     "setting-description": "The visual appearance of the user interface"
   },
+  "theme-primary-color": "Theme primary color",
+  "theme-primary-color.": {
+    "setting-description": "The primary color used throughout the application"
+  },
   "clipboard-data": "Clipboard data",
   "data-processing-pipeline": "Data processing pipeline",
   "install": "Install",

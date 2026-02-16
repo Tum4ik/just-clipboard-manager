@@ -91,13 +91,17 @@
       "call-paste-window": "Викликати вікно вставки"
     }
   },
-  "language-setting-descriptions": "Мова Інтерфейсу користувача",
+  "language-setting-descriptions": "Мова інтерфейсу користувача",
   "theme-mode": "Режим теми",
   "theme-mode.": {
     "system": "Системний",
     "light": "Світлий",
     "dark": "Темний",
     "setting-description": "Зовнішній вигляд інтерфейсу користувача"
+  },
+  "theme-primary-color": "Основний колір теми",
+  "theme-primary-color.": {
+    "setting-description": "Основний колір, що використовується в усьому додатку"
   },
   "clipboard-data": "Дані буфера обміну",
   "data-processing-pipeline": "Конвеєр обробки даних",

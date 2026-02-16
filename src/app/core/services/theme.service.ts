@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { getThemePreset, PresetColor } from '@app/theming/get-theme-preset';
 import { Event } from '@tauri-apps/api/event';
 import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
@@ -16,9 +17,8 @@ export class ThemeService extends GlobalStateService {
   ) {
     super();
 
-    this.settingsService.themeMode.getAsync().then(themeMode => {
-      this.setMode(themeMode);
-    });
+    this.settingsService.themeMode.getAsync().then(this.setMode.bind(this));
+    this.settingsService.themePrimaryColor.getAsync().then(this.setPresetColor.bind(this));
     window.matchMedia(PREFERS_COLOR_SCHEME_DARK).addEventListener('change', e => {
       this.notifyThemeChanged();
     });
@@ -29,16 +29,31 @@ export class ThemeService extends GlobalStateService {
     this.onThemeGloballyChanged.bind(this)
   );
 
-  private themeMode = new BehaviorSubject<ThemeMode>('system');
-  themeMode$ = this.themeMode.asObservable();
+  private readonly themePrimaryColorGlobalSetter = this.registerGlobalObservable(
+    'theme-primary-color-changed-event',
+    this.onThemeColorGloballyChanged.bind(this)
+  );
 
-  private isDarkTheme = new BehaviorSubject<boolean>(true);
-  isDarkTheme$ = this.isDarkTheme.asObservable();
+  private readonly themeMode = new BehaviorSubject<ThemeMode>('system');
+  readonly themeMode$ = this.themeMode.asObservable();
+
+  private readonly themePrimaryColor = new BehaviorSubject<PresetColor>(PresetColor.blue);
+  readonly themePrimaryColor$ = this.themePrimaryColor.asObservable();
+
+  private readonly isDarkTheme = new BehaviorSubject<boolean>(true);
+  readonly isDarkTheme$ = this.isDarkTheme.asObservable();
 
   async setThemeModeAsync(themeMode: ThemeMode) {
     await this.settingsService.themeMode.setAsync(themeMode);
     await this.themeModeGlobalSetter.setAsync(themeMode);
   }
+
+
+  async setThemePrimaryColorAsync(color: PresetColor) {
+    await this.settingsService.themePrimaryColor.setAsync(color);
+    await this.themePrimaryColorGlobalSetter.setAsync(color);
+  }
+
 
   private get isDarkMode(): boolean {
     const isSystemDarkModeSelector = this.primeNg.theme().options.darkModeSelector === 'system';
@@ -50,6 +65,11 @@ export class ThemeService extends GlobalStateService {
 
   private onThemeGloballyChanged(e: Event<ThemeMode>) {
     this.setMode(e.payload);
+  }
+
+
+  private onThemeColorGloballyChanged(e: Event<PresetColor>) {
+    this.setPresetColor(e.payload);
   }
 
 
@@ -74,6 +94,14 @@ export class ThemeService extends GlobalStateService {
     this.primeNg.onThemeChange(currentTheme);
     this.themeMode.next(mode);
     this.notifyThemeChanged();
+  }
+
+
+  private setPresetColor(color: PresetColor) {
+    const currentTheme = this.primeNg.theme();
+    currentTheme.preset = getThemePreset(color);
+    this.primeNg.onThemeChange(currentTheme);
+    this.themePrimaryColor.next(color);
   }
 
 
