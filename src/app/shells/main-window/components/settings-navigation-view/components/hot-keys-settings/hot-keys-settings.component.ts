@@ -1,7 +1,8 @@
-import { Component, effect, OnInit, signal } from '@angular/core';
-import { Shortcut } from '@app/core/services/base-shortcuts.service';
+import { Component, effect, inject, linkedSignal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GlobalShortcutsSettingService } from '@app/shells/main-window/services/global-shortcuts-setting.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { from } from 'rxjs';
 import { ScrollViewComponent } from "../../../scroll-view/scroll-view.component";
 import { SettingsCardComponent } from "../../../settings-card/settings-card.component";
 import { HotKeySetting } from "./hot-key-setting/hot-key-setting";
@@ -17,20 +18,15 @@ import { HotKeySetting } from "./hot-key-setting/hot-key-setting";
     HotKeySetting,
   ]
 })
-export class HotKeysSettingsComponent implements OnInit {
-  constructor(
-    private readonly globalShortcutsSettingService: GlobalShortcutsSettingService,
-  ) { }
+export class HotKeysSettingsComponent {
+  private readonly globalShortcutsSettingService = inject(GlobalShortcutsSettingService);
 
-  protected readonly callPasteWindowShortcut = signal<Shortcut | undefined>(undefined);
+  private readonly _callPasteWindowShortcut = toSignal(from(this.globalShortcutsSettingService.getCallPasteWindowShortcutAsync()));
+  protected readonly callPasteWindowShortcut = linkedSignal(() => this._callPasteWindowShortcut());
   private readonly callPasteWindowShortcutEffect = effect(async () => {
     const newShortcut = this.callPasteWindowShortcut();
     if (newShortcut) {
       await this.globalShortcutsSettingService.setCallPasteWindowShortcutAsync(newShortcut);
     }
   });
-
-  ngOnInit() {
-    this.globalShortcutsSettingService.getCallPasteWindowShortcutAsync().then(s => this.callPasteWindowShortcut.set(s));
-  }
 }

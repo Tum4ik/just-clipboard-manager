@@ -23,13 +23,10 @@ export class HotKeySetting implements OnDestroy {
     private readonly renderer: Renderer2
   ) { }
 
-  // readonly currentShortcut = input<Shortcut>();
-  // readonly shortcutChanged = output<Shortcut>();
   readonly shortcut = model<Shortcut>();
 
   private readonly shortcutTag = viewChild.required<Tag>('shortcut');
 
-  // protected readonly displayShortcut = linkedSignal(() => this.currentShortcut());
   protected readonly displayShortcut = linkedSignal(() => this.shortcut());
   private readonly effect = effect(async () => {
     const displayShortcut = this.displayShortcut();
@@ -93,7 +90,6 @@ export class HotKeySetting implements OnDestroy {
     }
     this.document.removeEventListener('keydown', this._keydownListener);
     this.isEditMode.set(false);
-    // this.shortcutChanged.emit(this.displayShortcut()!);
     this.shortcut.set(this.displayShortcut());
   }
 
@@ -107,7 +103,6 @@ export class HotKeySetting implements OnDestroy {
   protected cancel() {
     this.document.removeEventListener('keydown', this._keydownListener);
     this.isEditMode.set(false);
-    // this.displayShortcut.set(this.currentShortcut());
     this.displayShortcut.set(this.shortcut());
   }
 
