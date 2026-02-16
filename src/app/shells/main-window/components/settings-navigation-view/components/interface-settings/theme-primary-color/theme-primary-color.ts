@@ -23,64 +23,43 @@ import { Select } from 'primeng/select';
 export class ThemePrimaryColor {
   private readonly themeService = inject(ThemeService);
 
-  protected readonly colors = Object.values(PresetColor).map(this.getPresetColorItem);
+  protected readonly colors = Object.values(PresetColor);
 
   private readonly _selectedColor = toSignal(this.themeService.themePrimaryColor$, { requireSync: true });
-  protected readonly selectedColor = computed(() => this.getPresetColorItem(this._selectedColor()));
+  protected readonly selectedColor = computed(() => this._selectedColor());
 
 
-  protected async setSelectedColor(colorItem: PresetColorItem) {
-    await this.themeService.setThemePrimaryColorAsync(colorItem.name);
+  protected async setSelectedColor(color: PresetColor) {
+    await this.themeService.setThemePrimaryColorAsync(color);
   }
 
+  protected readonly colorMap: Readonly<Record<PresetColor, string>> = {
+    [PresetColor.emerald]: '#10b981',
+    [PresetColor.green]: '#22c55e',
+    [PresetColor.lime]: '#84cc16',
+    [PresetColor.red]: '#ef4444',
+    [PresetColor.orange]: '#f97316',
+    [PresetColor.amber]: '#f59e0b',
+    [PresetColor.yellow]: '#eab308',
+    [PresetColor.teal]: '#14b8a6',
+    [PresetColor.cyan]: '#06b6d4',
+    [PresetColor.sky]: '#0ea5e9',
+    [PresetColor.blue]: '#3b82f6',
+    [PresetColor.indigo]: '#6366f1',
+    [PresetColor.violet]: '#8b5cf6',
+    [PresetColor.purple]: '#a855f7',
+    [PresetColor.fuchsia]: '#d946ef',
+    [PresetColor.pink]: '#ec4899',
+    [PresetColor.rose]: '#f43f5e',
+    [PresetColor.slate]: '#64748b',
+    [PresetColor.gray]: '#6b7280',
+    [PresetColor.zinc]: '#71717a',
+    [PresetColor.neutral]: '#737373',
+    [PresetColor.stone]: '#78716c',
+  };
 
-  private getPresetColorItem(color: PresetColor): PresetColorItem {
-    switch (color) {
-      case PresetColor.emerald:
-        return { name: color, color: '#10b981' };
-      case PresetColor.green:
-        return { name: color, color: '#22c55e' };
-      case PresetColor.lime:
-        return { name: color, color: '#84cc16' };
-      case PresetColor.red:
-        return { name: color, color: '#ef4444' };
-      case PresetColor.orange:
-        return { name: color, color: '#f97316' };
-      case PresetColor.amber:
-        return { name: color, color: '#f59e0b' };
-      case PresetColor.yellow:
-        return { name: color, color: '#eab308' };
-      case PresetColor.teal:
-        return { name: color, color: '#14b8a6' };
-      case PresetColor.cyan:
-        return { name: color, color: '#06b6d4' };
-      case PresetColor.sky:
-        return { name: color, color: '#0ea5e9' };
-      case PresetColor.blue:
-        return { name: color, color: '#3b82f6' };
-      case PresetColor.indigo:
-        return { name: color, color: '#6366f1' };
-      case PresetColor.violet:
-        return { name: color, color: '#8b5cf6' };
-      case PresetColor.purple:
-        return { name: color, color: '#a855f7' };
-      case PresetColor.fuchsia:
-        return { name: color, color: '#d946ef' };
-      case PresetColor.pink:
-        return { name: color, color: '#ec4899' };
-      case PresetColor.rose:
-        return { name: color, color: '#f43f5e' };
-      case PresetColor.slate:
-        return { name: color, color: '#64748b' };
-      case PresetColor.gray:
-        return { name: color, color: '#6b7280' };
-      case PresetColor.zinc:
-        return { name: color, color: '#71717a' };
-      case PresetColor.neutral:
-        return { name: color, color: '#737373' };
-      case PresetColor.stone:
-        return { name: color, color: '#78716c' };
-    }
+  protected asPresetColor(item: any): PresetColor {
+    return item as PresetColor;
   }
 }
 

@@ -80,27 +80,27 @@ export class PasteWindowSettingsComponent {
 
   protected async setWidth(e: InputNumberInputEvent) {
     const value = e.value;
-    if (value){
+    if (value || value === 0) {
       await this.pasteWindowSizingService.setSize(value, this.height());
     }
   }
 
   protected async setHeight(e: InputNumberInputEvent) {
     const value = e.value;
-    if (value){
+    if (value || value === 0) {
       await this.pasteWindowSizingService.setSize(this.width(), value);
     }
   }
 
   protected async setPinnedClipsHeightPercentage(e: InputNumberInputEvent) {
     const value = e.value;
-    if (value){
+    if (value || value === 0) {
       await this.pasteWindowSizingService.setPinnedClipsHeightPercentage(value);
     }
   }
 
   protected async setOpacityPercentage(value: number | undefined) {
-    if (value) {
+    if (value || value === 0) {
       await this.pasteWindowOpacityService.setOpacityPercentageAsync(value);
     }
   }
