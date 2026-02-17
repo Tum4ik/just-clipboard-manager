@@ -2,7 +2,7 @@ import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 import { Preset } from '@primeuix/themes/types';
 
-export function getThemePreset(color: PresetColor): Preset {
+export function getThemePreset(color: PresetColorName): Preset {
   return definePreset(Aura, {
     semantic: {
       primary: {
@@ -35,27 +35,52 @@ export function getThemePreset(color: PresetColor): Preset {
   });
 }
 
-export enum PresetColor {
-  emerald = 'emerald',
-  green = 'green',
-  lime = 'lime',
-  red = 'red',
-  orange = 'orange',
-  amber = 'amber',
-  yellow = 'yellow',
-  teal = 'teal',
-  cyan = 'cyan',
-  sky = 'sky',
-  blue = 'blue',
-  indigo = 'indigo',
-  violet = 'violet',
-  purple = 'purple',
-  fuchsia = 'fuchsia',
-  pink = 'pink',
-  rose = 'rose',
-  slate = 'slate',
-  gray = 'gray',
-  zinc = 'zinc',
-  neutral = 'neutral',
-  stone = 'stone',
-}
+export type PresetColorName =
+  | 'emerald'
+  | 'green'
+  | 'lime'
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'teal'
+  | 'cyan'
+  | 'sky'
+  | 'blue'
+  | 'indigo'
+  | 'violet'
+  | 'purple'
+  | 'fuchsia'
+  | 'pink'
+  | 'rose'
+  | 'slate'
+  | 'gray'
+  | 'zinc'
+  | 'neutral'
+  | 'stone'
+  ;
+
+export const PRESET_COLORS_MAP: Readonly<Record<PresetColorName, string>> = {
+  'emerald': '#10b981',
+  'green': '#22c55e',
+  'lime': '#84cc16',
+  'red': '#ef4444',
+  'orange': '#f97316',
+  'amber': '#f59e0b',
+  'yellow': '#eab308',
+  'teal': '#14b8a6',
+  'cyan': '#06b6d4',
+  'sky': '#0ea5e9',
+  'blue': '#3b82f6',
+  'indigo': '#6366f1',
+  'violet': '#8b5cf6',
+  'purple': '#a855f7',
+  'fuchsia': '#d946ef',
+  'pink': '#ec4899',
+  'rose': '#f43f5e',
+  'slate': '#64748b',
+  'gray': '#6b7280',
+  'zinc': '#71717a',
+  'neutral': '#737373',
+  'stone': '#78716c',
+};

@@ -13,7 +13,7 @@ import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
 import { ThemeService } from "./core/services/theme.service";
 import { registerSvgIcons } from "./initializers/register-svg-icons";
-import { getThemePreset, PresetColor } from "./theming/get-theme-preset";
+import { getThemePreset } from "./theming/get-theme-preset";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     ),
     providePrimeNG({
       theme: {
-        preset: getThemePreset(PresetColor.blue),
+        preset: getThemePreset('blue'),
         options: {
           darkModeSelector: 'system'
         }

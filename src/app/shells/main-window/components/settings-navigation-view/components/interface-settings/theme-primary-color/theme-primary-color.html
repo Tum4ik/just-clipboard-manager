@@ -6,7 +6,7 @@
             (ngModelChange)="setSelectedColor($event)">
     <ng-template #item #selectedItem let-item>
       <div class="option-root">
-        <div class="color-display" [style.background-color]="colorMap[asPresetColor(item)]"></div>
+        <div class="color-display" [style.background-color]="getColorHex(item)"></div>
         <div>{{ item | titlecase }}</div>
       </div>
     </ng-template>

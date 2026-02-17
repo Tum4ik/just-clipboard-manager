@@ -1,4 +1,4 @@
-import { Component, effect, inject, linkedSignal } from '@angular/core';
+import { Component, computed, effect, inject, linkedSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ClipsAutoDeleteService } from '@app/core/services/clips-auto-delete.service';
@@ -39,8 +39,11 @@ export class AutoDeleteClips {
 
   protected readonly deletionPeriodTypes = this.clipsAutoDeleteService.deletionPeriodTypes;
 
-
-  protected getPluralCategory(quantity: number): Intl.LDMLPluralRule {
-    return getPluralCategory(quantity, this.translateService.getCurrentLang());
-  }
+  protected readonly pluralCategory = computed(() => {
+    const quantity = this.periodQuantity();
+    if (quantity || quantity === 0) {
+      return getPluralCategory(quantity, this.translateService.getCurrentLang());
+    }
+    return undefined;
+  });
 }

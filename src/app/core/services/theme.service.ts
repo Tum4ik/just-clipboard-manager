@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getThemePreset, PresetColor } from '@app/theming/get-theme-preset';
+import { getThemePreset, PresetColorName } from '@app/theming/get-theme-preset';
 import { Event } from '@tauri-apps/api/event';
 import { PrimeNG } from 'primeng/config';
 import { BehaviorSubject } from 'rxjs';
@@ -37,7 +37,7 @@ export class ThemeService extends GlobalStateService {
   private readonly themeMode = new BehaviorSubject<ThemeMode>('system');
   readonly themeMode$ = this.themeMode.asObservable();
 
-  private readonly themePrimaryColor = new BehaviorSubject<PresetColor>(PresetColor.blue);
+  private readonly themePrimaryColor = new BehaviorSubject<PresetColorName>('blue');
   readonly themePrimaryColor$ = this.themePrimaryColor.asObservable();
 
   private readonly isDarkTheme = new BehaviorSubject<boolean>(true);
@@ -49,7 +49,7 @@ export class ThemeService extends GlobalStateService {
   }
 
 
-  async setThemePrimaryColorAsync(color: PresetColor) {
+  async setThemePrimaryColorAsync(color: PresetColorName) {
     await this.settingsService.themePrimaryColor.setAsync(color);
     await this.themePrimaryColorGlobalSetter.setAsync(color);
   }
@@ -68,7 +68,7 @@ export class ThemeService extends GlobalStateService {
   }
 
 
-  private onThemeColorGloballyChanged(e: Event<PresetColor>) {
+  private onThemeColorGloballyChanged(e: Event<PresetColorName>) {
     this.setPresetColor(e.payload);
   }
 
@@ -97,7 +97,7 @@ export class ThemeService extends GlobalStateService {
   }
 
 
-  private setPresetColor(color: PresetColor) {
+  private setPresetColor(color: PresetColorName) {
     const currentTheme = this.primeNg.theme();
     currentTheme.preset = getThemePreset(color);
     this.primeNg.onThemeChange(currentTheme);

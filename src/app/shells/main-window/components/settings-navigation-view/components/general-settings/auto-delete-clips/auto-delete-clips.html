@@ -2,7 +2,6 @@
                    [title]="'settings..general..auto-delete-clips..title' | translate"
                    [description]="'settings..general..auto-delete-clips..description' | translate">
   <div class="auto-delete-options">
-    @if (periodQuantity()){
     <p-input-number [inputSize]="1"
                     [min]="1" [max]="999"
                     [allowEmpty]="false"
@@ -10,7 +9,7 @@
     <p-select [options]="deletionPeriodTypes"
               [(ngModel)]="selectedDeletionPeriodType">
       <ng-template #item #selectedItem let-item>
-        @switch (getPluralCategory(periodQuantity()!)) {
+        @switch (pluralCategory()) {
         @case ('one') {
         <span>{{ 'settings..general..auto-delete-clips..options..' + item + '_singular' | translate }}</span>
         }
@@ -23,6 +22,5 @@
         }
       </ng-template>
     </p-select>
-    }
   </div>
 </jcm-settings-card>
