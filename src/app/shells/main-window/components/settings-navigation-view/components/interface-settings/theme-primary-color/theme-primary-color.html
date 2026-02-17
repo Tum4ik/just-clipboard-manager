@@ -1,0 +1,14 @@
+<jcm-settings-card icon="palette"
+                   [title]="'theme-primary-color' | translate"
+                   [description]="'theme-primary-color..setting-description' | translate">
+  <p-select [options]="colors"
+            [ngModel]="selectedColor()"
+            (ngModelChange)="setSelectedColor($event)">
+    <ng-template #item #selectedItem let-item>
+      <div class="option-root">
+        <div class="color-display" [style.background-color]="getColorHex(item)"></div>
+        <div>{{ item | titlecase }}</div>
+      </div>
+    </ng-template>
+  </p-select>
+</jcm-settings-card>

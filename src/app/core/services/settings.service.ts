@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { PresetColorName } from '@app/theming/get-theme-preset';
 import { Theme } from '@tauri-apps/api/window';
 import { BaseSettingsService } from './base/base-settings-service';
 
@@ -10,6 +11,7 @@ export class SettingsService extends BaseSettingsService {
 
   readonly language = this.setting<Language>('language', Language.en);
   readonly themeMode = this.setting<ThemeMode>('theme-mode', 'system');
+  readonly themePrimaryColor = this.setting<PresetColorName>('theme-primary-color', 'blue');
   readonly pasteWindowSize = this.setting<Size>('paste-window-size', { width: 400, height: 400 });
   readonly pasteWindowPinnedClipsHeightPercentage = this.setting<number>('paste-window-height-percentage', 40);
   readonly pasteWindowSnappingMode = this.setting<SnappingMode>('paste-window-snapping-mode', SnappingMode.MouseCursor);

@@ -9,7 +9,7 @@
     <p-select [options]="deletionPeriodTypes"
               [(ngModel)]="selectedDeletionPeriodType">
       <ng-template #item #selectedItem let-item>
-        @switch (getPluralCategory(periodQuantity())) {
+        @switch (pluralCategory()) {
         @case ('one') {
         <span>{{ 'settings..general..auto-delete-clips..options..' + item + '_singular' | translate }}</span>
         }

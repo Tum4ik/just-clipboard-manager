@@ -69,12 +69,14 @@
                      [description]="'settings..paste-window..opacity..description' | translate">
     <div class="opacity-options">
       <p-slider [min]="0" [max]="100"
-                [(ngModel)]="opacityPercentage" />
+                [ngModel]="opacityPercentage()"
+                (ngModelChange)="setOpacityPercentage($event)" />
       <p-input-number suffix="%"
                       [min]="0" [max]="100"
                       [inputSize]="1"
                       [allowEmpty]="false"
-                      [(ngModel)]="opacityPercentage" />
+                      [ngModel]="opacityPercentage()"
+                      (ngModelChange)="setOpacityPercentage($event)" />
     </div>
   </jcm-settings-card>
 
