@@ -1,7 +1,6 @@
 import { Given } from "@wdio/cucumber-framework";
-import checkTopLevelTabButtonExists from "../support/check/main-window/checkTopLevelTabButtonExists";
+import { MainWindow } from "../page-objects/main-window/main-window";
 
-Given(
-  /^(Settings|Plugins|About) top-level tab button$/,
-  checkTopLevelTabButtonExists
+Given('the Main window is opened',
+  async () => await MainWindow.verifyIsOpened()
 );

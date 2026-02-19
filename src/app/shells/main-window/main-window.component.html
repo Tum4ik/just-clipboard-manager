@@ -1,6 +1,6 @@
 <div class="root">
   <jcm-title-bar />
-  <div ngTabs>
+  <div ngTabs data-testid="top-level-tabs">
     <div ngTabList
          orientation="vertical"
          selectionMode="explicit"
@@ -16,7 +16,7 @@
       </div>
       }
     </div>
-    <p-panel>
+    <p-panel data-testid="top-level-tab-content">
       @for (tab of tabs; track tab.id) {
       <div ngTabPanel [value]="tab.id" [preserveContent]="true"
            [attr.data-testid]="tab.id">
