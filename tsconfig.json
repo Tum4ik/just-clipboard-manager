@@ -32,7 +32,12 @@
       "@app/*": [
         "app/*"
       ]
-    }
+    },
+    "types": [
+      "node",
+      "@wdio/globals/types",
+      "@wdio/cucumber-framework"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

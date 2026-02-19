@@ -3,12 +3,17 @@
 
 use config::{Config, File};
 use sentry::{protocol::IpAddress, types::Dsn, User};
-use std::str::FromStr;
+use std::{env, path::PathBuf, str::FromStr};
 
 fn main() {
+  let exe_dir = env::current_exe()
+    .ok()
+    .and_then(|p| p.parent().map(|p| p.to_path_buf()))
+    .unwrap_or_else(|| PathBuf::from("."));
+
   let config = Config::builder()
-    .add_source(File::with_name("config/default"))
-    .add_source(File::with_name("config/development").required(false))
+    .add_source(File::from(exe_dir.join("config/default")))
+    .add_source(File::from(exe_dir.join("config/development")).required(false))
     .build()
     .expect("Failed to load config");
 
