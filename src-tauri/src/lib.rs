@@ -1,7 +1,7 @@
-mod setup;
 mod commands;
 mod helpers;
 mod migrations;
+mod setup;
 
 use crate::setup::clipboard_listener::setup_clipboard_listener;
 use config::Config;
@@ -40,7 +40,7 @@ pub fn run(config: Config) {
     .plugin(tauri_plugin_store::Builder::new().build())
     .manage(config)
     .setup(|app| {
-      let _ = setup_clipboard_listener(app);
+      setup_clipboard_listener(app)?;
       Ok(())
     })
     .invoke_handler(all_commands!())

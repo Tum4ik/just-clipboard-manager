@@ -1,44 +1,30 @@
+const TOP_LEVEL_TABS_SELECTOR = '[data-testid="top-level-tabs"]';
+
 export abstract class MainWindow {
   static get settingsTabButton() {
-    return $('[data-testid="top-level-tabs"] [data-testid="settings"]');
+    return $(`${TOP_LEVEL_TABS_SELECTOR} [data-testid="settings"]`);
   }
 
   static get pluginsTabButton() {
-    return $('[data-testid="top-level-tabs"] [data-testid="plugins"]');
+    return $(`${TOP_LEVEL_TABS_SELECTOR} [data-testid="plugins"]`);
   }
 
   static get aboutTabButton() {
-    return $('[data-testid="top-level-tabs"] [data-testid="about"]');
+    return $(`${TOP_LEVEL_TABS_SELECTOR} [data-testid="about"]`);
   }
 
   static get topLevelTabContent() {
-    return $('[data-testid="top-level-tabs"] [data-testid="top-level-tab-content"]');
+    return $(`${TOP_LEVEL_TABS_SELECTOR} [data-testid="top-level-tab-content"]`);
   }
 
-  static getTab(tabName: string) {
-    switch (tabName) {
-      case 'Settings':
-        return MainWindow.settingsTabButton;
-      case 'Plugins':
-        return MainWindow.pluginsTabButton;
-      case 'About':
-        return MainWindow.aboutTabButton;
-      default:
-        throw new Error('Undefined Main window tab: ' + tabName);
-    }
+  static getTabButton(tabName: string): ChainablePromiseElement {
+    const tab = this.getTab(tabName);
+    return tab.tabButton;
   }
 
-  static getTabContentView(tabName: string) {
-    switch (tabName) {
-      case 'Settings':
-        return MainWindow.topLevelTabContent.$('<jcm-settings-navigation-view />');
-      case 'Plugins':
-        return MainWindow.topLevelTabContent.$('<jcm-plugins-navigation-view />');
-      case 'About':
-        return MainWindow.topLevelTabContent.$('<jcm-about-view />');
-      default:
-        throw new Error('Undefined Main window tab: ' + tabName);
-    }
+  static getTabContentView(tabName: string): ChainablePromiseElement {
+    const tab = this.getTab(tabName);
+    return tab.tabContentView;
   }
 
   static async verifyIsOpened(): Promise<void> {
@@ -47,7 +33,33 @@ export abstract class MainWindow {
   }
 
   static async verifyTabIsSelected(tabName: string): Promise<void> {
-    const tab = this.getTab(tabName);
+    const tab = this.getTabButton(tabName);
     await expect(tab).toHaveAttribute('aria-selected', 'true');
   }
+
+
+  private static getTab(tabName: string): Tab {
+    const tab = this.tabs[tabName];
+    if (!tab) {
+      throw new Error('Undefined Main window tab: ' + tabName);
+    }
+    return tab;
+  }
+
+  private static readonly tabs: Record<string, Tab> = {
+    'Settings': {
+      tabButton: MainWindow.settingsTabButton,
+      tabContentView: MainWindow.topLevelTabContent.$('<jcm-settings-navigation-view />'),
+    },
+    'Plugins': {
+      tabButton: MainWindow.pluginsTabButton,
+      tabContentView: MainWindow.topLevelTabContent.$('<jcm-plugins-navigation-view />'),
+    },
+    'About': {
+      tabButton: MainWindow.aboutTabButton,
+      tabContentView: MainWindow.topLevelTabContent.$('<jcm-about-view />'),
+    }
+  };
 }
+
+type Tab = { tabButton: ChainablePromiseElement; tabContentView: ChainablePromiseElement; };

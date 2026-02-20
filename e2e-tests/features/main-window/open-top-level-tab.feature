@@ -11,12 +11,12 @@ Feature: Main Window Top-Level Tabs
     And the "Settings" tab content is displayed
 
   Scenario Outline: User can switch tabs
-    When the user clicks the "<tab>" button
-    Then the "<tab>" tab must be selected
-    And the "<tab>" tab content is displayed
+    When the user clicks the "<Tab>" tab button
+    Then the "<Tab>" tab must be selected
+    And the "<Tab>" tab content is displayed
 
     Examples:
-      | tab      |
+      | Tab      |
       | Plugins  |
       | About    |
       | Settings |
