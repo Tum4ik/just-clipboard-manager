@@ -4,7 +4,7 @@ Feature: Main Window Top-Level Tabs
   So that I can access different sections of the application
 
   Background:
-    Given the Main window is opened
+    Given the Main window is activated
 
   Scenario: Settings tab is open by default
     Then the "Settings" tab must be selected

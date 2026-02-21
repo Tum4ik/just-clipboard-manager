@@ -27,9 +27,17 @@ export abstract class MainWindow {
     return tab.tabContentView;
   }
 
-  static async verifyIsOpened(): Promise<void> {
-    const url = await browser.getUrl();
-    expect(url.endsWith('/main-window')).toBeTruthy();
+  static async activate(): Promise<void> {
+    const handles = await browser.getWindowHandles();
+    for (const handle of handles) {
+      await browser.switchToWindow(handle);
+      const url = await browser.getUrl();
+      if (url === 'http://tauri.localhost/main-window') {
+        return;
+      }
+    }
+
+    throw new Error('Can\'t select Main window.');
   }
 
   static async verifyTabIsSelected(tabName: string): Promise<void> {
@@ -48,16 +56,16 @@ export abstract class MainWindow {
 
   private static readonly tabs: Record<string, Tab> = {
     'Settings': {
-      tabButton: MainWindow.settingsTabButton,
-      tabContentView: MainWindow.topLevelTabContent.$('<jcm-settings-navigation-view />'),
+      tabButton: this.settingsTabButton,
+      tabContentView: this.topLevelTabContent.$('<jcm-settings-navigation-view />'),
     },
     'Plugins': {
-      tabButton: MainWindow.pluginsTabButton,
-      tabContentView: MainWindow.topLevelTabContent.$('<jcm-plugins-navigation-view />'),
+      tabButton: this.pluginsTabButton,
+      tabContentView: this.topLevelTabContent.$('<jcm-plugins-navigation-view />'),
     },
     'About': {
-      tabButton: MainWindow.aboutTabButton,
-      tabContentView: MainWindow.topLevelTabContent.$('<jcm-about-view />'),
+      tabButton: this.aboutTabButton,
+      tabContentView: this.topLevelTabContent.$('<jcm-about-view />'),
     }
   };
 }
