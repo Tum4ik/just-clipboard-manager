@@ -29,15 +29,17 @@ export abstract class MainWindow {
 
   static async activate(): Promise<void> {
     const handles = await browser.getWindowHandles();
+    const urls: string[] = [];
     for (const handle of handles) {
       await browser.switchToWindow(handle);
       const url = await browser.getUrl();
+      urls.push(url);
       if (url === 'http://tauri.localhost/main-window') {
         return;
       }
     }
 
-    throw new Error('Can\'t select Main window.');
+    throw new Error('Can\'t select Main window. Checked URLs: ' + urls);
   }
 
   static async verifyTabIsSelected(tabName: string): Promise<void> {
