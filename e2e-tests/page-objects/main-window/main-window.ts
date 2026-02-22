@@ -28,18 +28,43 @@ export abstract class MainWindow {
   }
 
   static async activate(): Promise<void> {
-    const handles = await browser.getWindowHandles();
+    const maxRetries = 5;
+    const retryDelayMs = 500;
     const urls: string[] = [];
-    for (const handle of handles) {
-      await browser.switchToWindow(handle);
-      const url = await browser.getUrl();
-      urls.push(url);
-      if (url === 'http://tauri.localhost/main-window') {
-        return;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      const handles = await browser.getWindowHandles();
+
+      if (handles.length === 0) {
+        urls.push(`[attempt ${attempt + 1}] No window handles found`);
+        await browser.pause(retryDelayMs);
+        continue;
+      }
+
+      for (const handle of handles) {
+        try {
+          await browser.switchToWindow(handle);
+          const url = await browser.getUrl();
+          urls.push(url);
+          if (url === 'http://tauri.localhost/main-window') {
+            return;
+          }
+        } catch (error) {
+          // Handle may have become stale, skip it
+          urls.push(`[handle error] ${error instanceof Error ? error.message : String(error)}`);
+        }
+      }
+
+      // If we haven't found the main window yet, wait and retry
+      if (attempt < maxRetries - 1) {
+        await browser.pause(retryDelayMs);
       }
     }
 
-    throw new Error('Can\'t select Main window. Checked URLs: ' + urls);
+    throw new Error(
+      `Can't select Main window after ${maxRetries} attempts. ` +
+      `Handles checked: ${urls.length}. URLs: ${urls.join(', ')}`
+    );
   }
 
   static async verifyTabIsSelected(tabName: string): Promise<void> {
