@@ -1,6 +1,13 @@
+import { BaseWindow } from "../base-window";
+
 const TOP_LEVEL_TABS_SELECTOR = '[data-testid="top-level-tabs"]';
 
-export abstract class MainWindow {
+export abstract class MainWindow extends BaseWindow {
+  static async activate(): Promise<void> {
+    await this.baseActivate('http://tauri.localhost/main-window');
+  }
+
+
   static get settingsTabButton() {
     return $(`${TOP_LEVEL_TABS_SELECTOR} [data-testid="settings"]`);
   }
@@ -25,31 +32,6 @@ export abstract class MainWindow {
   static getTabContentView(tabName: string): ChainablePromiseElement {
     const tab = this.getTab(tabName);
     return tab.tabContentView;
-  }
-
-  static async activate(): Promise<void> {
-    const maxRetries = 5;
-    const retryDelayMs = 500;
-    const urls: string[] = [];
-
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      const handles = await browser.getWindowHandles();
-
-      for (const handle of handles) {
-        await browser.switchToWindow(handle);
-        const url = await browser.getUrl();
-        urls.push(url);
-        if (url === 'http://tauri.localhost/main-window') {
-          return;
-        }
-      }
-
-      if (attempt < maxRetries - 1) {
-        await browser.pause(retryDelayMs);
-      }
-    }
-
-    throw new Error('Can\'t select Main window. Checked URLs: ' + urls);
   }
 
   static async verifyTabIsSelected(tabName: string): Promise<void> {
