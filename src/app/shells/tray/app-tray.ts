@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { ClipsAutoDeleteService } from "@app/core/services/clips-auto-delete.service";
 import { EnvironmentService } from "@app/core/services/environment.service";
 import { LanguageSwitchingService } from "@app/core/services/language-switching-service";
 import { MonitoringService } from "@app/core/services/monitoring.service";
@@ -21,6 +22,7 @@ export class AppTray {
     private readonly languageSwitchingService: LanguageSwitchingService,
     private readonly monitoring: MonitoringService,
     private readonly environment: EnvironmentService,
+    private readonly clipsAutoDeleteService: ClipsAutoDeleteService,
   ) { }
 
   private settingsMenuItem?: MenuItem;
@@ -101,6 +103,8 @@ export class AppTray {
       tray.setTitle(productName);
       tray.setTooltip(productName);
     }
+
+    await this.clipsAutoDeleteService.deleteOutdatedClipsAsync();
   }
 
 

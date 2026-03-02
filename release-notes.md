@@ -5,3 +5,4 @@
 ## Fixes
 
 * Improved icons preloading.
+* Improved database performance.
