@@ -43,7 +43,6 @@ export class InstalledPluginCard {
   private readonly isEnabledEffect = effect(async () => {
     const pluginInfo = untracked(() => this.pluginInfo());
     if (this.isEnabled() === pluginInfo.isEnabled) {
-      console.log("no save");
       return;
     }
     const pluginId = pluginInfo.plugin.id;
