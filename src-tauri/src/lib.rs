@@ -49,9 +49,11 @@ pub fn run(config: Config) {
     .run(|_, event| match event {
       tauri::RunEvent::Ready => {
         sentry::start_session();
+        sentry::capture_message("Application started", sentry::Level::Info);
       }
       tauri::RunEvent::Exit => {
         sentry::end_session();
+        sentry::capture_message("Application closed", sentry::Level::Info);
       }
       _ => {}
     });
