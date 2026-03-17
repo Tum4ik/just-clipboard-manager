@@ -11,7 +11,7 @@ Feature: Main Window Top-Level Tabs
     And the "Settings" tab content is displayed
 
   Scenario Outline: User can switch tabs
-    When the user clicks the "<Tab>" tab button
+    When the user clicks the "<Tab>" top-level tab button
     Then the "<Tab>" tab must be selected
     And the "<Tab>" tab content is displayed
 

@@ -52,6 +52,7 @@
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-typescript": "12.3.0",
     "@tauri-apps/cli": "2.9.6",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "25.2.3",
     "@types/semver": "7.7.1",
     "@wdio/cli": "9.24.0",
@@ -59,9 +60,9 @@
     "@wdio/globals": "9.23.0",
     "@wdio/local-runner": "9.24.0",
     "@wdio/spec-reporter": "9.24.0",
+    "better-sqlite3": "12.6.2",
     "expect-webdriverio": "5.6.4",
     "jsdom": "27.4.0",
-    "tsx": "^4.21.0",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
   }

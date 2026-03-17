@@ -6,7 +6,8 @@
     @for (item of items(); track item.id) {
     <div ngTab [value]="item.id"
          pButton [text]="true"
-         pRipple>
+         pRipple
+         [attr.data-testid]="item.id">
       <google-icon [iconName]="item.icon" [size]="20" />
       <span class="label">{{ item.label | translate }}</span>
     </div>
