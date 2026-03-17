@@ -1,0 +1,22 @@
+.title-root {
+  display: flex;
+
+  .title {
+    font-size: 18px;
+  }
+
+  .version {
+    margin-left: auto;
+    font-size: 16px;
+    font-weight: normal;
+  }
+}
+
+.footer {
+  margin-top: 12px;
+  display: flex;
+
+  p-toggle-button {
+    margin-inline-start: auto;
+  }
+}

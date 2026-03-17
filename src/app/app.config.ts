@@ -7,7 +7,6 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from "./app.routes";
 import { TOOLTIP_OPTIONS } from "./core/config/tooltip.config";
-import { ClipsAutoDeleteService } from "./core/services/clips-auto-delete.service";
 import { LanguageSwitchingService } from "./core/services/language-switching-service";
 import { MonitoringService } from "./core/services/monitoring.service";
 import { PluginsService } from "./core/services/plugins.service";
@@ -37,15 +36,12 @@ export const appConfig: ApplicationConfig = {
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })
     }),
     provideAppInitializer(async () => {
-
       inject(ThemeService);
       inject(LanguageSwitchingService);
       const pluginsService = inject(PluginsService);
-      const clipsAutoDeleteService = inject(ClipsAutoDeleteService);
       registerSvgIcons();
 
       await pluginsService.initAsync();
-      await clipsAutoDeleteService.deleteOutdatedClipsAsync();
     }),
     { provide: ErrorHandler, useExisting: MonitoringService },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: TOOLTIP_OPTIONS },

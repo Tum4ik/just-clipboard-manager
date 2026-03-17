@@ -1,6 +1,6 @@
 <div class="root">
   <jcm-title-bar />
-  <div ngTabs>
+  <div ngTabs data-testid="top-level-tabs">
     <div ngTabList
          orientation="vertical"
          selectionMode="explicit"
@@ -9,15 +9,17 @@
       <div ngTab [value]="tab.id"
            #tabDirective="ngTab"
            pButton [text]="true"
-           pRipple>
+           pRipple
+           [attr.data-testid]="tab.id">
         <google-icon [iconName]="tab.icon" [isFilled]="tabDirective.selected()" />
         <div class="label">{{ tab.label | translate }}</div>
       </div>
       }
     </div>
-    <p-panel>
+    <p-panel data-testid="top-level-tab-content">
       @for (tab of tabs; track tab.id) {
-      <div ngTabPanel [value]="tab.id" [preserveContent]="true">
+      <div ngTabPanel [value]="tab.id" [preserveContent]="true"
+           [attr.data-testid]="tab.id">
         <ng-template ngTabContent>
           @let component = tab.component | async;
           @if (tab.id === selectedTabId() && isNavigationView(component)){

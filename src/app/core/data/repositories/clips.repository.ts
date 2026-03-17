@@ -119,20 +119,15 @@ export class ClipsRepository extends BaseDatabaseRepository {
 
   async deleteOutdatedClipsAsync(olderThan: Date): Promise<void> {
     const db = await this.getDbAsync();
+    const olderThanStr = olderThan.toISOString().replace('T', ' ').substring(0, 19);
     await db.execute(
       /* sql */`
       DELETE FROM clips
       WHERE
-        id IN (
-          SELECT clips.id
-          FROM clips
-          LEFT JOIN pinned_clips ON clips.id = pinned_clips.id
-          WHERE
-            pinned_clips.id IS NULL
-            AND clips.clipped_at < $1
-        )
+        clips.clipped_at < $1
+        AND NOT EXISTS (SELECT 1 FROM pinned_clips WHERE pinned_clips.id = clips.id)
       `,
-      [olderThan]
+      [olderThanStr]
     );
   }
 }

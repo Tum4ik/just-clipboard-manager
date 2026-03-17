@@ -1,9 +1,9 @@
-mod clipboard_listener;
 mod commands;
 mod helpers;
 mod migrations;
+mod setup;
 
-use clipboard_listener::clipboard_listener;
+use crate::setup::clipboard_listener::setup_clipboard_listener;
 use config::Config;
 use log::LevelFilter;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
@@ -39,16 +39,21 @@ pub fn run(config: Config) {
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
     .plugin(tauri_plugin_store::Builder::new().build())
     .manage(config)
-    .setup(clipboard_listener)
+    .setup(|app| {
+      setup_clipboard_listener(app)?;
+      Ok(())
+    })
     .invoke_handler(all_commands!())
     .build(tauri::generate_context!())
     .expect("error while building tauri application")
     .run(|_, event| match event {
       tauri::RunEvent::Ready => {
         sentry::start_session();
+        sentry::capture_message("Application started", sentry::Level::Info);
       }
       tauri::RunEvent::Exit => {
         sentry::end_session();
+        sentry::capture_message("Application closed", sentry::Level::Info);
       }
       _ => {}
     });

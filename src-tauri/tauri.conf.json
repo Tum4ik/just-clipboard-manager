@@ -11,6 +11,17 @@
   "app": {
     "windows": [
       {
+        "label": "main-window",
+        "url": "main-window",
+        "title": "Just Clipboard Manager",
+        "width": 1000,
+        "height": 700,
+        "minWidth": 750,
+        "minHeight": 250,
+        "decorations": false,
+        "create": false
+      },
+      {
         "label": "paste-window",
         "url": "paste-window",
         "width": 400,
@@ -21,17 +32,6 @@
         "alwaysOnTop": true,
         "visible": false,
         "transparent": true
-      },
-      {
-        "label": "main-window",
-        "url": "main-window",
-        "title": "Just Clipboard Manager",
-        "width": 1000,
-        "height": 700,
-        "minWidth": 750,
-        "minHeight": 250,
-        "decorations": false,
-        "create": false
       }
     ],
     "security": {

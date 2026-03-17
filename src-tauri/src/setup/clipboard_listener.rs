@@ -10,7 +10,7 @@ use windows::Win32::UI::WindowsAndMessaging::{
 
 static APP_HANDLE: OnceLock<AppHandle> = OnceLock::new();
 
-pub fn clipboard_listener(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
+pub fn setup_clipboard_listener(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
   APP_HANDLE.set(app.handle().clone()).unwrap();
 
   let wind_builder = WebviewWindowBuilder::new(

@@ -1,0 +1,8 @@
+{
+  "cucumber.features": [
+    "e2e-tests/features/**/*.feature"
+  ],
+  "cucumber.glue": [
+    "e2e-tests/steps/**/*.ts"
+  ]
+}

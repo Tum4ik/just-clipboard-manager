@@ -11,7 +11,6 @@ on:
     branches:
       - main
 
-
 jobs:
   release:
     name: Release
@@ -31,82 +30,87 @@ jobs:
       release-notes: ${{ steps.get-release-notes.outputs.release-notes }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24
-        cache: npm
-        cache-dependency-path: ./package-lock.json
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: ./package-lock.json
 
-    - name: Install Rust stable
-      uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
 
-    - name: Rust cache
-      uses: swatinem/rust-cache@v2
-      with:
-        workspaces: './src-tauri -> target'
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
 
-    - name: Import Windows certificate
-      if: matrix.platform == 'windows-latest'
-      env:
-        WINDOWS_CERTIFICATE: ${{ secrets.BASE64_ENCODED_PFX }}
-        WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.PFX_KEY }}
-      run: |
-        New-Item -ItemType directory -Path certificate
-        Set-Content -Path certificate/tempCert.txt -Value $env:WINDOWS_CERTIFICATE
-        certutil -decode certificate/tempCert.txt certificate/certificate.pfx
-        Remove-Item -path certificate -include tempCert.txt
-        Import-PfxCertificate -FilePath certificate/certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -Force -AsPlainText)
+      - name: Import Windows certificate
+        if: matrix.platform == 'windows-latest'
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.BASE64_ENCODED_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.PFX_KEY }}
+        run: |
+          New-Item -ItemType directory -Path certificate
+          Set-Content -Path certificate/tempCert.txt -Value $env:WINDOWS_CERTIFICATE
+          certutil -decode certificate/tempCert.txt certificate/certificate.pfx
+          Remove-Item -path certificate -include tempCert.txt
+          Import-PfxCertificate -FilePath certificate/certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -Force -AsPlainText)
 
-    - name: Build Text plugin
-      working-directory: ./plugins/text-plugin
-      run: |
-        npm ci
-        npm run build
+      - name: Build Text plugin
+        working-directory: ./plugins/text-plugin
+        run: |
+          npm ci
+          npm run build
 
-    - name: NPM clean install
-      run: npm ci
+      - name: NPM clean install
+        run: npm ci
 
-    - name: Build Tauri application
-      if: ${{ !inputs.is-release }}
-      env:
-        RUST_BACKTRACE: full
-        TAURI_LOG_LEVEL: trace
-        TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-        TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      run: npm run tauri build -- --verbose
+      - name: Install msedgedriver (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: |
+          cargo install --git https://github.com/chippers/msedgedriver-tool
+          & "$HOME/.cargo/bin/msedgedriver-tool.exe"
+          $PWD.Path >> $env:GITHUB_PATH
 
-    - name: Get release notes
-      id: get-release-notes
-      run: |
-        $content = Get-Content ./release-notes.md -Raw
-        echo "release-notes<<EOF" >> $env:GITHUB_OUTPUT
-        echo $content >> $env:GITHUB_OUTPUT
-        echo "EOF" >> $env:GITHUB_OUTPUT
+      - name: Install tauri-driver
+        run: cargo install tauri-driver --locked
 
-    - name: Configure Sentry
-      env:
-        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-      run: |
-        Install-Module -Name PSToml -Force
-        $filePath = "./src-tauri/config/default.toml"
-        $configDefault = Get-Content $filePath -Raw | ConvertFrom-Toml
-        $configDefault.sentry.dsn = $env:SENTRY_DSN
-        $configDefault | ConvertTo-Toml | Set-Content $filePath
+      - name: E2E test WebdriverIO (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: npm run test-e2e
 
-    - name: Release Tauri app
-      if: ${{ inputs.is-release }}
-      uses: tauri-apps/tauri-action@v0
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-        TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      with:
-        tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-        releaseName: __VERSION__
-        releaseBody: ${{ steps.get-release-notes.outputs.release-notes }}
-        releaseDraft: true
-        includeUpdaterJson: true
+      - name: Get release notes
+        id: get-release-notes
+        run: |
+          $content = Get-Content ./release-notes.md -Raw
+          echo "release-notes<<EOF" >> $env:GITHUB_OUTPUT
+          echo $content >> $env:GITHUB_OUTPUT
+          echo "EOF" >> $env:GITHUB_OUTPUT
+
+      - name: Configure Sentry
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          Install-Module -Name PSToml -Force
+          $filePath = "./src-tauri/config/default.toml"
+          $configDefault = Get-Content $filePath -Raw | ConvertFrom-Toml
+          $configDefault.sentry.dsn = $env:SENTRY_DSN
+          $configDefault | ConvertTo-Toml | Set-Content $filePath
+
+      - name: Release Tauri app
+        if: ${{ inputs.is-release }}
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: __VERSION__
+          releaseBody: ${{ steps.get-release-notes.outputs.release-notes }}
+          releaseDraft: true
+          includeUpdaterJson: true
