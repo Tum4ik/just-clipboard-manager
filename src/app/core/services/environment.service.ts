@@ -18,7 +18,15 @@ export class EnvironmentService {
 
   private _dbConnectionString = new Promise<string>(async resolve => {
     const dbConnectionString = await invoke<string>('db_connection_string');
-    await Database.load(dbConnectionString);
+    try {
+      await Database.load(dbConnectionString);
+    } catch (error) {
+      console.error(error);
+
+      // await invoke<void>('fix_migrations_checksum');
+      // await Database.load(dbConnectionString);
+    }
+
     resolve(dbConnectionString);
   });
   getDbConnectionStringAsync(): Promise<string> {

@@ -5,6 +5,7 @@ pub fn v1() -> Migration {
     version: 1,
     description: "Initial database creation",
     kind: MigrationKind::Up,
+    // sql: include_str!("sql/v1.sql"),
     sql: "
     CREATE TABLE clips (
       id INTEGER PRIMARY KEY,

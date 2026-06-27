@@ -2,6 +2,7 @@ pub mod autostart;
 pub mod copy_text_to_clipboard;
 pub mod environment;
 pub mod extract_and_remove_zip;
+pub mod fix_migrations_checksum;
 pub mod get_caret_position;
 pub mod get_foreground_window;
 pub mod info;
@@ -41,6 +42,8 @@ macro_rules! all_commands {
       commands::sentry::sentry_capture_warning,
       commands::sentry::sentry_capture_error,
       commands::sentry::sentry_capture_fatal,
+
+      commands::fix_migrations_checksum::fix_migrations_checksum,
     ]
   };
 }
