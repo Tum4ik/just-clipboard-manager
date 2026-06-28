@@ -1,4 +1,4 @@
-use crate::helpers::database::get_sqlite_db;
+use crate::{config::app_config::AppConfiguration, helpers::database::get_sqlite_db};
 use config::Config;
 use sqlx::Row;
 use std::mem::discriminant;
@@ -9,7 +9,7 @@ use serde::{Serialize, Serializer};
 
 #[tauri::command]
 pub async fn fix_migrations_checksum(
-  config: State<'_, Config>,
+  app_config: State<'_, AppConfiguration>,
   db_instances: State<'_, DbInstances>,
 ) -> Result<(), String> {
   /* let db = get_sqlite_db(config, db_instances)

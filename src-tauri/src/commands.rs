@@ -27,7 +27,7 @@ macro_rules! all_commands {
       commands::is_shortcut_registered::is_shortcut_registered,
       commands::copy_text_to_clipboard::copy_text_to_clipboard,
 
-      commands::environment::environment,
+      commands::environment::is_development,
       commands::environment::db_connection_string,
 
       commands::info::info_product_name,

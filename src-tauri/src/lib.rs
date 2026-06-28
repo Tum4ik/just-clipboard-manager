@@ -1,15 +1,16 @@
 mod commands;
+pub mod config;
 mod helpers;
 mod migrations;
 mod setup;
 
+use crate::config::app_config::AppConfiguration;
 use crate::setup::clipboard_listener::setup_clipboard_listener;
-use config::Config;
 use log::LevelFilter;
 use tauri_plugin_log::fern::colors::ColoredLevelConfig;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run(config: Config) {
+pub fn run(app_config: AppConfiguration) {
   tauri::Builder::default()
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {}))
@@ -25,10 +26,7 @@ pub fn run(config: Config) {
     .plugin(
       tauri_plugin_sql::Builder::new()
         .add_migrations(
-          config
-            .get_string("database.connection-string")
-            .expect("'database.connection-string' not found in config")
-            .as_str(),
+          &app_config.database.connection_string,
           migrations::migrations(),
         )
         .build(),
@@ -38,7 +36,7 @@ pub fn run(config: Config) {
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_global_shortcut::Builder::new().build())
     .plugin(tauri_plugin_store::Builder::new().build())
-    .manage(config)
+    .manage(app_config)
     .setup(|app| {
       setup_clipboard_listener(app)?;
       Ok(())

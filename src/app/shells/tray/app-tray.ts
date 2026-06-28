@@ -40,7 +40,7 @@ export class AppTray {
     } catch (error) {
       this.monitoring.error("Can't check updates.", error);
     }
-    if (update && await this.environment.isProductionAsync()) {
+    if (update && !(await this.environment.isDevelopmentAsync())) {
       try {
         await update.downloadAndInstall();
         await relaunch();

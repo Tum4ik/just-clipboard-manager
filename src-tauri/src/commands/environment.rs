@@ -1,16 +1,12 @@
-use config::Config;
+use crate::config::app_config::AppConfiguration;
 use tauri::State;
 
 #[tauri::command]
-pub fn environment(config: State<'_, Config>) -> String {
-  config
-    .get_string("environment")
-    .expect("'environment' key not found in config")
+pub fn is_development() -> bool {
+  cfg!(dev)
 }
 
 #[tauri::command]
-pub fn db_connection_string(config: State<'_, Config>) -> String {
-  config
-    .get_string("database.connection-string")
-    .expect("'database.connection-string' key not found in config")
+pub fn db_connection_string(app_config: State<'_, AppConfiguration>) -> String {
+  app_config.database.connection_string.clone()
 }

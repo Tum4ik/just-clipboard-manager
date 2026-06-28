@@ -1,11 +1,10 @@
-use crate::helpers::database::get_sqlite_db;
-use config::Config;
+use crate::{config::app_config::AppConfiguration, helpers::database::get_sqlite_db};
 use tauri::State;
 use tauri_plugin_sql::DbInstances;
 
 #[tauri::command]
 pub async fn update_clip(
-  config: State<'_, Config>,
+  app_config: State<'_, AppConfiguration>,
   db_instances: State<'_, DbInstances>,
   clip_id: i64,
   plugin_id: String,
@@ -15,7 +14,7 @@ pub async fn update_clip(
   representation_format_name: String,
   search_label: Option<String>,
 ) -> Result<(), String> {
-  let db = get_sqlite_db(config, db_instances)
+  let db = get_sqlite_db(app_config, db_instances)
     .await
     .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   sqlx::query(

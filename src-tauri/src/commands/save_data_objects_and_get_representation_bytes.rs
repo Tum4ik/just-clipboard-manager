@@ -1,13 +1,12 @@
-use crate::helpers::database::get_sqlite_db;
+use crate::{config::app_config::AppConfiguration, helpers::database::get_sqlite_db};
 use clipboard_win::raw::{close, get, open, size};
-use config::Config;
 use std::collections::HashMap;
 use tauri::State;
 use tauri_plugin_sql::DbInstances;
 
 #[tauri::command]
 pub async fn save_data_objects_and_get_representation_bytes(
-  config: State<'_, Config>,
+  app_config: State<'_, AppConfiguration>,
   db_instances: State<'_, DbInstances>,
   representation_format_id: u32,
   formats_to_save: Vec<u32>,
@@ -65,7 +64,7 @@ pub async fn save_data_objects_and_get_representation_bytes(
     ));
   }
 
-  let db = get_sqlite_db(config, db_instances)
+  let db = get_sqlite_db(app_config, db_instances)
     .await
     .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   let mut transaction = db.begin().await.unwrap();

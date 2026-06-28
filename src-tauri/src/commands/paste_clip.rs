@@ -1,7 +1,7 @@
+use crate::config::app_config::AppConfiguration;
 use crate::helpers::database::get_sqlite_db;
 use clipboard_win::raw::{close, open, set, set_without_clear};
 use clipboard_win::SysResult;
-use config::Config;
 use sqlx::Row;
 use std::ffi::c_void;
 use tauri::State;
@@ -15,12 +15,12 @@ use windows::Win32::UI::WindowsAndMessaging::{GetWindowThreadProcessId, SetForeg
 
 #[tauri::command]
 pub async fn paste_clip(
-  config: State<'_, Config>,
+  app_config: State<'_, AppConfiguration>,
   db_instances: State<'_, DbInstances>,
   clip_id: i64,
   target_window_ptr: usize,
 ) -> Result<(), String> {
-  let db = get_sqlite_db(config, db_instances)
+  let db = get_sqlite_db(app_config, db_instances)
     .await
     .map_err(|e| format!("Can't get SQLite DB: {}", e))?;
   let query_result = sqlx::query(

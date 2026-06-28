@@ -1,28 +1,21 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use config::{Config, File};
 use sentry::{protocol::IpAddress, types::Dsn, User};
-use std::{env, path::PathBuf, str::FromStr};
+use std::str::FromStr;
+
+use just_clipboard_manager_lib::config::app_config::AppConfiguration;
 
 fn main() {
-  let exe_dir = env::current_exe()
-    .ok()
-    .and_then(|p| p.parent().map(|p| p.to_path_buf()))
-    .unwrap_or_else(|| PathBuf::from("."));
-
-  let config = Config::builder()
-    .add_source(File::from(exe_dir.join("config/default")))
-    .add_source(File::from(exe_dir.join("config/development")).required(false))
-    .build()
-    .expect("Failed to load config");
-
-  let sentry_dsn = config.get_string("sentry.dsn").unwrap();
-  let environment = config.get_string("environment").unwrap();
+  let app_config = AppConfiguration::new().unwrap();
 
   let _guard = sentry::init(sentry::ClientOptions {
-    dsn: Dsn::from_str(&sentry_dsn).ok(),
-    environment: Some(environment.into()),
+    dsn: Dsn::from_str(&app_config.sentry.dsn).ok(),
+    environment: Some(if cfg!(dev) {
+      "development".into()
+    } else {
+      "production".into()
+    }),
     release: sentry::release_name!(),
     auto_session_tracking: true,
     ..sentry::ClientOptions::default()
@@ -35,5 +28,5 @@ fn main() {
     }));
   });
 
-  just_clipboard_manager_lib::run(config);
+  just_clipboard_manager_lib::run(app_config);
 }

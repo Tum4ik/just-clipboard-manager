@@ -1,35 +1,35 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import Database from '@tauri-apps/plugin-sql';
+import { MonitoringService } from './monitoring.service';
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentService {
-  private _isDevelopment = new Promise<boolean>(async resolve => {
-    const envStr = await invoke<string>('environment');
-    resolve(envStr === 'development');
-  });
-  isDevelopmentAsync(): Promise<boolean> {
-    return this._isDevelopment;
+  private readonly monitoring = inject(MonitoringService);
+
+  private isDevelopment?: boolean;
+  async isDevelopmentAsync(): Promise<boolean> {
+    if (!this.isDevelopment) {
+      this.isDevelopment = await invoke<boolean>('is_development');
+    }
+    return this.isDevelopment;
   }
 
-  async isProductionAsync(): Promise<boolean> {
-    return !(await this._isDevelopment);
-  }
+  private dbConnectionString?: string;
+  async getDbConnectionStringAsync(): Promise<string> {
+    if (!this.dbConnectionString) {
+      this.dbConnectionString = await invoke<string>('db_connection_string');
+      try {
+        await Database.load(this.dbConnectionString);
+      } catch (error) {
+        this.monitoring.error('Failed to load database', error);
+        console.error(error);
 
-  private _dbConnectionString = new Promise<string>(async resolve => {
-    const dbConnectionString = await invoke<string>('db_connection_string');
-    try {
-      await Database.load(dbConnectionString);
-    } catch (error) {
-      console.error(error);
-
-      // await invoke<void>('fix_migrations_checksum');
-      // await Database.load(dbConnectionString);
+        // await invoke<void>('fix_migrations_checksum');
+        // await Database.load(dbConnectionString);
+      }
     }
 
-    resolve(dbConnectionString);
-  });
-  getDbConnectionStringAsync(): Promise<string> {
-    return this._dbConnectionString;
+    return this.dbConnectionString;
   }
 }
