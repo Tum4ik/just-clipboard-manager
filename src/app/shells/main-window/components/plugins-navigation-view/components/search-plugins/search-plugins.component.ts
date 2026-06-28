@@ -36,7 +36,7 @@ export class SearchPluginsComponent {
   ) {
     this.lang = toSignal(
       this.translateService.onLangChange.pipe(map(e => e.lang)),
-      { initialValue: translateService.getCurrentLang() }
+      { initialValue: translateService.getCurrentLang() ?? 'en' }
     );
   }
 

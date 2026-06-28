@@ -20,17 +20,12 @@
     "declaration": false,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "ES2024",
+    "target": "es2025",
     "module": "preserve",
-    "lib": [
-      "ES2024",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "baseUrl": "src",
+    "rootDir": "src",
     "paths": {
       "@app/*": [
-        "app/*"
+        "./src/app/*"
       ]
     },
     "types": [

@@ -1,4 +1,4 @@
-import { provideHttpClient, withFetch } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from "@angular/core";
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from "@angular/material/tooltip";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
-    provideHttpClient(withFetch()),
+    provideHttpClient(),
     provideTranslateService({
       fallbackLang: 'en',
       loader: provideTranslateHttpLoader({ prefix: './assets/i18n/', suffix: '.json' })

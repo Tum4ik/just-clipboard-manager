@@ -42,7 +42,7 @@ export class AutoDeleteClips {
   protected readonly pluralCategory = computed(() => {
     const quantity = this.periodQuantity();
     if (quantity || quantity === 0) {
-      return getPluralCategory(quantity, this.translateService.getCurrentLang());
+      return getPluralCategory(quantity, this.translateService.getCurrentLang() ?? 'en');
     }
     return undefined;
   });

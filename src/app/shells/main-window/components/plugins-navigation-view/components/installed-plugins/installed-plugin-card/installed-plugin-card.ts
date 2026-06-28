@@ -37,7 +37,7 @@ export class InstalledPluginCard {
 
 
   private readonly langChangeEvent = toSignal(this.translateService.onLangChange);
-  protected readonly lang = computed(() => this.langChangeEvent()?.lang ?? this.translateService.getCurrentLang());
+  protected readonly lang = computed(() => this.langChangeEvent()?.lang ?? this.translateService.getCurrentLang() ?? 'en');
 
   protected readonly isEnabled = linkedSignal(() => this.pluginInfo().isEnabled);
   private readonly isEnabledEffect = effect(async () => {

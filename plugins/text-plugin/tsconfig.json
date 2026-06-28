@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "../../src-tauri/resources/plugins/text-plugin",
-    "target": "ES2024",
+    "target": "es2025",
     "module": "NodeNext",
     "esModuleInterop": true,
     "resolveJsonModule": true,
