@@ -1,9 +1,10 @@
-import { Component, computed, effect, inject, input, linkedSignal, untracked } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
 import { ExtendedDialogService } from '@app/core/services/extended-dialog.service';
-import { PluginsService, PluginWithAdditionalInfo } from '@app/core/services/plugins.service';
+import { PluginInfo, PluginsService } from '@app/core/services/plugins.service';
 import { ShadedCardComponent } from '@app/shells/main-window/components/shaded-card/shaded-card.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ClipboardDataPlugin, PluginId } from 'just-clipboard-manager-pdk';
@@ -21,6 +22,7 @@ import { ConfirmPluginUninstall, ConfirmPluginUninstallResult } from '../dialogs
     Button,
     ToggleButton,
     FormsModule,
+    AsyncPipe,
   ],
   providers: [
     ExtendedDialogService
@@ -33,13 +35,13 @@ export class InstalledPluginCard {
   private readonly clipsRepository = inject(ClipsRepository);
 
 
-  readonly pluginInfo = input.required<PluginWithAdditionalInfo>();
+  readonly pluginInfo = input.required<PluginInfo>();
 
 
   private readonly langChangeEvent = toSignal(this.translateService.onLangChange);
   protected readonly lang = computed(() => this.langChangeEvent()?.lang ?? this.translateService.getCurrentLang() ?? 'en');
 
-  protected readonly isEnabled = linkedSignal(() => this.pluginInfo().isEnabled);
+  /* protected readonly isEnabled = linkedSignal(() => this.pluginInfo().isEnabled);
   private readonly isEnabledEffect = effect(async () => {
     const pluginInfo = untracked(() => this.pluginInfo());
     if (this.isEnabled() === pluginInfo.isEnabled) {
@@ -51,7 +53,7 @@ export class InstalledPluginCard {
     } else {
       await this.pluginsService.disablePluginAsync(pluginId);
     }
-  });
+  }); */
 
 
   protected async uninstall(plugin: ClipboardDataPlugin) {

@@ -1,5 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { Component, Signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe } from '@ngx-translate/core';
 import { PluginsService, PluginWithAdditionalInfo } from '../../../../../../core/services/plugins.service';
@@ -20,13 +21,9 @@ import { PluginPipelineCardComponent } from "./components/plugin-pipeline-card/p
   ]
 })
 export class PluginsPipelineComponent {
-  constructor(
-    private readonly pluginsService: PluginsService,
-  ) { }
+  private readonly pluginsService = inject(PluginsService);
 
-  protected get plugins(): Signal<readonly PluginWithAdditionalInfo[]> {
-    return this.pluginsService.installedPlugins;
-  }
+  protected readonly plugins = toSignal(this.pluginsService.installedPlugins);
 
   protected async pluginsPipelineChanged(e: CdkDragDrop<PluginWithAdditionalInfo[]>) {
     await this.pluginsService.changePluginsOrderAsync(e.previousIndex, e.currentIndex);

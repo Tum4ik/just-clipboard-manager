@@ -29,7 +29,7 @@ export class LanguageSwitchingService extends GlobalStateService {
 
 
   async setLanguageAsync(lang: Language) {
-    await this.languageGlobalSetter.setAsync(lang);
+    await this.languageGlobalSetter.invokeAsync(lang);
   }
 
 

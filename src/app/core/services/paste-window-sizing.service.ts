@@ -41,12 +41,12 @@ export class PasteWindowSizingService extends GlobalStateService {
 
   async setSize(width: number, height: number) {
     await this.settingsService.pasteWindowSize.setAsync({ width, height });
-    await this.sizeGlobalSetter.setAsync({ width, height });
+    await this.sizeGlobalSetter.invokeAsync({ width, height });
   }
 
   async setPinnedClipsHeightPercentage(heightPercentage: number) {
     await this.settingsService.pasteWindowPinnedClipsHeightPercentage.setAsync(heightPercentage);
-    await this.pinnedClipsAreaHeightGlobalSetter.setAsync(heightPercentage);
+    await this.pinnedClipsAreaHeightGlobalSetter.invokeAsync(heightPercentage);
   }
 
 

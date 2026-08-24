@@ -5,7 +5,8 @@ import { ClipsRepository } from '@app/core/data/repositories/clips.repository';
 import { PinnedClipsRepository } from '@app/core/data/repositories/pinned-clips.repository';
 import { PluginsService } from '@app/core/services/plugins.service';
 import { SettingsService } from '@app/core/services/settings.service';
-import { BehaviorSubject, debounce, distinctUntilChanged, interval } from 'rxjs';
+import { PluginId } from 'just-clipboard-manager-pdk';
+import { BehaviorSubject, debounce, distinctUntilChanged, firstValueFrom, interval } from 'rxjs';
 import { PasteDataService } from './paste-data.service';
 
 @Injectable()
@@ -52,7 +53,7 @@ export class PasteWindowClipsService {
     for (const pinnedClipId of order) {
       if (pinnedClipsMap.has(pinnedClipId)) {
         const pinnedClip = pinnedClipsMap.get(pinnedClipId)!;
-        const htmlElement = this.getClipHtmlElement(pinnedClip.clip);
+        const htmlElement = await this.getClipHtmlElementAsync(pinnedClip.clip);
         if (htmlElement) {
           orderedClips.push({ clipId: pinnedClip.id, htmlElement });
         }
@@ -66,7 +67,7 @@ export class PasteWindowClipsService {
 
     if (pinnedClipsMap.size > 0) {
       for (const [id, pinnedClip] of pinnedClipsMap) {
-        const htmlElement = this.getClipHtmlElement(pinnedClip.clip);
+        const htmlElement = await this.getClipHtmlElementAsync(pinnedClip.clip);
         if (htmlElement) {
           orderedClips.push({ clipId: pinnedClip.id, htmlElement });
         }
@@ -170,14 +171,20 @@ export class PasteWindowClipsService {
 
 
   private async loadClipsAsync(options: { skip: number; take: number; }): Promise<PasteWindowClip[]> {
-    const enabledPluginIds = this.pluginsService.enabledPlugins().map(ep => ep.id);
+    const installedPlugins = await firstValueFrom(this.pluginsService.installedPlugins);
+    const enabledPluginIds: PluginId[] = [];
+    for (const pluginInfo of installedPlugins) {
+      if (await firstValueFrom(pluginInfo.isEnabled)) {
+        enabledPluginIds.push(pluginInfo.plugin.id);
+      }
+    }
     const clips = await this.clipsRepository.getClipsAsync(
       enabledPluginIds, options.skip, options.take, this.searchSubject.value.text
     );
     const clipsToAdd: PasteWindowClip[] = [];
     if (clips.length > 0) {
       for (const clip of clips) {
-        const htmlElement = this.getClipHtmlElement(clip);
+        const htmlElement = await this.getClipHtmlElementAsync(clip);
         if (!htmlElement) {
           continue;
         }
@@ -189,9 +196,9 @@ export class PasteWindowClipsService {
   }
 
 
-  private getClipHtmlElement(clip: Clip): HTMLElement | null {
-    const { plugin, isEnabled } = this.pluginsService.getPlugin(clip.pluginId) ?? {};
-    if (!plugin || !isEnabled?.()) {
+  private async getClipHtmlElementAsync(clip: Clip): Promise<HTMLElement | null> {
+    const { plugin, isEnabled: isEnabled$ } = this.pluginsService.getPlugin(clip.pluginId) ?? {};
+    if (!plugin || !isEnabled$ || !await firstValueFrom(isEnabled$)) {
       return null;
     }
 

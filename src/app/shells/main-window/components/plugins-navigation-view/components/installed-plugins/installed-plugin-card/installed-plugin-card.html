@@ -28,7 +28,8 @@
                 raised="true"
                 (onClick)="uninstall(pluginInfo().plugin)" />
       }
-      <p-toggle-button [(ngModel)]="isEnabled"
+      <!-- <p-toggle-button [(ngModel)]="isEnabled" -->
+      <p-toggle-button [ngModel]="pluginInfo().isEnabled | async"
                        [onLabel]="'enabled' | translate"
                        [offLabel]="'disabled' | translate" />
     </div>

@@ -45,13 +45,13 @@ export class ThemeService extends GlobalStateService {
 
   async setThemeModeAsync(themeMode: ThemeMode) {
     await this.settingsService.themeMode.setAsync(themeMode);
-    await this.themeModeGlobalSetter.setAsync(themeMode);
+    await this.themeModeGlobalSetter.invokeAsync(themeMode);
   }
 
 
   async setThemePrimaryColorAsync(color: PresetColorName) {
     await this.settingsService.themePrimaryColor.setAsync(color);
-    await this.themePrimaryColorGlobalSetter.setAsync(color);
+    await this.themePrimaryColorGlobalSetter.invokeAsync(color);
   }
 
 

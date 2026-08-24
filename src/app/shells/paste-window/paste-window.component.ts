@@ -103,19 +103,13 @@ export class PasteWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
     this.subscriptions.add(
-      this.pluginsService.pluginInstalled$.subscribe(() => {
+      this.pluginsService.pluginsListChanged.subscribe(() => {
         this.isClipsListUpToDate = false;
         this.pasteWindowClipsService.loadPinnedClipsAsync();
       })
     );
     this.subscriptions.add(
-      this.pluginsService.pluginUninstalled$.subscribe(() => {
-        this.isClipsListUpToDate = false;
-        this.pasteWindowClipsService.loadPinnedClipsAsync();
-      })
-    );
-    this.subscriptions.add(
-      this.pluginsService.pluginSettingsChanged$.subscribe(() => {
+      this.pluginsService.pluginSettingsChanged.subscribe(() => {
         this.isClipsListUpToDate = false;
         this.pasteWindowClipsService.loadPinnedClipsAsync();
       })

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleIcon } from "@app/core/components/google-icon/google-icon";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -31,7 +31,7 @@ import { ShadedCardComponent } from "../../../shaded-card/shaded-card.component"
 })
 export class SearchPluginsComponent {
   constructor(
-    private readonly pluginsService: PluginsService,
+
     private readonly translateService: TranslateService
   ) {
     this.lang = toSignal(
@@ -40,9 +40,13 @@ export class SearchPluginsComponent {
     );
   }
 
+  private readonly pluginsService = inject(PluginsService);
+
+  private readonly installedPlugins = toSignal(this.pluginsService.installedPlugins, { requireSync: true });
+
   private searchPlugins?: Promise<SearchPluginInfo[]>;
   protected readonly plugins = computed<Promise<readonly SearchPluginViewModel[]>>(() => {
-    const installedPlugins = this.pluginsService.installedPlugins();
+    const installedPlugins = this.installedPlugins();
     this.searchPlugins ??= this.pluginsService.searchPluginsAsync();
     return this.searchPlugins.then(plugins => {
       return plugins.map(p => {

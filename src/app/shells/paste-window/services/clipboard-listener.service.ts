@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from '@tauri-apps/api/event';
 import { ClipboardDataPlugin } from 'just-clipboard-manager-pdk';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { ClipsRepository } from '../../../core/data/repositories/clips.repository';
 import { MonitoringService } from '../../../core/services/monitoring.service';
 import { PluginsService } from '../../../core/services/plugins.service';
@@ -43,7 +43,7 @@ export class ClipboardListener {
 
 
   private async onClipboardUpdated(availableFormats: Map<string, number>) {
-    const pickResult = this.pickPlugin(availableFormats);
+    const pickResult = await this.pickPluginAsync(availableFormats);
     if (!pickResult) {
       return;
     }
@@ -78,13 +78,17 @@ export class ClipboardListener {
   }
 
 
-  private pickPlugin(availableFormats: Map<string, number>)
-    : { plugin: ClipboardDataPlugin, formatName: string, formatId: number; } | null {
+  private async pickPluginAsync(availableFormats: Map<string, number>)
+    : Promise<{ plugin: ClipboardDataPlugin, formatName: string, formatId: number; } | null> {
 
-    for (const plugin of this.pluginsService.enabledPlugins()) {
-      for (const format of plugin.representationFormats) {
+    const orderedPlugins = await firstValueFrom(this.pluginsService.installedOrderedPlugins);
+    for (const pluginInfo of orderedPlugins) {
+      if (!await firstValueFrom(pluginInfo.isEnabled)) {
+        continue;
+      }
+      for (const format of pluginInfo.plugin.representationFormats) {
         if (availableFormats.has(format)) {
-          return { plugin, formatName: format, formatId: availableFormats.get(format)! };
+          return { plugin: pluginInfo.plugin, formatName: format, formatId: availableFormats.get(format)! };
         }
       }
     }
