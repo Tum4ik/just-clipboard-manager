@@ -8,7 +8,7 @@
       "name": "C#: Debug",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/src/Platforms/Windows/WinUI/bin/x64/Debug/net10.0-windows10.0.19041.0/win-x64/JustClipboardManager.exe",
+      "program": "${workspaceFolder}/src/Platform/Windowing/Windows/WinUI/bin/x64/Debug/net10.0-windows10.0.19041.0/win-x64/JustClipboardManager.exe",
       "preLaunchTask": "build"
     }
   ]
