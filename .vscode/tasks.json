@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/src/Platform/Windowing/Windows/WinUI/JustClipboardManager.csproj",
+        "${workspaceFolder}/src/Platforms/Windows/WinUI/JustClipboardManager.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
         "/p:Platform=x64"
