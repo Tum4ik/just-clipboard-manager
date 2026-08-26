@@ -1,8 +1,5 @@
 {
   "profiles": {
-    "JustClipboardManager (Package)": {
-      "commandName": "MsixPackage"
-    },
     "JustClipboardManager (Unpackaged)": {
       "commandName": "Project"
     }
