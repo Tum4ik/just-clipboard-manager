@@ -4,6 +4,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Project Path="Core/JustClipboardManager.Application/JustClipboardManager.Application.csproj" Id="6319fade-6bd4-4c1f-bfe3-dfe301dcdfa1" />
+  <Project Path="Core/JustClipboardManager.Domain/JustClipboardManager.Domain.csproj" Id="8b71da60-9d19-40f3-8454-693143dbac29" />
+  <Project Path="Core/JustClipboardManager.Infrastructure/JustClipboardManager.Infrastructure.csproj" Id="5c4ec49c-d34f-4af4-bf93-2c6f66c017f2" />
   <Project Path="Platforms/Windows/WinUI/JustClipboardManager.csproj">
     <Platform Solution="*|ARM64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />
