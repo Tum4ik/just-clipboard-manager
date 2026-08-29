@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using JustClipboardManager.Application.Services;
+using JustClipboardManager.Infrastructure;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,10 +29,11 @@ namespace JustClipboardManager
     }
 
 
-    private IServiceProvider ConfigureServices()
+    private static IServiceProvider ConfigureServices()
     {
       var services = new ServiceCollection();
 
+      services.AddInfrastructure();
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
 
