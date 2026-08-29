@@ -11,8 +11,9 @@ internal class TrayIconService : ITrayIconService
   private readonly Stream _iconStream;
   private readonly Icon _icon;
   private readonly TrayIconWithContextMenu _trayIcon;
+  private readonly IWindowingService _windowingService;
 
-  public TrayIconService()
+  public TrayIconService(IWindowingService windowingService)
   {
     _iconStream = H.Resources.icon_ico.AsStream();
     _icon = new Icon(_iconStream);
@@ -24,7 +25,7 @@ internal class TrayIconService : ITrayIconService
       {
         Items =
         {
-          new PopupMenuItem("Settings", (_, _) => {}),
+          new PopupMenuItem("Settings", (_, _) => Settings()),
           new PopupMenuItem("About", (_, _) => {}),
           new PopupMenuSeparator(),
           new PopupSubMenu("Language")
@@ -40,11 +41,19 @@ internal class TrayIconService : ITrayIconService
         },
       }
     };
+
+    _windowingService = windowingService;
   }
 
   public void Initialize()
   {
     _trayIcon.Create();
+  }
+
+
+  private void Settings()
+  {
+    _windowingService.ShowMainWindow();
   }
 
 

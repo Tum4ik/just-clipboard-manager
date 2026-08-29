@@ -15,7 +15,6 @@ namespace JustClipboardManager
   /// </summary>
   public partial class App : Microsoft.UI.Xaml.Application
   {
-    private Window? _window;
     private readonly IServiceProvider _services;
 
     /// <summary>
@@ -34,6 +33,7 @@ namespace JustClipboardManager
       var services = new ServiceCollection();
 
       services.AddSingleton<ITrayIconService, TrayIconService>();
+      services.AddSingleton<IWindowingService, WindowingService>();
 
       return services.BuildServiceProvider();
     }
@@ -45,19 +45,7 @@ namespace JustClipboardManager
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-      _window = new MainWindow();
-      // _window.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-      if (_window.AppWindow.Presenter is OverlappedPresenter presenter)
-      {
-        // presenter.IsMaximizable = false;
-        // presenter.IsMinimizable = false;
-        presenter.SetBorderAndTitleBar(true, false);
-      }
-      _window.Activate();
-
-
       _services.GetRequiredService<ITrayIconService>().Initialize();
-
     }
   }
 }
