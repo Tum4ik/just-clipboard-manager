@@ -1,7 +1,6 @@
 using System;
 using JustClipboardManager.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Infrastructure;
@@ -48,6 +47,7 @@ namespace JustClipboardManager
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
       _services.GetRequiredService<ITrayIconService>().Initialize();
+      _services.GetRequiredService<IDatabaseMigrator>().Migrate();
     }
   }
 }
