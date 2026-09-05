@@ -1,9 +1,10 @@
 using System;
+using JustClipboardManager.Application;
+using JustClipboardManager.Application.Services;
+using JustClipboardManager.Infrastructure;
 using JustClipboardManager.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using JustClipboardManager.Application.Services;
-using JustClipboardManager.Infrastructure;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,9 +33,11 @@ namespace JustClipboardManager
     {
       var services = new ServiceCollection();
 
+      services.AddApplication();
       services.AddInfrastructure();
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
+      services.AddSingleton<IClipboardService, ClipboardService>();
 
       return services.BuildServiceProvider();
     }
@@ -48,6 +51,7 @@ namespace JustClipboardManager
     {
       _services.GetRequiredService<ITrayIconService>().Initialize();
       _services.GetRequiredService<IDatabaseMigrator>().Migrate();
+      _services.GetRequiredService<IClipboardService>().Initialize();
     }
   }
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JustClipboardManager.Infrastructure.Configurations;
 
-internal sealed class DatabaseOptions
+internal class DatabaseOptions
 {
   public const string Database = nameof(Database);
 

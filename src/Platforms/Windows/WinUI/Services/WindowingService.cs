@@ -7,6 +7,10 @@ namespace JustClipboardManager.Services;
 internal class WindowingService : IWindowingService
 {
   private readonly DispatcherQueue _dispatcherQueue;
+
+  /// <summary>
+  /// At least one window must always be created for the application to function normally.
+  /// </summary>
   private readonly PasteWindow _pasteWindow = new();
 
   public WindowingService()
