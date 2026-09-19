@@ -7,6 +7,8 @@ using JustClipboardManager.Infrastructure.Configurations;
 using Microsoft.Extensions.Options;
 using JustClipboardManager.Infrastructure.Services;
 using JustClipboardManager.Application.Services;
+using Microsoft.EntityFrameworkCore;
+using JustClipboardManager.Application.Common.Abstractions;
 
 namespace JustClipboardManager.Infrastructure;
 
@@ -17,12 +19,15 @@ public static class InfrastructureServiceCollectionExtensions
     var configuration = BuildConfiguration();
     services.AddSingleton(configuration);
     services.ConfigureWithValidateOnStart<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Database));
-    services.AddPooledDbContextFactory<AppDbContext>((provider, options) =>
+    services.AddPooledDbContextFactory<InfraDbContext>((provider, options) =>
     {
       var databaseOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
       var dbFilePath = BuildDbFilePath(databaseOptions.Name);
-      AppDbContext.ConfigureOptions(options, $"Data Source={dbFilePath}");
+      InfraDbContext.ConfigureOptions(options, $"Data Source={dbFilePath}");
     });
+    services.AddSingleton<IDbContextFactory<AppDbContext>>(
+      provider => new AppDbContextFactory(provider.GetRequiredService<IDbContextFactory<InfraDbContext>>())
+    );
     services.AddTransient<IDatabaseMigrator, DatabaseMigrator>();
 
     return services;
@@ -50,5 +55,14 @@ public static class InfrastructureServiceCollectionExtensions
     );
     Directory.CreateDirectory(dir);
     return Path.Combine(dir, dbFileName);
+  }
+
+
+  private sealed class AppDbContextFactory(IDbContextFactory<InfraDbContext> infraFactory) : IDbContextFactory<AppDbContext>
+  {
+    public AppDbContext CreateDbContext() => infraFactory.CreateDbContext();
+
+    public async Task<AppDbContext> CreateDbContextAsync(CancellationToken cancellationToken = default)
+      => await infraFactory.CreateDbContextAsync(cancellationToken);
   }
 }

@@ -1,12 +1,12 @@
 using System.Reflection;
-using JustClipboardManager.Domain.Entities;
+using JustClipboardManager.Application.Common.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace JustClipboardManager.Infrastructure.Data;
 
-internal sealed class AppDbContext : DbContext
+internal sealed class InfraDbContext : AppDbContext
 {
-  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+  public InfraDbContext(DbContextOptions<InfraDbContext> options) : base(options)
   {
   }
 
@@ -15,9 +15,6 @@ internal sealed class AppDbContext : DbContext
     options.UseSqlite(connectionString);
     options.UseLazyLoadingProxies();
   }
-
-  public DbSet<Clip> Clips => Set<Clip>();
-  public DbSet<ClipDataObject> ClipDataObjects => Set<ClipDataObject>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

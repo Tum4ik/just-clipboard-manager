@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build app",
+      "label": "Build App x64",
       "command": "dotnet",
       "type": "process",
       "args": [
@@ -13,6 +13,19 @@
         "/p:Platform=x64"
       ],
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Build Text Plugin x64",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Plugins/BuiltinPlugins/JustClipboardManager.TextPlugin.Windows/JustClipboardManager.TextPlugin.Windows.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary",
+        "/p:Platform=x64",
+        "/p:RuntimeIdentifier=win-x64"
+      ]
     }
   ]
 }

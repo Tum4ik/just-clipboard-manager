@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <RootNamespace>JustClipboardManager.TextPlugin.Windows</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PluginDevKit\JustClipboardManager.PluginDevKit.Windows\JustClipboardManager.PluginDevKit.Windows.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <BuildDestinationFolder>..\..\..\Platforms\Windows\WinUI\bin\$(Platform)\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\Plugins\b50fb996-904f-4391-94a6-78d95479def1\</BuildDestinationFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FilesToCopy Include="$(TargetDir)$(TargetName).dll" />
+    <FilesToCopy Include="$(TargetDir)$(TargetName).pdb" />
+    <FilesToCopy Include="$(TargetDir)$(TargetName).pri" />
+  </ItemGroup>
+  <Target Name="CopyPluginToBuildOutput" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="@(FilesToCopy)"
+          DestinationFiles="@(FilesToCopy->'$(BuildDestinationFolder)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+</Project>

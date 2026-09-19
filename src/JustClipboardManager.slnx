@@ -12,4 +12,7 @@
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
   </Project>
+  <Project Path="Plugins/BuiltinPlugins/JustClipboardManager.TextPlugin.Windows/JustClipboardManager.TextPlugin.Windows.csproj" Id="0e5250dd-9cba-4839-a3e9-712ddb6c723d" />
+  <Project Path="Plugins/PluginDevKit/JustClipboardManager.PluginDevKit.Core/JustClipboardManager.PluginDevKit.Core.csproj" Id="3f6d11fe-0bfa-454c-8b1a-919cfea1146b" />
+  <Project Path="Plugins/PluginDevKit/JustClipboardManager.PluginDevKit.Windows/JustClipboardManager.PluginDevKit.Windows.csproj" Id="d5d53360-3205-4035-8bdb-65f79b0a52d3" />
 </Solution>

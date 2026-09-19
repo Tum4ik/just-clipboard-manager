@@ -6,9 +6,9 @@ namespace JustClipboardManager.Infrastructure.Services;
 
 internal class DatabaseMigrator : IDatabaseMigrator
 {
-  private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+  private readonly IDbContextFactory<InfraDbContext> _dbContextFactory;
 
-  public DatabaseMigrator(IDbContextFactory<AppDbContext> dbContextFactory)
+  public DatabaseMigrator(IDbContextFactory<InfraDbContext> dbContextFactory)
   {
     _dbContextFactory = dbContextFactory;
   }

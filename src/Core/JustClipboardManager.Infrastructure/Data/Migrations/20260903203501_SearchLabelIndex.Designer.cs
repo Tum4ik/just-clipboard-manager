@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JustClipboardManager.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(InfraDbContext))]
     [Migration("20260903203501_SearchLabelIndex")]
     partial class SearchLabelIndex
     {

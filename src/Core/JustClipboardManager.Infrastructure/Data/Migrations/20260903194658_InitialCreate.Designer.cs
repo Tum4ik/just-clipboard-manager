@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JustClipboardManager.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(InfraDbContext))]
     [Migration("20260903194658_InitialCreate")]
     partial class InitialCreate
     {
