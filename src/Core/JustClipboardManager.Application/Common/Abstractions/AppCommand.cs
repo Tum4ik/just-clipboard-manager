@@ -24,6 +24,5 @@ internal abstract class AppCommand<TParameters, TResult> : IAppCommand
     return serializedResult;
   }
 
-
   protected abstract Task<TResult?> ExecuteAsync(TParameters? parameters, CancellationToken cancellationToken = default);
 }

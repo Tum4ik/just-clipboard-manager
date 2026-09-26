@@ -8,5 +8,5 @@ public class Clip
   public string? SearchLabel { get; set; }
   public DateTime ClippedAt { get; set; }
 
-  public virtual ICollection<ClipDataObject> ClipDataObjects { get; } = [];
+  public virtual ICollection<ClipData> ClipDataObjects { get; } = [];
 }

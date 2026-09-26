@@ -10,5 +10,5 @@ public abstract class AppDbContext : DbContext
   }
 
   public DbSet<Clip> Clips => Set<Clip>();
-  public DbSet<ClipDataObject> ClipDataObjects => Set<ClipDataObject>();
+  public DbSet<ClipData> ClipDataObjects => Set<ClipData>();
 }

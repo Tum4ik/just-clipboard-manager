@@ -1,5 +1,6 @@
 using System.Reflection;
 using JustClipboardManager.Application.Common.Abstractions;
+using JustClipboardManager.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JustClipboardManager.Application;
@@ -21,6 +22,8 @@ public static class ApplicationServiceCollectionExtensions
       // todo: need a possibility to specify lifetime for each command
       services.AddKeyedTransient(commandType, implType.Name, implType);
     }
+
+    services.AddSingleton<IClipsService, ClipsService>();
 
     return services;
   }

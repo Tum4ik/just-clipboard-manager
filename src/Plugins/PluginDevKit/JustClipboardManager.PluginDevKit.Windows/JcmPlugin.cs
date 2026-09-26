@@ -3,7 +3,7 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace JustClipboardManager.PluginDevKit.Windows;
 
-public abstract class JcmPlugin : JcmPlugin<DataPackageView>
+public abstract class JcmPlugin : JcmPlugin<DataPackageView, DataPackage>
 {
   
 }

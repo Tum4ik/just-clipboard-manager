@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace JustClipboardManager.PluginDevKit.Core;
 
-public abstract class JcmPlugin<TClipboardContent>
+public abstract class JcmPlugin<TClipboardContentView, TClipboardContent>
 {
   private Guid? _id;
   public Guid Id => _id ??= GetId(GetType());
@@ -14,5 +14,6 @@ public abstract class JcmPlugin<TClipboardContent>
   }
 
 
-  public abstract object? ProcessData(TClipboardContent dataPackageView);
+  public abstract Task<ProcessDataResult> ProcessDataAsync(TClipboardContentView clipboardContent);
+  public abstract TClipboardContent RestoreData(byte[] bytes);
 }

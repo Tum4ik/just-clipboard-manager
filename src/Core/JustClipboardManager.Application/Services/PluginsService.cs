@@ -4,9 +4,17 @@ using JustClipboardManager.PluginDevKit.Core;
 
 namespace JustClipboardManager.Application.Services;
 
-public abstract class PluginsService<TClipboardContent>
+
+public interface IPluginsService<TClipboardContentView, TClipboardContent>
 {
-  private readonly Dictionary<Guid, LoadedPlugin<TClipboardContent>> _loadedPlugins = [];
+  void LoadPlugins();
+  IReadOnlyCollection<JcmPlugin<TClipboardContentView, TClipboardContent>> GetLoadedPlugins();
+}
+
+
+public abstract class PluginsService<TClipboardContentView, TClipboardContent> : IPluginsService<TClipboardContentView, TClipboardContent>
+{
+  private readonly Dictionary<Guid, LoadedPlugin<TClipboardContentView, TClipboardContent>> _loadedPlugins = [];
 
   public void LoadPlugins()
   {
@@ -26,14 +34,14 @@ public abstract class PluginsService<TClipboardContent>
         var assembly = loadContext.LoadFromAssemblyPath(dllFile);
         var pluginType = assembly.GetTypes()
           .FirstOrDefault(
-            t => IsAssignableFromOpenGeneric(typeof(JcmPlugin<>), t)
+            t => IsAssignableFromOpenGeneric(typeof(JcmPlugin<,>), t)
                  && t.IsClass
                  && !t.IsAbstract
           );
         if (pluginType is not null)
         {
-          var plugin = (JcmPlugin<TClipboardContent>)Activator.CreateInstance(pluginType)!;
-          var loadedPlugin = new LoadedPlugin<TClipboardContent>
+          var plugin = (JcmPlugin<TClipboardContentView, TClipboardContent>)Activator.CreateInstance(pluginType)!;
+          var loadedPlugin = new LoadedPlugin<TClipboardContentView, TClipboardContent>
           {
             LoadContext = loadContext,
             WeakReference = weakReference,
@@ -43,6 +51,12 @@ public abstract class PluginsService<TClipboardContent>
         }
       }
     }
+  }
+
+
+  public IReadOnlyCollection<JcmPlugin<TClipboardContentView, TClipboardContent>> GetLoadedPlugins()
+  {
+    return [.._loadedPlugins.Values.Select(v => v.Plugin)];
   }
 
 
@@ -67,9 +81,10 @@ public abstract class PluginsService<TClipboardContent>
   }
 }
 
-internal class LoadedPlugin<TClipboardContent>
+
+internal class LoadedPlugin<TClipboardContentView, TClipboardContent>
 {
   public required AssemblyLoadContext LoadContext { get; init; }
   public required WeakReference WeakReference { get; init; }
-  public required JcmPlugin<TClipboardContent> Plugin { get; init; }
+  public required JcmPlugin<TClipboardContentView, TClipboardContent> Plugin { get; init; }
 }

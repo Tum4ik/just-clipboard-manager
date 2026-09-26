@@ -1,10 +1,12 @@
 using JustClipboardManager.Application.Common.Abstractions;
 using JustClipboardManager.Domain.Common;
+using JustClipboardManager.Domain.Entities;
+using JustClipboardManager.PluginDevKit.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace JustClipboardManager.Application.Commands;
 
-internal class CreateClipCommand : AppCommand<None, None>
+internal class CreateClipCommand : AppCommand<ProcessDataResult, None>
 {
   private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
@@ -13,8 +15,12 @@ internal class CreateClipCommand : AppCommand<None, None>
     _dbContextFactory = dbContextFactory;
   }
 
-  protected override Task<None> ExecuteAsync(None parameters, CancellationToken cancellationToken = default)
+  protected override async Task<None> ExecuteAsync(ProcessDataResult? parameters, CancellationToken cancellationToken = default)
   {
-    throw new NotImplementedException();
+    ArgumentNullException.ThrowIfNull(parameters);
+
+    
+
+    return None.Value;
   }
 }

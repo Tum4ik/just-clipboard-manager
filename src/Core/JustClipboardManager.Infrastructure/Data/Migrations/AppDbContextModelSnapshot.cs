@@ -16,7 +16,7 @@ namespace JustClipboardManager.Infrastructure.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
@@ -49,7 +49,7 @@ namespace JustClipboardManager.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("JustClipboardManager.Domain.Entities.ClipDataObject", b =>
+            modelBuilder.Entity("JustClipboardManager.Domain.Entities.ClipData", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,8 +62,8 @@ namespace JustClipboardManager.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<int>("FormatId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("FormatId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -75,7 +75,7 @@ namespace JustClipboardManager.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("JustClipboardManager.Domain.Entities.ClipDataObject", b =>
+            modelBuilder.Entity("JustClipboardManager.Domain.Entities.ClipData", b =>
                 {
                     b.HasOne("JustClipboardManager.Domain.Entities.Clip", null)
                         .WithMany("ClipDataObjects")
