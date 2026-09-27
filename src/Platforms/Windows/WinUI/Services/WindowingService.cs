@@ -1,6 +1,5 @@
 using JustClipboardManager.Application.Services;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Windowing;
 
 namespace JustClipboardManager.Services;
 

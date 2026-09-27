@@ -13,9 +13,9 @@ internal class DatabaseMigrator : IDatabaseMigrator
     _dbContextFactory = dbContextFactory;
   }
 
-  public void Migrate()
+  public async Task MigrateAsync(CancellationToken cancellationToken = default)
   {
     using var dbContext = _dbContextFactory.CreateDbContext();
-    dbContext.Database.Migrate();
+    await dbContext.Database.MigrateAsync(cancellationToken);
   }
 }

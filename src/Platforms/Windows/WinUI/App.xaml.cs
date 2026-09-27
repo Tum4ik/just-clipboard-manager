@@ -30,7 +30,7 @@ namespace JustClipboardManager
     }
 
 
-    private static IServiceProvider ConfigureServices()
+    private static ServiceProvider ConfigureServices()
     {
       var services = new ServiceCollection();
 
@@ -49,10 +49,12 @@ namespace JustClipboardManager
     /// Invoked when the application is launched.
     /// </summary>
     /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+      // todo: show migration progress, maybe provide cancellation possibility
+      await _services.GetRequiredService<IDatabaseMigrator>().MigrateAsync();
+
       _services.GetRequiredService<ITrayIconService>().Initialize();
-      _services.GetRequiredService<IDatabaseMigrator>().Migrate();
       _services.GetRequiredService<IClipboardService>().Initialize();
       _services.GetRequiredService<IPluginsService<DataPackageView, DataPackage>>().LoadPlugins();
 
