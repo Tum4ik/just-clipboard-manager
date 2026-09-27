@@ -12,6 +12,10 @@
         "/consoleloggerparameters:NoSummary",
         "/p:Platform=x64"
       ],
+      "dependsOn": [
+        "Build Text Plugin x64",
+        "Copy Angular UI"
+      ],
       "problemMatcher": "$msCompile"
     },
     {
@@ -26,6 +30,26 @@
         "/p:Platform=x64",
         "/p:RuntimeIdentifier=win-x64"
       ]
+    },
+    {
+      "label": "Copy Angular UI",
+      "type": "shell",
+      "command": "robocopy \"${workspaceFolder}/src/Core/UI/dist/just-clipboard-manager/browser\" \"${workspaceFolder}/src/Platforms/Windows/WinUI/Resources/UI\" /MIR; if ($LASTEXITCODE -le 7) { $global:LASTEXITCODE = 0 }",
+      "dependsOn": "Build Angular UI",
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Build Angular UI",
+      "type": "shell",
+      "command": "ng build",
+      "options": {
+        "cwd": "${workspaceFolder}/src/Core/UI"
+      },
+      "presentation": {
+        "reveal": "always"
+      }
     },
     {
       "type": "npm",
