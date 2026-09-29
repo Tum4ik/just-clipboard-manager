@@ -40,12 +40,16 @@ public sealed partial class MainWindow : Window
 
   private void MapVirtualHostNameToUiFolder()
   {
+#if DEBUG
+    WebView.CoreWebView2.Navigate("http://localhost:4200/#/main-window");
+#else
     var uiFolder = Path.Join(AppContext.BaseDirectory, "Resources", "UI");
     WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
       "angularapp",
       uiFolder,
       CoreWebView2HostResourceAccessKind.Allow
     );
-    WebView.CoreWebView2.Navigate("http://angularapp/index.html");
+    WebView.CoreWebView2.Navigate("http://angularapp/index.html#/main-window");
+#endif
   }
 }

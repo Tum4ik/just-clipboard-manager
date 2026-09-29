@@ -3,7 +3,9 @@
   "version": "5.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "cpy ../../Assets/**/* assets/shared",
     "start": "ng serve",
+    "prebuild": "cpy ../../Assets/**/* assets/shared",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -28,6 +30,7 @@
     "@angular/cli": "22.2.0",
     "@angular/compiler-cli": "22.2.0",
     "@tailwindcss/postcss": "4.3.3",
+    "cpy-cli": "7.0.0",
     "jsdom": "30.1.1",
     "postcss": "8.5.28",
     "tailwindcss": "4.3.3",

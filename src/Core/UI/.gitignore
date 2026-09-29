@@ -42,3 +42,9 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# licenses
+primeui-license.json
+
+
+assets/shared/

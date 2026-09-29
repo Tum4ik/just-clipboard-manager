@@ -14,7 +14,8 @@
       ],
       "dependsOn": [
         "Build Text Plugin x64",
-        "Copy Angular UI"
+        // "Copy Angular UI",
+        "Serve Angular UI"
       ],
       "problemMatcher": "$msCompile"
     },
@@ -32,6 +33,28 @@
       ]
     },
     {
+      "label": "Serve Angular UI",
+      "type": "shell",
+      "command": "npm run start",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^Watch mode enabled. Watching for file changes*"
+        }
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/src/Core/UI"
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
       "label": "Copy Angular UI",
       "type": "shell",
       "command": "robocopy \"${workspaceFolder}/src/Core/UI/dist/just-clipboard-manager/browser\" \"${workspaceFolder}/src/Platforms/Windows/WinUI/Resources/UI\" /MIR; if ($LASTEXITCODE -le 7) { $global:LASTEXITCODE = 0 }",
@@ -43,7 +66,7 @@
     {
       "label": "Build Angular UI",
       "type": "shell",
-      "command": "ng build",
+      "command": "npm run build",
       "options": {
         "cwd": "${workspaceFolder}/src/Core/UI"
       },
