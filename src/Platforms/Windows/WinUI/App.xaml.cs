@@ -36,6 +36,7 @@ namespace JustClipboardManager
 
       services.AddApplication();
       services.AddInfrastructure();
+      services.AddTransient<MainWindow>();
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
       services.AddSingleton<IClipboardService, ClipboardService>();
@@ -57,8 +58,6 @@ namespace JustClipboardManager
       _services.GetRequiredService<ITrayIconService>().Initialize();
       _services.GetRequiredService<IClipboardService>().Initialize();
       _services.GetRequiredService<IPluginsService<DataPackageView, DataPackage>>().LoadPlugins();
-
-      //_services.GetRequiredKeyedService<IAppCommand>("CreateClipCommand").ExecuteAsync(null);
     }
   }
 }

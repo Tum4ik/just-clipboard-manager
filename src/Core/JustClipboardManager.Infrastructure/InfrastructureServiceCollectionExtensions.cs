@@ -19,6 +19,7 @@ public static class InfrastructureServiceCollectionExtensions
     var configuration = BuildConfiguration();
     services.AddSingleton(configuration);
     services.ConfigureWithValidateOnStart<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Database));
+    services.ConfigureWithValidateOnStart<ProductInfoOptions>(configuration.GetSection(ProductInfoOptions.ProductInfo));
     services.AddPooledDbContextFactory<InfraDbContext>((provider, options) =>
     {
       var databaseOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
@@ -28,7 +29,9 @@ public static class InfrastructureServiceCollectionExtensions
     services.AddSingleton<IDbContextFactory<AppDbContext>>(
       provider => new AppDbContextFactory(provider.GetRequiredService<IDbContextFactory<InfraDbContext>>())
     );
+
     services.AddTransient<IDatabaseMigrator, DatabaseMigrator>();
+    services.AddSingleton<IProductInfoService, ProductInfoService>();
 
     return services;
   }

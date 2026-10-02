@@ -9,4 +9,6 @@ import { TitleBar } from './title-bar/title-bar';
     TitleBar
   ],
 })
-export class MainWindow { }
+export class MainWindow {
+
+}

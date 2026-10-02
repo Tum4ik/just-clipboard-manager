@@ -1,8 +1,6 @@
-using System;
-using System.IO;
+using JustClipboardManager.Application.Services;
+using JustClipboardManager.Extensions;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
 using Windows.Graphics;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -15,13 +13,12 @@ namespace JustClipboardManager;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
-  public MainWindow()
+  public MainWindow(ICommandsService commandsService)
   {
     InitializeComponent();
     ConfigureWindow();
 
-    WebView.CoreWebView2Initialized += OnCoreWebView2Initialized;
-    _ = WebView.EnsureCoreWebView2Async();
+    _ = WebView.MapAngularUiAsync(commandsService, "main-window");
   }
 
 
@@ -29,27 +26,5 @@ public sealed partial class MainWindow : Window
   {
     AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
     AppWindow.Resize(new SizeInt32(1000, 700));
-  }
-
-
-  private void OnCoreWebView2Initialized(object sender, CoreWebView2InitializedEventArgs e)
-  {
-    MapVirtualHostNameToUiFolder();
-  }
-
-
-  private void MapVirtualHostNameToUiFolder()
-  {
-#if DEBUG
-    WebView.CoreWebView2.Navigate("http://localhost:4200/#/main-window");
-#else
-    var uiFolder = Path.Join(AppContext.BaseDirectory, "Resources", "UI");
-    WebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
-      "angularapp",
-      uiFolder,
-      CoreWebView2HostResourceAccessKind.Allow
-    );
-    WebView.CoreWebView2.Navigate("http://angularapp/index.html#/main-window");
-#endif
   }
 }

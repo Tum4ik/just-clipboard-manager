@@ -22,6 +22,7 @@ public static class ApplicationServiceCollectionExtensions
       // todo: need a possibility to specify lifetime for each command
       services.AddKeyedTransient(commandType, implType.Name, implType);
     }
+    services.AddSingleton<ICommandsService, CommandsService>();
 
     services.AddSingleton<IClipsService, ClipsService>();
 
