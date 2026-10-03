@@ -1,5 +1,6 @@
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Extensions;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Windows.Graphics;
 
@@ -24,7 +25,10 @@ public sealed partial class MainWindow : Window
 
   private void ConfigureWindow()
   {
-    AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+    AppWindow.SetIcon("Resources/UI/assets/shared/icon.ico");
     AppWindow.Resize(new SizeInt32(1000, 700));
+    var titleBar = AppWindow.TitleBar;
+    titleBar.ExtendsContentIntoTitleBar = true;
+    titleBar.ButtonBackgroundColor = Colors.Transparent;
   }
 }

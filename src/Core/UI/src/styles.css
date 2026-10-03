@@ -2,3 +2,13 @@
 
 @import 'tailwindcss';
 @import "tailwindcss-primeui";
+
+html,
+body {
+  height: 100%;
+  /* overflow: hidden; */
+  /* margin: 0; */
+  user-select: none;
+
+  font-size: 14px;
+}

@@ -12,7 +12,13 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       license: `${primeuiLicense.licenseKey}`,
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          cssLayer: {
+            name: 'primeng',
+            order: 'theme, base, primeng'
+          }
+        }
       },
       ripple: true
     })
