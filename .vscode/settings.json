@@ -3,5 +3,8 @@
     "angular-*": {
       "externalTemplate": true
     }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   }
 }
