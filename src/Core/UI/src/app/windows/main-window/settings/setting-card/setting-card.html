@@ -1,0 +1,17 @@
+<p-card [pt]="{
+  body: { class: 'flex-row items-center p-3' },
+  footer: { class: 'ml-auto' },
+}">
+  <ng-template #title>
+    <div class="flex gap-4 items-center">
+      <jcm-material-icon [iconName]="materialIconName()" />
+      <div>
+        <div class="text-base">{{ settingTitle() }}</div>
+        <div class="description text-sm font-normal">{{ settingDescription() }}</div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <ng-content />
+  </ng-template>
+</p-card>

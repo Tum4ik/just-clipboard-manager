@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+}
+
+.description {
+  color: var(--p-card-subtitle-color);
+}

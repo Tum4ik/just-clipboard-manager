@@ -30,5 +30,6 @@ public sealed partial class MainWindow : Window
     var titleBar = AppWindow.TitleBar;
     titleBar.ExtendsContentIntoTitleBar = true;
     titleBar.ButtonBackgroundColor = Colors.Transparent;
+    titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
   }
 }

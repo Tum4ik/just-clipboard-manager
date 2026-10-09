@@ -6,9 +6,27 @@
 html,
 body {
   height: 100%;
-  /* overflow: hidden; */
+  overflow: hidden;
   /* margin: 0; */
   user-select: none;
+}
 
-  font-size: 14px;
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  src: url(/assets/fonts/material-symbols-rounded.woff2) format('woff2');
+}
+
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 }

@@ -1,1 +1,76 @@
 <jcm-title-bar />
+<p-sidebar-layout class="flex-1 min-h-[unset]">
+  <p-sidebar side="left" [open]="false">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+
+        <ng-template #primarySidebarMenuItem let-icon="icon">
+          <p-sidebar-menu-item>
+            <button pSidebarMenuButton pRipple class="p-0 justify-center">
+              <jcm-material-icon [iconName]="icon" />
+            </button>
+          </p-sidebar-menu-item>
+        </ng-template>
+
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-content>
+              <p-sidebar-menu>
+                <ng-container *ngTemplateOutlet="primarySidebarMenuItem; context: { icon: 'settings' }" />
+                <ng-container *ngTemplateOutlet="primarySidebarMenuItem; context: { icon: 'extension' }" />
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+        <p-sidebar-footer>
+          <p-sidebar-menu>
+            <ng-container *ngTemplateOutlet="primarySidebarMenuItem; context: { icon: 'info' }" />
+          </p-sidebar-menu>
+        </p-sidebar-footer>
+
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+
+  <p-sidebar side="left">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+        <p-sidebar-header>
+          <div class="px-1">
+            <span class="font-semibold text-sm">Settings</span>
+          </div>
+        </p-sidebar-header>
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-content>
+              <p-sidebar-menu>
+                <p-sidebar-menu-item>
+                  <button pSidebarMenuButton pRipple>
+                    <span>General</span>
+                  </button>
+                </p-sidebar-menu-item>
+                <p-sidebar-menu-item>
+                  <button pSidebarMenuButton pRipple>
+                    <span>Interface</span>
+                  </button>
+                </p-sidebar-menu-item>
+                <p-sidebar-menu-item>
+                  <button pSidebarMenuButton pRipple>
+                    <span>Paste window</span>
+                  </button>
+                </p-sidebar-menu-item>
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+
+  <p-sidebar-main>
+    <jcm-interface-settings />
+  </p-sidebar-main>
+
+</p-sidebar-layout>
