@@ -1,9 +1,9 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withHashLocation } from '@angular/router';
-import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import primeuiLicense from '../../primeui-license.json';
 import { routes } from './app.routes';
+import { getThemePreset } from './theming/get-theme-preset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +12,7 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       license: `${primeuiLicense.licenseKey}`,
       theme: {
-        preset: Aura,
+        preset: getThemePreset(),
         options: {
           cssLayer: {
             name: 'primeng',
