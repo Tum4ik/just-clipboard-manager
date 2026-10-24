@@ -5,7 +5,7 @@ import { Preset } from "@primeuix/themes/types";
 export function getThemePreset(): Preset {
   return definePreset(Aura, {
     components: {
-      card: {
+      /* card: {
         colorScheme: {
           light: {
             root: {
@@ -18,7 +18,7 @@ export function getThemePreset(): Preset {
             }
           }
         }
-      }
+      } */
     }
   });
 }

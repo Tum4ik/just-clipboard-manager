@@ -4,6 +4,11 @@
   max-width: 40rem;
 }
 
+p-card {
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 0.5rem;
+}
+
 .description {
   color: var(--p-card-subtitle-color);
 }
