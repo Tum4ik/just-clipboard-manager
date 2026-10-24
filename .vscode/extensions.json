@@ -8,7 +8,6 @@
     "ms-dotnettools.csdevkit",
     "streetsidesoftware.code-spell-checker",
     "editorconfig.editorconfig",
-    "bradlc.vscode-tailwindcss",
-    "spmeesseman.vscode-taskexplorer"
+    "bradlc.vscode-tailwindcss"
   ]
 }
