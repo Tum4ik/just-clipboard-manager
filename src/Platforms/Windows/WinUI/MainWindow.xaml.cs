@@ -1,3 +1,7 @@
+using System;
+using System.Text.Json;
+using System.Threading.Tasks;
+using JustClipboardManager.Application.Common.Abstractions;
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Extensions;
 using Microsoft.UI;
@@ -20,6 +24,15 @@ public sealed partial class MainWindow : Window
     ConfigureWindow();
 
     _ = WebView.MapAngularUiAsync(commandsService, "main-window");
+  }
+
+
+  public async Task PostEventAsync<T>(T appEvent) where T : IAppEvent, new()
+  {
+    await WebView.EnsureCoreWebView2Async();
+    // todo: extract logic to use same options for all windows
+    var message = JsonSerializer.Serialize(appEvent, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+    WebView.CoreWebView2.PostWebMessageAsJson(message);
   }
 
 

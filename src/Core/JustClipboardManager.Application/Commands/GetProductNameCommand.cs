@@ -13,7 +13,7 @@ internal class GetProductNameCommand : AppCommand<None, string>
     _productInfoService = productInfoService;
   }
 
-  protected override Task<string> ExecuteAsync(None parameter, CancellationToken cancellationToken = default)
+  protected override Task<string> ExecuteInternalAsync(None parameter, CancellationToken cancellationToken = default)
   {
     return Task.FromResult(_productInfoService.GetProductName());
   }

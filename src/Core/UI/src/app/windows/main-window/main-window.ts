@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
+import { TranslateBlockDirective } from '@ngx-translate/core';
 import { Ripple } from 'primeng/ripple';
 import { Sidebar, SidebarAside, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarLayout, SidebarMain, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarPanel, SidebarSpacer } from 'primeng/sidebar';
 import { MaterialIcon } from '../../shared/material-icon/material-icon';
@@ -30,6 +31,7 @@ import { TitleBar } from './title-bar/title-bar';
     Ripple,
     InterfaceSettings,
     NgTemplateOutlet,
+    TranslateBlockDirective,
   ],
 })
 export class MainWindow {

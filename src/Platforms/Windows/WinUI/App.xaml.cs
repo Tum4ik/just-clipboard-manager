@@ -36,10 +36,12 @@ namespace JustClipboardManager
 
       services.AddApplication();
       services.AddInfrastructure();
+      services.AddSingleton<PasteWindow>();
       services.AddTransient<MainWindow>();
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
       services.AddSingleton<IClipboardService, ClipboardService>();
+      services.AddSingleton<IEventsPublisher, EventsPublisher>();
       services.AddSingleton<IPluginsService<DataPackageView, DataPackage>, PluginsService>();
 
       return services.BuildServiceProvider();
@@ -57,6 +59,7 @@ namespace JustClipboardManager
 
       _services.GetRequiredService<ITrayIconService>().Initialize();
       _services.GetRequiredService<IClipboardService>().Initialize();
+      await _services.GetRequiredService<ISettingsService>().LoadSettingsAsync();
       _services.GetRequiredService<IPluginsService<DataPackageView, DataPackage>>().LoadPlugins();
     }
   }

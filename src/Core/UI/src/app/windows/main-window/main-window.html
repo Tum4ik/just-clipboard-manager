@@ -1,5 +1,5 @@
 <jcm-title-bar />
-<p-sidebar-layout class="flex-1 min-h-[unset]">
+<p-sidebar-layout class="flex-1 min-h-[unset]" *translateBlock="let t">
   <p-sidebar side="left" [open]="false">
     <p-sidebar-spacer />
     <p-sidebar-aside>
@@ -39,7 +39,7 @@
       <p-sidebar-panel>
         <p-sidebar-header>
           <div class="px-1">
-            <span class="font-semibold text-sm">Settings</span>
+            <span class="font-semibold text-sm">{{ t('settings._') }}</span>
           </div>
         </p-sidebar-header>
         <p-sidebar-content>

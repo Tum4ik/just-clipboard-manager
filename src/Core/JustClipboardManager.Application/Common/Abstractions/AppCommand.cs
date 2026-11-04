@@ -10,20 +10,27 @@ internal abstract class AppCommand<TParameter, TResult> : IAppCommand
     TParameter? parsedParameter = default;
     if (parameter is not null && typeof(TParameter) != typeof(None))
     {
-      var parsable = typeof(TParameter).GetInterfaces()
-        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IParsable<>));
-      if (parsable is null)
+      if (typeof(TParameter) == typeof(string))
       {
-        parsedParameter = JsonSerializer.Deserialize<TParameter>(parameter);
+        parsedParameter = (TParameter)(object)parameter;
       }
       else
       {
-        var parseMethod = parsable.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)])!;
-        parsedParameter = (TParameter)parseMethod.Invoke(null, [parameter])!;
+        var parsable = typeof(TParameter).GetInterfaces()
+          .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IParsable<>));
+        if (parsable is null)
+        {
+          parsedParameter = JsonSerializer.Deserialize<TParameter>(parameter);
+        }
+        else
+        {
+          var parseMethod = parsable.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)])!;
+          parsedParameter = (TParameter)parseMethod.Invoke(null, [parameter])!;
+        }
       }
     }
 
-    var result = await ExecuteAsync(default(TParameter)!, cancellationToken);
+    var result = await ExecuteInternalAsync(parsedParameter!, cancellationToken);
 
     string? serializedResult = null;
     if (result is not null && typeof(TResult) != typeof(None))
@@ -45,5 +52,5 @@ internal abstract class AppCommand<TParameter, TResult> : IAppCommand
     return serializedResult;
   }
 
-  protected abstract Task<TResult> ExecuteAsync(TParameter parameters, CancellationToken cancellationToken = default);
+  protected abstract Task<TResult> ExecuteInternalAsync(TParameter parameter, CancellationToken cancellationToken = default);
 }

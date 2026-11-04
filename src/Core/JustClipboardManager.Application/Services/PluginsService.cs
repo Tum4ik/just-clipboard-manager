@@ -56,7 +56,7 @@ public abstract class PluginsService<TClipboardContentView, TClipboardContent> :
 
   public IReadOnlyCollection<JcmPlugin<TClipboardContentView, TClipboardContent>> GetLoadedPlugins()
   {
-    return [.._loadedPlugins.Values.Select(v => v.Plugin)];
+    return [.. _loadedPlugins.Values.Select(v => v.Plugin)];
   }
 
 

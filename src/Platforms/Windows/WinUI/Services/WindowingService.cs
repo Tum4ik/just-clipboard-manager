@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using JustClipboardManager.Application.Common.Abstractions;
 using JustClipboardManager.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -12,37 +14,66 @@ internal class WindowingService : IWindowingService
   /// <summary>
   /// At least one window must always be created for the application to function normally.
   /// </summary>
-  private readonly PasteWindow _pasteWindow = new();
+  private readonly PasteWindow _pasteWindow;
   private readonly IServiceProvider _serviceProvider;
 
-  public WindowingService(IServiceProvider serviceProvider)
+  public WindowingService(PasteWindow pasteWindow,
+                          IServiceProvider serviceProvider)
   {
-    _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+    _pasteWindow = pasteWindow;
     _serviceProvider = serviceProvider;
+    _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
   }
 
 
   public void ShowPasteWindow()
   {
-    _pasteWindow.AppWindow.Show();
+    ShowOnMainThread(ShowPasteWindowInternal);
   }
 
 
   public void ShowMainWindow()
   {
-    if (_dispatcherQueue != null && !_dispatcherQueue.HasThreadAccess)
+    ShowOnMainThread(ShowMainWindowInternal);
+  }
+
+  public async Task PublishEventForMainWindowAsync<TEvent>(TEvent appEvent) where TEvent : IAppEvent, new()
+  {
+    if (_mainWindow is null)
     {
-      _dispatcherQueue.TryEnqueue(ShowMainWindowInternal);
       return;
     }
 
-    ShowMainWindowInternal();
+    await _mainWindow.PostEventAsync(appEvent);
   }
 
 
+  private void ShowPasteWindowInternal()
+  {
+    _pasteWindow.AppWindow.Show();
+  }
+
+
+  private MainWindow? _mainWindow;
+
   private void ShowMainWindowInternal()
   {
-    var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-    mainWindow.Activate();
+    _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+    _mainWindow.Closed += (sender, args) =>
+    {
+      _mainWindow = null;
+    };
+    _mainWindow.Activate();
+  }
+
+
+  private void ShowOnMainThread(Action action)
+  {
+    if (_dispatcherQueue != null && !_dispatcherQueue.HasThreadAccess)
+    {
+      _dispatcherQueue.TryEnqueue(new(action));
+      return;
+    }
+    action();
   }
 }

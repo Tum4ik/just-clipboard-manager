@@ -18,12 +18,16 @@ public static class InfrastructureServiceCollectionExtensions
   {
     var configuration = BuildConfiguration();
     services.AddSingleton(configuration);
+
     services.ConfigureWithValidateOnStart<DatabaseOptions>(configuration.GetSection(DatabaseOptions.Database));
     services.ConfigureWithValidateOnStart<ProductInfoOptions>(configuration.GetSection(ProductInfoOptions.ProductInfo));
+    services.ConfigureWithValidateOnStart<SettingsFilesOptions>(configuration.GetSection(SettingsFilesOptions.SettingsFiles));
+
     services.AddPooledDbContextFactory<InfraDbContext>((provider, options) =>
     {
+      var productInfoOptions = provider.GetRequiredService<IOptions<ProductInfoOptions>>().Value;
       var databaseOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-      var dbFilePath = BuildDbFilePath(databaseOptions.Name);
+      var dbFilePath = BuildDbFilePath(productInfoOptions.Name, databaseOptions.Name);
       InfraDbContext.ConfigureOptions(options, $"Data Source={dbFilePath}");
     });
     services.AddSingleton<IDbContextFactory<AppDbContext>>(
@@ -32,6 +36,7 @@ public static class InfrastructureServiceCollectionExtensions
 
     services.AddTransient<IDatabaseMigrator, DatabaseMigrator>();
     services.AddSingleton<IProductInfoService, ProductInfoService>();
+    services.AddSingleton<ISettingsService, SettingsService>();
 
     return services;
   }
@@ -50,11 +55,11 @@ public static class InfrastructureServiceCollectionExtensions
   }
 
 
-  private static string BuildDbFilePath(string dbFileName)
+  private static string BuildDbFilePath(string productName, string dbFileName)
   {
     var dir = Path.Combine(
       Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-      "JustClipboardManager" // todo: replace product name from other place (for ex. appsettings.json)
+      productName
     );
     Directory.CreateDirectory(dir);
     return Path.Combine(dir, dbFileName);

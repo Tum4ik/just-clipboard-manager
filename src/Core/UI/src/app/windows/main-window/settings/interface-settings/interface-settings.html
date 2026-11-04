@@ -1,10 +1,20 @@
-<jcm-setting-card materialIconName="language"
-                  settingTitle="Lang"
-                  settingDescription="Desc">
-  <p-select />
-</jcm-setting-card>
-<jcm-setting-card materialIconName="routine"
-                  settingTitle="Theme mode"
-                  settingDescription="Desc mode">
-  <p-select />
-</jcm-setting-card>
+<ng-container *translateBlock="let t">
+
+  <jcm-setting-card materialIconName="language"
+                    [settingTitle]="t('settings.interface.language')"
+                    [settingDescription]="t('settings.interface.language-desc')">
+    <p-select [options]="languages" optionValue="value"
+              [(ngModel)]="selectedLanguage">
+      <ng-template #item #selectedItem let-item>
+        <span>{{ item.label }}</span>
+      </ng-template>
+    </p-select>
+  </jcm-setting-card>
+
+  <jcm-setting-card materialIconName="routine"
+                    [settingTitle]="t('settings.interface.theme-mode._')"
+                    [settingDescription]="t('settings.interface.theme-mode-desc')">
+    <p-select />
+  </jcm-setting-card>
+
+</ng-container>
