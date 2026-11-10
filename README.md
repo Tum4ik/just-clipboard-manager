@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="src-tauri/icons/icon.ico" alt="Just Clipboard Manager" style="width:128px;" />
+  <img src="src/Assets/icon.ico" alt="Just Clipboard Manager" style="width:128px;" />
   <br/>
   Just Clipboard Manager
 </h1>
