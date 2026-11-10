@@ -11,7 +11,6 @@
     "test": "ng test"
   },
   "private": true,
-  "packageManager": "npm@11.19.1",
   "dependencies": {
     "@angular/common": "22.2.2",
     "@angular/compiler": "22.2.2",

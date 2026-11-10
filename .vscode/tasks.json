@@ -2,22 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build App x64",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/src/Platforms/Windows/WinUI/JustClipboardManager.csproj",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary",
-        "/p:Platform=x64"
-      ],
+      "label": "Preparations x64",
       "dependsOn": [
         "Build Text Plugin x64",
-        // "Copy Angular UI",
+        "Copy Angular UI",
         "Serve Angular UI"
       ],
-      "problemMatcher": "$msCompile"
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "label": "Build Text Plugin x64",
@@ -28,9 +23,9 @@
         "${workspaceFolder}/src/Plugins/BuiltinPlugins/JustClipboardManager.TextPlugin.Windows/JustClipboardManager.TextPlugin.Windows.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
-        "/p:Platform=x64",
         "/p:RuntimeIdentifier=win-x64"
-      ]
+      ],
+      "problemMatcher": "$msCompile"
     },
     {
       "label": "Serve Angular UI",

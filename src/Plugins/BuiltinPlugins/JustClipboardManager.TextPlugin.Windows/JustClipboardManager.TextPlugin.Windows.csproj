@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <BuildDestinationFolder>..\..\..\Platforms\Windows\WinUI\bin\$(Platform)\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\Plugins\b50fb996-904f-4391-94a6-78d95479def1\</BuildDestinationFolder>
+    <BuildDestinationFolder>..\..\..\Platforms\Windows\WinUI\bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\Plugins\b50fb996-904f-4391-94a6-78d95479def1\</BuildDestinationFolder>
   </PropertyGroup>
 
   <ItemGroup>

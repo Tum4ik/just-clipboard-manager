@@ -6,5 +6,8 @@
   },
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "winapp.appDirectories": [
+    "src"
+  ]
 }

@@ -6,6 +6,7 @@
     "ms-dotnettools.vscode-dotnet-runtime",
     "ms-dotnettools.csharp",
     "ms-dotnettools.csdevkit",
+    "microsoft-winappcli.winapp",
     "streetsidesoftware.code-spell-checker",
     "editorconfig.editorconfig",
     "bradlc.vscode-tailwindcss"

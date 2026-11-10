@@ -5,11 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C#: Debug",
-      "type": "coreclr",
+      "name": "WinApp: Launch and Attach",
+      "type": "winapp",
       "request": "launch",
-      "program": "${workspaceFolder}/src/Platforms/Windows/WinUI/bin/x64/Debug/net10.0-windows10.0.19041.0/win-x64/JustClipboardManager.exe",
-      "preLaunchTask": "Build App x64"
+      "preLaunchTask": "${defaultBuildTask}",
+      "input": "${workspaceFolder}/src/JustClipboardManager.slnx",
+      "project": "${workspaceFolder}/src/Platforms/Windows/WinUI/JustClipboardManager.csproj",
+      "runtime": "win-x64"
     },
     {
       "name": "ng serve",
