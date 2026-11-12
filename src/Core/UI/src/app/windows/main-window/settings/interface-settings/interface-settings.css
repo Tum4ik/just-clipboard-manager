@@ -1,7 +1,6 @@
 @reference 'tailwindcss';
 
 :host {
-  @apply m-2
-         flex flex-col gap-2
+  @apply flex flex-col gap-2
          items-center;
 }

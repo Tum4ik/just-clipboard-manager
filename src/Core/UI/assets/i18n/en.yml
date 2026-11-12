@@ -4,6 +4,8 @@ supported-languages:
 
 settings:
   _: "Settings"
+  general:
+    _: "General"
   interface:
     _: "Interface"
     language: "Language"
@@ -14,3 +16,11 @@ settings:
       light: "Light"
       dark: "Dark"
     theme-mode-desc: "The visual appearance of the user interface"
+  paste-window:
+    _: "Paste window"
+
+plugins:
+  _: "Plugins"
+
+about:
+  _: "About"
