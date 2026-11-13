@@ -42,7 +42,7 @@ import { TitleBar } from './title-bar/title-bar';
   ],
 })
 export class MainWindow {
-  // todo: use id for items and sub-items
+  // todo: use id for items and sub-items to be able to open items on demand
   protected readonly menuItems: readonly MenuItem[] = [
     {
       title: 'settings._',

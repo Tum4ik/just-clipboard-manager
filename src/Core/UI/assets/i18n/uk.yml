@@ -1,5 +1,7 @@
 settings:
   _: "Налаштування"
+  general:
+    _: "Загальні"
   interface:
     _: "Інтерфейс"
     language: "Мова"
@@ -10,3 +12,11 @@ settings:
       light: "Світлий"
       dark: "Темний"
     theme-mode-desc: "Зовнішній вигляд інтерфейсу користувача"
+  paste-window:
+    _: "Вікно вставки"
+
+plugins:
+  _: "Плагіни"
+
+about:
+  _: "Про програму"

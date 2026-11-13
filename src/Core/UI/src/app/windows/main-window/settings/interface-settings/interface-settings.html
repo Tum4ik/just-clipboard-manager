@@ -14,7 +14,14 @@
   <jcm-setting-card materialIconName="routine"
                     [settingTitle]="t('settings.interface.theme-mode._')"
                     [settingDescription]="t('settings.interface.theme-mode-desc')">
-    <p-select />
+    <p-select [options]="themeModes">
+      <ng-template #item #selectedItem let-themeMode>
+        <div class="flex flex-row gap-3">
+          <jcm-material-icon [iconName]="getThemeModeIconName(themeMode)" />
+          <span>{{ t(`settings.interface.theme-mode.${themeMode}`) }}</span>
+        </div>
+      </ng-template>
+    </p-select>
   </jcm-setting-card>
 
 </ng-container>
