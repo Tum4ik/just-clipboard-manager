@@ -1,4 +1,5 @@
 using JustClipboardManager.Application.Common.Abstractions;
+using JustClipboardManager.Application.Common.IpcPayloads.Events;
 using JustClipboardManager.Application.Events;
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Domain.Common;

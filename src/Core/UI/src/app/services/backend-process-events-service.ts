@@ -1,10 +1,11 @@
 import { Service } from '@angular/core';
+import { LanguageChangedPayload } from '@gen/events/language_changed_payload_pb';
 import { Subject } from 'rxjs';
 
 @Service()
 export class BackendProcessEventsService {
   constructor() {
-    (window.chrome as any).webview.addEventListener('message', (e: MessageEvent) => {
+    (window.chrome as any).webview.addEventListener('message', (e: MessageEvent<BackendProcessEvent>) => {
       this.allEventsSubject.next(e.data);
       if (e.data.name === 'LanguageChangedEvent') {
         this.languageChangedSubject.next(e.data.payload);
@@ -24,10 +25,4 @@ interface BackendProcessEvent {
   id?: string;
   name: string;
   payload: any;
-}
-
-
-// todo: generate via gRPC
-interface LanguageChangedPayload {
-  languageCode: string;
 }
