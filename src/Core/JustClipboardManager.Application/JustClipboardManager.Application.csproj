@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf ProtoRoot="..\IPC" Include="..\IPC\**\*.proto" GrpcServices="None" Access="internal" />
+    <Protobuf ProtoRoot="..\IPC" Include="..\IPC\**\*.proto" GrpcServices="None" />
   </ItemGroup>
 
   <ItemGroup>

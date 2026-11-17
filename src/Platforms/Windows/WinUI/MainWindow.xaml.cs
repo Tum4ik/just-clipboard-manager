@@ -1,12 +1,14 @@
 using System;
-using System.Text.Json;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using JustClipboardManager.Application.Common.Abstractions;
+using Google.Protobuf;
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.Web.WebView2.Core;
 using Windows.Graphics;
+using JustClipboardManager.Application.IPC.Events;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,12 +29,20 @@ public sealed partial class MainWindow : Window
   }
 
 
-  public async Task PostEventAsync<T>(T appEvent) where T : IAppEvent, new()
+  public async Task PostEventAsync(AppEvent appEvent)
   {
     await WebView.EnsureCoreWebView2Async();
     // todo: extract logic to use same options for all windows
-    var message = JsonSerializer.Serialize(appEvent, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-    WebView.CoreWebView2.PostWebMessageAsJson(message);
+    var payload = appEvent.ToByteArray();
+    using var sharedBuffer = WebView.CoreWebView2.Environment.CreateSharedBuffer((ulong)payload.Length);
+    using var stream = sharedBuffer.OpenStream();
+    await stream.WriteAsync(payload.AsBuffer());
+
+    WebView.CoreWebView2.PostSharedBufferToScript(
+      sharedBuffer,
+      CoreWebView2SharedBufferAccess.ReadOnly,
+      string.Empty
+    );
   }
 
 

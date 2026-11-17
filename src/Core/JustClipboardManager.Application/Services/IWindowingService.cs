@@ -1,4 +1,4 @@
-using JustClipboardManager.Application.Common.Abstractions;
+using JustClipboardManager.Application.IPC.Events;
 
 namespace JustClipboardManager.Application.Services;
 
@@ -7,5 +7,5 @@ public interface IWindowingService
   void ShowPasteWindow();
 
   void ShowMainWindow();
-  Task PublishEventForMainWindowAsync<TEvent>(TEvent appEvent) where TEvent : IAppEvent, new();
+  Task PublishEventForMainWindowAsync(AppEvent appEvent);
 }

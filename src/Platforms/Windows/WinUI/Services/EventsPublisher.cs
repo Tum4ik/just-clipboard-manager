@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using JustClipboardManager.Application.Common.Abstractions;
+using Google.Protobuf;
+using JustClipboardManager.Application.IPC.Events;
 using JustClipboardManager.Application.Services;
 
 namespace JustClipboardManager.Services;
@@ -14,24 +15,18 @@ internal class EventsPublisher : IEventsPublisher
     _windowingService = windowingService;
   }
 
-  public async Task PublishAsync<TEvent>() where TEvent : IAppEvent, new()
+  public async Task PublishAsync<TPayload>(Action<TPayload>? configurePayload = null) where TPayload : IMessage<TPayload>, new()
   {
-    var @event = new TEvent();
-    await _windowingService.PublishEventForMainWindowAsync(@event);
-    // todo: publish to other windows if needed
-    // todo: maybe provide possibility to chosse the window to publish to, or publish to all windows
-  }
-
-
-  public async Task PublishAsync<TEvent, TPayload>(Func<TPayload> payloadFactory) where TEvent : IAppEvent<TPayload>, new()
-  {
-    var payload = payloadFactory();
-    var @event = new TEvent()
+    var payload = new TPayload();
+    if (configurePayload is not null)
     {
-      Payload = payload
-    };
-    await _windowingService.PublishEventForMainWindowAsync(@event);
+      configurePayload(payload);
+    }
+    var packedPayload = Google.Protobuf.WellKnownTypes.Any.Pack(payload, "jcm");
+    var appEvent = new AppEvent { Payload = packedPayload };
+    
+    await _windowingService.PublishEventForMainWindowAsync(appEvent);
     // todo: publish to other windows if needed
-    // todo: maybe provide possibility to chosse the window to publish to, or publish to all windows
+    // todo: maybe provide possibility to chose the window to publish to, or publish to all windows
   }
 }

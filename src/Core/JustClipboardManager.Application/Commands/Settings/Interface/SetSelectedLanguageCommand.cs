@@ -1,6 +1,6 @@
 using JustClipboardManager.Application.Common.Abstractions;
-using JustClipboardManager.Application.Common.IpcPayloads.Events;
-using JustClipboardManager.Application.Events;
+using JustClipboardManager.Application.IPC.Events;
+using JustClipboardManager.Application.IPC.Events.Payloads;
 using JustClipboardManager.Application.Services;
 using JustClipboardManager.Domain.Common;
 
@@ -22,7 +22,7 @@ internal class SetSelectedLanguageCommand : AppCommand<string, None>
   {
     _settingsService.UserSettings.SelectedLanguageCode = parameter;
     await _settingsService.SaveChangesAsync();
-    await _eventsPublisher.PublishAsync<LanguageChangedEvent, LanguageChangedPayload>(() => new() { LanguageCode = parameter });
+    await _eventsPublisher.PublishAsync<LanguageChangedPayload>(payload => payload.LanguageCode = parameter);
     return None.Value;
   }
 }

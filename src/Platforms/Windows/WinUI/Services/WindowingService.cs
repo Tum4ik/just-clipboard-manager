@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using JustClipboardManager.Application.Common.Abstractions;
+using Google.Protobuf;
+using JustClipboardManager.Application.IPC.Events;
 using JustClipboardManager.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -37,7 +38,7 @@ internal class WindowingService : IWindowingService
     ShowOnMainThread(ShowMainWindowInternal);
   }
 
-  public async Task PublishEventForMainWindowAsync<TEvent>(TEvent appEvent) where TEvent : IAppEvent, new()
+  public async Task PublishEventForMainWindowAsync(AppEvent appEvent)
   {
     if (_mainWindow is null)
     {

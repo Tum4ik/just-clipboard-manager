@@ -1,14 +1,32 @@
 import { Service } from '@angular/core';
-import { LanguageChangedPayload } from '@gen/events/language_changed_payload_pb';
+import { fromBinary } from '@bufbuild/protobuf';
+import { anyIs, anyUnpack } from '@bufbuild/protobuf/wkt';
+import { AppEventSchema } from '@gen/events/app_event_pb';
+import { LanguageChangedPayload, LanguageChangedPayloadSchema } from '@gen/events/payloads/language_changed_payload_pb';
 import { Subject } from 'rxjs';
 
 @Service()
 export class BackendProcessEventsService {
   constructor() {
-    (window.chrome as any).webview.addEventListener('message', (e: MessageEvent<BackendProcessEvent>) => {
-      this.allEventsSubject.next(e.data);
-      if (e.data.name === 'LanguageChangedEvent') {
-        this.languageChangedSubject.next(e.data.payload);
+    (window.chrome as any).webview.addEventListener('sharedbufferreceived', (e: any) => {
+      const buffer = e.getBuffer();
+      const view = new Uint8Array(buffer);
+      const appEvent = fromBinary(AppEventSchema, view);
+
+      const packedPayload = appEvent.payload;
+      if (packedPayload) {
+        if (anyIs(packedPayload, LanguageChangedPayloadSchema)) {
+          const payload = anyUnpack(packedPayload, LanguageChangedPayloadSchema);
+          if (payload) {
+            this.languageChangedSubject.next(payload);
+          }
+          else {
+            // todo: report error - payload must be always present
+          }
+        }
+      }
+      else {
+        // todo: report error - payload must be always present
       }
     });
   }
