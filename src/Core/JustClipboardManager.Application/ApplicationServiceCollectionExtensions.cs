@@ -19,8 +19,7 @@ public static class ApplicationServiceCollectionExtensions
       );
     foreach (var implType in commandTypes)
     {
-      // todo: need a possibility to specify lifetime for each command
-      services.AddKeyedTransient(commandType, implType.Name, implType);
+      services.AddKeyedScoped(commandType, implType.Name, implType);
     }
     services.AddSingleton<ICommandsService, CommandsService>();
 

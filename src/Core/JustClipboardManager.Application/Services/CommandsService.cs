@@ -10,6 +10,7 @@ namespace JustClipboardManager.Application.Services;
 public interface ICommandsService
 {
   Task<string> ExecuteCommandAsync(string webMessageJson,
+                                   IServiceScope serviceScope,
                                    CancellationToken cancellationToken = default);
 }
 
@@ -37,12 +38,13 @@ internal class CommandsService : ICommandsService
 
 
   public async Task<string> ExecuteCommandAsync(string webMessageJson,
+                                                IServiceScope serviceScope,
                                                 CancellationToken cancellationToken = default)
   {
     var incomingIpcMessage = _commandJsonParser.Parse<IpcMessage>(webMessageJson);
     var commandRequest = incomingIpcMessage.Body.Unpack<AppCommandRequest>();
 
-    var command = _serviceProvider.GetRequiredKeyedService<IAppCommand>(commandRequest.Name);
+    var command = serviceScope.ServiceProvider.GetRequiredKeyedService<IAppCommand>(commandRequest.Name);
     var result = await command.ExecuteAsync(commandRequest.Parameter, cancellationToken);
 
     var commandResult = new AppCommandResult
