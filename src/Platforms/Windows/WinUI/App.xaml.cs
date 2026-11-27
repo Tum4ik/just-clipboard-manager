@@ -36,8 +36,8 @@ namespace JustClipboardManager
 
       services.AddApplication();
       services.AddInfrastructure();
-      services.AddSingleton<PasteWindow>();
-      services.AddTransient<MainWindow>();
+      services.AddSingleton<PasteWindow>(); // todo: probably should be scoped
+      services.AddScoped<MainWindow>();
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
       services.AddSingleton<IClipboardService, ClipboardService>();

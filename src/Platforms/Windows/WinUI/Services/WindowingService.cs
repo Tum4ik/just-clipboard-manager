@@ -62,22 +62,27 @@ internal class WindowingService : IWindowingService
   }
 
 
+  private IServiceScope? _mainWindowScope;
   private MainWindow? _mainWindow;
 
   private async void ShowMainWindowInternal()
   {
-    _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+    _mainWindowScope = _serviceProvider.CreateScope();
+    _mainWindow = _mainWindowScope.ServiceProvider.GetRequiredService<MainWindow>();
     await MapAngularUiAsync(_mainWindow.WebView, "main-window");
     _mainWindow.Closed += OnMainWindowClosed;
     _mainWindow.Activate();
   }
 
 
-  private async void OnMainWindowClosed(object sender, WindowEventArgs args)
+  private void OnMainWindowClosed(object sender, WindowEventArgs args)
   {
     _mainWindow?.Closed -= OnMainWindowClosed;
-    _mainWindow?.WebView.CoreWebView2.WebMessageReceived -= OnCommandReceived;
+    _mainWindow?.WebView.CoreWebView2.WebMessageReceived -= OnMainWindowCommandReceived;
     _mainWindow = null;
+
+    _mainWindowScope?.Dispose();
+    _mainWindowScope = null;
   }
 
 
@@ -105,7 +110,7 @@ internal class WindowingService : IWindowingService
   {
     await webView.EnsureCoreWebView2Async();
     MapVirtualHostNameToUiFolder(webView, windowUiRoute);
-    webView.CoreWebView2.WebMessageReceived += OnCommandReceived;
+    webView.CoreWebView2.WebMessageReceived += OnMainWindowCommandReceived;
   }
 
 
@@ -125,9 +130,9 @@ internal class WindowingService : IWindowingService
   }
 
 
-  private async void OnCommandReceived(CoreWebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
+  private async void OnMainWindowCommandReceived(CoreWebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
   {
-    var commandResultJson = await _commandsService.ExecuteCommandAsync(args.WebMessageAsJson);
+    var commandResultJson = await _commandsService.ExecuteCommandAsync(args.WebMessageAsJson, _mainWindowScope);
     sender.PostWebMessageAsJson(commandResultJson);
   }
 }
