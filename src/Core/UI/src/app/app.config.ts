@@ -4,8 +4,8 @@ import { provideTranslateLoader, provideTranslateService, TranslateService } fro
 import { providePrimeNG } from 'primeng/config';
 import primeuiLicense from '../../primeui-license.json';
 import { routes } from './app.routes';
-import { BackendProcessEventsService } from './services/backend-process-events-service';
-import { CommandsService } from './services/commands-service';
+import { AppCommandsService } from './services/app-commands-service';
+import { AppEventsService } from './services/app-events-service';
 import { TranslateYamlHttpLoader } from './services/translate-yaml-http-loader';
 import { getThemePreset } from './theming/get-theme-preset';
 
@@ -32,14 +32,14 @@ export const appConfig: ApplicationConfig = {
       loader: provideTranslateLoader(TranslateYamlHttpLoader),
     }),
     provideAppInitializer(async () => {
-      const commandsService = inject(CommandsService);
+      const commandsService = inject(AppCommandsService);
       const translate = inject(TranslateService);
-      const backendProcessEventsService = inject(BackendProcessEventsService);
+      const appEventsService = inject(AppEventsService);
 
       translate.addLangs(['en', 'uk']);
       const selectedLanguage = await commandsService.getSelectedLanguageAsync();
       translate.use(selectedLanguage);
-      backendProcessEventsService.languageChanged.subscribe(payload => {
+      appEventsService.languageChanged.subscribe(payload => {
         translate.use(payload.languageCode);
       });
     }),

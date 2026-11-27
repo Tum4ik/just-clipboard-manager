@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package commands.get_product_name;
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Commands";
+
+message GetProductNameResult {
+  string product_name = 1;
+}

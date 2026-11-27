@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Menubar } from 'primeng/menubar';
 import { from } from 'rxjs';
-import { CommandsService } from '../../../services/commands-service';
+import { AppCommandsService } from '../../../services/app-commands-service';
 
 @Component({
   selector: 'jcm-title-bar',
@@ -13,7 +13,7 @@ import { CommandsService } from '../../../services/commands-service';
   ],
 })
 export class TitleBar {
-  private readonly commandsService = inject(CommandsService);
+  private readonly commandsService = inject(AppCommandsService);
 
   protected readonly productName = toSignal(from(this.commandsService.getProductNameAsync()));
 }

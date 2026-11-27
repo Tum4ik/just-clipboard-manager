@@ -1,8 +1,8 @@
-using System.Text.Json.Nodes;
+using Google.Protobuf.WellKnownTypes;
 
 namespace JustClipboardManager.Application.Common.Abstractions;
 
 public interface IAppCommand
 {
-  Task<string?> ExecuteAsync(string? parameter, CancellationToken cancellationToken = default);
+  Task<Any> ExecuteAsync(Any parameter, CancellationToken cancellationToken = default);
 }

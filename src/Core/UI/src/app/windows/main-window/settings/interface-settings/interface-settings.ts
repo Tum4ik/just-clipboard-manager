@@ -1,6 +1,6 @@
 import { Component, effect, inject, linkedSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommandsService } from '@app/services/commands-service';
+import { AppCommandsService } from '@app/services/app-commands-service';
 import { ThemeMode, ThemeService } from '@app/services/theme-service';
 import { MaterialIcon } from '@app/shared/material-icon/material-icon';
 import { TranslateBlockDirective, TranslateService } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ import { SettingCard } from '../setting-card/setting-card';
 })
 export class InterfaceSettings {
   private readonly translate = inject(TranslateService);
-  private readonly commandsService = inject(CommandsService);
+  private readonly commandsService = inject(AppCommandsService);
   private readonly themeService = inject(ThemeService);
 
 

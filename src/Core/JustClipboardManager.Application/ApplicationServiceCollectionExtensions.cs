@@ -24,6 +24,8 @@ public static class ApplicationServiceCollectionExtensions
     }
     services.AddSingleton<ICommandsService, CommandsService>();
 
+    services.AddSingleton<IEventsPublisher, EventsPublisher>();
+    services.AddSingleton<IIpcMessageTypesRegistry, IpcMessageTypesRegistry>();
     services.AddSingleton<IClipsService, ClipsService>();
 
     return services;

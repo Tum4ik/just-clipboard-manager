@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package common;
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Common";
+
+message Empty {}

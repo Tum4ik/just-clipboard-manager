@@ -41,7 +41,6 @@ namespace JustClipboardManager
       services.AddSingleton<ITrayIconService, TrayIconService>();
       services.AddSingleton<IWindowingService, WindowingService>();
       services.AddSingleton<IClipboardService, ClipboardService>();
-      services.AddSingleton<IEventsPublisher, EventsPublisher>();
       services.AddSingleton<IPluginsService<DataPackageView, DataPackage>, PluginsService>();
 
       return services.BuildServiceProvider();

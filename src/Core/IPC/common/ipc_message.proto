@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package common;
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Common";
+
+message IpcMessage {
+  MessageType type = 1;
+  google.protobuf.Any body = 2;
+
+  enum MessageType {
+    MESSAGE_TYPE_UNSPECIFIED = 0;
+    MESSAGE_TYPE_COMMAND_REQUEST = 1;
+    MESSAGE_TYPE_COMMAND_RESULT = 2;
+    MESSAGE_TYPE_EVENT = 3;
+  }
+}

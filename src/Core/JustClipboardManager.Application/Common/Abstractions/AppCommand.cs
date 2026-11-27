@@ -1,56 +1,20 @@
-using System.Text.Json;
-using JustClipboardManager.Domain.Common;
+using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
 namespace JustClipboardManager.Application.Common.Abstractions;
 
 internal abstract class AppCommand<TParameter, TResult> : IAppCommand
+  where TParameter : class, IMessage<TParameter>, new()
+  where TResult : class, IMessage<TResult>, new()
 {
-  public async Task<string?> ExecuteAsync(string? parameter, CancellationToken cancellationToken = default)
+  public async Task<Any> ExecuteAsync(Any parameter, CancellationToken cancellationToken = default)
   {
-    TParameter? parsedParameter = default;
-    if (parameter is not null && typeof(TParameter) != typeof(None))
-    {
-      if (typeof(TParameter) == typeof(string))
-      {
-        parsedParameter = (TParameter)(object)parameter;
-      }
-      else
-      {
-        var parsable = typeof(TParameter).GetInterfaces()
-          .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IParsable<>));
-        if (parsable is null)
-        {
-          parsedParameter = JsonSerializer.Deserialize<TParameter>(parameter);
-        }
-        else
-        {
-          var parseMethod = parsable.GetMethod("Parse", [typeof(string), typeof(IFormatProvider)])!;
-          parsedParameter = (TParameter)parseMethod.Invoke(null, [parameter])!;
-        }
-      }
-    }
+    var unpackedParameter = parameter.Unpack<TParameter>();
+    var result = await ExecuteAsync(unpackedParameter, cancellationToken);
+    var packedResult = Any.Pack(result);
 
-    var result = await ExecuteInternalAsync(parsedParameter!, cancellationToken);
-
-    string? serializedResult = null;
-    if (result is not null && typeof(TResult) != typeof(None))
-    {
-      if (result is string stringResult)
-      {
-        serializedResult = stringResult;
-      }
-      else if (typeof(TResult).GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IParsable<>)))
-      {
-        serializedResult = result.ToString();
-      }
-      else
-      {
-        serializedResult = JsonSerializer.Serialize(result);
-      }
-    }
-
-    return serializedResult;
+    return packedResult;
   }
 
-  protected abstract Task<TResult> ExecuteInternalAsync(TParameter parameter, CancellationToken cancellationToken = default);
+  protected abstract Task<TResult> ExecuteAsync(TParameter parameter, CancellationToken cancellationToken = default);
 }

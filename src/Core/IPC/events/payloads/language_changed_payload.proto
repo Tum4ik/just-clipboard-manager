@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 // buf:lint:ignore PACKAGE_VERSION_SUFFIX
 package events.payloads;
 

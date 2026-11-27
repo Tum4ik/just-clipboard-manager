@@ -1,10 +1,11 @@
 using JustClipboardManager.Application.Common.Abstractions;
+using JustClipboardManager.Application.IPC.Commands;
+using JustClipboardManager.Application.IPC.Common;
 using JustClipboardManager.Application.Services;
-using JustClipboardManager.Domain.Common;
 
 namespace JustClipboardManager.Application.Commands;
 
-internal class GetProductNameCommand : AppCommand<None, string>
+internal class GetProductNameCommand : AppCommand<Empty, GetProductNameResult>
 {
   private readonly IProductInfoService _productInfoService;
 
@@ -13,8 +14,9 @@ internal class GetProductNameCommand : AppCommand<None, string>
     _productInfoService = productInfoService;
   }
 
-  protected override Task<string> ExecuteInternalAsync(None parameter, CancellationToken cancellationToken = default)
+  protected override Task<GetProductNameResult> ExecuteAsync(Empty parameter, CancellationToken cancellationToken = default)
   {
-    return Task.FromResult(_productInfoService.GetProductName());
+    var productName = _productInfoService.GetProductName();
+    return Task.FromResult<GetProductNameResult>(new() { ProductName = productName });
   }
 }

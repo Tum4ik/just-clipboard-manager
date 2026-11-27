@@ -7,5 +7,5 @@ public interface IWindowingService
   void ShowPasteWindow();
 
   void ShowMainWindow();
-  Task PublishEventForMainWindowAsync(AppEvent appEvent);
+  Task PublishEventForMainWindowAsync(string appEventJson);
 }

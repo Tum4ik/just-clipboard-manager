@@ -1,14 +1,7 @@
-using System;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Google.Protobuf;
-using JustClipboardManager.Application.Services;
-using JustClipboardManager.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.Web.WebView2.Core;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Graphics;
-using JustClipboardManager.Application.IPC.Events;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -18,32 +11,18 @@ namespace JustClipboardManager;
 /// <summary>
 /// An empty window that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow : Window, IAppWindow
 {
-  public MainWindow(ICommandsService commandsService)
+  public MainWindow()
   {
     InitializeComponent();
     ConfigureWindow();
 
-    _ = WebView.MapAngularUiAsync(commandsService, "main-window");
+    WebView = WebViewControl;
   }
 
 
-  public async Task PostEventAsync(AppEvent appEvent)
-  {
-    await WebView.EnsureCoreWebView2Async();
-    // todo: extract logic to use same options for all windows
-    var payload = appEvent.ToByteArray();
-    using var sharedBuffer = WebView.CoreWebView2.Environment.CreateSharedBuffer((ulong)payload.Length);
-    using var stream = sharedBuffer.OpenStream();
-    await stream.WriteAsync(payload.AsBuffer());
-
-    WebView.CoreWebView2.PostSharedBufferToScript(
-      sharedBuffer,
-      CoreWebView2SharedBufferAccess.ReadOnly,
-      string.Empty
-    );
-  }
+  public WebView2 WebView { get; }
 
 
   private void ConfigureWindow()
