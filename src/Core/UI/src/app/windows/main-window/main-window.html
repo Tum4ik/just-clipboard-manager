@@ -1,0 +1,94 @@
+<jcm-title-bar />
+<p-sidebar-layout class="flex-1 min-h-[unset]" *translateBlock="let t">
+  <p-sidebar side="left" [open]="false">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+
+        <ng-template #primarySidebarMenuItem let-menuItem="menuItem">
+          <p-sidebar-menu-item>
+            @let isActive = menuItem === selectedMenuItem();
+            <button pSidebarMenuButton pRipple
+                    class="p-0 justify-center
+                           data-active:bg-(--p-highlight-background)
+                           data-active:text-primary
+                           "
+                    [pTooltip]="t(menuItem.title)"
+                    [isActive]="isActive"
+                    (click)="selectMenuItem(menuItem)">
+              <jcm-material-icon [iconName]="menuItem.icon" [isFilled]="isActive" />
+            </button>
+          </p-sidebar-menu-item>
+        </ng-template>
+
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-content>
+              <p-sidebar-menu>
+                @for(menuItem of menuItems; track menuItem.title){
+                <ng-container *ngTemplateOutlet="primarySidebarMenuItem; context: { menuItem: menuItem }" />
+                }
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+        <p-sidebar-footer>
+          <p-sidebar-menu>
+            @for(menuItem of footerMenuItems; track menuItem.title){
+            <ng-container *ngTemplateOutlet="primarySidebarMenuItem; context: { menuItem: menuItem }" />
+            }
+          </p-sidebar-menu>
+        </p-sidebar-footer>
+
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+
+  @let subMenuItems = selectedMenuItem().subMenuItems;
+  @let containsSubMenuItems = subMenuItems && subMenuItems.length > 0;
+  @if(containsSubMenuItems){
+  <p-sidebar side="left">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+        <p-sidebar-header>
+          <div class="px-1">
+            <span class="font-semibold text-sm">{{ t(selectedMenuItem().title) }}</span>
+          </div>
+        </p-sidebar-header>
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-content>
+              <p-sidebar-menu>
+                @for(subMenuItem of subMenuItems; track subMenuItem.title; let subMenuItemIndex = $index){
+                <p-sidebar-menu-item>
+                  @let isActive = subMenuItemIndex === selectedMenuItem().selectedSubMenuItemIndex;
+                  <button pSidebarMenuButton pRipple
+                          class="data-active:*:not-[.ignore]:text-primary"
+                          [isActive]="isActive"
+                          (click)="selectSubMenuItem(selectedMenuItem(), subMenuItemIndex)">
+                    <jcm-material-icon [iconName]="subMenuItem.icon" />
+                    <span class="ignore">{{ t(subMenuItem.title) }}</span>
+                  </button>
+                </p-sidebar-menu-item>
+                }
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+  }
+
+  <p-sidebar-main class="p-2">
+    @if(selectedMenuItem().component){
+    <ng-container *ngComponentOutlet="selectedMenuItem().component!" />
+    }
+    @else if (containsSubMenuItems){
+    @let selectedSubMenuItem = subMenuItems[selectedMenuItem().selectedSubMenuItemIndex ?? 0];
+    <ng-container *ngComponentOutlet="selectedSubMenuItem.component" />
+    }
+  </p-sidebar-main>
+
+</p-sidebar-layout>

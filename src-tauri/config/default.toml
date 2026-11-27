@@ -1,7 +1,0 @@
-environment = "production"
-
-[database]
-connection-string = "sqlite:jcm-database.db"
-
-[sentry]
-dsn = ""

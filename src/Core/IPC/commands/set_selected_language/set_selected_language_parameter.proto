@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package commands.set_selected_language;
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Commands";
+
+message SetSelectedLanguageParameter {
+  string language_code = 1;
+}

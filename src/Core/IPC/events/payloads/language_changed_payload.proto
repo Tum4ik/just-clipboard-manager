@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package events.payloads;
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Events.Payloads";
+
+message LanguageChangedPayload {
+  string language_code = 1;
+}

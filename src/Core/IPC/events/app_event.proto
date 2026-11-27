@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package events;
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Events";
+
+message AppEvent {
+  google.protobuf.Any payload = 1;
+}

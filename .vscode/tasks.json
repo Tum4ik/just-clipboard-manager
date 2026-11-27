@@ -1,0 +1,109 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Preparations x64",
+      "dependsOn": [
+        "Build Text Plugin x64",
+        "Copy Angular UI",
+        "Serve Angular UI"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Build Text Plugin x64",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/Plugins/BuiltinPlugins/JustClipboardManager.TextPlugin.Windows/JustClipboardManager.TextPlugin.Windows.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary",
+        "/p:RuntimeIdentifier=win-x64"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Serve Angular UI",
+      "type": "shell",
+      "command": "npm run start",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*",
+          "endsPattern": "^Watch mode enabled. Watching for file changes*"
+        }
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/src/Core/UI"
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Copy Angular UI",
+      "type": "shell",
+      "command": "robocopy \"${workspaceFolder}/src/Core/UI/dist/just-clipboard-manager/browser\" \"${workspaceFolder}/src/Platforms/Windows/WinUI/Resources/UI\" /MIR; if ($LASTEXITCODE -le 7) { $global:LASTEXITCODE = 0 }",
+      "dependsOn": "Build Angular UI",
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Build Angular UI",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/src/Core/UI"
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Changes detected"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation (complete|failed)"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Changes detected"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation (complete|failed)"
+          }
+        }
+      }
+    }
+  ]
+}

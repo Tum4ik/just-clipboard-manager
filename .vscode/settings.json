@@ -1,8 +1,13 @@
 {
-  "cucumber.features": [
-    "e2e-tests/features/**/*.feature"
-  ],
-  "cucumber.glue": [
-    "e2e-tests/steps/**/*.ts"
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "externalTemplate": true
+    }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "winapp.appDirectories": [
+    "src"
   ]
 }

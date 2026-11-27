@@ -1,0 +1,5 @@
+<linker>
+  <assembly fullname="JustClipboardManager.Application">
+    <type fullname="JustClipboardManager.Application.Commands.*" preserve="all" />
+  </assembly>
+</linker>

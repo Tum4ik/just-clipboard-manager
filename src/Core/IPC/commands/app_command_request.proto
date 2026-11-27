@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// buf:lint:ignore PACKAGE_VERSION_SUFFIX
+package commands;
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "JustClipboardManager.Application.IPC.Commands";
+
+message AppCommandRequest {
+  string name = 1;
+  string request_id = 2;
+  google.protobuf.Any parameter = 3;
+}

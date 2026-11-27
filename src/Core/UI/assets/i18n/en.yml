@@ -1,0 +1,26 @@
+supported-languages:
+  en: "English (United States)"
+  uk: "українська (Україна)"
+
+settings:
+  _: "Settings"
+  general:
+    _: "General"
+  interface:
+    _: "Interface"
+    language: "Language"
+    language-desc: "The language of the user interface"
+    theme-mode:
+      _: "Theme mode"
+      system: "System"
+      light: "Light"
+      dark: "Dark"
+    theme-mode-desc: "The visual appearance of the user interface"
+  paste-window:
+    _: "Paste window"
+
+plugins:
+  _: "Plugins"
+
+about:
+  _: "About"
